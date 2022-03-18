@@ -1,3 +1,5 @@
+Connect Memo
+
 🤔 What is the "Connect-Memo" ? 
  - Connect Memo is an application that connects memos to find more insightful ideas.
  - The user adds a note called "dot",
