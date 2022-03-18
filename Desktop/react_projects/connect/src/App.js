@@ -25,21 +25,6 @@ import { recoilPersist } from "recoil-persist";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {} from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAUS6qAw8b-PwqK0LG7Px0UeRgMq9mJq3M",
-  authDomain: "connect-memo-16299.firebaseapp.com",
-  projectId: "connect-memo-16299",
-  storageBucket: "connect-memo-16299.appspot.com",
-  messagingSenderId: "902980916094",
-  appId: "1:902980916094:web:1adb90da6c02d5e104592f",
-  measurementId: "G-CPH06GG8V8",
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 const { persistAtom } = recoilPersist();
 
