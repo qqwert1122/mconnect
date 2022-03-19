@@ -1,3 +1,4 @@
+import "./TagBar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faStar as fasStar,
@@ -133,15 +134,10 @@ const TagBar = ({ customHooks }) => {
 
   return (
     <div
-      class="p-1 flex-wrap"
+      class="tagbar p-1 flex-wrap"
       style={{
-        width: "20%",
-        height: "calc(100vh - 80px)",
-        maxHeight: "calc(100vh - 80px)",
-        overflow: "auto",
         backgroundColor: `${customHooks.color}`,
         color: `${customHooks.textColor}`,
-        transition: "0.5s",
       }}
     >
       <div ref={customHooks.topTagBar}></div>

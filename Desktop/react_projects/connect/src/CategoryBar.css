@@ -1,0 +1,12 @@
+.categorybar {
+  padding-top: 80px;
+  boxsizing: "border-box";
+  height: 100vh;
+  transition: 0.5s;
+}
+
+@media screen and (max-width: 400px) {
+  .categorybar {
+    display: none;
+  }
+}

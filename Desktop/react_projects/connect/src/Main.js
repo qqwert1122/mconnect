@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import Typography from "@mui/material/Typography";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHashtag,
@@ -26,12 +28,16 @@ import {
   faPlus,
   faArrowRotateLeft,
   faDiceD6,
+  faA,
+  faStar as fasStar,
+  faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faHeart as farHeart,
   faBookmark as farBookmark,
   faCopy,
   faCircleXmark,
+  faStar as farStar,
 } from "@fortawesome/free-regular-svg-icons";
 
 const Main = ({ customHooks }) => {
@@ -76,6 +82,10 @@ const Main = ({ customHooks }) => {
     customHooks.setSelectedPostIds([]);
     customHooks.setFormMode(!customHooks.formMode);
   };
+  function handleClick(event) {
+    event.preventDefault();
+    console.info("You clicked a breadcrumb.");
+  }
 
   const handleDeleteSnackBarClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -139,318 +149,360 @@ const Main = ({ customHooks }) => {
   );
 
   const postListing = (
-    <li key={customHooks.showingPostIds}>
-      <div class="flex-col m-5">
-        {customHooks.showingPostIds.length == 0 ? (
-          // showingPosts가 비었을 경우 "텅"
-          <div
-            class="flex justify-center items-center m-2 p-2 rounded-3xl"
-            style={{
-              width: "650px",
-              color: "#2C272E",
-              transition: "0.5s",
-              fontSize: "30px",
-            }}
-          >
-            <FontAwesomeIcon icon={faQuoteLeft} size="xs" />
-            &nbsp;<b>텅</b>&nbsp;
-            <FontAwesomeIcon icon={faQuoteRight} size="xs" />
-          </div>
-        ) : (
-          // showingPosts
-          <div class="flex-wrap">
-            {customHooks.posts
-              .filter((fPost) =>
-                customHooks.showingPostIds.includes(fPost.postId)
-              )
-              .map((mPost) => (
-                // total layout
-                <div
-                  class="borderShadow flex m-2 p-2 rounded-3xl"
-                  style={{
-                    width: "90%",
-                    fontSize: "14px",
-                    color: `${
-                      customHooks.selectedPostIds.some(
-                        (sPostId) => sPostId === mPost.postId
-                      )
-                        ? `${customHooks.textColor}`
-                        : "#2C272E"
-                    }`,
-                    backgroundColor: `${
-                      customHooks.selectedPostIds.some(
-                        (sPostId) => sPostId === mPost.postId
-                      )
-                        ? `${customHooks.color}`
-                        : "#EEEEEE"
-                    }`,
-                    transition: "0.5s",
-                  }}
-                >
-                  <div class="flex w-full items-center">
-                    {/* category */}
+    <li>
+      {customHooks.showingPostIds.length == 0 ? (
+        // showingPosts가 비었을 경우 "텅"
+        <div
+          class="flex justify-center items-center"
+          style={{
+            width: "100%",
+            color: "#2C272E",
+            transition: "0.5s",
+            fontSize: "30px",
+          }}
+        >
+          <FontAwesomeIcon icon={faQuoteLeft} size="xs" />
+          &nbsp;<b>텅</b>&nbsp;
+          <FontAwesomeIcon icon={faQuoteRight} size="xs" />
+        </div>
+      ) : (
+        // showingPosts
+        <div class="main__box flex flex-wrap ">
+          {customHooks.posts
+            .filter((fPost) =>
+              customHooks.showingPostIds.includes(fPost.postId)
+            )
+            .map((mPost) => (
+              // total layout
+              <div
+                class="main__post borderShadow flex my-3 p-2 rounded-3xl"
+                style={{
+                  color: `${
+                    customHooks.selectedPostIds.some(
+                      (sPostId) => sPostId === mPost.postId
+                    )
+                      ? `${customHooks.textColor}`
+                      : "#2C272E"
+                  }`,
+                  backgroundColor: `${
+                    customHooks.selectedPostIds.some(
+                      (sPostId) => sPostId === mPost.postId
+                    )
+                      ? `${customHooks.color}`
+                      : "#FAFAFA"
+                  }`,
+                }}
+              >
+                <div class="flex w-full items-center">
+                  {/* category */}
+                  <button
+                    class="flex justify-center items-center h-full"
+                    style={{
+                      width: "5%",
+                    }}
+                    onClick={() => {}}
+                  >
+                    {mPost.category === 3 ? (
+                      <FontAwesomeIcon icon={faDiceD6} />
+                    ) : mPost.category === 2 ? (
+                      <FontAwesomeIcon icon={faSquare} size="xs" />
+                    ) : mPost.category === 1 ? (
+                      <FontAwesomeIcon icon={faMinus} />
+                    ) : (
+                      <FontAwesomeIcon icon={faCircle} size="2xs" />
+                    )}
+                  </button>
+                  {/* Posts */}
+                  <div
+                    class="flex-col content-start items-start"
+                    style={{
+                      width: "85%",
+                    }}
+                  >
+                    {/* text */}
                     <button
-                      class="flex justify-center items-center h-full"
+                      class="flex-wrap text-left "
                       style={{
-                        width: "5%",
+                        wordBreak: "break-all",
                       }}
-                      onClick={() => {}}
-                    >
-                      {mPost.category === 3 ? (
-                        <FontAwesomeIcon icon={faDiceD6} />
-                      ) : mPost.category === 2 ? (
-                        <FontAwesomeIcon icon={faSquare} size="xs" />
-                      ) : mPost.category === 1 ? (
-                        <FontAwesomeIcon icon={faMinus} />
-                      ) : (
-                        <FontAwesomeIcon icon={faCircle} size="2xs" />
-                      )}
-                    </button>
-                    {/* Posts */}
-                    <div
-                      class="flex-col content-start items-start"
-                      style={{
-                        width: "85%",
-                      }}
-                    >
-                      {/* text */}
-                      <button
-                        class="flex-wrap text-left "
-                        style={{
-                          wordBreak: "break-all",
-                        }}
-                        onClick={() => {
-                          if (
-                            customHooks.selectedPostIds.some(
-                              (sPostId) => sPostId === mPost.postId
+                      onClick={() => {
+                        if (
+                          customHooks.selectedPostIds.some(
+                            (sPostId) => sPostId === mPost.postId
+                          )
+                        ) {
+                          customHooks.setSelectedPostIds(
+                            customHooks.selectedPostIds.filter(
+                              (fPostId) => fPostId != mPost.postId
                             )
-                          ) {
-                            customHooks.setSelectedPostIds(
-                              customHooks.selectedPostIds.filter(
-                                (fPostId) => fPostId != mPost.postId
-                              )
-                            );
-                          } else {
-                            customHooks.setSelectedPostIds([
-                              ...customHooks.selectedPostIds,
-                              mPost.postId,
-                            ]);
-                          }
-                        }}
-                      >
-                        {mPost.text}
-                      </button>
-                      {/* source */}
+                          );
+                        } else {
+                          customHooks.setSelectedPostIds([
+                            ...customHooks.selectedPostIds,
+                            mPost.postId,
+                          ]);
+                        }
+                      }}
+                    >
+                      {mPost.text}
+                    </button>
+                    {/* source */}
+                    <div
+                      class="flex-wrap mt-3 "
+                      style={{
+                        fontSize: "12px",
+                      }}
+                    >
+                      <a href="`${mPost.source}">{mPost.source}</a>
+                    </div>
+                    {/* tag */}
+                    <div class="flex flex-wrap justify-start ">
+                      {mPost.tags.map((mTag, mIndex) => (
+                        <button
+                          class="mr-1 mt-1 px-1 rounded-2xl"
+                          style={{
+                            fontSize: "12px",
+                            color: "#EEEEEE",
+                            backgroundColor: "#2C272E",
+                            transition: "0.5s",
+                          }}
+                          onClick={() => {
+                            customHooks.setFilterTag([mTag]);
+                          }}
+                        >
+                          {mTag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* action icons(like, bookmark, delete) */}
+                  <div
+                    class="flex justify-around "
+                    style={{ width: "10%", height: "100%" }}
+                  >
+                    {/* 왼쪽 */}
+                    <div class="flex-col justify-between">
                       <div
-                        class="flex-wrap mt-3 "
-                        style={{
-                          fontSize: "12px",
-                        }}
-                      >
-                        <a href="`${mPost.source}">{mPost.source}</a>
-                      </div>
-                      {/* tag */}
-                      <div class="flex flex-wrap justify-start ">
-                        {mPost.tags.map((mTag, mIndex) => (
-                          <button
-                            class="mr-1 mt-1 px-1 rounded-2xl"
-                            style={{
-                              fontSize: "12px",
-                              color: "#EEEEEE",
-                              backgroundColor: "#2C272E",
-                              transition: "0.5s",
-                            }}
-                            onClick={() => {
-                              if (customHooks.filterTag.includes(mTag)) {
-                                customHooks.setFilterTag(
-                                  customHooks.filterTag.filter(
-                                    (fTag) => fTag != mTag
-                                  )
-                                );
-                              } else {
-                                customHooks.setFilterTag([
-                                  ...customHooks.filterTag,
-                                  mTag,
-                                ]);
-                              }
-                            }}
-                          >
-                            {mTag}
-                          </button>
-                        ))}
+                        class="flex items-end"
+                        style={{ height: "50%" }}
+                      ></div>
+                      <div class="flex items-end " style={{ height: "50%" }}>
+                        <button>
+                          <FontAwesomeIcon icon={faCopy} />
+                        </button>
                       </div>
                     </div>
-                    {/* action icons(like, bookmark, delete) */}
-                    <div
-                      class="flex justify-around "
-                      style={{ width: "10%", height: "100%" }}
-                    >
-                      {/* 왼쪽 */}
-                      <div class="flex-col justify-between">
-                        <div
-                          class="flex items-end"
-                          style={{ height: "50%" }}
-                        ></div>
-                        <div class="flex items-end " style={{ height: "50%" }}>
-                          <button>
-                            <FontAwesomeIcon icon={faCopy} />
-                          </button>
-                        </div>
+                    {/* 가운데 */}
+                    <div class="flex-col justify-between">
+                      <div
+                        class="flex items-end"
+                        style={{ height: "50%" }}
+                      ></div>
+                      <div class="flex items-end " style={{ height: "50%" }}>
+                        <button
+                          onClick={() => {
+                            const copyPosts = [...customHooks.posts];
+                            const findIndex = customHooks.posts.findIndex(
+                              (e) => e.postId === mPost.postId
+                            );
+                            copyPosts[findIndex] = {
+                              ...copyPosts[findIndex],
+                              like: !mPost.like,
+                            };
+                            customHooks.setPosts(copyPosts);
+                          }}
+                        >
+                          {mPost.like ? (
+                            <FontAwesomeIcon icon={fasHeart} />
+                          ) : (
+                            <FontAwesomeIcon icon={farHeart} />
+                          )}
+                        </button>
                       </div>
-                      {/* 가운데 */}
-                      <div class="flex-col justify-between">
-                        <div
-                          class="flex items-end"
-                          style={{ height: "50%" }}
-                        ></div>
-                        <div class="flex items-end " style={{ height: "50%" }}>
-                          <button
-                            onClick={() => {
-                              const copyPosts = [...customHooks.posts];
-                              const findIndex = customHooks.posts.findIndex(
-                                (e) => e.postId === mPost.postId
-                              );
-                              copyPosts[findIndex] = {
-                                ...copyPosts[findIndex],
-                                like: !mPost.like,
-                              };
-                              customHooks.setPosts(copyPosts);
-                            }}
-                          >
-                            {mPost.like ? (
-                              <FontAwesomeIcon icon={fasHeart} />
-                            ) : (
-                              <FontAwesomeIcon icon={farHeart} />
-                            )}
-                          </button>
-                        </div>
+                    </div>
+                    {/* 오른쪽 */}
+                    <div class="flex-col justify-between ">
+                      {/* 오른쪽-위 */}
+                      <div class="flex items-start" style={{ height: "50%" }}>
+                        <button
+                          variant="outlined"
+                          onClick={() => {
+                            customHooks.setTempoPost(mPost);
+                            customHooks.setDeleteDialogOpen(true);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCircleXmark} />
+                        </button>
+                        {/* posts 삭제 버튼 누르면 나오는 대화상자 */}
+                        <Dialog
+                          open={customHooks.deleteDialogOpen}
+                          onClose={() => {
+                            customHooks.setDeleteDialogOpen(false);
+                          }}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                        >
+                          <DialogTitle id="alert-dialog-title">
+                            {"삭제 알림"}
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText
+                              id="alert-dialog-description"
+                              style={{
+                                fontSize: "12px",
+                              }}
+                            >
+                              정말 글을 지우시겠다면 '삭제'를 눌러주세요.
+                              <br />
+                              삭제된 글은 한 달간 휴지통에 보관됩니다.
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button
+                              onClick={() => {
+                                customHooks.setDeleteDialogOpen(false);
+                              }}
+                              style={{
+                                fontSize: "12px",
+                              }}
+                            >
+                              취소
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                customHooks.setPosts(
+                                  customHooks.posts.filter(
+                                    (fPost, fIndex) =>
+                                      fPost != customHooks.tempoPost
+                                  )
+                                );
+                                customHooks.setDeleteDialogOpen(false);
+                                customHooks.setDeleteSnackBarOpen(true);
+                              }}
+                              autoFocus
+                              style={{
+                                fontSize: "12px",
+                              }}
+                            >
+                              삭제
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
                       </div>
-                      {/* 오른쪽 */}
-                      <div class="flex-col justify-between ">
-                        {/* 오른쪽-위 */}
-                        <div class="flex items-start" style={{ height: "50%" }}>
-                          <button
-                            variant="outlined"
-                            onClick={() => {
-                              customHooks.setTempoPost(mPost);
-                              customHooks.setDeleteDialogOpen(true);
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faCircleXmark} />
-                          </button>
-                          {/* posts 삭제 버튼 누르면 나오는 대화상자 */}
-                          <Dialog
-                            open={customHooks.deleteDialogOpen}
-                            onClose={() => {
-                              customHooks.setDeleteDialogOpen(false);
-                            }}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                          >
-                            <DialogTitle id="alert-dialog-title">
-                              {"삭제 알림"}
-                            </DialogTitle>
-                            <DialogContent>
-                              <DialogContentText
-                                id="alert-dialog-description"
-                                style={{
-                                  fontSize: "12px",
-                                }}
-                              >
-                                정말 글을 지우시겠다면 '삭제'를 눌러주세요.
-                                <br />
-                                삭제된 글은 한 달간 휴지통에 보관됩니다.
-                              </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                              <Button
-                                onClick={() => {
-                                  customHooks.setDeleteDialogOpen(false);
-                                }}
-                                style={{
-                                  fontSize: "12px",
-                                }}
-                              >
-                                취소
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  customHooks.setPosts(
-                                    customHooks.posts.filter(
-                                      (fPost, fIndex) =>
-                                        fPost != customHooks.tempoPost
-                                    )
-                                  );
-                                  customHooks.setDeleteDialogOpen(false);
-                                  customHooks.setDeleteSnackBarOpen(true);
-                                }}
-                                autoFocus
-                                style={{
-                                  fontSize: "12px",
-                                }}
-                              >
-                                삭제
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </div>
-                        {/* 오른쪽-아래 */}
-                        <div class="flex items-end " style={{ height: "50%" }}>
-                          <button
-                            onClick={() => {
-                              const copyPosts = [...customHooks.posts];
-                              const findIndex = customHooks.posts.findIndex(
-                                (e) => e.postId === mPost.postId
-                              );
-                              copyPosts[findIndex] = {
-                                ...copyPosts[findIndex],
-                                bookmark: !mPost.bookmark,
-                              };
-                              customHooks.setPosts(copyPosts);
-                            }}
-                          >
-                            {mPost.bookmark ? (
-                              <FontAwesomeIcon icon={fasBookmark} />
-                            ) : (
-                              <FontAwesomeIcon icon={farBookmark} />
-                            )}
-                          </button>
-                        </div>
+                      {/* 오른쪽-아래 */}
+                      <div class="flex items-end " style={{ height: "50%" }}>
+                        <button
+                          onClick={() => {
+                            const copyPosts = [...customHooks.posts];
+                            const findIndex = customHooks.posts.findIndex(
+                              (e) => e.postId === mPost.postId
+                            );
+                            copyPosts[findIndex] = {
+                              ...copyPosts[findIndex],
+                              bookmark: !mPost.bookmark,
+                            };
+                            customHooks.setPosts(copyPosts);
+                          }}
+                        >
+                          {mPost.bookmark ? (
+                            <FontAwesomeIcon icon={fasBookmark} />
+                          ) : (
+                            <FontAwesomeIcon icon={farBookmark} />
+                          )}
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))}
-          </div>
-        )}
-        {/* 대화상자에서 삭제 누르면 나오는 스낵바 */}
-        <Snackbar
-          open={customHooks.deleteSnackBarOpen}
-          autoHideDuration={6000}
-          onClose={handleDeleteSnackBarClose}
-          message="글이 삭제되었습니다"
-          action={deleteSnackBarAction}
-        />
-      </div>
+              </div>
+            ))}
+        </div>
+      )}
+      {/* 대화상자에서 삭제 누르면 나오는 스낵바 */}
+      <Snackbar
+        open={customHooks.deleteSnackBarOpen}
+        autoHideDuration={6000}
+        onClose={handleDeleteSnackBarClose}
+        message="글이 삭제되었습니다"
+        action={deleteSnackBarAction}
+      />
     </li>
   );
 
   return (
     <div
-      class="borderShadow flex-col flex-wrap rounded-t-3xl "
+      class="main flex-col flex-wrap rounded-tl-3xl"
       style={{
-        width: "60%",
-        height: "calc(100vh - 80px)",
-        maxHeight: "calc(100vh - 80px)",
-        overflow: "auto",
         color: `${customHooks.color}`,
-        backgroundColor: "#EEEEEE",
-        transition: "0.5s",
       }}
     >
+      <div class="" role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography underline="hover" color="inherit">
+            Category :&nbsp;
+            {customHooks.tabValue === 4 ? (
+              <FontAwesomeIcon icon={faDiceD6} />
+            ) : customHooks.tabValue === 3 ? (
+              <FontAwesomeIcon icon={faSquare} size="xs" />
+            ) : customHooks.tabValue === 2 ? (
+              <FontAwesomeIcon icon={faMinus} />
+            ) : customHooks.tabValue === 1 ? (
+              <FontAwesomeIcon icon={faCircle} size="2xs" />
+            ) : (
+              <FontAwesomeIcon icon={faA} size="xs" />
+            )}
+          </Typography>
+          {customHooks.filterTag.length === 0 ? (
+            <Typography>Tags : All</Typography>
+          ) : (
+            <Typography
+              underline="hover"
+              color="inherit"
+              href="/getting-started/installation/"
+            >
+              Tags :&nbsp;
+              {customHooks.filterTag.map((mTag, mIndex) => (
+                <button
+                  class="mx-1"
+                  style={{
+                    fontSize: "14px",
+                  }}
+                >
+                  <button
+                    onClick={() => {
+                      if (customHooks.filterTag.includes(mTag)) {
+                        customHooks.setFilterTag(
+                          customHooks.filterTag.filter((fTag) => fTag !== mTag)
+                        );
+                      } else {
+                        customHooks.setFilterTag([
+                          ...customHooks.filterTag,
+                          mTag,
+                        ]);
+                      }
+                    }}
+                  >
+                    <b>{mTag}</b>
+                  </button>
+                </button>
+              ))}
+            </Typography>
+          )}
+          <Typography color="inherit">
+            Filter : &nbsp;
+            {customHooks.filteringParameter == "LIKE" ? (
+              <FontAwesomeIcon icon={farHeart} size="xs" />
+            ) : customHooks.filteringParameter == "BOOKMARK" ? (
+              <FontAwesomeIcon icon={farBookmark} size="xs" />
+            ) : (
+              <span>Empty</span>
+            )}
+          </Typography>
+        </Breadcrumbs>
+      </div>
       {/* 리스트 */}
       <div ref={customHooks.topMain}></div>
-      <ul class="postListing">{postListing}</ul>
+      <ul>{postListing}</ul>
 
       {/* Floating Bar */}
       <button

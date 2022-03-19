@@ -1,4 +1,7 @@
 import "./Main.css";
+import "./SideBar.css";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCodeBranch,
@@ -39,12 +42,9 @@ const SideBar = ({ customHooks }) => {
 
   return (
     <div
-      class="borderShadow flex-col mx-5 rounded-t-3xl"
+      class="sidebar borderShadow flex-col mx-5 rounded-t-3xl"
       style={{
-        width: "20%",
         color: `${customHooks.color}`,
-        backgroundColor: "#EEEEEE",
-        transition: "0.5s",
       }}
     >
       {/* 메뉴 layout */}
@@ -141,22 +141,35 @@ const SideBar = ({ customHooks }) => {
       {customHooks.selectedPostIds.length <= 1 ? (
         <div></div>
       ) : (
-        <button
+        <div
           class="fixed borderShadow flex justify-center items-center m-2 p-2 rounded-t-lg rounded-b-lg"
           style={{
-            width: "230px",
+            right: "0",
             bottom: "0",
             color: `${menuTextColor()}`,
             backgroundColor: `${menuColor()}`,
             transition: "0.5s",
           }}
-          onClick={() => {
-            // selected Posts 중 가장 상위 category를 가져옴.
-            customHooks.setFormMode(!customHooks.formMode);
-          }}
         >
-          <FontAwesomeIcon icon={faCodeFork} />
-        </button>
+          <button
+            onClick={() => {
+              // selected Posts 중 가장 상위 category를 가져옴.
+              customHooks.setFormMode(!customHooks.formMode);
+            }}
+          >
+            <Tooltip title="Connect Memos">
+              <IconButton
+                style={{
+                  color: "white",
+                  height: "20px",
+                  fontSize: "16px",
+                }}
+              >
+                <FontAwesomeIcon icon={faCodeFork} />
+              </IconButton>
+            </Tooltip>
+          </button>
+        </div>
       )}
     </div>
   );

@@ -1,11 +1,12 @@
 import Header from "./Header";
+import CategoryBar from "./CategoryBar";
 import TagBar from "./TagBar";
-import SideBar from "./SideBar";
 import Main from "./Main";
 import "./Main.css";
-import logo from "./logo.svg";
+import SideBar from "./SideBar";
 import "./App.css";
 import { createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import {
   RecoilRoot,
   atom,
@@ -300,6 +301,7 @@ const useCustomHooks = () => {
             .filter((fIndex) => posts[fIndex].bookmark == true)
             .map((mIndex) => posts[mIndex].postId)
         );
+        break;
     }
   }, [posts, tabValue, filterTag, filteringParameter]); // filter parameter 변경 시마다 showingPostIds를 변경
 
@@ -410,6 +412,7 @@ const App = () => {
       <Header customHooks={customHooks} />
       {/* TagBar, Main, SideBar flex-row로 놓을 자리 */}
       <div class="flex">
+        <CategoryBar customHooks={customHooks} />
         <TagBar customHooks={customHooks} />
         <Main customHooks={customHooks} />
         <SideBar customHooks={customHooks} />

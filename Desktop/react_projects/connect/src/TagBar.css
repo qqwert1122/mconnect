@@ -1,0 +1,14 @@
+.tagbar {
+  width: 25%;
+  height: 100vh;
+  min-width: ;
+  padding-top: 80px;
+  overflow: auto;
+  transition: 0.5s;
+}
+
+@media screen and (max-width: 800px) {
+  .tagbar {
+    display: none;
+  }
+}

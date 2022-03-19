@@ -1,27 +1,8 @@
-.navButton::before {
-  transform: scaleX(0);
-  transform-origin: bottom right;
-}
-
-.navButton:hover::before {
-  transform: scaleX(1);
-  transform-origin: bottom left;
-}
-
-.navButton::before {
-  content: " ";
-  display: block;
-  position: absolute;
+.header {
+  position: fixed;
   top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  inset: 0 0 0 0;
-  background: hsl(200 100% 80%);
-  z-index: -1;
-  transition: transform 0.3s ease;
-}
-
-.navButton {
-  position: relative;
+  width: 100vw;
+  height: 50px;
+  transition: 0.5s;
+  z-index: 20;
 }

@@ -1,0 +1,10 @@
+.sidebar {
+  position: fixed;
+  right: 0;
+  z-index: 10;
+  height: calc(100vh-80px);
+  margin-top: 80px;
+  boxsizing: border-box;
+  background-color: #eeeeee;
+  transition: 0.5s;
+}
