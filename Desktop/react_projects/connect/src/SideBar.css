@@ -1,10 +1,30 @@
 .sidebar {
-  position: fixed;
-  right: 0;
-  z-index: 10;
-  height: calc(100vh-80px);
-  margin-top: 80px;
   boxsizing: border-box;
-  background-color: #eeeeee;
+  width: 250px;
+  min-width: 250px;
+  height: 100vh;
+  padding-top: 80px;
+  transition: 0.5s;
+}
+
+@media screen and (max-width: 1000px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+.selectedposts__box {
+  width: 210px;
+  max-width: 210px;
+  height: 400px;
+  max-height: ;
+}
+
+.selectedposts {
+  width: 92%;
+  color: #2c272e;
+
+  backgroundcolor: #ffffff;
+  wordbreak: break-all;
   transition: 0.5s;
 }

@@ -31,6 +31,7 @@ import {
   faA,
   faStar as fasStar,
   faHeart,
+  faAngleUp,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faHeart as farHeart,
@@ -111,7 +112,7 @@ const Main = ({ customHooks }) => {
         boxShadow: "0 0 5px grey",
         position: "fixed",
         bottom: "0px",
-        right: "24%",
+        right: "300px",
       }}
       onClick={() => {
         customHooks.setFormMode(!customHooks.formMode);
@@ -156,6 +157,7 @@ const Main = ({ customHooks }) => {
           class="flex justify-center items-center"
           style={{
             width: "100%",
+            marginTop: "50px",
             color: "#2C272E",
             transition: "0.5s",
             fontSize: "30px",
@@ -436,8 +438,9 @@ const Main = ({ customHooks }) => {
         color: `${customHooks.color}`,
       }}
     >
-      <div class="" role="presentation" onClick={handleClick}>
-        <Breadcrumbs aria-label="breadcrumb">
+      <div ref={customHooks.topMain}></div>
+      {/* <div class="" role="presentation" onClick={handleClick}> */}
+      {/* <Breadcrumbs aria-label="breadcrumb">
           <Typography underline="hover" color="inherit">
             Category :&nbsp;
             {customHooks.tabValue === 4 ? (
@@ -498,14 +501,13 @@ const Main = ({ customHooks }) => {
               <span>Empty</span>
             )}
           </Typography>
-        </Breadcrumbs>
-      </div>
+        </Breadcrumbs> */}
+      {/* </div> */}
       {/* 리스트 */}
-      <div ref={customHooks.topMain}></div>
       <ul>{postListing}</ul>
 
       {/* Floating Bar */}
-      <button
+      {/* <button
         class="border p-1"
         style={{
           width: "35px",
@@ -617,19 +619,15 @@ const Main = ({ customHooks }) => {
       >
         <FontAwesomeIcon icon={faFilter} size="xs" />
       </button>
-      {sideBarFormIcon}
+      {sideBarFormIcon} */}
 
       {/* form */}
       <div
-        class="formBox absolute rounded-tr-3xl"
+        class="formBox absolute rounded-t-3xl"
         style={{
-          width: "600px",
           height: `${customHooks.formDisplay}`,
-          overflow: "auto",
-          bottom: "0",
           color: `${customHooks.textColor}`,
           backgroundColor: `${customHooks.color}`,
-          transition: "0.5s",
         }}
       >
         <div
@@ -643,7 +641,11 @@ const Main = ({ customHooks }) => {
               customHooks.setFormMode(!customHooks.formMode);
             }}
           >
-            <FontAwesomeIcon icon={faAngleDown} />
+            {customHooks.formMode ? (
+              <FontAwesomeIcon icon={faAngleDown} />
+            ) : (
+              <FontAwesomeIcon icon={faAngleUp} />
+            )}
           </button>
         </div>
         <article class="flex-col p-2 ">

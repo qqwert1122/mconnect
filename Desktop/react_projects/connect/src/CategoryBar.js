@@ -23,14 +23,15 @@ const CategoryBar = ({ customHooks }) => {
     <div
       class="categorybar flex justify-between"
       style={{
-        color: `${customHooks.textColor}`,
-        backgroundColor: `${customHooks.color}`,
+        color: "#2C272E",
+        // backgroundColor: `${customHooks.color}`,
+        backgroundColor: "#FFFFFF",
       }}
     >
       <ThemeProvider theme={customHooks.theme}>
         <Tabs
           textColor="inherit"
-          indicatorColor="secondary"
+          indicatorColor="primary"
           value={customHooks.tabValue}
           onChange={tabValueHandleChange}
           aria-label="icon label tabs example"
@@ -43,9 +44,9 @@ const CategoryBar = ({ customHooks }) => {
               // </Badge>
             }
           />
-          <Tab icon={<FontAwesomeIcon icon={faCircle} size="" />} />
+          <Tab icon={<FontAwesomeIcon icon={faCircle} size="2xs" />} />
           <Tab icon={<FontAwesomeIcon icon={faMinus} />} />
-          <Tab icon={<FontAwesomeIcon icon={faSquare} size="" />} />
+          <Tab icon={<FontAwesomeIcon icon={faSquare} size="xs" />} />
           <Tab icon={<FontAwesomeIcon icon={faDiceD6} />} />
         </Tabs>
       </ThemeProvider>

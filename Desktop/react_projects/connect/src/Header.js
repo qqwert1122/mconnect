@@ -1,4 +1,5 @@
 import "./Header.css";
+import Avatar from "@mui/material/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPalette,
@@ -13,12 +14,9 @@ import {} from "@fortawesome/free-regular-svg-icons";
 const Header = ({ customHooks }) => {
   const showColorPicker = (
     <div
-      class="h-28 w-32 rounded-bl-3xl inset-y-16"
+      class="colorpicker rounded-bl-3xl"
       style={{
-        position: "absolute",
-        right: "0",
         display: `${customHooks.colorPickerDisplay}`,
-        transition: "0.5s",
         backgroundColor: `${customHooks.color}`,
       }}
     >
@@ -50,12 +48,29 @@ const Header = ({ customHooks }) => {
       }}
     >
       <div class="flex items-center">
-        <img class="h-16 mx-2" src="img/logo_connect_ver2.png" />
+        {/* <img class="h-12 mx-6" src="img/logo_connect_ver2.png" /> */}
+        <span class="mx-6">
+          <b>App Logo</b>
+        </span>
       </div>
       <div class="flex items-center">
-        <div>User Info</div>
+        <div class="flex items-center" style={{ marginRight: "16px" }}>
+          <Avatar
+            alt="Remy Sharp"
+            src="img/duck_avatar.png"
+            sx={{
+              display: "flex",
+              width: "24px",
+              height: "24px",
+              marginRight: "8px",
+            }}
+          />
+          <span style={{ fontSize: "0.8rem" }}>
+            <b>abcd1234</b>
+          </span>
+        </div>
         <button
-          class="mx-4 w-4 h-4 rounded-xl border-2 border-white"
+          class="colorPicker__button rounded-xl border-2 border-white"
           style={{
             backgroundColor: `${customHooks.color}`,
           }}

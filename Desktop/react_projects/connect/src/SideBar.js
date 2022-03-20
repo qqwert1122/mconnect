@@ -1,12 +1,21 @@
 import "./Main.css";
 import "./SideBar.css";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
+import { ThemeProvider } from "@mui/material/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCircle,
   faCodeBranch,
   faCodeFork,
+  faDiceD6,
   faLayerGroup,
+  faMinus,
+  faPersonDigging,
+  faSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
 const SideBar = ({ customHooks }) => {
@@ -34,115 +43,185 @@ const SideBar = ({ customHooks }) => {
     return luma < 235 ? customHooks.textColor : "#EEEEEE";
   };
 
+  const TabPanel = ({ children, sideBarTabValue, index, ...other }) => {
+    return (
+      <div
+        role="tabpanel"
+        hidden={customHooks.sideBarTabValue !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {customHooks.sideBarTabValue === index && <span>{children}</span>}
+      </div>
+    );
+  };
+
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
+
+  const handleChange = (event, newValue) => {
+    customHooks.setSideBarTabValue(newValue);
+  };
+
   const infoMode = <></>;
-
-  const branchMode = <></>;
-
-  const layerGroupMode = <></>;
 
   return (
     <div
-      class="sidebar borderShadow flex-col mx-5 rounded-t-3xl"
+      class="sidebar flex-col pl-2"
       style={{
-        color: `${customHooks.color}`,
+        color: "#2C272E",
+        backgroundColor: "#ffffff",
+        // backgroundColor: `${customHooks.color}`,
       }}
     >
       {/* 메뉴 layout */}
-      <div
-        class="borderShadow flex justify-center items-center m-2 p-2 rounded-t-3xl rounded-b-lg"
-        style={{
-          height: "8%",
-          color: `${menuTextColor()}`,
-          backgroundColor: `${menuColor()}`,
-          transition: "0.5s",
-        }}
-      >
-        {/* branch 메뉴 */}
-        <button class="w-1/2">
-          <FontAwesomeIcon icon={faCodeBranch} />
-        </button>
-        <p>|</p>
-        {/* layer-group 메뉴 */}
-        <button class="w-1/2 ">
-          <FontAwesomeIcon icon={faLayerGroup} />
-        </button>
-      </div>
-
-      {/* selected posts */}
-      <div
-        class="flex-col flex-wrap justify-center items-center"
-        style={{
-          height: "92%",
-          maxHeight: "calc(100vh - 140px)",
-          overflow: "auto",
-        }}
-      >
-        <div>
-          {customHooks.posts
-            .filter((fPost) =>
-              customHooks.selectedPostIds.includes(fPost.postId)
-            )
-            .map((mPost) => (
+      {customHooks.selectedPostIds.length === 0 ? (
+        <div></div>
+      ) : (
+        <ThemeProvider theme={customHooks.theme}>
+          <Tabs
+            value={customHooks.sideBarTabValue}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+            textColor="inherit"
+            indicatorColor="primary"
+          >
+            <Tab
+              label="Thread"
+              icon={<FontAwesomeIcon icon={faCodeBranch} />}
+              iconPosition="start"
+              {...a11yProps(0)}
+              sx={{
+                fontWeight: "bold",
+                fontSize: 15,
+                textTransform: "capitalize",
+              }}
+            />
+            <Tab
+              label="Stacks"
+              icon={<FontAwesomeIcon icon={faLayerGroup} />}
+              iconPosition="start"
+              {...a11yProps(1)}
+              sx={{
+                fontWeight: "bold",
+                fontSize: 15,
+                textTransform: "capitalize",
+              }}
+            />
+          </Tabs>
+          <TabPanel value={customHooks.sideBarTabValue} index={0}>
+            <div class="border-box flex items-center justify-center text-xl pt-20">
+              <FontAwesomeIcon icon={faPersonDigging} />
+              &nbsp;<span>공사중</span>
+            </div>
+          </TabPanel>
+          <TabPanel
+            value={customHooks.sideBarTabValue}
+            index={1}
+            sx={{
+              boxSizing: "border-box",
+              p: 3,
+            }}
+          >
+            {/* selected posts */}
+            <div
+              class="selectedposts__box border-box flex-col flex-wrap justify-items-center items-center p-1 "
+              style={{
+                overflow: "scroll",
+              }}
+            >
               <div>
-                <button
-                  class="borderShadow flex-col justify-center text-left mt-2  mx-2 p-2 px-4 rounded-3xl"
-                  style={{
-                    width: "230px",
-                    borderColor: "#2C272E",
-                    color: "#2C272E",
-                    backgroundColor: "#EEEEEE",
-                    transition: "0.5s",
-                    fontSize: "12px",
-                    wordBreak: "break-all",
-                  }}
-                  onClick={() => {
-                    customHooks.setSelectedPostIds(
-                      customHooks.selectedPostIds.filter(
-                        (fPostId) => fPostId != mPost.postId
-                      )
-                    );
-                  }}
-                >
-                  {/* text */}
-                  <div
-                    class="flex w-full text-left"
-                    style={{
-                      wordBreak: "break-all",
-                    }}
-                  >
-                    {mPost.text}
-                  </div>
-                  {/* tags */}
-                  <div
-                    class="flex flex-wrap justify-start"
-                    style={{
-                      wordBreak: "break-all",
-                    }}
-                  >
-                    {mPost.tags.map((mTag, mIndex) => (
-                      <div
-                        class="mr-1 mt-1 px-1 rounded-2xl"
-                        style={{
-                          fontSize: "10px",
-                          backgroundColor: "#2C272E",
-                          color: "#EEEEEE",
-                          transition: "0.5s",
+                {customHooks.posts
+                  .filter((fPost) =>
+                    customHooks.selectedPostIds.includes(fPost.postId)
+                  )
+                  .map((mPost) => (
+                    <div>
+                      <button
+                        class="selectedposts border-box flex-col justify-center text-left mt-2  mx-2 p-2 px-4 rounded-3xl"
+                        onClick={() => {
+                          customHooks.setSelectedPostIds(
+                            customHooks.selectedPostIds.filter(
+                              (fPostId) => fPostId != mPost.postId
+                            )
+                          );
                         }}
                       >
-                        {mTag}
-                      </div>
-                    ))}
-                  </div>
-                </button>
+                        {/* category */}
+                        <div
+                          class="flex w-full text-left"
+                          style={{
+                            fontSize: "12px",
+                            wordBreak: "break-all",
+                          }}
+                        >
+                          {mPost.category === 3 ? (
+                            <FontAwesomeIcon icon={faDiceD6} />
+                          ) : mPost.category === 2 ? (
+                            <FontAwesomeIcon icon={faSquare} size="xs" />
+                          ) : mPost.category === 1 ? (
+                            <FontAwesomeIcon icon={faMinus} />
+                          ) : (
+                            <FontAwesomeIcon icon={faCircle} size="2xs" />
+                          )}
+                        </div>
+                        {/* text */}
+                        <div
+                          class="flex w-full text-left"
+                          style={{
+                            fontSize: "12px",
+                            wordBreak: "break-all",
+                          }}
+                        >
+                          {mPost.text}
+                        </div>
+                        {/* tags */}
+                        <div
+                          class="flex flex-wrap justify-start"
+                          style={{
+                            wordBreak: "break-all",
+                          }}
+                        >
+                          {mPost.tags.map((mTag, mIndex) => (
+                            <div
+                              class="mr-1 mt-1 px-1 rounded-2xl"
+                              style={{
+                                fontSize: "10px",
+                                backgroundColor: "#2C272E",
+                                color: "#EEEEEE",
+                                transition: "0.5s",
+                              }}
+                            >
+                              {mTag}
+                            </div>
+                          ))}
+                        </div>
+                      </button>
+                      <hr />
+                    </div>
+                  ))}
               </div>
-            ))}
-        </div>
-      </div>
+            </div>
+          </TabPanel>
+        </ThemeProvider>
+      )}
+
       {customHooks.selectedPostIds.length <= 1 ? (
         <div></div>
       ) : (
         <div
-          class="fixed borderShadow flex justify-center items-center m-2 p-2 rounded-t-lg rounded-b-lg"
+          class="fixed borderShadow flex justify-center items-center m-5 p-2 rounded-full text-2xl"
           style={{
             right: "0",
             bottom: "0",
@@ -157,12 +236,13 @@ const SideBar = ({ customHooks }) => {
               customHooks.setFormMode(!customHooks.formMode);
             }}
           >
-            <Tooltip title="Connect Memos">
+            <Tooltip title="Connect Memos : Combine two or more notes to find new ideas.">
               <IconButton
                 style={{
                   color: "white",
-                  height: "20px",
-                  fontSize: "16px",
+                  // width: "1.5rem",
+                  height: "1.5rem",
+                  fontSize: "1rem",
                 }}
               >
                 <FontAwesomeIcon icon={faCodeFork} />

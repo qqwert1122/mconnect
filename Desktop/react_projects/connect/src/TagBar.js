@@ -14,21 +14,15 @@ const TagBar = ({ customHooks }) => {
       <button
         class="m-1 p-1 border rounded-2xl text-sm"
         style={{
-          borderColor: `${
-            customHooks.filterTag.includes(mTag)
-              ? customHooks.color
-              : customHooks.textColor
-          }`,
+          borderColor: "#2C272E",
           backgroundColor: `${
-            customHooks.filterTag.includes(mTag)
-              ? customHooks.textColor
-              : customHooks.color
+            customHooks.filterTag.includes(mTag) ? customHooks.color : "#ffffff"
           }`,
           fontSize: "12px",
           color: `${
             customHooks.filterTag.includes(mTag)
-              ? customHooks.color
-              : customHooks.textColor
+              ? customHooks.textColor
+              : "#2C272E"
           }`,
           transition: "0.5s",
         }}
@@ -84,21 +78,15 @@ const TagBar = ({ customHooks }) => {
       <button
         class="m-1 p-1 border rounded-2xl text-sm"
         style={{
-          borderColor: `${
-            customHooks.filterTag.includes(mTag)
-              ? customHooks.color
-              : customHooks.textColor
-          }`,
+          borderColor: "#2C272E",
           backgroundColor: `${
-            customHooks.filterTag.includes(mTag)
-              ? customHooks.textColor
-              : customHooks.color
+            customHooks.filterTag.includes(mTag) ? customHooks.color : "#ffffff"
           }`,
           fontSize: "12px",
           color: `${
             customHooks.filterTag.includes(mTag)
-              ? customHooks.color
-              : customHooks.textColor
+              ? customHooks.textColor
+              : "#2C272E"
           }`,
           transition: "0.5s",
         }}
@@ -136,11 +124,18 @@ const TagBar = ({ customHooks }) => {
     <div
       class="tagbar p-1 flex-wrap"
       style={{
-        backgroundColor: `${customHooks.color}`,
-        color: `${customHooks.textColor}`,
+        // backgroundColor: `${customHooks.color}`,
+        backgroundColor: "#ffffff",
+        // color: `${customHooks.color}`,
+        color: "#2C272E",
       }}
     >
-      <div ref={customHooks.topTagBar}></div>
+      <div
+        ref={customHooks.topTagBar}
+        style={{
+          height: "80px",
+        }}
+      ></div>
       <div class="m-2">
         <FontAwesomeIcon icon={fasStar} />
         <span>
@@ -150,9 +145,10 @@ const TagBar = ({ customHooks }) => {
       <div class="mb-2">{showTagFavoriteList}</div>
       <hr />
       <input
-        class="m-2 px-2 rounded-2xl text-gray-600"
+        class="m-2 px-2 rounded-2xl border text-gray-600"
         style={{
           width: "80%",
+          borderColor: "#2C272E",
         }}
         type="text"
         value={customHooks.searchTag}
@@ -173,10 +169,10 @@ const TagBar = ({ customHooks }) => {
                 class="m-1 p-1 border rounded-2xl text-sm"
                 style={{
                   width: "40px",
-                  borderColor: `${customHooks.textColor}`,
-                  backgroundColor: `${customHooks.color}`,
+                  borderColor: "#2C272E",
+                  // backgroundColor: `${customHooks.textColor}`,
                   fontSize: "12px",
-                  color: `${customHooks.textColor}`,
+                  color: "#2C272E",
                   transition: "0.5s",
                 }}
                 onClick={() => {

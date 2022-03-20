@@ -6,7 +6,6 @@ import "./Main.css";
 import SideBar from "./SideBar";
 import "./App.css";
 import { createTheme } from "@mui/material/styles";
-import { ThemeProvider } from "@mui/material/styles";
 import {
   RecoilRoot,
   atom,
@@ -180,6 +179,7 @@ const useCustomHooks = () => {
   // SideBar state
   const [sideBarMode, setSideBarMode] = useState("");
   const [selectedPostIds, setSelectedPostIds] = useState([]);
+  const [sideBarTabValue, setSideBarTabValue] = useState(0);
 
   // useEffect
   useEffect(() => {
@@ -202,7 +202,7 @@ const useCustomHooks = () => {
         setFormDisplay("80%");
       }
     } else {
-      setFormDisplay("0px");
+      setFormDisplay("20px");
     }
   }, [formMode, inputCategory, selectedPostIds]); // formMode true 시 form height 200px
 
@@ -394,6 +394,8 @@ const useCustomHooks = () => {
     tabValue,
     setTabValue,
     theme,
+    sideBarTabValue,
+    setSideBarTabValue,
   };
 };
 
