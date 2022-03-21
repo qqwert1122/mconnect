@@ -49,7 +49,7 @@ const Header = ({ customHooks }) => {
     >
       <div class="flex items-center">
         {/* <img class="h-12 mx-6" src="img/logo_connect_ver2.png" /> */}
-        <span class="mx-6">
+        <span class="app__logo mx-6">
           <b>App Logo</b>
         </span>
       </div>
@@ -65,7 +65,7 @@ const Header = ({ customHooks }) => {
               marginRight: "8px",
             }}
           />
-          <span style={{ fontSize: "0.8rem" }}>
+          <span class="avatar__id" style={{ fontSize: "0.8rem" }}>
             <b>abcd1234</b>
           </span>
         </div>

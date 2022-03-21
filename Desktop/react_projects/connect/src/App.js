@@ -169,7 +169,7 @@ const useCustomHooks = () => {
   const [showingPostIds, setShowingPostIds] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteSnackBarOpen, setDeleteSnackBarOpen] = useState(false);
-
+  const [formErrorSnackBarOpen, setFormErrorSnackBarOpen] = useState(false);
   // TagBar state
   const [tagList, setTagList] = useRecoilState(tagAtom); // posts에서 tagList 따오기
   const [searchTag, setSearchTag] = useState(""); // tag search한 input 값
@@ -196,13 +196,9 @@ const useCustomHooks = () => {
 
   useEffect(() => {
     if (formMode) {
-      if (selectedPostIds.length === 0 || inputCategory === 0) {
-        setFormDisplay("200px");
-      } else {
-        setFormDisplay("80%");
-      }
+      setFormDisplay("200px");
     } else {
-      setFormDisplay("20px");
+      setFormDisplay("1.5rem");
     }
   }, [formMode, inputCategory, selectedPostIds]); // formMode true 시 form height 200px
 
@@ -396,6 +392,8 @@ const useCustomHooks = () => {
     theme,
     sideBarTabValue,
     setSideBarTabValue,
+    formErrorSnackBarOpen,
+    setFormErrorSnackBarOpen,
   };
 };
 
@@ -407,13 +405,13 @@ const App = () => {
       style={{
         height: "100%",
         width: "100%",
-        backgroundColor: `${customHooks.color}`,
+        backgroundColor: "#ffffff",
         transition: "0.5s",
       }}
     >
       <Header customHooks={customHooks} />
       {/* TagBar, Main, SideBar flex-row로 놓을 자리 */}
-      <div class="flex">
+      <div class="flex justify-center">
         <CategoryBar customHooks={customHooks} />
         <TagBar customHooks={customHooks} />
         <Main customHooks={customHooks} />

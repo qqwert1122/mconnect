@@ -7,17 +7,18 @@
   transition: 0.5s;
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1100px) {
   .sidebar {
     display: none;
   }
 }
 
 .selectedposts__box {
+  overflow: auto;
   width: 210px;
   max-width: 210px;
-  height: 400px;
-  max-height: ;
+  height: calc(100vh-130px);
+  max-height: calc(100vh-130px);
 }
 
 .selectedposts {

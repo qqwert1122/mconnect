@@ -236,7 +236,7 @@ const SideBar = ({ customHooks }) => {
               customHooks.setFormMode(!customHooks.formMode);
             }}
           >
-            <Tooltip title="Connect Memos : Combine two or more notes to find new ideas.">
+            <Tooltip title="Combine two or more notes to find new ideas.">
               <IconButton
                 style={{
                   color: "white",

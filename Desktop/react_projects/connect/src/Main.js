@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Alert from "@mui/material/Alert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHashtag,
@@ -50,7 +51,7 @@ const Main = ({ customHooks }) => {
     form.inputText.value = form.inputText.value.trim();
 
     if (form.inputText.value.trim().length == 0) {
-      alert("내용을 입력해주세요.");
+      customHooks.setFormErrorSnackBarOpen(true);
       form.inputText.focus();
       return;
     }
@@ -83,10 +84,11 @@ const Main = ({ customHooks }) => {
     customHooks.setSelectedPostIds([]);
     customHooks.setFormMode(!customHooks.formMode);
   };
-  function handleClick(event) {
-    event.preventDefault();
-    console.info("You clicked a breadcrumb.");
-  }
+
+  // function handleClick(event) {
+  //   event.preventDefault();
+  //   console.info("You clicked a breadcrumb.");
+  // }
 
   const handleDeleteSnackBarClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -94,6 +96,14 @@ const Main = ({ customHooks }) => {
     }
 
     customHooks.setDeleteSnackBarOpen(false);
+  };
+
+  const handleFormErrorSnackBarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    customHooks.setFormErrorSnackBarOpen(false);
   };
 
   // JSX
@@ -169,7 +179,7 @@ const Main = ({ customHooks }) => {
         </div>
       ) : (
         // showingPosts
-        <div class="main__box flex flex-wrap ">
+        <div class="main__box flex flex-wrap">
           {customHooks.posts
             .filter((fPost) =>
               customHooks.showingPostIds.includes(fPost.postId)
@@ -177,7 +187,7 @@ const Main = ({ customHooks }) => {
             .map((mPost) => (
               // total layout
               <div
-                class="main__post borderShadow flex my-3 p-2 rounded-3xl"
+                class="main__post borderShadow flex mb-5 p-2 rounded-3xl"
                 style={{
                   color: `${
                     customHooks.selectedPostIds.some(
@@ -428,6 +438,13 @@ const Main = ({ customHooks }) => {
         message="글이 삭제되었습니다"
         action={deleteSnackBarAction}
       />
+      <Snackbar
+        open={customHooks.formErrorSnackBarOpen}
+        autoHideDuration={3000}
+        onClose={handleFormErrorSnackBarClose}
+        message="내용을 입력하세요"
+        sx={{ color: "red" }}
+      />
     </li>
   );
 
@@ -436,6 +453,9 @@ const Main = ({ customHooks }) => {
       class="main flex-col flex-wrap rounded-tl-3xl"
       style={{
         color: `${customHooks.color}`,
+        paddingBottom: `${
+          customHooks.formMode ? customHooks.formDisplay : "20px"
+        }`,
       }}
     >
       <div ref={customHooks.topMain}></div>
@@ -623,19 +643,15 @@ const Main = ({ customHooks }) => {
 
       {/* form */}
       <div
-        class="formBox absolute rounded-t-3xl"
+        class="formBox rounded-t-3xl"
         style={{
           height: `${customHooks.formDisplay}`,
+          // minHeight: `${customHooks.formDisplay}`,
           color: `${customHooks.textColor}`,
           backgroundColor: `${customHooks.color}`,
         }}
       >
-        <div
-          class="flex justify-center items-center"
-          style={{
-            height: "18px",
-          }}
-        >
+        <div class="flex justify-center items-center">
           <button
             onClick={() => {
               customHooks.setFormMode(!customHooks.formMode);
@@ -648,230 +664,227 @@ const Main = ({ customHooks }) => {
             )}
           </button>
         </div>
-        <article class="flex-col p-2 ">
-          <form onSubmit={onSubmit}>
-            <div class="flex items-center">
-              {/* 카테고리 */}
-              <span class="mx-2 ">
-                {customHooks.inputCategory === 3 ? (
-                  <FontAwesomeIcon icon={faDiceD6} />
-                ) : customHooks.inputCategory === 2 ? (
-                  <FontAwesomeIcon icon={faSquare} size="xs" />
-                ) : customHooks.inputCategory === 1 ? (
-                  <FontAwesomeIcon icon={faMinus} />
-                ) : (
-                  <FontAwesomeIcon icon={faCircle} size="2xs" />
-                )}
-              </span>
-              {/* 텍스트 */}
-              <textarea
-                class="p-2 rounded-xl"
-                style={{
-                  height: `${
-                    customHooks.formDisplay == "200px" ? "83px" : "300px"
-                  }`,
-                  width: "500px",
-                  backgroundColor: `${customHooks.textColor}`,
-                  color: `${customHooks.color}`,
-                }}
-                name="inputText"
-                value={customHooks.inputContent}
-                onChange={(e) => {
-                  customHooks.setInputContent(e.target.value);
-                }}
-                autoComplete="off"
-              />
 
-              {/* 제출 버튼 */}
-              <button class="mx-4" type="submit">
-                <FontAwesomeIcon icon={faCircleChevronUp} size="xl" />
-              </button>
-            </div>
-
-            {/* source */}
-            <span class="mt-2" style={{ width: "530px" }}>
-              <span class="mx-2">
-                <FontAwesomeIcon icon={faQuoteLeft} />
-              </span>
-              <input
-                class="rounded-xl px-2"
-                style={{
-                  width: "500px",
-                  fontSize: "12px",
-                  color: `${customHooks.color}`,
-                  backgroundColor: `${customHooks.textColor}`,
-                }}
-                name="inputSource"
-                placeholder="출처 입력 (책/URL/강사 등)"
-                value={customHooks.inputSource}
-                onChange={(e) => {
-                  customHooks.setInputSource(e.target.value);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                  }
-                }}
-                autoComplete="off"
-              />
+        <form class="flex-col p-2" onSubmit={onSubmit}>
+          <div class="flex items-center">
+            {/* 카테고리 */}
+            <span class="mx-2 ">
+              {customHooks.inputCategory === 3 ? (
+                <FontAwesomeIcon icon={faDiceD6} />
+              ) : customHooks.inputCategory === 2 ? (
+                <FontAwesomeIcon icon={faSquare} size="xs" />
+              ) : customHooks.inputCategory === 1 ? (
+                <FontAwesomeIcon icon={faMinus} />
+              ) : (
+                <FontAwesomeIcon icon={faCircle} size="2xs" />
+              )}
             </span>
-            <span class="relative">
-              <button
-                class="px-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  customHooks.setInputLike(!customHooks.inputLike);
-                }}
-              >
-                {customHooks.inputLike ? (
-                  <FontAwesomeIcon icon={fasHeart} />
-                ) : (
-                  <FontAwesomeIcon icon={farHeart} />
-                )}
-              </button>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  customHooks.setInputBookmark(!customHooks.inputBookmark);
-                }}
-              >
-                {customHooks.inputBookmark ? (
-                  <FontAwesomeIcon icon={fasBookmark} />
-                ) : (
-                  <FontAwesomeIcon icon={farBookmark} />
-                )}
-              </button>
-            </span>
+            {/* 텍스트 */}
+            <textarea
+              class="p-2 rounded-xl"
+              style={{
+                height: "100px",
+                width: "80%",
+                backgroundColor: `${customHooks.textColor}`,
+                color: `${customHooks.color}`,
+              }}
+              name="inputText"
+              value={customHooks.inputContent}
+              onChange={(e) => {
+                customHooks.setInputContent(e.target.value);
+              }}
+              autoComplete="off"
+            />
 
-            {/* 태그 */}
-            <div class="" style={{ width: "550px" }}>
-              <span class="mx-2">
-                <FontAwesomeIcon icon={faHashtag} />
-              </span>
-              <span
-                class="mt-1"
-                style={{
-                  bottom: "0px",
-                }}
-              >
-                {/* input Tag List */}
-                <span>
-                  {customHooks.inputTagList.map((mTag, mIndex) => (
-                    <button
-                      class="mr-2 pr-1 rounded-xl border"
-                      style={{
-                        fontSize: "12px",
-                        backgroundColor: `${customHooks.color}`,
-                        color: `${customHooks.textColor}`,
-                        borderColor: `${customHooks.textColor}`,
-                        transition: "0.5s",
-                      }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        customHooks.setInputTagList(
-                          customHooks.inputTagList.filter(
-                            (fTag, fIndex) => fTag != mTag
-                          )
-                        );
-                      }}
-                    >
-                      {mTag}
-                    </button>
-                  ))}
-                </span>
-                {/* tag 입력 시 입력 내용이 포함된 tag List 보여줌 */}
-                <span class="relative">
-                  <span
-                    class="absolute rounded-lg px-2"
+            {/* 제출 버튼 */}
+            <button class="mx-4" type="submit">
+              <FontAwesomeIcon icon={faCircleChevronUp} size="xl" />
+            </button>
+          </div>
+
+          {/* source */}
+          <span class="mt-2" style={{ width: "80%" }}>
+            <span class="mx-2">
+              <FontAwesomeIcon icon={faQuoteLeft} />
+            </span>
+            <input
+              class="rounded-xl px-2"
+              style={{
+                width: "70%",
+                fontSize: "12px",
+                color: `${customHooks.color}`,
+                backgroundColor: `${customHooks.textColor}`,
+              }}
+              name="inputSource"
+              placeholder="출처 입력 (type: 링크, 책, 논문 등)"
+              value={customHooks.inputSource}
+              onChange={(e) => {
+                customHooks.setInputSource(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                }
+              }}
+              autoComplete="off"
+            />
+          </span>
+          <span class="relative">
+            <button
+              class="px-2"
+              onClick={(e) => {
+                e.preventDefault();
+                customHooks.setInputLike(!customHooks.inputLike);
+              }}
+            >
+              {customHooks.inputLike ? (
+                <FontAwesomeIcon icon={fasHeart} />
+              ) : (
+                <FontAwesomeIcon icon={farHeart} />
+              )}
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                customHooks.setInputBookmark(!customHooks.inputBookmark);
+              }}
+            >
+              {customHooks.inputBookmark ? (
+                <FontAwesomeIcon icon={fasBookmark} />
+              ) : (
+                <FontAwesomeIcon icon={farBookmark} />
+              )}
+            </button>
+          </span>
+
+          {/* 태그 */}
+          <div class="flex-nowrap overflow-y-auto" style={{ width: "90%" }}>
+            <span class="mx-2">
+              <FontAwesomeIcon icon={faHashtag} />
+            </span>
+            <span
+              class="mt-1"
+              style={{
+                bottom: "0px",
+              }}
+            >
+              {/* input Tag List */}
+              <span>
+                {customHooks.inputTagList.map((mTag, mIndex) => (
+                  <button
+                    class="mr-2 pr-1 rounded-xl border"
                     style={{
-                      maxHeight: "90px",
-                      width: "100px",
-                      overflow: "auto",
-                      bottom: "20px",
-                      transition: "0.5s",
                       fontSize: "12px",
-                      color: "black",
-                      backgroundColor: "#EEEEEE",
+                      backgroundColor: `${customHooks.color}`,
+                      color: `${customHooks.textColor}`,
+                      borderColor: `${customHooks.textColor}`,
+                      transition: "0.5s",
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      customHooks.setInputTagList(
+                        customHooks.inputTagList.filter(
+                          (fTag, fIndex) => fTag != mTag
+                        )
+                      );
                     }}
                   >
-                    {customHooks.inputTag.length == 0 ? (
-                      <div></div>
-                    ) : (
-                      <div>
-                        {customHooks.tagList
-                          .filter((fTag) => fTag.includes(customHooks.inputTag))
-                          .map((mTag, mIndex) => (
-                            <div>
-                              <button
-                                id="tagListHover"
-                                class="flex w-full justify-items-start"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  if (customHooks.inputTagList.includes(mTag)) {
-                                    customHooks.setInputTag("");
-                                  } else {
-                                    customHooks.setInputTagList([
-                                      ...customHooks.inputTagList,
-                                      mTag,
-                                    ]);
-                                    customHooks.setInputTag("");
-                                  }
-                                }}
-                              >
-                                {mTag}
-                              </button>
-                            </div>
-                          ))}
-                      </div>
-                    )}
-                  </span>
+                    {mTag}
+                  </button>
+                ))}
+              </span>
+              {/* tag 입력 시 입력 내용이 포함된 tag List 보여줌 */}
+              <span class="relative">
+                <span
+                  class="absolute rounded-lg px-2"
+                  style={{
+                    maxHeight: "90px",
+                    width: "100px",
+                    overflow: "auto",
+                    bottom: "20px",
+                    transition: "0.5s",
+                    fontSize: "12px",
+                    color: "black",
+                    backgroundColor: "#EEEEEE",
+                  }}
+                >
+                  {customHooks.inputTag.length == 0 ? (
+                    <div></div>
+                  ) : (
+                    <div>
+                      {customHooks.tagList
+                        .filter((fTag) => fTag.includes(customHooks.inputTag))
+                        .map((mTag, mIndex) => (
+                          <div>
+                            <button
+                              id="tagListHover"
+                              class="flex w-full justify-items-start"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (customHooks.inputTagList.includes(mTag)) {
+                                  customHooks.setInputTag("");
+                                } else {
+                                  customHooks.setInputTagList([
+                                    ...customHooks.inputTagList,
+                                    mTag,
+                                  ]);
+                                  customHooks.setInputTag("");
+                                }
+                              }}
+                            >
+                              {mTag}
+                            </button>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </span>
 
-                  {/* tag 입력 input */}
-                  <input
-                    class="absolute rounded-xl px-2"
-                    style={{
-                      width: "100px",
-                      bottom: "0px",
-                      fontSize: "12px",
-                      color: `${customHooks.color}`,
-                      backgroundColor: `${customHooks.textColor}`,
-                    }}
-                    name="inputTag"
-                    placeholder="tag 입력 (Enter)"
-                    value={customHooks.inputTag}
-                    onChange={(e) => {
-                      customHooks.setInputTag(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Process") {
+                {/* tag 입력 input */}
+                <input
+                  class="absolute rounded-xl px-2"
+                  style={{
+                    width: "100px",
+                    bottom: "0px",
+                    fontSize: "12px",
+                    color: `${customHooks.color}`,
+                    backgroundColor: `${customHooks.textColor}`,
+                  }}
+                  name="inputTag"
+                  placeholder="tag 입력 (Enter)"
+                  value={customHooks.inputTag}
+                  onChange={(e) => {
+                    customHooks.setInputTag(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Process") {
+                      return;
+                    }
+
+                    if (e.code === "Enter") {
+                      if (e.target.value.trim().length == 0) {
+                        e.preventDefault();
                         return;
                       }
 
-                      if (e.code === "Enter") {
-                        if (e.target.value.trim().length == 0) {
-                          e.preventDefault();
-                          return;
-                        }
-
-                        e.preventDefault();
-                        if (customHooks.inputTagList.includes(e.target.value)) {
-                          customHooks.setInputTag("");
-                        } else {
-                          customHooks.setInputTagList([
-                            ...customHooks.inputTagList,
-                            e.target.value,
-                          ]);
-                          customHooks.setInputTag("");
-                        }
+                      e.preventDefault();
+                      if (customHooks.inputTagList.includes(e.target.value)) {
+                        customHooks.setInputTag("");
+                      } else {
+                        customHooks.setInputTagList([
+                          ...customHooks.inputTagList,
+                          e.target.value,
+                        ]);
+                        customHooks.setInputTag("");
                       }
-                    }}
-                    autoComplete="off"
-                  />
-                </span>
+                    }
+                  }}
+                  autoComplete="off"
+                />
               </span>
-            </div>
-          </form>
-        </article>
+            </span>
+          </div>
+        </form>
       </div>
     </div>
   );

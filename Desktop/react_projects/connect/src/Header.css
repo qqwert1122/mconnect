@@ -13,6 +13,12 @@
     5px -8px 4px rgba(191, 255, 0, 1), 5px -16px 5px rgba(191, 255, 0, 1);
 }
 
+@media screen and (max-width: 400px) {
+  .avatar__id {
+    display: none;
+  }
+}
+
 .colorPicker__button {
   box-sizing: box-border;
   margin-right: 1rem;

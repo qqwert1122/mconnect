@@ -9,6 +9,8 @@ import {
 import { faStar as farStar } from "@fortawesome/free-regular-svg-icons";
 
 const TagBar = ({ customHooks }) => {
+  const browserWidth = window.innerWidth;
+
   const tagListItem = (mTag) => {
     return (
       <button
@@ -164,7 +166,7 @@ const TagBar = ({ customHooks }) => {
           {customHooks.tagList.length === 0 ? (
             <div></div>
           ) : (
-            <div>
+            <div style={{ paddingBottom: "40px" }}>
               <button
                 class="m-1 p-1 border rounded-2xl text-sm"
                 style={{
@@ -188,26 +190,28 @@ const TagBar = ({ customHooks }) => {
       ) : (
         <div>{showSearchTagList}</div>
       )}
-
-      <button
-        class="fixed border p-1"
-        style={{
-          width: "35px",
-          height: "35px",
-          bottom: "10px",
-          left: "200px",
-          borderRadius: "100%",
-          boxShadow: "0 0 5px grey",
-          backgroundColor: `${customHooks.color}`,
-          color: `${customHooks.textColor}`,
-          transition: "0.5s",
-        }}
-        onClick={() => {
-          customHooks.topTagBar.current?.scrollIntoView({ behavior: "smooth" });
-        }}
-      >
-        <FontAwesomeIcon icon={faCaretUp} />
-      </button>
+      <div class="flex justify-end">
+        <button
+          class="fixed border p-1"
+          style={{
+            width: "35px",
+            height: "35px",
+            bottom: "10px",
+            borderRadius: "100%",
+            boxShadow: "0 0 5px grey",
+            backgroundColor: `${customHooks.color}`,
+            color: `${customHooks.textColor}`,
+            transition: "0.5s",
+          }}
+          onClick={() => {
+            customHooks.topTagBar.current?.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+        >
+          <FontAwesomeIcon icon={faCaretUp} />
+        </button>
+      </div>
     </div>
   );
 };

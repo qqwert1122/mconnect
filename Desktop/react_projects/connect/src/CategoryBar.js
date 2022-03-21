@@ -21,7 +21,7 @@ const CategoryBar = ({ customHooks }) => {
 
   return (
     <div
-      class="categorybar flex justify-between"
+      class="categorybar flex "
       style={{
         color: "#2C272E",
         // backgroundColor: `${customHooks.color}`,
