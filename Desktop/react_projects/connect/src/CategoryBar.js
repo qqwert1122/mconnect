@@ -40,14 +40,14 @@ const CategoryBar = ({ customHooks }) => {
           <Tab
             icon={
               // <Badge badgeContent={"new"} color="secondary">
-              <FontAwesomeIcon icon={faA} size="" />
+              <FontAwesomeIcon icon={faA} size="xl" />
               // </Badge>
             }
           />
-          <Tab icon={<FontAwesomeIcon icon={faCircle} size="2xs" />} />
-          <Tab icon={<FontAwesomeIcon icon={faMinus} />} />
-          <Tab icon={<FontAwesomeIcon icon={faSquare} size="xs" />} />
-          <Tab icon={<FontAwesomeIcon icon={faDiceD6} />} />
+          <Tab icon={<FontAwesomeIcon icon={faCircle} size="lg" />} />
+          <Tab icon={<FontAwesomeIcon icon={faMinus} size="2xl" />} />
+          <Tab icon={<FontAwesomeIcon icon={faSquare} size="lg" />} />
+          <Tab icon={<FontAwesomeIcon icon={faDiceD6} size="xl" />} />
         </Tabs>
       </ThemeProvider>
     </div>

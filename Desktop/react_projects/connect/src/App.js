@@ -71,7 +71,7 @@ const postsAtom = atom({
       tags: ["경제", "경영"],
       like: false,
       bookmark: false,
-      connectedPostIds: [],
+      connectedPostIds: [2, 3],
     },
     {
       postId: 2,
@@ -148,6 +148,8 @@ const useCustomHooks = () => {
   const [tempoPost, setTempoPost] = useState([]); // Dialog에서 post 삭제 구현하기 위한 post 값 임시저장
   const topMain = useRef(); // Main 상단으로 부드럽게 이동
   const topTagBar = useRef(); // TagBar 상단으로 부드럽게 이동
+  const tagBarLayout = useRef();
+  const MainLayout = useRef();
 
   // Header
   const [tabValue, setTabValue] = useState(0);
@@ -170,6 +172,8 @@ const useCustomHooks = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteSnackBarOpen, setDeleteSnackBarOpen] = useState(false);
   const [formErrorSnackBarOpen, setFormErrorSnackBarOpen] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+
   // TagBar state
   const [tagList, setTagList] = useRecoilState(tagAtom); // posts에서 tagList 따오기
   const [searchTag, setSearchTag] = useState(""); // tag search한 input 값
@@ -180,6 +184,7 @@ const useCustomHooks = () => {
   const [sideBarMode, setSideBarMode] = useState("");
   const [selectedPostIds, setSelectedPostIds] = useState([]);
   const [sideBarTabValue, setSideBarTabValue] = useState(0);
+  const [lastSelectedPostId, setLastSelectedPostId] = useState(0);
 
   // useEffect
   useEffect(() => {
@@ -231,7 +236,6 @@ const useCustomHooks = () => {
     setTagList(tempoTagList);
     setShowingPostIds(posts.map((mPost) => mPost.postId));
     setSelectedPostIds(
-      // selectedPostIds.filter((fPost, fIndex) => posts.includes(fPost))
       posts
         .filter((fPost) => selectedPostIds.includes(fPost.postId))
         .map((mPost) => mPost.postId)
@@ -394,6 +398,12 @@ const useCustomHooks = () => {
     setSideBarTabValue,
     formErrorSnackBarOpen,
     setFormErrorSnackBarOpen,
+    activeStep,
+    setActiveStep,
+    lastSelectedPostId,
+    setLastSelectedPostId,
+    tagBarLayout,
+    MainLayout,
   };
 };
 

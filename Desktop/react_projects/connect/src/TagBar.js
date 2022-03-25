@@ -124,6 +124,7 @@ const TagBar = ({ customHooks }) => {
 
   return (
     <div
+      ref={customHooks.tagBarLayout}
       class="tagbar p-1 flex-wrap"
       style={{
         // backgroundColor: `${customHooks.color}`,
@@ -207,6 +208,8 @@ const TagBar = ({ customHooks }) => {
             customHooks.topTagBar.current?.scrollIntoView({
               behavior: "smooth",
             });
+            // console.log(customHooks.mainLayout.current.scrollHeight);
+            // console.log(customHooks.TagBarLayout.current.scrollHeight);
           }}
         >
           <FontAwesomeIcon icon={faCaretUp} />
