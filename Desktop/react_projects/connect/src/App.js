@@ -6,25 +6,24 @@ import "./Main.css";
 import SideBar from "./SideBar";
 import "./App.css";
 import { createTheme } from "@mui/material/styles";
-import {
-  RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-} from "recoil";
-import {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  Fragment,
-  useCallback,
-} from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import moment from "moment";
+import Moment from "react-moment";
+import "moment/locale/ko";
+import { RecoilRoot, atom, useRecoilState } from "recoil";
+import { useState, useRef, useEffect, Fragment } from "react";
 import { recoilPersist } from "recoil-persist";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
+import { selectClasses } from "@mui/material";
 
 const { persistAtom } = recoilPersist();
 
@@ -66,45 +65,51 @@ const postsAtom = atom({
       postId: 1,
       category: 0,
       title: "",
-      text: "대규모 경제조직에서 CEO의 중요성은 10~14%에 불과하다",
+      content: "대규모 경제조직에서 CEO의 중요성은 10~14%에 불과하다",
       source: "",
       tags: ["경제", "경영"],
       like: false,
       bookmark: false,
       connectedPostIds: [2, 3],
+      time: "2022-02-17T13:24:00",
     },
     {
       postId: 2,
       category: 0,
       title: "",
-      text: "거래량 없이 갭상승, 갭하락이 있었다면 이는 세력 작품이다. 이 갭은 곧 메워질 가능성이 크다",
+      content:
+        "거래량 없이 갭상승, 갭하락이 있었다면 이는 세력 작품이다. 이 갭은 곧 메워질 가능성이 크다",
       source: "네이버 블로그",
       tags: ["주식", "차트", "기술적분석"],
       like: false,
       bookmark: true,
       connectedPostIds: [],
+      time: "2022-02-20T23:59:13",
     },
     {
       postId: 3,
       category: 0,
       title: "",
-      text: "비트코인 10개 미만 소유자가 전체 공급량의 13.9%나 차지한다",
+      content: "비트코인 10개 미만 소유자가 전체 공급량의 13.9%나 차지한다",
       source: "네이버 블로그",
       tags: ["암호화폐", "비트코인", "온체인데이터"],
       like: true,
       bookmark: true,
       connectedPostIds: [],
+      time: "2022-02-27T17:30:38",
     },
     {
       postId: 4,
       category: 0,
       title: "",
-      text: "현재 국제유가는 배럴당 130달러이다. 러시아 원유 금수조치가 내려질 경우 배럴당 200달러까지 상승이 전망된다.",
+      content:
+        "현재 국제유가는 배럴당 130달러이다. 러시아 원유 금수조치가 내려질 경우 배럴당 200달러까지 상승이 전망된다.",
       source: "",
       tags: ["경제", "세계", "원자재", "러우크라이나 전쟁"],
       like: false,
       bookmark: true,
       connectedPostIds: [],
+      time: "2022-03-26T17:10:12",
     },
   ],
   effects_UNSTABLE: [persistAtom],
@@ -148,25 +153,12 @@ const useCustomHooks = () => {
   const [tempoPost, setTempoPost] = useState([]); // Dialog에서 post 삭제 구현하기 위한 post 값 임시저장
   const topMain = useRef(); // Main 상단으로 부드럽게 이동
   const topTagBar = useRef(); // TagBar 상단으로 부드럽게 이동
-  const tagBarLayout = useRef();
-  const MainLayout = useRef();
+  const [time, setTime] = useState(Date.now());
 
   // Header
   const [tabValue, setTabValue] = useState(0);
 
   // Main state
-  const [lastPostId, setLastPostId] = useRecoilState(lastPostIdAtom); // form post id
-  const [inputCategory, setInputCategory] = useState(0);
-  const [inputTitle, setInputTitle] = useState("");
-  const [inputContent, setInputContent] = useState(""); // form text
-  const [inputTag, setInputTag] = useState(""); // form tag
-  const [inputTagList, setInputTagList] = useState([]); // form tagList
-  const [inputSource, setInputSource] = useState(""); // form source
-  const [inputLike, setInputLike] = useState(false); // form like
-  const [inputBookmark, setInputBookmark] = useState(false); // form bookmark
-  const [inputConnectedPostId, setInputConnectedPostId] = useState([]);
-  const [formMode, setFormMode] = useState(false); // form Mode, click event => true/false
-  const [formDisplay, setFormDisplay] = useState(0); // form height
   const [filteringParameter, setFilteringParameter] = useState(""); // tag로 post Filter
   const [showingPostIds, setShowingPostIds] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -182,9 +174,22 @@ const useCustomHooks = () => {
 
   // SideBar state
   const [sideBarMode, setSideBarMode] = useState("");
+  const [formMode, setFormMode] = useState(false); // form Mode, click event => true/false
+  const [formState, setFormState] = useState("NEW"); // "NEW" : main faplus , "EDIT" : sidebar view or edit, "CONNECT" : selectedpostids > 1 => you can press the connect button
+  const [editMode, setEditMode] = useState(false);
   const [selectedPostIds, setSelectedPostIds] = useState([]);
   const [sideBarTabValue, setSideBarTabValue] = useState(0);
-  const [lastSelectedPostId, setLastSelectedPostId] = useState(0);
+
+  const [lastPostId, setLastPostId] = useRecoilState(lastPostIdAtom); // form post id
+  const [inputCategory, setInputCategory] = useState(0);
+  const [inputTitle, setInputTitle] = useState("");
+  const [inputContent, setInputContent] = useState(""); // form text
+  const [inputTag, setInputTag] = useState(""); // form tag
+  const [inputTagList, setInputTagList] = useState([]); // form tagList
+  const [inputSource, setInputSource] = useState(""); // form source
+  const [inputLike, setInputLike] = useState(false); // form like
+  const [inputBookmark, setInputBookmark] = useState(false); // form bookmark
+  const [inputConnectedPostIds, setInputConnectedPostIds] = useState([]);
 
   // useEffect
   useEffect(() => {
@@ -200,14 +205,18 @@ const useCustomHooks = () => {
   }, [colorPicker]); // colorPicker false 시 display : none
 
   useEffect(() => {
-    if (formMode) {
-      setFormDisplay("200px");
-    } else {
-      setFormDisplay("1.5rem");
+    switch (selectedPostIds.length) {
+      case 1:
+        setFormState("EDIT");
+        break;
+      case 0:
+        setFormState("NEW");
+        break;
+      default:
+        setFormState("CONNECT");
+        break;
     }
-  }, [formMode, inputCategory, selectedPostIds]); // formMode true 시 form height 200px
 
-  useEffect(() => {
     const newCategory = selectedPostIds
       .map((mId) => posts.findIndex((x) => x.postId === mId))
       .map((mIndex) => posts[mIndex].category)
@@ -215,12 +224,27 @@ const useCustomHooks = () => {
         return b - a;
       })[0];
 
-    if (newCategory === 3) {
-      return setInputCategory(3);
-    } else {
-      return setInputCategory(newCategory + 1);
+    switch (formState) {
+      case "NEW":
+        return setInputCategory(0);
+        setInputTitle("");
+        setInputContent("");
+        setInputTagList([]);
+        setInputSource("");
+        setInputLike(false);
+        setInputBookmark(false);
+        setInputConnectedPostIds([]);
+      case "EDIT":
+        return setInputCategory(newCategory);
+      case "CONNECT":
+        switch (newCategory) {
+          case 3:
+            return setInputCategory(3);
+          default:
+            return setInputCategory(newCategory + 1);
+        }
     }
-  }, [selectedPostIds]);
+  }, [selectedPostIds, formState]);
 
   useEffect(() => {
     const tempoTagList = [];
@@ -328,7 +352,91 @@ const useCustomHooks = () => {
     },
   });
 
+  const handleDeleteSnackBarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setDeleteSnackBarOpen(false);
+  };
+
   // JSX
+
+  const deleteSnackBarAction = (
+    <Fragment>
+      <Button
+        color="inherit"
+        size="small"
+        onClick={() => {
+          setPosts([...posts, tempoPost]);
+          handleDeleteSnackBarClose();
+        }}
+      >
+        <FontAwesomeIcon icon={faArrowRotateLeft} />
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleDeleteSnackBarClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Fragment>
+  );
+
+  const deleteDialog = (
+    <div>
+      {/* 삭제 버튼 누르면 나오는 대화상자 */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => {
+          setDeleteDialogOpen(false);
+        }}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"삭제 알림"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            id="alert-dialog-description"
+            style={{
+              fontSize: "12px",
+            }}
+          >
+            정말 글을 지우시겠다면 '삭제'를 눌러주세요.
+            <br />
+            삭제된 글은 한 달간 휴지통에 보관됩니다.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setDeleteDialogOpen(false);
+            }}
+            style={{
+              fontSize: "12px",
+            }}
+          >
+            취소
+          </Button>
+          <Button
+            onClick={() => {
+              setPosts(posts.filter((fPost, fIndex) => fPost != tempoPost));
+              setDeleteDialogOpen(false);
+              setDeleteSnackBarOpen(true);
+            }}
+            autoFocus
+            style={{
+              fontSize: "12px",
+            }}
+          >
+            삭제
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 
   return {
     colorPickerDisplay,
@@ -361,8 +469,6 @@ const useCustomHooks = () => {
     setInputBookmark,
     formMode,
     setFormMode,
-    formDisplay,
-    setFormDisplay,
     inputSource,
     setInputSource,
     tagFavoriteList,
@@ -389,8 +495,8 @@ const useCustomHooks = () => {
     setInputCategory,
     inputTitle,
     setInputTitle,
-    inputConnectedPostId,
-    setInputConnectedPostId,
+    inputConnectedPostIds,
+    setInputConnectedPostIds,
     tabValue,
     setTabValue,
     theme,
@@ -400,10 +506,15 @@ const useCustomHooks = () => {
     setFormErrorSnackBarOpen,
     activeStep,
     setActiveStep,
-    lastSelectedPostId,
-    setLastSelectedPostId,
-    tagBarLayout,
-    MainLayout,
+    deleteDialog,
+    deleteSnackBarAction,
+    handleDeleteSnackBarClose,
+    time,
+    setTime,
+    formState,
+    setFormState,
+    editMode,
+    setEditMode,
   };
 };
 

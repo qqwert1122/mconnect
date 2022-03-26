@@ -1,24 +1,17 @@
 .sidebar {
   overflow: scroll;
   boxsizing: border-box;
-  width: 300px;
-  min-width: 300px;
-  max-width: 300px;
+  width: 350px;
   height: 100vh;
-  margin-left: 30px;
-  padding-top: 80px;
+  margin-left: 10px;
+  padding-top: 100px;
   transition: 0.5s;
 }
 
-@media screen and (max-width: 1100px) {
-  .sidebar {
-    display: none;
-  }
+@media screen and (max-width: 600px) {
 }
 
 .selectedposts__box {
-  width: 210px;
-  max-width: 210px;
 }
 
 .selectedposts {

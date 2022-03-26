@@ -3,7 +3,7 @@
   max-width: 500px;
   min-width: 500px;
   height: 100vh;
-  padding-top: 80px;
+  padding-top: 100px;
   /* padding-bottom: 20px; */
   overflow: auto;
   background-color: #ffffff;
@@ -48,33 +48,21 @@
 }
 
 @media screen and (max-width: 700px) {
-  .main {
-    max-width: 80%;
-    min-width: 80%;
-  }
-  .formBox {
-    max-width: 80%;
-    min-width: 80%;
-  }
 }
 
 @media screen and (max-width: 450px) {
-  .main {
-    border-top-left-radius: 0;
-  }
-
-  .formBox {
-    width: 100vw;
-    height: 100vh;
-    bottom: 0;
-    padding-top: 50px;
-    box-shadow: unset;
-    border-radius: 0;
-    transition: 0.5s;
-  }
 }
 
 .borderShadow {
   box-shadow: 0 0px 1px rgba(0, 0, 0, 0.08), 0 0px 2px rgba(0, 0, 0, 0.12),
     0 0px 4px rgba(0, 0, 0, 0.16), 0 0px 8px rgba(0, 0, 0, 0.2);
+}
+
+#new__post__button {
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);
+  transition: 0.5s;
 }

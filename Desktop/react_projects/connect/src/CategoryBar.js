@@ -44,7 +44,7 @@ const CategoryBar = ({ customHooks }) => {
               // </Badge>
             }
           />
-          <Tab icon={<FontAwesomeIcon icon={faCircle} size="lg" />} />
+          <Tab icon={<FontAwesomeIcon icon={faCircle} size="" />} />
           <Tab icon={<FontAwesomeIcon icon={faMinus} size="2xl" />} />
           <Tab icon={<FontAwesomeIcon icon={faSquare} size="lg" />} />
           <Tab icon={<FontAwesomeIcon icon={faDiceD6} size="xl" />} />

@@ -1,14 +1,5 @@
 import "./Main.css";
-import { Fragment } from "react";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart as fasHeart,
@@ -20,23 +11,20 @@ import {
   faQuoteRight,
   faArrowRotateLeft,
   faDiceD6,
+  faCaretUp,
+  faCodePullRequest,
+  faCirclePlus,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faHeart as farHeart,
   faBookmark as farBookmark,
   faCircleXmark,
 } from "@fortawesome/free-regular-svg-icons";
+import Moment from "react-moment";
 
 const Main = ({ customHooks }) => {
   // function
-  const handleDeleteSnackBarClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    customHooks.setDeleteSnackBarOpen(false);
-  };
-
   const handleFormErrorSnackBarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -45,30 +33,23 @@ const Main = ({ customHooks }) => {
     customHooks.setFormErrorSnackBarOpen(false);
   };
 
-  // JSX
+  const displayCreatedAt = (mPost) => {
+    let startTime = new Date(mPost.time);
+    let nowTime = Date.now();
+    console.log(startTime);
+    console.log(nowTime);
+    if (parseInt(startTime - nowTime) > -60000) {
+      return <Moment format="방금 전">{startTime}</Moment>;
+    }
+    if (parseInt(startTime - nowTime) < -86400000) {
+      return <Moment format="YYYY. M. D. HH:MM">{startTime}</Moment>;
+    }
+    if (parseInt(startTime - nowTime) > -86400000) {
+      return <Moment fromNow>{startTime}</Moment>;
+    }
+  };
 
-  const deleteSnackBarAction = (
-    <Fragment>
-      <Button
-        color="inherit"
-        size="small"
-        onClick={() => {
-          customHooks.setPosts([...customHooks.posts, customHooks.tempoPost]);
-          handleDeleteSnackBarClose();
-        }}
-      >
-        <FontAwesomeIcon icon={faArrowRotateLeft} />
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleDeleteSnackBarClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </Fragment>
-  );
+  // JSX
 
   const postListing = (
     <li>
@@ -160,22 +141,28 @@ const Main = ({ customHooks }) => {
                                 (fPostId) => fPostId != mPost.postId
                               )
                             );
+                            if (customHooks.selectedPostIds.length === 1) {
+                              customHooks.setFormMode(false);
+                            }
                           } else {
                             customHooks.setSelectedPostIds([
                               ...customHooks.selectedPostIds,
                               mPost.postId,
                             ]);
-                            customHooks.setLastSelectedPostId(mPost.postId);
-                            console.log(
-                              customHooks.posts.find(
-                                (x) =>
-                                  x.postId === customHooks.lastSelectedPostId
-                              ).connectedPostIds.length
+                            customHooks.setFormMode(true);
+                            customHooks.setInputTitle(mPost.title);
+                            customHooks.setInputContent(mPost.content);
+                            customHooks.setInputTagList(mPost.tags);
+                            customHooks.setInputSource(mPost.source);
+                            customHooks.setInputLike(mPost.like);
+                            customHooks.setInputBookmark(mPost.bookmark);
+                            customHooks.connectedPostIds(
+                              mPost.connectedPostIds
                             );
                           }
                         }}
                       >
-                        {mPost.text}
+                        {mPost.content}
                       </button>
                       {/* source */}
                       <div
@@ -221,61 +208,6 @@ const Main = ({ customHooks }) => {
                     >
                       <FontAwesomeIcon icon={faCircleXmark} />
                     </button>
-                    {/* posts 삭제 버튼 누르면 나오는 대화상자 */}
-                    <Dialog
-                      open={customHooks.deleteDialogOpen}
-                      onClose={() => {
-                        customHooks.setDeleteDialogOpen(false);
-                      }}
-                      aria-labelledby="alert-dialog-title"
-                      aria-describedby="alert-dialog-description"
-                    >
-                      <DialogTitle id="alert-dialog-title">
-                        {"삭제 알림"}
-                      </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText
-                          id="alert-dialog-description"
-                          style={{
-                            fontSize: "12px",
-                          }}
-                        >
-                          정말 글을 지우시겠다면 '삭제'를 눌러주세요.
-                          <br />
-                          삭제된 글은 한 달간 휴지통에 보관됩니다.
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button
-                          onClick={() => {
-                            customHooks.setDeleteDialogOpen(false);
-                          }}
-                          style={{
-                            fontSize: "12px",
-                          }}
-                        >
-                          취소
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            customHooks.setPosts(
-                              customHooks.posts.filter(
-                                (fPost, fIndex) =>
-                                  fPost != customHooks.tempoPost
-                              )
-                            );
-                            customHooks.setDeleteDialogOpen(false);
-                            customHooks.setDeleteSnackBarOpen(true);
-                          }}
-                          autoFocus
-                          style={{
-                            fontSize: "12px",
-                          }}
-                        >
-                          삭제
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
                   </div>
                 </div>
 
@@ -336,20 +268,21 @@ const Main = ({ customHooks }) => {
                       right: "20px",
                     }}
                   >
-                    2022. 3. 25. 16:39
+                    {displayCreatedAt(mPost)}
                   </span>
                 </div>
               </div>
             ))}
         </div>
       )}
+      {customHooks.deleteDialog}
       {/* 대화상자에서 삭제 누르면 나오는 스낵바 */}
       <Snackbar
         open={customHooks.deleteSnackBarOpen}
         autoHideDuration={6000}
-        onClose={handleDeleteSnackBarClose}
+        onClose={customHooks.handleDeleteSnackBarClose}
         message="글이 삭제되었습니다"
-        action={deleteSnackBarAction}
+        action={customHooks.deleteSnackBarAction}
       />
       <Snackbar
         open={customHooks.formErrorSnackBarOpen}
@@ -362,43 +295,58 @@ const Main = ({ customHooks }) => {
   );
 
   return (
-    <div
-      ref={customHooks.mainLayout}
-      class="main flex-col flex-wrap rounded-tl-3xl"
-      style={{
-        color: `${customHooks.color}`,
-        paddingBottom: `${
-          customHooks.formMode ? customHooks.formDisplay : "20px"
-        }`,
-      }}
-    >
+    <div class="main flex-col flex-wrap">
       <div ref={customHooks.topMain}></div>
-      <ul>{postListing}</ul>
-
-      {/* form */}
-      {/* <div
-        class="formBox rounded-t-3xl"
+      <div
         style={{
-          height: `${customHooks.formDisplay}`,
-          // minHeight: `${customHooks.formDisplay}`,
-          color: `${customHooks.textColor}`,
-          backgroundColor: `${customHooks.color}`,
+          fontSize: "2rem",
+          marginBottom: "2rem",
+          marginLeft: "1rem",
         }}
       >
-        <div class="flex justify-center items-center">
-          <button
-            onClick={() => {
-              customHooks.setFormMode(!customHooks.formMode);
-            }}
-          >
-            {customHooks.formMode ? (
-              <FontAwesomeIcon icon={faAngleDown} />
-            ) : (
-              <FontAwesomeIcon icon={faAngleUp} />
-            )}
-          </button>
-        </div>
-      </div> */}
+        <b>
+          {customHooks.tabValue === 0 ? (
+            "All"
+          ) : customHooks.tabValue === 1 ? (
+            <FontAwesomeIcon icon={faCircle} size="xs" />
+          ) : customHooks.tabValue === 2 ? (
+            <FontAwesomeIcon icon={faMinus} />
+          ) : customHooks.tabValue === 3 ? (
+            <FontAwesomeIcon icon={faSquare} size="sm" />
+          ) : (
+            <FontAwesomeIcon icon={faDiceD6} />
+          )}
+        </b>
+      </div>
+      <ul>{postListing}</ul>
+      <div class="flex justify-end">
+        &nbsp;
+        <button
+          id="new__post__button"
+          class="fixed border p-1"
+          style={{
+            display: `${
+              customHooks.formMode || customHooks.selectedPostIds.length > 0
+                ? "none"
+                : "initial"
+            }`,
+            width: "35px",
+            height: "35px",
+            bottom: "10px",
+            borderRadius: "100%",
+            boxShadow: "0 0 2px grey",
+            backgroundColor: `${customHooks.color}`,
+            color: `${customHooks.textColor}`,
+            transition: "0.5s",
+          }}
+          onClick={() => {
+            customHooks.setFormMode(true);
+            customHooks.setFormState("NEW");
+          }}
+        >
+          <FontAwesomeIcon icon={faPlus} />
+        </button>
+      </div>
     </div>
   );
 };
