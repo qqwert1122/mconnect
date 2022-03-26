@@ -299,7 +299,7 @@ const Main = ({ customHooks }) => {
       <div ref={customHooks.topMain}></div>
       <div
         style={{
-          fontSize: "2rem",
+          fontSize: "1.8rem",
           marginBottom: "2rem",
           marginLeft: "1rem",
         }}

@@ -138,14 +138,21 @@ const TagBar = ({ customHooks }) => {
           height: "100px",
         }}
       ></div>
-      <div class="m-2">
-        <FontAwesomeIcon icon={fasStar} />
-        <span>
-          <b> Favorites</b>
-        </span>
-      </div>
-      <div class="mb-2">{showTagFavoriteList}</div>
-      <hr />
+      {customHooks.tagFavoriteList.length === 0 ? (
+        <div></div>
+      ) : (
+        <div>
+          <div class="m-2">
+            <FontAwesomeIcon icon={fasStar} />
+            <span>
+              <b> Favorites</b>
+            </span>
+          </div>
+          <div class="mb-2">{showTagFavoriteList}</div>
+          <hr />
+        </div>
+      )}
+
       <input
         class="m-2 px-2 rounded-2xl border text-gray-600"
         style={{

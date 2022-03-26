@@ -49,9 +49,45 @@ const Header = ({ customHooks }) => {
     >
       <div class="flex items-center">
         {/* <img class="h-12 mx-6" src="img/logo_connect_ver2.png" /> */}
-        <span class="app__logo mx-6">
+        <span
+          class="app__logo mx-6"
+          style={{
+            fontSize: "2rem",
+            fontWeight: "900",
+          }}
+        >
           <b>App Logo</b>
         </span>
+        <nav>
+          <ul
+            style={{
+              display: "flex",
+              fontSize: "1.5rem",
+              marginLeft: "3rem",
+            }}
+          >
+            <li>
+              <a class="nav__a mx-6" href="#">
+                Home
+              </a>
+            </li>
+            <li>
+              <a class="nav__a mx-6" href="#">
+                Private
+              </a>
+            </li>
+            <li>
+              <a class="nav__a mx-6" href="#">
+                Public
+              </a>
+            </li>
+            <li>
+              <a class="nav__a mx-6" href="#">
+                Lab
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
       <div class="flex items-center">
         <div class="flex items-center" style={{ marginRight: "16px" }}>

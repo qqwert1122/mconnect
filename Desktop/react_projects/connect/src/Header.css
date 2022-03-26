@@ -8,9 +8,7 @@
 }
 
 .app__logo {
-  text-shadow: 0x 0px 10px rgba(191, 255, 0, 1),
-    5px -2px 2px rgba(191, 255, 0, 1), 5px -4px 3px rgba(191, 255, 0, 1),
-    5px -8px 4px rgba(191, 255, 0, 1), 5px -16px 5px rgba(191, 255, 0, 1);
+  text-shadow: 0.1em 0.1em 0 hsl(120 50% 30%);
 }
 
 @media screen and (max-width: 400px) {
@@ -34,4 +32,46 @@
   right: 0;
   width: 120px;
   transition: 0.5s;
+}
+
+.nav__a {
+  display: inline-block;
+  position: relative;
+}
+
+.nav__a:before {
+  content: "";
+  position: absolute;
+  right: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: white;
+  transition: all 0.2s;
+}
+
+.nav__a:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: white;
+  transition: all 0.2s;
+}
+
+.nav__a:hover:before {
+  width: 50%;
+}
+
+.nav__a:hover:after {
+  width: 50%;
+}
+
+.nav__a:visited:before {
+  width: 50%;
+}
+.nav__a:visited:after {
+  width: 50%;
 }

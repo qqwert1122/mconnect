@@ -216,7 +216,9 @@ const useCustomHooks = () => {
         setFormState("CONNECT");
         break;
     }
+  }, [selectedPostIds]);
 
+  useEffect(() => {
     const newCategory = selectedPostIds
       .map((mId) => posts.findIndex((x) => x.postId === mId))
       .map((mIndex) => posts[mIndex].category)
@@ -227,13 +229,16 @@ const useCustomHooks = () => {
     switch (formState) {
       case "NEW":
         return setInputCategory(0);
-        setInputTitle("");
-        setInputContent("");
-        setInputTagList([]);
-        setInputSource("");
-        setInputLike(false);
-        setInputBookmark(false);
-        setInputConnectedPostIds([]);
+      // setInputTitle("");
+      // setInputContent("");
+      // setInputSource("");
+      // setInputTag("");
+      // setInputTagList([]);
+      // setInputLike(false);
+      // setInputBookmark(false);
+      // setSelectedPostIds([]);
+      // setFormMode(false);
+
       case "EDIT":
         return setInputCategory(newCategory);
       case "CONNECT":
@@ -244,7 +249,7 @@ const useCustomHooks = () => {
             return setInputCategory(newCategory + 1);
         }
     }
-  }, [selectedPostIds, formState]);
+  }, [formState]);
 
   useEffect(() => {
     const tempoTagList = [];
