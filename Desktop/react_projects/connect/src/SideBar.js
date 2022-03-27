@@ -25,6 +25,7 @@ import {
   faPenToSquare,
   faAngleRight,
   faAngleLeft,
+  faCircleNodes,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faHeart as farHeart,
@@ -76,6 +77,7 @@ const SideBar = ({ customHooks }) => {
     <div>
       {customHooks.selectedPostIds.length === 0 ? (
         <div
+          class="highlight"
           style={{
             fontSize: "1.8rem",
             marginBottom: "2rem",
@@ -87,6 +89,7 @@ const SideBar = ({ customHooks }) => {
       ) : customHooks.selectedPostIds.length === 1 ? (
         <div class="flex items-end" style={{ height: "80px" }}>
           <button
+            class={customHooks.editMode ? "" : "highlight"}
             style={{
               fontSize: `${customHooks.editMode ? "1.3rem" : "1.8rem"}`,
               marginBottom: "2rem",
@@ -117,6 +120,7 @@ const SideBar = ({ customHooks }) => {
             )}
           </button>
           <button
+            class={customHooks.editMode ? "highlight" : ""}
             style={{
               fontSize: `${customHooks.editMode ? "1.8rem" : "1.3rem"}`,
               marginBottom: "2rem",
@@ -133,6 +137,7 @@ const SideBar = ({ customHooks }) => {
         </div>
       ) : (
         <div
+          class="highlight"
           style={{
             fontSize: "1.8rem",
             marginBottom: "2rem",
@@ -172,7 +177,7 @@ const SideBar = ({ customHooks }) => {
               >
                 <FontAwesomeIcon icon={faCircleChevronLeft} size="xl" />
               </button>
-              {customHooks.selectedPostIds.length > 1 ? (
+              {customHooks.selectedPostIds.length != 1 ? (
                 <div></div>
               ) : (
                 <button
@@ -458,8 +463,11 @@ const SideBar = ({ customHooks }) => {
           </span>
         </form>
       ) : (
+        /* Connected Posts */
         <div>공사중</div>
       )}
+
+      {/* Posts to Connect */}
       {customHooks.selectedPostIds.length <= 1 ? (
         <div></div>
       ) : (
@@ -471,7 +479,11 @@ const SideBar = ({ customHooks }) => {
               marginLeft: "1rem",
             }}
           >
-            <b>Connected Posts</b>
+            <span class="text-yellow-300">
+              <FontAwesomeIcon icon={faCircleNodes} />
+            </span>
+            &nbsp;
+            <b class="highlight">Posts to connect</b>
           </div>
           <div class="selectedposts__box border-box flex-col flex-wrap justify-items-center items-center p-1 mb-10">
             {customHooks.posts
@@ -555,8 +567,6 @@ const SideBar = ({ customHooks }) => {
         class="sidebar flex-col p-1"
         style={{
           color: "#2C272E",
-          backgroundColor: "#ffffff",
-          // backgroundColor: `${customHooks.color}`,
         }}
       >
         {customHooks.formMode ? (

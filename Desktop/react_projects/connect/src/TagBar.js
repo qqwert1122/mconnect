@@ -126,9 +126,6 @@ const TagBar = ({ customHooks }) => {
     <div
       class="tagbar p-1 flex-wrap"
       style={{
-        // backgroundColor: `${customHooks.color}`,
-        backgroundColor: "#ffffff",
-        // color: `${customHooks.color}`,
         color: "#2C272E",
       }}
     >

@@ -24,8 +24,6 @@ const CategoryBar = ({ customHooks }) => {
       class="categorybar flex "
       style={{
         color: "#2C272E",
-        // backgroundColor: `${customHooks.color}`,
-        backgroundColor: "#FFFFFF",
       }}
     >
       <ThemeProvider theme={customHooks.theme}>

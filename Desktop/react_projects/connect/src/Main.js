@@ -80,7 +80,7 @@ const Main = ({ customHooks }) => {
               // total layout
               <div class="flex-col w-full mb-6 ">
                 <div
-                  class="main__post borderShadow flex p-2 rounded-3xl bg-green-200"
+                  class="main__post borderShadow flex p-2 rounded-3xl"
                   style={{
                     color: `${
                       customHooks.selectedPostIds.some(

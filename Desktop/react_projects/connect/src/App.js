@@ -207,12 +207,15 @@ const useCustomHooks = () => {
     switch (selectedPostIds.length) {
       case 1:
         setFormState("EDIT");
+        setEditMode(false);
         break;
       case 0:
         setFormState("NEW");
+        setEditMode(true);
         break;
       default:
         setFormState("CONNECT");
+        setEditMode(true);
         break;
     }
   }, [selectedPostIds]);
@@ -530,7 +533,6 @@ const App = () => {
       style={{
         height: "100%",
         width: "100%",
-        backgroundColor: "#ffffff",
         transition: "0.5s",
       }}
     >

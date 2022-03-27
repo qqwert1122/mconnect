@@ -30,3 +30,34 @@
   color: #eeeeee;
   background-color: #2c272e;
 }
+
+.highlight {
+  display: inline-block;
+  position: relative;
+}
+
+@keyframes highlighting {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.highlight:after {
+  animation-name: highlighting;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  content: "";
+  width: 0%;
+  height: 1rem;
+  display: inline-block;
+  background: #fff44f;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  transition: 0.2s all;
+}
