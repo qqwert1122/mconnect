@@ -10,6 +10,7 @@ import {
   faA,
 } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
+import { NavLink } from "react-router-dom";
 
 const Header = ({ customHooks }) => {
   const showColorPicker = (
@@ -49,44 +50,36 @@ const Header = ({ customHooks }) => {
     >
       <div class="flex items-center">
         {/* <img class="h-12 mx-6" src="img/logo_connect_ver2.png" /> */}
-        <span
-          class="app__logo mx-6"
-          style={{
-            fontSize: "2rem",
-            fontWeight: "900",
-          }}
-        >
-          <b>App Logo</b>
-        </span>
-        <nav>
-          <ul
+        <NavLink to="/homePage">
+          <span
+            class="app__logo mx-6"
             style={{
-              display: "flex",
-              fontSize: "1.5rem",
-              marginLeft: "3rem",
+              fontSize: "2rem",
+              fontWeight: "900",
             }}
           >
-            <li>
-              <a class="nav__a mx-6" href="#">
-                Home
-              </a>
-            </li>
-            <li>
-              <a class="nav__a mx-6" href="#">
-                Private
-              </a>
-            </li>
-            <li>
-              <a class="nav__a mx-6" href="#">
-                Public
-              </a>
-            </li>
-            <li>
-              <a class="nav__a mx-6" href="#">
-                Lab
-              </a>
-            </li>
-          </ul>
+            <b>App Logo</b>
+          </span>
+        </NavLink>
+        <nav
+          style={{
+            display: "flex",
+            fontSize: "1.5rem",
+            marginLeft: "3rem",
+          }}
+        >
+          <NavLink to="/home">
+            <span class="nav__a mx-6">Home</span>
+          </NavLink>
+          <NavLink to="/main">
+            <span class="nav__a mx-6">Main</span>
+          </NavLink>
+          <NavLink to="/public">
+            <span class="nav__a mx-6">Public</span>
+          </NavLink>
+          <NavLink to="/Lab">
+            <span class="nav__a mx-6">Lab</span>
+          </NavLink>
         </nav>
       </div>
       <div class="flex items-center">

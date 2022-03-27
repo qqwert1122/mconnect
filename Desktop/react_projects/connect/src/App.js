@@ -1,9 +1,9 @@
+import HomePage from "./HomePage";
+import MainPage from "./MainPage";
+import PublicPage from "./PublicPage";
+import LabPage from "./LabPage";
 import Header from "./Header";
-import CategoryBar from "./CategoryBar";
-import TagBar from "./TagBar";
-import Main from "./Main";
 import "./Main.css";
-import SideBar from "./SideBar";
 import "./App.css";
 import { createTheme } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -14,12 +14,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import moment from "moment";
-import Moment from "react-moment";
 import "moment/locale/ko";
 import { RecoilRoot, atom, useRecoilState } from "recoil";
 import { useState, useRef, useEffect, Fragment } from "react";
 import { recoilPersist } from "recoil-persist";
+import { Routes, Route, Link, Router, Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
@@ -537,12 +536,16 @@ const App = () => {
     >
       <Header customHooks={customHooks} />
       {/* TagBar, Main, SideBar flex-row로 놓을 자리 */}
-      <div class="flex justify-center">
-        <CategoryBar customHooks={customHooks} />
-        <TagBar customHooks={customHooks} />
-        <Main customHooks={customHooks} />
-        <SideBar customHooks={customHooks} />
-      </div>
+      <Routes class="flex justify-center">
+        <Route path="/home" element={<HomePage customHooks={customHooks} />} />
+        <Route path="/main" element={<MainPage customHooks={customHooks} />} />
+        <Route
+          path="/public"
+          element={<PublicPage customHooks={customHooks} />}
+        />
+        <Route path="/lab" element={<LabPage customHooks={customHooks} />} />
+        <Route path="*" element={<Navigate to="/home" />} />
+      </Routes>
     </div>
   );
 };
