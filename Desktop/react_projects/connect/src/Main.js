@@ -9,11 +9,7 @@ import {
   faMinus,
   faQuoteLeft,
   faQuoteRight,
-  faArrowRotateLeft,
   faDiceD6,
-  faCaretUp,
-  faCodePullRequest,
-  faCirclePlus,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -21,7 +17,6 @@ import {
   faBookmark as farBookmark,
   faCircleXmark,
 } from "@fortawesome/free-regular-svg-icons";
-import Moment from "react-moment";
 
 const Main = ({ customHooks }) => {
   // function
@@ -32,23 +27,6 @@ const Main = ({ customHooks }) => {
 
     customHooks.setFormErrorSnackBarOpen(false);
   };
-
-  const displayCreatedAt = (mPost) => {
-    let startTime = new Date(mPost.time);
-    let nowTime = Date.now();
-    console.log(startTime);
-    console.log(nowTime);
-    if (parseInt(startTime - nowTime) > -60000) {
-      return <Moment format="방금 전">{startTime}</Moment>;
-    }
-    if (parseInt(startTime - nowTime) < -86400000) {
-      return <Moment format="YYYY. M. D. HH:MM">{startTime}</Moment>;
-    }
-    if (parseInt(startTime - nowTime) > -86400000) {
-      return <Moment fromNow>{startTime}</Moment>;
-    }
-  };
-
   // JSX
 
   const postListing = (
@@ -156,7 +134,7 @@ const Main = ({ customHooks }) => {
                             customHooks.setInputSource(mPost.source);
                             customHooks.setInputLike(mPost.like);
                             customHooks.setInputBookmark(mPost.bookmark);
-                            customHooks.connectedPostIds(
+                            customHooks.setInputConnectedPostIds(
                               mPost.connectedPostIds
                             );
                           }
@@ -268,7 +246,7 @@ const Main = ({ customHooks }) => {
                       right: "20px",
                     }}
                   >
-                    {displayCreatedAt(mPost)}
+                    {customHooks.displayCreatedAt(mPost)}
                   </span>
                 </div>
               </div>

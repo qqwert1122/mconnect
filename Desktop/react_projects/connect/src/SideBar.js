@@ -5,11 +5,12 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import MobileStepper from "@mui/material/MobileStepper";
+import "moment/locale/ko";
+import Moment from "react-moment";
 import { CardActionArea, CardActions } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircle,
-  faCircleChevronUp,
   faCircleInfo,
   faDiceD6,
   faMinus,
@@ -458,13 +459,64 @@ const SideBar = ({ customHooks }) => {
                 right: "20px",
               }}
             >
-              2022. 3. 25. 19:09
+              {customHooks.selectedPostIds.length === 1 ? (
+                customHooks.displayCreatedAt(
+                  customHooks.posts.find(
+                    (x) => x.postId === customHooks.selectedPostIds[0]
+                  )
+                )
+              ) : (
+                <Moment locale="ko" format="YYYY. M. D. HH:MM">
+                  {Date.now()}
+                </Moment>
+              )}
             </span>
           </span>
         </form>
       ) : (
-        /* Connected Posts */
-        <div>공사중</div>
+        /* Connected Posts :: 어차피 selectedPostIds === 1, editMode 아닐때만 보여지는 것 */
+        <div>
+          <div class="flex justify-center mb-5 px-2">
+            {customHooks.inputConnectedPostIds.length === 0 ? (
+              <div>텅</div>
+            ) : (
+              <div>
+                {customHooks.inputConnectedPostIds.map((mId) => (
+                  <div class="flex">
+                    <div class="flex-col justify-center">
+                      <div class="text-gray-400">
+                        {customHooks.posts.find((x) => x.postId === mId)
+                          .category === 3 ? (
+                          <FontAwesomeIcon icon={faDiceD6} />
+                        ) : customHooks.posts.find((x) => x.postId === mId)
+                            .category === 2 ? (
+                          <FontAwesomeIcon icon={faSquare} size="xs" />
+                        ) : customHooks.posts.find((x) => x.postId === mId)
+                            .category === 1 ? (
+                          <FontAwesomeIcon icon={faMinus} />
+                        ) : (
+                          <FontAwesomeIcon icon={faCircle} size="2xs" />
+                        )}
+                      </div>
+                      <div class="ml-1 h-full border-l-2 border-gray-200"></div>
+                    </div>
+                    <div class="box-border flex-col w-full pl-4 ">
+                      <div>
+                        {customHooks.posts.find((x) => x.postId === mId).title}
+                      </div>
+                      <div>
+                        {
+                          customHooks.posts.find((x) => x.postId === mId)
+                            .content
+                        }
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       )}
 
       {/* Posts to Connect */}
@@ -629,7 +681,7 @@ const SideBar = ({ customHooks }) => {
                     variant="progress"
                     steps={10}
                     position="static"
-                    activeStep={3}
+                    activeStep={6}
                     sx={{ width: 240 }}
                   />
                 </Typography>

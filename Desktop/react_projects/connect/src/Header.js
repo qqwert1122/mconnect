@@ -58,7 +58,7 @@ const Header = ({ customHooks }) => {
               fontWeight: "900",
             }}
           >
-            <b>App Logo</b>
+            <b>Connect</b>
           </span>
         </NavLink>
         <nav

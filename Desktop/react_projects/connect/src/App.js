@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import "moment/locale/ko";
+import Moment from "react-moment";
 import { RecoilRoot, atom, useRecoilState } from "recoil";
 import { useState, useRef, useEffect, Fragment } from "react";
 import { recoilPersist } from "recoil-persist";
@@ -62,7 +63,7 @@ const postsAtom = atom({
   default: [
     {
       postId: 1,
-      category: 0,
+      category: 1,
       title: "",
       content: "대규모 경제조직에서 CEO의 중요성은 10~14%에 불과하다",
       source: "",
@@ -367,6 +368,28 @@ const useCustomHooks = () => {
     setDeleteSnackBarOpen(false);
   };
 
+  const displayCreatedAt = (mPost) => {
+    let startTime = new Date(mPost.time);
+    let nowTime = Date.now();
+    if (parseInt(startTime - nowTime) > -60000) {
+      return (
+        <Moment locale="ko" format="방금 전">
+          {startTime}
+        </Moment>
+      );
+    }
+    if (parseInt(startTime - nowTime) < -86400000) {
+      return <Moment format="YYYY. M. D. HH:MM">{startTime}</Moment>;
+    }
+    if (parseInt(startTime - nowTime) > -86400000) {
+      return (
+        <Moment locale="ko" fromNow>
+          {startTime}
+        </Moment>
+      );
+    }
+  };
+
   // JSX
 
   const deleteSnackBarAction = (
@@ -522,6 +545,7 @@ const useCustomHooks = () => {
     setFormState,
     editMode,
     setEditMode,
+    displayCreatedAt,
   };
 };
 
@@ -533,6 +557,7 @@ const App = () => {
       style={{
         height: "100%",
         width: "100%",
+
         transition: "0.5s",
       }}
     >
