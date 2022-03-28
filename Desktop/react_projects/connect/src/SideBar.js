@@ -176,7 +176,9 @@ const SideBar = ({ customHooks }) => {
                   customHooks.setFormState("NEW");
                 }}
               >
-                <FontAwesomeIcon icon={faCircleChevronLeft} size="xl" />
+                <p class="icon__hover">
+                  <FontAwesomeIcon icon={faCircleChevronLeft} size="xl" />
+                </p>
               </button>
               {customHooks.selectedPostIds.length != 1 ? (
                 <div></div>
@@ -189,12 +191,16 @@ const SideBar = ({ customHooks }) => {
                     customHooks.setDeleteDialogOpen(true);
                   }}
                 >
-                  <FontAwesomeIcon icon={faTrash} size="lg" />
+                  <p class="icon__hover">
+                    <FontAwesomeIcon icon={faTrash} size="lg" />
+                  </p>
                 </button>
               )}
               {customHooks.deleteDialog}
               <button class="absolute top-0 right-2" type="submit">
-                <FontAwesomeIcon icon={faCircleCheck} size="xl" />
+                <p class="icon__hover">
+                  <FontAwesomeIcon icon={faCircleCheck} size="xl" />
+                </p>
               </button>
             </div>
             {/* 제목 */}
@@ -433,9 +439,13 @@ const SideBar = ({ customHooks }) => {
               }}
             >
               {customHooks.inputLike ? (
-                <FontAwesomeIcon icon={fasHeart} />
+                <p class="like__button">
+                  <FontAwesomeIcon icon={fasHeart} />
+                </p>
               ) : (
-                <FontAwesomeIcon icon={farHeart} />
+                <p class="like__button">
+                  <FontAwesomeIcon icon={farHeart} />
+                </p>
               )}
             </button>
             <button
@@ -447,9 +457,13 @@ const SideBar = ({ customHooks }) => {
               }}
             >
               {customHooks.inputBookmark ? (
-                <FontAwesomeIcon icon={fasBookmark} />
+                <p class="bookmark__button">
+                  <FontAwesomeIcon icon={fasBookmark} />
+                </p>
               ) : (
-                <FontAwesomeIcon icon={farBookmark} />
+                <p class="bookmark__button">
+                  <FontAwesomeIcon icon={farBookmark} />
+                </p>
               )}
             </button>
             <span
@@ -658,7 +672,7 @@ const SideBar = ({ customHooks }) => {
   );
 
   return (
-    <div style={{ position: "relative", height: "100vh" }}>
+    <div style={{ position: "relative" }}>
       <div
         class="sidebar flex-col p-1"
         style={{

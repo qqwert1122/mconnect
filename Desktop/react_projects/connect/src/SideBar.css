@@ -61,3 +61,23 @@
   z-index: -1;
   transition: 0.2s all;
 }
+
+.icon__hover:hover {
+  animation-name: icon__hover;
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  bottom: 0rem;
+  left: -0.1rem;
+}
+
+@keyframes icon__hover {
+  from {
+    font-size: 1.2rem;
+    color: gray;
+  }
+  to {
+    font-size: 1rem;
+    left: 0rem;
+  }
+}

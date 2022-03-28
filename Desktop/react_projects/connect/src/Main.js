@@ -174,7 +174,9 @@ const Main = ({ customHooks }) => {
                         customHooks.setDeleteDialogOpen(true);
                       }}
                     >
-                      <FontAwesomeIcon icon={faCircleXmark} />
+                      <p class="delete__button">
+                        <FontAwesomeIcon icon={faCircleXmark} />
+                      </p>
                     </button>
                   </div>
                 </div>
@@ -203,9 +205,13 @@ const Main = ({ customHooks }) => {
                     }}
                   >
                     {mPost.like ? (
-                      <FontAwesomeIcon icon={fasHeart} />
+                      <p class="like__button">
+                        <FontAwesomeIcon icon={fasHeart} />
+                      </p>
                     ) : (
-                      <FontAwesomeIcon icon={farHeart} />
+                      <p class="like__button">
+                        <FontAwesomeIcon icon={farHeart} />
+                      </p>
                     )}
                   </button>
                   <button
@@ -224,9 +230,13 @@ const Main = ({ customHooks }) => {
                     }}
                   >
                     {mPost.bookmark ? (
-                      <FontAwesomeIcon icon={fasBookmark} />
+                      <p class="bookmark__button">
+                        <FontAwesomeIcon icon={fasBookmark} />
+                      </p>
                     ) : (
-                      <FontAwesomeIcon icon={farBookmark} />
+                      <p class="bookmark__button">
+                        <FontAwesomeIcon icon={farBookmark} />
+                      </p>
                     )}
                   </button>
                   <span
@@ -268,8 +278,8 @@ const Main = ({ customHooks }) => {
       <div
         style={{
           fontSize: "1.8rem",
-          marginBottom: "2rem",
-          marginLeft: "1rem",
+          paddingBottom: "2rem",
+          paddingLeft: "1rem",
         }}
       >
         <b>
@@ -290,8 +300,7 @@ const Main = ({ customHooks }) => {
       <div class="flex justify-end">
         &nbsp;
         <button
-          id="new__post__button"
-          class="fixed border p-1"
+          class="new__post__button fixed border p-1"
           style={{
             display: `${customHooks.formMode ? "none" : "initial"}`,
             width: "35px",
