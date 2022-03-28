@@ -235,6 +235,7 @@ const useCustomHooks = () => {
       case 0:
         editClear();
         setEditMode(true);
+        setFormState("NEW");
         break;
       case 1:
         setInputCategory(selectedPost[0].category);
@@ -248,22 +249,28 @@ const useCustomHooks = () => {
         setInputConnectedPostIds(selectedPost[0].connectedPostIds);
         setFormMode(true);
         setEditMode(false);
+        setFormState("EDIT");
         break;
       default:
-        editClear();
-        switch (newCategory) {
-          case 3:
-            setInputCategory(3);
-            break;
-          default:
-            setInputCategory(newCategory + 1);
-            break;
+        if (formState == "CONNECT") {
+          setInputTagList(tempoTagList);
+          return;
+        } else {
+          editClear();
+          switch (newCategory) {
+            case 3:
+              setInputCategory(3);
+              break;
+            default:
+              setInputCategory(newCategory + 1);
+              break;
+          }
+          setInputTagList(tempoTagList);
+          setFormMode(true);
+          setFormState("CONNECT");
+          setEditMode(true);
+          break;
         }
-        setInputTagList(tempoTagList);
-        setFormMode(true);
-        setFormState("CONNECT");
-        setEditMode(true);
-        break;
     }
   }, [selectedPostIds]);
 
