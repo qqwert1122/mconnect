@@ -220,6 +220,17 @@ const useCustomHooks = () => {
         return b - a;
       })[0];
 
+    const tempoTagList = [];
+
+    for (var a in selectedPost) {
+      for (var b in selectedPost[a].tags) {
+        if (tempoTagList.includes(selectedPost[a].tags[b])) {
+        } else {
+          tempoTagList.push(posts[a].tags[b]);
+        }
+      }
+    }
+
     switch (selectedPostIds.length) {
       case 0:
         editClear();
@@ -248,6 +259,7 @@ const useCustomHooks = () => {
             setInputCategory(newCategory + 1);
             break;
         }
+        setInputTagList(tempoTagList);
         setFormMode(true);
         setFormState("CONNECT");
         setEditMode(true);
