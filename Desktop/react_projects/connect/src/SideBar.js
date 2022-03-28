@@ -309,7 +309,7 @@ const SideBar = ({ customHooks }) => {
               >
                 {/* input Tag List */}
                 <span>
-                  {customHooks.inputTagList.map((mTag, mIndex) => (
+                  {customHooks.inputTagList.map((mTag) => (
                     <button
                       class="mr-2 pr-1 rounded-xl border"
                       style={{
@@ -323,7 +323,7 @@ const SideBar = ({ customHooks }) => {
                         e.preventDefault();
                         customHooks.setInputTagList(
                           customHooks.inputTagList.filter(
-                            (fTag, fIndex) => fTag != mTag
+                            (fTag) => fTag != mTag
                           )
                         );
                       }}
@@ -476,8 +476,52 @@ const SideBar = ({ customHooks }) => {
       ) : (
         /* Connected Posts :: 어차피 selectedPostIds === 1, editMode 아닐때만 보여지는 것 */
         <div>
-          <div class="flex justify-center mb-5 px-2">
-            {customHooks.inputConnectedPostIds.length === 0 ? (
+          {/* <div class="flex justify-center mb-5 px-2">
+            {
+              (customHooks.selectedPost = "undefinded" ? (
+                <div>텅</div>
+              ) : (
+                <div>
+                  {customHooks.inputConnectedPostIds.map((mId) => (
+                    <div class="flex">
+                      <div class="flex-col justify-center">
+                        <div class="text-gray-400">
+                          {customHooks.posts.find((x) => x.postId === mId)
+                            .category === 3 ? (
+                            <FontAwesomeIcon icon={faDiceD6} />
+                          ) : customHooks.posts.find((x) => x.postId === mId)
+                              .category === 2 ? (
+                            <FontAwesomeIcon icon={faSquare} size="xs" />
+                          ) : customHooks.posts.find((x) => x.postId === mId)
+                              .category === 1 ? (
+                            <FontAwesomeIcon icon={faMinus} />
+                          ) : (
+                            <FontAwesomeIcon icon={faCircle} size="2xs" />
+                          )}
+                        </div>
+                        <div class="ml-1 h-full border-l-2 border-gray-200"></div>
+                      </div>
+                      <div class="box-border flex-col w-full pl-4 ">
+                        <div>
+                          {
+                            customHooks.posts.find((x) => x.postId === mId)
+                              .title
+                          }
+                        </div>
+                        <div>
+                          {
+                            customHooks.posts.find((x) => x.postId === mId)
+                              .content
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))
+            } */}
+
+          {/* {customHooks.inputConnectedPostIds.length === 0 ? (
               <div>텅</div>
             ) : (
               <div>
@@ -514,8 +558,8 @@ const SideBar = ({ customHooks }) => {
                   </div>
                 ))}
               </div>
-            )}
-          </div>
+            )} */}
+          {/* </div> */}
         </div>
       )}
 
@@ -531,7 +575,7 @@ const SideBar = ({ customHooks }) => {
               marginLeft: "1rem",
             }}
           >
-            <span class="text-yellow-300">
+            <span>
               <FontAwesomeIcon icon={faCircleNodes} />
             </span>
             &nbsp;

@@ -8,7 +8,7 @@
 }
 
 .app__logo {
-  text-shadow: 0.1em 0.1em 0 #bfff00;
+  text-shadow: 0.05em 0.05em 0 #fff44f, 0.1em 0.1em 0 #bfff00;
 }
 
 @media screen and (max-width: 400px) {

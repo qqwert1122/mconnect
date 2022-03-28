@@ -127,16 +127,6 @@ const Main = ({ customHooks }) => {
                               ...customHooks.selectedPostIds,
                               mPost.postId,
                             ]);
-                            customHooks.setFormMode(true);
-                            customHooks.setInputTitle(mPost.title);
-                            customHooks.setInputContent(mPost.content);
-                            customHooks.setInputTagList(mPost.tags);
-                            customHooks.setInputSource(mPost.source);
-                            customHooks.setInputLike(mPost.like);
-                            customHooks.setInputBookmark(mPost.bookmark);
-                            customHooks.setInputConnectedPostIds(
-                              mPost.connectedPostIds
-                            );
                           }
                         }}
                       >
@@ -303,11 +293,7 @@ const Main = ({ customHooks }) => {
           id="new__post__button"
           class="fixed border p-1"
           style={{
-            display: `${
-              customHooks.formMode || customHooks.selectedPostIds.length > 0
-                ? "none"
-                : "initial"
-            }`,
+            display: `${customHooks.formMode ? "none" : "initial"}`,
             width: "35px",
             height: "35px",
             bottom: "10px",

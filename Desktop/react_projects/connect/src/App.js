@@ -29,7 +29,7 @@ const { persistAtom } = recoilPersist();
 
 const colorAtom = atom({
   key: "colorAtom",
-  default: "#2C272E",
+  default: "#DFDFDF",
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -47,7 +47,7 @@ const colorListAtom = atom({
     "#EEEEEE",
     "#F0FFC2",
     "#46CDCF",
-    "#95CD41",
+    "#DFDFDF",
   ],
   effects_UNSTABLE: [persistAtom],
 });
@@ -64,7 +64,7 @@ const postsAtom = atom({
     {
       postId: 1,
       category: 1,
-      title: "",
+      title: "CEO의 영향력",
       content: "대규모 경제조직에서 CEO의 중요성은 10~14%에 불과하다",
       source: "",
       tags: ["경제", "경영"],
@@ -142,6 +142,8 @@ const lastPostIdAtom = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+let timer = null;
+
 const useCustomHooks = () => {
   // All state
   const [colorPickerDisplay, setColorPickerDisplay] = useState(""); // colorPicker height
@@ -179,6 +181,7 @@ const useCustomHooks = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedPostIds, setSelectedPostIds] = useState([]);
   const [sideBarTabValue, setSideBarTabValue] = useState(0);
+  const [selectedPost, setSelectedPost] = useState();
 
   const [lastPostId, setLastPostId] = useRecoilState(lastPostIdAtom); // form post id
   const [inputCategory, setInputCategory] = useState(0);
@@ -190,6 +193,7 @@ const useCustomHooks = () => {
   const [inputLike, setInputLike] = useState(false); // form like
   const [inputBookmark, setInputBookmark] = useState(false); // form bookmark
   const [inputConnectedPostIds, setInputConnectedPostIds] = useState([]);
+  const [inputTime, setInputTime] = useState();
 
   // useEffect
   useEffect(() => {
@@ -205,23 +209,10 @@ const useCustomHooks = () => {
   }, [colorPicker]); // colorPicker false 시 display : none
 
   useEffect(() => {
-    switch (selectedPostIds.length) {
-      case 1:
-        setFormState("EDIT");
-        setEditMode(false);
-        break;
-      case 0:
-        setFormState("NEW");
-        setEditMode(true);
-        break;
-      default:
-        setFormState("CONNECT");
-        setEditMode(true);
-        break;
-    }
-  }, [selectedPostIds]);
+    const selectedPost = selectedPostIds
+      .map((mId) => posts.findIndex((x) => x.postId === mId))
+      .map((mIndex) => posts[mIndex]);
 
-  useEffect(() => {
     const newCategory = selectedPostIds
       .map((mId) => posts.findIndex((x) => x.postId === mId))
       .map((mIndex) => posts[mIndex].category)
@@ -229,30 +220,40 @@ const useCustomHooks = () => {
         return b - a;
       })[0];
 
-    switch (formState) {
-      case "NEW":
-        return setInputCategory(0);
-      // setInputTitle("");
-      // setInputContent("");
-      // setInputSource("");
-      // setInputTag("");
-      // setInputTagList([]);
-      // setInputLike(false);
-      // setInputBookmark(false);
-      // setSelectedPostIds([]);
-      // setFormMode(false);
-
-      case "EDIT":
-        return setInputCategory(newCategory);
-      case "CONNECT":
+    switch (selectedPostIds.length) {
+      case 0:
+        editClear();
+        setEditMode(true);
+        break;
+      case 1:
+        setInputCategory(selectedPost[0].category);
+        setInputTitle(selectedPost[0].title);
+        setInputContent(selectedPost[0].content);
+        setInputTag("");
+        setInputTagList(selectedPost[0].tags);
+        setInputSource(selectedPost[0].source);
+        setInputLike(selectedPost[0].like);
+        setInputBookmark(selectedPost[0].bookmark);
+        setInputConnectedPostIds(selectedPost[0].connectedPostIds);
+        setFormMode(true);
+        setEditMode(false);
+        break;
+      default:
+        editClear();
         switch (newCategory) {
           case 3:
-            return setInputCategory(3);
+            setInputCategory(3);
+            break;
           default:
-            return setInputCategory(newCategory + 1);
+            setInputCategory(newCategory + 1);
+            break;
         }
+        setFormMode(true);
+        setFormState("CONNECT");
+        setEditMode(true);
+        break;
     }
-  }, [formState]);
+  }, [selectedPostIds]);
 
   useEffect(() => {
     const tempoTagList = [];
@@ -338,6 +339,19 @@ const useCustomHooks = () => {
   }, [posts, tabValue, filterTag, filteringParameter]); // filter parameter 변경 시마다 showingPostIds를 변경
 
   // function
+  const editClear = () => {
+    setInputCategory(0);
+    setInputTitle("");
+    setInputContent("");
+    setInputSource("");
+    setInputTag("");
+    setInputTagList([]);
+    setInputLike(false);
+    setInputBookmark(false);
+    setInputConnectedPostIds([]);
+    setInputTime(Date.now());
+  };
+
   const getTextColorByBackgroundColor = (hexColor) => {
     const c = hexColor.substring(1); // 색상 앞의 # 제거
     const rgb = parseInt(c, 16); // rrggbb를 10진수로 변환
@@ -546,6 +560,10 @@ const useCustomHooks = () => {
     editMode,
     setEditMode,
     displayCreatedAt,
+    selectedPost,
+    setSelectedPost,
+    inputTime,
+    setInputTime,
   };
 };
 
