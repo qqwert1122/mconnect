@@ -184,6 +184,7 @@ const useCustomHooks = () => {
   const [selectedPost, setSelectedPost] = useState();
 
   const [lastPostId, setLastPostId] = useRecoilState(lastPostIdAtom); // form post id
+  const [inputPostId, setInputPostId] = useState(0);
   const [inputCategory, setInputCategory] = useState(0);
   const [inputTitle, setInputTitle] = useState("");
   const [inputContent, setInputContent] = useState(""); // form text
@@ -238,6 +239,7 @@ const useCustomHooks = () => {
         setFormState("NEW");
         break;
       case 1:
+        setInputPostId(selectedPost[0].postId);
         setInputCategory(selectedPost[0].category);
         setInputTitle(selectedPost[0].title);
         setInputContent(selectedPost[0].content);
@@ -247,6 +249,7 @@ const useCustomHooks = () => {
         setInputLike(selectedPost[0].like);
         setInputBookmark(selectedPost[0].bookmark);
         setInputConnectedPostIds(selectedPost[0].connectedPostIds);
+        setInputTime(selectedPost[0].time);
         setFormMode(true);
         setEditMode(false);
         setFormState("EDIT");
@@ -583,6 +586,8 @@ const useCustomHooks = () => {
     setSelectedPost,
     inputTime,
     setInputTime,
+    inputPostId,
+    setInputPostId,
   };
 };
 

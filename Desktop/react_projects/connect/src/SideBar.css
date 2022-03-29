@@ -36,15 +36,6 @@
   position: relative;
 }
 
-@keyframes highlighting {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
-
 .highlight:after {
   animation-name: highlighting;
   animation-duration: 0.4s;
@@ -60,6 +51,35 @@
   left: 0;
   z-index: -1;
   transition: 0.2s all;
+}
+
+@keyframes highlighting {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.underlining {
+  display: inline-block;
+  position: relative;
+}
+
+.underlining:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background-color: black;
+  transition: all 0.2s;
+}
+
+.underlining:hover:after {
+  width: 100%;
 }
 
 .icon__hover:hover {

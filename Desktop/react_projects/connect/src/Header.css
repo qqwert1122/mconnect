@@ -61,11 +61,6 @@
   transition: all 0.2s;
 }
 
-.nav__a__clicked {
-  display: inline-block;
-  position: relative;
-}
-
 .nav__a:hover:before {
   width: 50%;
 }

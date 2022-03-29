@@ -82,6 +82,7 @@
   animation-duration: 0.2s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
+  /* 심장 모드 ㅋㅋㅋ animation-iteration-count	: infinite; */
   position: absolute;
   left: -0.1rem;
   bottom: 0rem;

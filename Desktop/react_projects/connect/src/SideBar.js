@@ -44,23 +44,48 @@ const SideBar = ({ customHooks }) => {
       return;
     }
 
-    const postId = customHooks.lastPostId + 1;
-    customHooks.setLastPostId(postId);
+    let postId = 0;
+    if (customHooks.formState === "EDIT") {
+      postId = customHooks.inputPostId;
+    } else {
+      postId = customHooks.lastPostId + 1;
+      customHooks.setLastPostId(postId);
+    }
 
     const newPost = {
       postId: postId,
-      category: customHooks.inputCategory, // category 수정해야함
-      title: customHooks.inputTitle, // title 수정해야함
-      content: form.inputContent.value,
+      category: customHooks.inputCategory,
+      title: customHooks.inputTitle,
+      content: customHooks.inputContent,
       source: form.inputSource.value,
       tags: customHooks.inputTagList,
       like: customHooks.inputLike,
       bookmark: customHooks.inputBookmark,
-      connectedPostIds: [], // conncetedPostId 수정해야함
-      time: Date.now(),
+      connectedPostIds: customHooks.inputConnectedPostIds,
+      time: `${
+        customHooks.formState === "EDIT" ? customHooks.inputTime : Date.now()
+      }`,
     };
 
-    customHooks.setPosts([...customHooks.posts, newPost]); // post 등록
+    if (customHooks.posts.some((x) => x.postId === postId)) {
+      const copyPosts = [...customHooks.posts];
+      const findIndex = customHooks.posts.findIndex(
+        (e) => e.postId === newPost.postId
+      );
+      copyPosts[findIndex] = {
+        ...copyPosts[findIndex],
+        title: customHooks.inputTitle,
+        content: customHooks.inputContent,
+        source: form.inputSource.value,
+        tags: customHooks.inputTagList,
+        like: customHooks.inputLike,
+        bookmark: customHooks.inputBookmark,
+      };
+      customHooks.setPosts(copyPosts);
+    } else {
+      customHooks.setPosts([...customHooks.posts, newPost]); // post 새 글 등록
+    }
+
     customHooks.setInputCategory(0); // form 초기화
     customHooks.setInputTitle("");
     customHooks.setInputContent("");
@@ -90,7 +115,7 @@ const SideBar = ({ customHooks }) => {
       ) : customHooks.selectedPostIds.length === 1 ? (
         <div class="flex items-end" style={{ height: "80px" }}>
           <button
-            class={customHooks.editMode ? "" : "highlight"}
+            class={customHooks.editMode ? "underlining" : "highlight"}
             style={{
               fontSize: `${customHooks.editMode ? "1.3rem" : "1.8rem"}`,
               marginBottom: "2rem",
@@ -121,7 +146,7 @@ const SideBar = ({ customHooks }) => {
             )}
           </button>
           <button
-            class={customHooks.editMode ? "highlight" : ""}
+            class={customHooks.editMode ? "highlight" : "underlining"}
             style={{
               fontSize: `${customHooks.editMode ? "1.8rem" : "1.3rem"}`,
               marginBottom: "2rem",
