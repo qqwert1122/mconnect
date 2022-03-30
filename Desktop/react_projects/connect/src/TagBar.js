@@ -1,4 +1,5 @@
 import "./TagBar.css";
+import "./SideBar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faStar as fasStar,
@@ -14,7 +15,7 @@ const TagBar = ({ customHooks }) => {
   const tagListItem = (mTag) => {
     return (
       <button
-        class="m-1 p-1 border rounded-2xl text-sm"
+        class="item__hover m-1 p-1 border rounded-2xl text-sm"
         style={{
           borderColor: "#2C272E",
           backgroundColor: `${

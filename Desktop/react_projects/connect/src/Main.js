@@ -1,4 +1,5 @@
 import "./Main.css";
+import "./SideBar.css";
 import Snackbar from "@mui/material/Snackbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -58,7 +59,7 @@ const Main = ({ customHooks }) => {
               // total layout
               <div class="flex-col w-full mb-6 ">
                 <div
-                  class="main__post borderShadow flex p-2 rounded-3xl"
+                  class="item__hover main__post borderShadow flex p-2 rounded-3xl"
                   style={{
                     color: `${
                       customHooks.selectedPostIds.some(
@@ -296,19 +297,31 @@ const Main = ({ customHooks }) => {
           paddingLeft: "1rem",
         }}
       >
-        <b>
-          {customHooks.tabValue === 0 ? (
-            "All"
-          ) : customHooks.tabValue === 1 ? (
-            <FontAwesomeIcon icon={faCircle} size="xs" />
-          ) : customHooks.tabValue === 2 ? (
-            <FontAwesomeIcon icon={faMinus} />
-          ) : customHooks.tabValue === 3 ? (
-            <FontAwesomeIcon icon={faSquare} size="sm" />
-          ) : (
-            <FontAwesomeIcon icon={faDiceD6} />
-          )}
-        </b>
+        <span class="mr-3">
+          <b>
+            {customHooks.tabValue === 0 ? (
+              "All"
+            ) : customHooks.tabValue === 1 ? (
+              <FontAwesomeIcon icon={faCircle} size="xs" />
+            ) : customHooks.tabValue === 2 ? (
+              <FontAwesomeIcon icon={faMinus} />
+            ) : customHooks.tabValue === 3 ? (
+              <FontAwesomeIcon icon={faSquare} size="sm" />
+            ) : (
+              <FontAwesomeIcon icon={faDiceD6} />
+            )}
+          </b>
+        </span>
+        {customHooks.filterTag.map((mTag) => (
+          <span
+            class="mr-3 underline"
+            style={{
+              fontSize: "1rem",
+            }}
+          >
+            {mTag}
+          </span>
+        ))}
       </div>
       <ul>{postListing}</ul>
       <div class="flex justify-end">

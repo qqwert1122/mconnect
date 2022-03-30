@@ -625,7 +625,7 @@ const SideBar = ({ customHooks }) => {
               .map((mPost) => (
                 <div>
                   <button
-                    class="selectedposts border-box flex-col justify-center text-left mt-2  mx-2 p-2 px-4 rounded-3xl"
+                    class="selectedposts item__hover border-box flex-col justify-center text-left mt-2  mx-2 p-2 px-4"
                     onClick={() => {
                       customHooks.setSelectedPostIds(
                         customHooks.selectedPostIds.filter(
