@@ -260,7 +260,7 @@ const Main = ({ customHooks }) => {
                       right: "20px",
                     }}
                   >
-                    {customHooks.displayCreatedAt(mPost)}
+                    {customHooks.timeDisplay(mPost)}
                   </span>
                 </div>
               </div>

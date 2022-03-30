@@ -5,8 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import MobileStepper from "@mui/material/MobileStepper";
-import "moment/locale/ko";
-import Moment from "react-moment";
+import dayjs from "dayjs";
 import { CardActionArea, CardActions } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -63,7 +62,7 @@ const SideBar = ({ customHooks }) => {
       bookmark: customHooks.inputBookmark,
       connectedPostIds: customHooks.inputConnectedPostIds,
       time: `${
-        customHooks.formState === "EDIT" ? customHooks.inputTime : Date.now()
+        customHooks.formState === "EDIT" ? customHooks.inputTime : dayjs()
       }`,
     };
 
@@ -499,11 +498,13 @@ const SideBar = ({ customHooks }) => {
               }}
             >
               {customHooks.selectedPostIds.length === 1 ? (
-                customHooks.displayCreatedAt(customHooks.inputTime)
+                <p>
+                  {dayjs(customHooks.inputTime).format(
+                    "YYYY. MM. DD. HH:mm:ss"
+                  )}
+                </p>
               ) : (
-                <Moment locale="ko" format="YYYY. M. D. HH:MM">
-                  {Date.now()}
-                </Moment>
+                <p>{dayjs().format("YYYY. MM. DD. HH:mm:ss")}</p>
               )}
             </span>
           </span>

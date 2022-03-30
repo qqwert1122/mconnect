@@ -14,8 +14,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import "moment/locale/ko";
-import Moment from "react-moment";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
 import { RecoilRoot, atom, useRecoilState } from "recoil";
 import { useState, useRef, useEffect, Fragment } from "react";
 import { recoilPersist } from "recoil-persist";
@@ -23,7 +23,13 @@ import { Routes, Route, Link, Router, Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
-import { selectClasses } from "@mui/material";
+
+// dayjs extends
+var relativeTime = require("dayjs/plugin/relativeTime");
+dayjs.extend(relativeTime);
+var customParseFormat = require("dayjs/plugin/customParseFormat");
+dayjs.extend(customParseFormat);
+dayjs.locale("ko");
 
 const { persistAtom } = recoilPersist();
 
@@ -142,8 +148,6 @@ const lastPostIdAtom = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
-let timer = null;
-
 const useCustomHooks = () => {
   // All state
   const [colorPickerDisplay, setColorPickerDisplay] = useState(""); // colorPicker height
@@ -155,7 +159,7 @@ const useCustomHooks = () => {
   const [tempoPost, setTempoPost] = useState([]); // Dialog에서 post 삭제 구현하기 위한 post 값 임시저장
   const topMain = useRef(); // Main 상단으로 부드럽게 이동
   const topTagBar = useRef(); // TagBar 상단으로 부드럽게 이동
-  const [time, setTime] = useState(Date.now());
+  const [time, setTime] = useState(dayjs());
 
   // Header
   const [tabValue, setTabValue] = useState(0);
@@ -194,7 +198,7 @@ const useCustomHooks = () => {
   const [inputLike, setInputLike] = useState(false); // form like
   const [inputBookmark, setInputBookmark] = useState(false); // form bookmark
   const [inputConnectedPostIds, setInputConnectedPostIds] = useState([]);
-  const [inputTime, setInputTime] = useState(Date.now());
+  const [inputTime, setInputTime] = useState(dayjs());
 
   // useEffect
   useEffect(() => {
@@ -367,7 +371,7 @@ const useCustomHooks = () => {
     setInputLike(false);
     setInputBookmark(false);
     setInputConnectedPostIds([]);
-    setInputTime(Date.now());
+    setInputTime(dayjs());
   };
 
   const getTextColorByBackgroundColor = (hexColor) => {
@@ -400,26 +404,12 @@ const useCustomHooks = () => {
     setDeleteSnackBarOpen(false);
   };
 
-  const displayCreatedAt = (mPost) => {
-    let startTime = new Date(mPost.time);
-    let nowTime = Date.now();
-    if (parseInt(startTime - nowTime) > -60000) {
-      return (
-        <Moment locale="ko" format="방금 전">
-          {startTime}
-        </Moment>
-      );
+  const timeDisplay = (mPost) => {
+    if (dayjs().diff(dayjs(mPost.time), "day") >= 31) {
+      return <div>{dayjs(mPost.time).format("YYYY. MM. DD. HH:mm:ss")}</div>;
     }
-    if (parseInt(startTime - nowTime) < -86400000) {
-      return <Moment format="YYYY. M. D. HH:MM">{startTime}</Moment>;
-    }
-    if (parseInt(startTime - nowTime) > -86400000) {
-      return (
-        <Moment locale="ko" fromNow>
-          {startTime}
-        </Moment>
-      );
-    }
+
+    return <div>{dayjs(mPost.time).fromNow()}</div>;
   };
 
   // JSX
@@ -577,7 +567,7 @@ const useCustomHooks = () => {
     setFormState,
     editMode,
     setEditMode,
-    displayCreatedAt,
+    timeDisplay,
     selectedPost,
     setSelectedPost,
     inputTime,
