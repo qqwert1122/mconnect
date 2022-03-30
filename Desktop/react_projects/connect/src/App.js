@@ -194,7 +194,7 @@ const useCustomHooks = () => {
   const [inputLike, setInputLike] = useState(false); // form like
   const [inputBookmark, setInputBookmark] = useState(false); // form bookmark
   const [inputConnectedPostIds, setInputConnectedPostIds] = useState([]);
-  const [inputTime, setInputTime] = useState();
+  const [inputTime, setInputTime] = useState(Date.now());
 
   // useEffect
   useEffect(() => {
@@ -221,13 +221,13 @@ const useCustomHooks = () => {
         return b - a;
       })[0];
 
-    const tempoTagList = [];
+    const tempoinputTagList = [];
 
     for (var a in selectedPost) {
       for (var b in selectedPost[a].tags) {
-        if (tempoTagList.includes(selectedPost[a].tags[b])) {
+        if (tempoinputTagList.includes(selectedPost[a].tags[b])) {
         } else {
-          tempoTagList.push(posts[a].tags[b]);
+          tempoinputTagList.push(selectedPost[a].tags[b]);
         }
       }
     }
@@ -239,6 +239,7 @@ const useCustomHooks = () => {
         setFormState("NEW");
         break;
       case 1:
+        console.log(selectedPost[0].time);
         setInputPostId(selectedPost[0].postId);
         setInputCategory(selectedPost[0].category);
         setInputTitle(selectedPost[0].title);
@@ -255,24 +256,19 @@ const useCustomHooks = () => {
         setFormState("EDIT");
         break;
       default:
-        if (formState == "CONNECT") {
-          setInputTagList(tempoTagList);
-          return;
-        } else {
+        if (formState == "EDIT") {
           editClear();
-          switch (newCategory) {
-            case 3:
-              setInputCategory(3);
-              break;
-            default:
-              setInputCategory(newCategory + 1);
-              break;
-          }
-          setInputTagList(tempoTagList);
-          setFormMode(true);
-          setFormState("CONNECT");
-          setEditMode(true);
-          break;
+        }
+        setEditMode(true);
+        setFormState("CONNECT");
+        setInputTagList(tempoinputTagList);
+        switch (newCategory) {
+          case 3:
+            setInputCategory(3);
+            break;
+          default:
+            setInputCategory(newCategory + 1);
+            break;
         }
     }
   }, [selectedPostIds]);

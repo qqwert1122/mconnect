@@ -37,7 +37,7 @@ const Main = ({ customHooks }) => {
           class="flex justify-center items-center"
           style={{
             width: "100%",
-            marginTop: "50px",
+            paddingTop: "50px",
             color: "#2C272E",
             transition: "0.5s",
             fontSize: "30px",
@@ -82,6 +82,7 @@ const Main = ({ customHooks }) => {
                       class="flex justify-center items-center h-full"
                       style={{
                         width: "5%",
+                        // marginRight: "10px",
                       }}
                       onClick={() => {}}
                     >
@@ -97,12 +98,13 @@ const Main = ({ customHooks }) => {
                     </button>
                     {/* Posts */}
                     <div
-                      class="flex-col content-start items-start"
+                      class="flex-col content-start items-start box-border"
                       style={{
                         width: "90%",
+                        paddingLeft: "10px",
                       }}
                     >
-                      {/* text */}
+                      {/* title / content */}
                       <button
                         class="flex-wrap text-left "
                         style={{
@@ -130,7 +132,19 @@ const Main = ({ customHooks }) => {
                           }
                         }}
                       >
-                        {mPost.content}
+                        {mPost.title == "" ? (
+                          <div></div>
+                        ) : (
+                          <div
+                            style={{
+                              fontSize: "1.2rem",
+                              marginBottom: "0.5rem",
+                            }}
+                          >
+                            <b>{mPost.title}</b>
+                          </div>
+                        )}
+                        <div>{mPost.content}</div>
                       </button>
                       {/* source */}
                       <div

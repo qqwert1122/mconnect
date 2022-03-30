@@ -244,9 +244,9 @@ const SideBar = ({ customHooks }) => {
                   }}
                   name="inputSource"
                   placeholder="제목"
-                  value={customHooks.inputSource}
+                  value={customHooks.inputTitle}
                   onChange={(e) => {
-                    customHooks.setInputSource(e.target.value);
+                    customHooks.setInputTitle(e.target.value);
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
@@ -499,11 +499,7 @@ const SideBar = ({ customHooks }) => {
               }}
             >
               {customHooks.selectedPostIds.length === 1 ? (
-                customHooks.displayCreatedAt(
-                  customHooks.posts.find(
-                    (x) => x.postId === customHooks.selectedPostIds[0]
-                  )
-                )
+                customHooks.displayCreatedAt(customHooks.inputTime)
               ) : (
                 <Moment locale="ko" format="YYYY. M. D. HH:MM">
                   {Date.now()}
@@ -710,7 +706,7 @@ const SideBar = ({ customHooks }) => {
           <div
             class="pt-2"
             style={{
-              marginTop: "80px",
+              paddingTop: "80px",
             }}
           >
             <Card sx={{ maxWidth: 250 }}>
