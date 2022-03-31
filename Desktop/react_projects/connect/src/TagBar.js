@@ -10,11 +10,10 @@ import {
 import { faStar as farStar } from "@fortawesome/free-regular-svg-icons";
 
 const TagBar = ({ customHooks }) => {
-  const browserWidth = window.innerWidth;
-
-  const tagListItem = (mTag) => {
+  const tagListItem = (mTag, mIndex) => {
     return (
       <button
+        key={mIndex}
         class="item__hover m-1 p-1 border rounded-2xl text-sm"
         style={{
           borderColor: "#2C272E",
@@ -68,17 +67,18 @@ const TagBar = ({ customHooks }) => {
   }; // tagBar에서 tagList와 searchTagList에 보여줄 값
 
   const showTagList = customHooks.tagList.map((mTag, mIndex) =>
-    tagListItem(mTag)
+    tagListItem(mTag, mIndex)
   ); // posts에서 tagList 보여줌
 
   const showSearchTagList = customHooks.tagList
     .filter((fTag) => fTag.includes(customHooks.searchTag))
-    .map((mTag, mIndex) => tagListItem(mTag));
+    .map((mTag, mIndex) => tagListItem(mTag, mIndex));
   // search 내용에 따라 tagList 보여줌
 
   const showTagFavoriteList = customHooks.tagFavoriteList.map(
     (mTag, mIndex) => (
       <button
+        key={mIndex}
         class="item__hover m-1 p-1 border rounded-2xl text-sm"
         style={{
           borderColor: "#2C272E",

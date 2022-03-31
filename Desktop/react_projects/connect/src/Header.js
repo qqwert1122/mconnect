@@ -25,6 +25,7 @@ const Header = ({ customHooks }) => {
         <div class="flex justify-center items-center flex-wrap">
           {customHooks.colorList.map((mColor, mIndex) => (
             <button
+              key={mIndex}
               class="m-2 mt-2 p-2 border-2 border-solid border-white rounded-xl"
               style={{
                 backgroundColor: `${mColor}`,

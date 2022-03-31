@@ -32,7 +32,7 @@ const Main = ({ customHooks }) => {
   // JSX
 
   const postListing = (
-    <li>
+    <li key={customHooks.showingPostIds}>
       {customHooks.showingPostIds.length == 0 ? (
         // showingPosts가 비었을 경우 "텅"
         <div
@@ -56,9 +56,9 @@ const Main = ({ customHooks }) => {
             .filter((fPost) =>
               customHooks.showingPostIds.includes(fPost.postId)
             )
-            .map((mPost) => (
+            .map((mPost, mIndex) => (
               // total layout
-              <div class="flex-col w-full mb-6 ">
+              <div key={mIndex} class="flex-col w-full mb-6 ">
                 <div
                   class={
                     customHooks.selectedPostIds.some(
@@ -167,6 +167,7 @@ const Main = ({ customHooks }) => {
                       <div class="flex flex-wrap justify-start ">
                         {mPost.tags.map((mTag, mIndex) => (
                           <button
+                            key={mIndex}
                             class="mr-1 mt-1 px-1 rounded-2xl"
                             style={{
                               fontSize: "12px",
@@ -319,16 +320,24 @@ const Main = ({ customHooks }) => {
             )}
           </b>
         </span>
-        {customHooks.filterTag.map((mTag) => (
-          <span
-            class="mr-3 underline"
-            style={{
-              fontSize: "1rem",
-            }}
-          >
-            {mTag}
-          </span>
-        ))}
+        <span class="w-10 flex-nowrap bg-red-200">
+          {customHooks.filterTag.map((mTag, mIndex) => (
+            <span
+              key={mIndex}
+              class="m-1 p-1 border rounded-2xl text-sm"
+              style={{
+                width: "40px",
+                borderColor: "#2C272E",
+                // backgroundColor: `${customHooks.textColor}`,
+                fontSize: "0.8rem",
+                color: "#2C272E",
+                transition: "0.5s",
+              }}
+            >
+              {mTag}
+            </span>
+          ))}
+        </span>
       </div>
       <ul>{postListing}</ul>
       <div class="flex justify-end">
