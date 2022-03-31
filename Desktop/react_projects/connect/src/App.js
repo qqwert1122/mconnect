@@ -160,6 +160,7 @@ const useCustomHooks = () => {
   const topMain = useRef(); // Main 상단으로 부드럽게 이동
   const topTagBar = useRef(); // TagBar 상단으로 부드럽게 이동
   const [time, setTime] = useState(dayjs());
+  // const [selectedPost, setSelectedPost] = useState([]);
 
   // Header
   const [tabValue, setTabValue] = useState(0);
@@ -185,7 +186,6 @@ const useCustomHooks = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedPostIds, setSelectedPostIds] = useState([]);
   const [sideBarTabValue, setSideBarTabValue] = useState(0);
-  const [selectedPost, setSelectedPost] = useState();
 
   const [lastPostId, setLastPostId] = useRecoilState(lastPostIdAtom); // form post id
   const [inputPostId, setInputPostId] = useState(0);
@@ -243,7 +243,6 @@ const useCustomHooks = () => {
         setFormState("NEW");
         break;
       case 1:
-        console.log(selectedPost[0].time);
         setInputPostId(selectedPost[0].postId);
         setInputCategory(selectedPost[0].category);
         setInputTitle(selectedPost[0].title);
@@ -256,7 +255,11 @@ const useCustomHooks = () => {
         setInputConnectedPostIds(selectedPost[0].connectedPostIds);
         setInputTime(selectedPost[0].time);
         setFormMode(true);
-        setEditMode(false);
+        if (selectedPost[0].connectedPostIds.length === 0) {
+          setEditMode(true);
+        } else {
+          setEditMode(false);
+        }
         setFormState("EDIT");
         break;
       default:
@@ -294,6 +297,9 @@ const useCustomHooks = () => {
       posts
         .filter((fPost) => selectedPostIds.includes(fPost.postId))
         .map((mPost) => mPost.postId)
+        .sort(function (a, b) {
+          return b - a;
+        })
     );
   }, [posts]); // posts가 바뀔 때마다 tagList 변경
 
@@ -568,8 +574,6 @@ const useCustomHooks = () => {
     editMode,
     setEditMode,
     timeDisplay,
-    selectedPost,
-    setSelectedPost,
     inputTime,
     setInputTime,
     inputPostId,

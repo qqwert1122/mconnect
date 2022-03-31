@@ -26,6 +26,7 @@ import {
   faAngleRight,
   faAngleLeft,
   faCircleNodes,
+  faQuoteRight,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faHeart as farHeart,
@@ -33,6 +34,10 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 
 const SideBar = ({ customHooks }) => {
+  const selectedPost = customHooks.selectedPostIds
+    .map((mId) => customHooks.posts.findIndex((x) => x.postId === mId))
+    .map((mIndex) => customHooks.posts[mIndex]);
+
   const onSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -60,7 +65,9 @@ const SideBar = ({ customHooks }) => {
       tags: customHooks.inputTagList,
       like: customHooks.inputLike,
       bookmark: customHooks.inputBookmark,
-      connectedPostIds: customHooks.inputConnectedPostIds,
+      connectedPostIds: customHooks.selectedPostIds.sort(function (a, b) {
+        return a - b;
+      }),
       time: `${
         customHooks.formState === "EDIT" ? customHooks.inputTime : dayjs()
       }`,
@@ -94,6 +101,7 @@ const SideBar = ({ customHooks }) => {
     customHooks.setInputLike(false);
     customHooks.setInputBookmark(false);
     customHooks.setInputTime();
+    customHooks.setInputConnectedPostIds([]);
     customHooks.setSelectedPostIds([]);
     customHooks.setFormMode(false);
   };
@@ -510,92 +518,82 @@ const SideBar = ({ customHooks }) => {
           </span>
         </form>
       ) : (
-        /* Connected Posts :: 어차피 selectedPostIds === 1, editMode 아닐때만 보여지는 것 */
-        <div>
-          {/* <div class="flex justify-center mb-5 px-2">
-            {
-              (customHooks.selectedPost = "undefinded" ? (
-                <div>텅</div>
-              ) : (
-                <div>
-                  {customHooks.inputConnectedPostIds.map((mId) => (
-                    <div class="flex">
-                      <div class="flex-col justify-center">
-                        <div class="text-gray-400">
-                          {customHooks.posts.find((x) => x.postId === mId)
-                            .category === 3 ? (
-                            <FontAwesomeIcon icon={faDiceD6} />
-                          ) : customHooks.posts.find((x) => x.postId === mId)
-                              .category === 2 ? (
-                            <FontAwesomeIcon icon={faSquare} size="xs" />
-                          ) : customHooks.posts.find((x) => x.postId === mId)
-                              .category === 1 ? (
-                            <FontAwesomeIcon icon={faMinus} />
-                          ) : (
-                            <FontAwesomeIcon icon={faCircle} size="2xs" />
-                          )}
-                        </div>
-                        <div class="ml-1 h-full border-l-2 border-gray-200"></div>
-                      </div>
-                      <div class="box-border flex-col w-full pl-4 ">
-                        <div>
+        <div class="flex-col justify-center">
+          {customHooks.inputConnectedPostIds.length === 0 ? (
+            <div
+              class="flex justify-center items-center"
+              style={{
+                width: "100%",
+                paddingTop: "50px",
+                color: "#2C272E",
+                transition: "0.5s",
+                fontSize: "30px",
+              }}
+            >
+              <FontAwesomeIcon icon={faQuoteLeft} size="xs" />
+              &nbsp;<b>텅</b>&nbsp;
+              <FontAwesomeIcon icon={faQuoteRight} size="xs" />
+            </div>
+          ) : (
+            <div class="box-border pb-5 px-2">
+              {customHooks.inputConnectedPostIds.map((mId, mIndex) => (
+                <div class="box-border flex item__hover px-2 py-1">
+                  {/* 카테고리 , line */}
+                  <div class="flex-col justify-center">
+                    <div class="text-gray-400">
+                      {customHooks.posts.find((x) => x.postId === mId)
+                        .category === 3 ? (
+                        <FontAwesomeIcon icon={faDiceD6} />
+                      ) : customHooks.posts.find((x) => x.postId === mId)
+                          .category === 2 ? (
+                        <FontAwesomeIcon icon={faSquare} size="xs" />
+                      ) : customHooks.posts.find((x) => x.postId === mId)
+                          .category === 1 ? (
+                        <FontAwesomeIcon icon={faMinus} />
+                      ) : (
+                        <FontAwesomeIcon icon={faCircle} size="2xs" />
+                      )}
+                    </div>
+                    {mIndex == customHooks.inputConnectedPostIds.length - 1 ? (
+                      <div></div>
+                    ) : (
+                      <div class="line ml-1 border-l-2 border-gray-200"></div>
+                    )}
+                  </div>
+                  {/* title, content */}
+                  <div class="box-border flex-col w-full pl-4 ">
+                    {customHooks.posts.find((x) => x.postId === mId).title ==
+                    "" ? (
+                      <div></div>
+                    ) : (
+                      <div
+                        class="mb-2"
+                        style={{
+                          fontSize: "1.2rem",
+                        }}
+                      >
+                        <b>
                           {
                             customHooks.posts.find((x) => x.postId === mId)
                               .title
                           }
-                        </div>
-                        <div>
-                          {
-                            customHooks.posts.find((x) => x.postId === mId)
-                              .content
-                          }
-                        </div>
+                        </b>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ))
-            } */}
+                    )}
 
-          {/* {customHooks.inputConnectedPostIds.length === 0 ? (
-              <div>텅</div>
-            ) : (
-              <div>
-                {customHooks.inputConnectedPostIds.map((mId) => (
-                  <div class="flex">
-                    <div class="flex-col justify-center">
-                      <div class="text-gray-400">
-                        {customHooks.posts.find((x) => x.postId === mId)
-                          .category === 3 ? (
-                          <FontAwesomeIcon icon={faDiceD6} />
-                        ) : customHooks.posts.find((x) => x.postId === mId)
-                            .category === 2 ? (
-                          <FontAwesomeIcon icon={faSquare} size="xs" />
-                        ) : customHooks.posts.find((x) => x.postId === mId)
-                            .category === 1 ? (
-                          <FontAwesomeIcon icon={faMinus} />
-                        ) : (
-                          <FontAwesomeIcon icon={faCircle} size="2xs" />
-                        )}
-                      </div>
-                      <div class="ml-1 h-full border-l-2 border-gray-200"></div>
-                    </div>
-                    <div class="box-border flex-col w-full pl-4 ">
-                      <div>
-                        {customHooks.posts.find((x) => x.postId === mId).title}
-                      </div>
-                      <div>
-                        {
-                          customHooks.posts.find((x) => x.postId === mId)
-                            .content
-                        }
-                      </div>
+                    <div
+                      class="mb-4"
+                      style={{
+                        fontSize: "1rem",
+                      }}
+                    >
+                      {customHooks.posts.find((x) => x.postId === mId).content}
                     </div>
                   </div>
-                ))}
-              </div>
-            )} */}
-          {/* </div> */}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -625,7 +623,7 @@ const SideBar = ({ customHooks }) => {
               .map((mPost) => (
                 <div>
                   <button
-                    class="selectedposts item__hover border-box flex-col justify-center text-left mt-2  mx-2 p-2 px-4"
+                    class="selectedposts item__hover border-box flex-col justify-center text-left w-full mt-2  mx-2 p-2 px-4"
                     onClick={() => {
                       customHooks.setSelectedPostIds(
                         customHooks.selectedPostIds.filter(

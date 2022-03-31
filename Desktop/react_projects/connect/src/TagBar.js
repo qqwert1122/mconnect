@@ -79,7 +79,7 @@ const TagBar = ({ customHooks }) => {
   const showTagFavoriteList = customHooks.tagFavoriteList.map(
     (mTag, mIndex) => (
       <button
-        class="m-1 p-1 border rounded-2xl text-sm"
+        class="item__hover m-1 p-1 border rounded-2xl text-sm"
         style={{
           borderColor: "#2C272E",
           backgroundColor: `${
@@ -173,7 +173,7 @@ const TagBar = ({ customHooks }) => {
           ) : (
             <div style={{ paddingBottom: "40px" }}>
               <button
-                class="m-1 p-1 border rounded-2xl text-sm"
+                class="item__hover m-1 p-1 border rounded-2xl text-sm"
                 style={{
                   width: "40px",
                   borderColor: "#2C272E",
@@ -195,7 +195,7 @@ const TagBar = ({ customHooks }) => {
       ) : (
         <div>{showSearchTagList}</div>
       )}
-      <div class="flex justify-end">
+      {/* <div class="flex justify-end">
         <button
           class="fixed border p-1"
           style={{
@@ -216,7 +216,7 @@ const TagBar = ({ customHooks }) => {
         >
           <FontAwesomeIcon icon={faCaretUp} />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

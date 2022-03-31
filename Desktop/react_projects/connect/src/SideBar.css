@@ -11,6 +11,10 @@
 @media screen and (max-width: 600px) {
 }
 
+.line {
+  height: calc(100% - 20px);
+}
+
 .selectedposts__box {
 }
 

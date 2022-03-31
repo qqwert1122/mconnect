@@ -12,6 +12,7 @@ import {
   faQuoteRight,
   faDiceD6,
   faPlus,
+  faCheckDouble,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faHeart as farHeart,
@@ -59,7 +60,13 @@ const Main = ({ customHooks }) => {
               // total layout
               <div class="flex-col w-full mb-6 ">
                 <div
-                  class="item__hover main__post borderShadow flex p-2 rounded-3xl"
+                  class={
+                    customHooks.selectedPostIds.some(
+                      (sPostId) => sPostId === mPost.postId
+                    )
+                      ? "main__post borderShadow flex p-2 rounded-3xl"
+                      : "item__hover main__post borderShadow flex p-2 rounded-3xl"
+                  }
                   style={{
                     color: `${
                       customHooks.selectedPostIds.some(
@@ -107,7 +114,7 @@ const Main = ({ customHooks }) => {
                     >
                       {/* title / content */}
                       <button
-                        class="flex-wrap text-left "
+                        class="flex-wrap text-left w-full"
                         style={{
                           wordBreak: "break-all",
                         }}
@@ -330,12 +337,12 @@ const Main = ({ customHooks }) => {
           class="new__post__button fixed border p-1"
           style={{
             display: `${customHooks.formMode ? "none" : "initial"}`,
-            width: "35px",
-            height: "35px",
+            width: "40px",
+            height: "40px",
             bottom: "10px",
             borderRadius: "100%",
             boxShadow: "0 0 2px grey",
-            backgroundColor: `${customHooks.color}`,
+            backgroundColor: "#fff44f",
             color: `${customHooks.textColor}`,
             transition: "0.5s",
           }}
@@ -344,7 +351,29 @@ const Main = ({ customHooks }) => {
             customHooks.setFormState("NEW");
           }}
         >
-          <FontAwesomeIcon icon={faPlus} />
+          <FontAwesomeIcon icon={faPlus} size="xl" />
+        </button>
+        <button
+          class="new__post__button fixed border p-1"
+          style={{
+            display: `${
+              customHooks.selectedPostIds.length >= 1 ? "initial" : "none"
+            }`,
+            height: "40px",
+            width: "40px",
+            bottom: "10px",
+            borderRadius: "100%",
+            boxShadow: "0 0 2px grey",
+            backgroundColor: "#fff44f",
+            color: `${customHooks.textColor}`,
+            transition: "0.5s",
+          }}
+          onClick={() => {
+            customHooks.setSelectedPostIds([]);
+            customHooks.setFormMode(false);
+          }}
+        >
+          <FontAwesomeIcon icon={faCheckDouble} size="xl" />
         </button>
       </div>
     </div>
