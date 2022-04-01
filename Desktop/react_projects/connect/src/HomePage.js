@@ -1,6 +1,15 @@
 import "./HomePage.css";
-import {} from "@fortawesome/free-regular-svg-icons";
-import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import "./SideBar.css";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
+import {
+  faAngleDown,
+  faAngleUp,
+  faCircle,
+  faHeart as farHeart,
+  faBookmark as farBookmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef, useEffect } from "react";
 
@@ -202,6 +211,185 @@ const HomePage = ({ customHooks }) => {
               }}
             >
               News
+            </div>
+          </div>
+        </div>
+
+        {/* right*/}
+        <div
+          class="absolute text-5xl "
+          style={{
+            width: "600px",
+            height: "500px",
+            right: "15%",
+            bottom: "10%",
+            wordBreak: "break-word",
+          }}
+        >
+          {/* message */}
+          <p class="highlight mb-5">
+            <b>Find</b>&nbsp;one-line ideas
+          </p>
+          <p class="pb-3 text-3xl">in news, videos, books, blogs,</p>
+          <p class="pb-3 text-3xl">and anywhere in work, school, or project.</p>
+
+          {/* form */}
+          <div
+            class="flex-col my-16 "
+            style={{
+              width: "500px",
+              fontSize: "1.5rem",
+            }}
+          >
+            <div
+              class="item__hover main__post borderShadow flex p-2 rounded-3xl"
+              style={{
+                color: "#2C272E",
+                backgroundColor: "#FAFAFA",
+              }}
+            >
+              <div class="relative flex w-full items-center ">
+                {/* category */}
+                <button
+                  class="flex justify-center items-center h-full"
+                  style={{
+                    width: "5%",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faCircle} />
+                </button>
+                {/* Posts */}
+                <div
+                  class="flex-col content-start items-start box-border"
+                  style={{
+                    width: "90%",
+                    paddingLeft: "10px",
+                  }}
+                >
+                  {/* title / content */}
+                  <button
+                    class="flex-wrap text-left w-full"
+                    style={{
+                      wordBreak: "break-all",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "1.5rem",
+                        marginBottom: "2rem",
+                      }}
+                    >
+                      <b>Word Break</b>
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "1.2rem",
+                        marginBottom: "0.5rem",
+                      }}
+                    >
+                      텍스트가 자신의 콘텐츠 박스 밖으로 오버플로 할 때 줄을
+                      바꿀 지 지정한다.
+                    </div>
+                  </button>
+                  {/* source */}
+                  <div
+                    class="flex-wrap mt-3 "
+                    style={{
+                      fontSize: "1rem",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    <a
+                      target="_blank"
+                      href="https://developer.mozilla.org/ko/docs/Web/CSS/word-break"
+                    >
+                      https://developer.mozilla.org/ko/docs/Web/CSS/word-break
+                    </a>
+                  </div>
+                  {/* tag */}
+                  <div class="flex flex-wrap justify-start ">
+                    <button
+                      class="mr-2 p-1 rounded-2xl"
+                      style={{
+                        fontSize: "0.9rem",
+                        color: "#EEEEEE",
+                        backgroundColor: "#2C272E",
+                      }}
+                    >
+                      코딩
+                    </button>
+                    <button
+                      class="mr-2 p-1 rounded-2xl"
+                      style={{
+                        fontSize: "0.9rem",
+                        color: "#EEEEEE",
+                        backgroundColor: "#2C272E",
+                      }}
+                    >
+                      CSS
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  class="absolute"
+                  style={{
+                    top: 0,
+                    right: 0,
+                  }}
+                  variant="outlined"
+                >
+                  <p class="delete__button">
+                    <FontAwesomeIcon icon={faCircleXmark} />
+                  </p>
+                </button>
+              </div>
+            </div>
+
+            {/* 하단 like, bookmark, timestamp */}
+            <div
+              class="relative flex w-full pt-2"
+              style={{
+                color: "#2C272E",
+              }}
+            >
+              &nbsp;
+              <button
+                class="absolute"
+                style={{
+                  color: "red",
+                  left: "20px",
+                  bottom: 0,
+                  fontSize: "1.2rem",
+                }}
+              >
+                <p class="like__hover">
+                  <FontAwesomeIcon icon={farHeart} />
+                </p>
+              </button>
+              <button
+                class="absolute"
+                style={{
+                  color: "orange",
+                  left: "45px",
+                  bottom: 0,
+                  fontSize: "1.2rem",
+                }}
+              >
+                <p class="bookmark__hover">
+                  <FontAwesomeIcon icon={farBookmark} />
+                </p>
+              </button>
+              <span
+                class="absolute"
+                style={{
+                  bottom: 0,
+                  right: "20px",
+                  fontSize: "1.2rem",
+                }}
+              >
+                {dayjs().format("YYYY. MM. DD. HH:mm:ss")}
+              </span>
             </div>
           </div>
         </div>

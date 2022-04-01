@@ -4,6 +4,18 @@
     5px -16px 5px rgba(0, 0, 0, 0.12);
 }
 
+.like__hover:hover {
+  font-size: 1.3rem;
+  color: orange;
+  transition: 0.2s;
+}
+
+.bookmark__hover:hover {
+  font-size: 1.3rem;
+  color: red;
+  transition: 0.2s;
+}
+
 .disappearing1 {
   animation: animation__disappearing1 25s infinite;
   animation-timing-function: ease-out;
