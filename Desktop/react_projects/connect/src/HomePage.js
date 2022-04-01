@@ -1,3 +1,4 @@
+import "./HomePage.css";
 import {} from "@fortawesome/free-regular-svg-icons";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -42,12 +43,71 @@ const HomePage = ({ customHooks }) => {
     >
       <div ref={page1}></div>
       <div
-        class="w-full flex justify-center items-center text-5xl font-bold bg-red-200"
+        class="relative w-full flex justify-center items-center  font-bold"
         style={{
           height: "100vh",
         }}
       >
-        page1 😚
+        <div
+          class="disappearing4 absolute rounded-3xl bg-gray-800"
+          style={{
+            left: "13%",
+            bottom: "14%",
+            width: "500px",
+            minHeight: "500px",
+            marginTop: "80px",
+          }}
+        >
+          <div class="p-5 mb-10 text-5xl">
+            <b>title</b>
+          </div>
+          <div class="p-5 text-3xl">text</div>
+        </div>
+        <div
+          class="disappearing3 absolute rounded-3xl bg-gray-600"
+          style={{
+            left: "12%",
+            bottom: "12%",
+            width: "500px",
+            minHeight: "500px",
+            marginTop: "80px",
+          }}
+        >
+          <div class="p-5 mb-10 text-5xl">
+            <b>title</b>
+          </div>
+          <div class="p-5 text-3xl">text</div>
+        </div>
+        <div
+          class="disappearing2 absolute rounded-3xl bg-gray-400"
+          style={{
+            left: "11%",
+            bottom: "10%",
+            width: "500px",
+            minHeight: "500px",
+            marginTop: "80px",
+          }}
+        >
+          <div class="p-5 mb-10 text-5xl">
+            <b>title</b>
+          </div>
+          <div class="p-5 text-3xl">text</div>
+        </div>
+        <div
+          class="disappearing1 absolute rounded-3xl bg-gray-200"
+          style={{
+            left: "10%",
+            bottom: "8%",
+            width: "500px",
+            minHeight: "500px",
+            marginTop: "80px",
+          }}
+        >
+          <div class="p-5 mb-10 text-5xl">
+            <b>title</b>
+          </div>
+          <div class="p-5 text-3xl">text</div>
+        </div>
       </div>
       <div ref={page2}></div>
       <div

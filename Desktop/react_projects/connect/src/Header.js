@@ -43,10 +43,11 @@ const Header = ({ customHooks }) => {
 
   return (
     <div
-      class="header flex justify-between items-center"
+      class="header flex justify-between items-center "
       style={{
         color: `${customHooks.textColor}`,
         backgroundColor: `${customHooks.color}`,
+        zIndex: "5",
       }}
     >
       <div class="flex items-center">
