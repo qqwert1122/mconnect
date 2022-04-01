@@ -41,6 +41,7 @@ const HomePage = ({ customHooks }) => {
         height: "300vh",
       }}
     >
+      {/* page 1 */}
       <div ref={page1}></div>
       <div
         class="relative w-full flex justify-center items-center  font-bold"
@@ -48,8 +49,9 @@ const HomePage = ({ customHooks }) => {
           height: "100vh",
         }}
       >
+        {/* post 4 */}
         <div
-          class="disappearing4 absolute rounded-3xl bg-gray-800"
+          class="boxshadow disappearing4 absolute rounded-3xl bg-gray-800 text-white"
           style={{
             left: "13%",
             bottom: "14%",
@@ -58,13 +60,37 @@ const HomePage = ({ customHooks }) => {
             marginTop: "80px",
           }}
         >
-          <div class="p-5 mb-10 text-5xl">
-            <b>title</b>
+          <div
+            class="relative text-5xl"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <img
+              class="rounded-3xl"
+              src="img/lecture.jpg"
+              alt="lecture"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+            <div
+              class="box-border absolute p-2 text-2xl rounded-full bg-white text-gray-800"
+              style={{
+                top: "30px",
+                right: "30px",
+              }}
+            >
+              Lecture
+            </div>
           </div>
-          <div class="p-5 text-3xl">text</div>
         </div>
+        {/* post 3 */}
         <div
-          class="disappearing3 absolute rounded-3xl bg-gray-600"
+          class="boxshadow disappearing3 absolute rounded-3xl bg-gray-600 text-white"
           style={{
             left: "12%",
             bottom: "12%",
@@ -73,42 +99,115 @@ const HomePage = ({ customHooks }) => {
             marginTop: "80px",
           }}
         >
-          <div class="p-5 mb-10 text-5xl">
-            <b>title</b>
+          <div
+            class="relative text-5xl"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <img
+              class="rounded-3xl"
+              src="img/work.jpg"
+              alt="work"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+            <div
+              class="box-border absolute p-2 text-2xl rounded-full bg-gray-800 text-white"
+              style={{
+                top: "30px",
+                right: "30px",
+              }}
+            >
+              Work
+            </div>
           </div>
-          <div class="p-5 text-3xl">text</div>
         </div>
+        {/* post 2 */}
         <div
-          class="disappearing2 absolute rounded-3xl bg-gray-400"
+          class="boxshadow disappearing2 absolute rounded-3xl"
           style={{
             left: "11%",
             bottom: "10%",
             width: "500px",
-            minHeight: "500px",
+            height: "500px",
             marginTop: "80px",
           }}
         >
-          <div class="p-5 mb-10 text-5xl">
-            <b>title</b>
+          <div
+            class="relative text-5xl"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <img
+              class="rounded-3xl"
+              src="img/video.png"
+              alt="video"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+            <div
+              class="box-border absolute p-2 text-2xl rounded-full bg-white text-gray-800"
+              style={{
+                top: "30px",
+                right: "30px",
+              }}
+            >
+              Video
+            </div>
           </div>
-          <div class="p-5 text-3xl">text</div>
         </div>
+        {/* post 1 */}
         <div
-          class="disappearing1 absolute rounded-3xl bg-gray-200"
+          class="boxshadow disappearing1 absolute rounded-3xl"
           style={{
             left: "10%",
             bottom: "8%",
             width: "500px",
-            minHeight: "500px",
+            height: "500px",
             marginTop: "80px",
           }}
         >
-          <div class="p-5 mb-10 text-5xl">
-            <b>title</b>
+          <div
+            class="relative text-5xl"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <img
+              class="rounded-3xl"
+              src="img/newspaper.png"
+              alt="newspaper"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+            <div
+              class="box-border absolute p-2 text-2xl rounded-full bg-gray-800 text-white"
+              style={{
+                top: "30px",
+                right: "30px",
+              }}
+            >
+              News
+            </div>
           </div>
-          <div class="p-5 text-3xl">text</div>
         </div>
       </div>
+
+      {/* page 2 */}
       <div ref={page2}></div>
       <div
         class="w-full flex justify-center items-center text-5xl font-bold bg-yellow-200"
@@ -118,6 +217,8 @@ const HomePage = ({ customHooks }) => {
       >
         page2 😎
       </div>
+
+      {/* page 3 */}
       <div ref={page3}></div>
       <div
         class="w-full flex justify-center items-center text-5xl font-bold bg-green-200"
