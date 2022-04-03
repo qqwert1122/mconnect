@@ -1,3 +1,172 @@
+.home__highlight {
+  display: inline-block;
+  position: relative;
+}
+
+.home__highlight:after {
+  animation-name: home__highlighting;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  content: "";
+  width: 0%;
+  height: 1rem;
+  display: inline-block;
+  background: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  transition: 1s all;
+}
+
+@keyframes home__highlighting {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.form__2 {
+  animation: form__2__move 12s infinite;
+  animation-timing-function: ease-out;
+  z-index: 1;
+}
+
+@keyframes form__2__move {
+  0% {
+    left: -50%;
+    bottom: 0%;
+  }
+
+  5% {
+    left: 15%;
+  }
+  10% {
+  }
+
+  15% {
+  }
+
+  20% {
+    left: 15%;
+    bottom: 0%;
+  }
+
+  25% {
+    bottom: -5%;
+  }
+  100% {
+    left: 15%;
+    bottom: -5%;
+  }
+}
+
+.form__3 {
+  animation: form__3__move 12s infinite;
+  animation-timing-function: ease-out;
+  z-index: 1;
+}
+
+@keyframes form__3__move {
+  0% {
+    left: -50%;
+  }
+
+  5% {
+    left: -50%;
+  }
+  10% {
+    left: 15%;
+  }
+
+  15% {
+  }
+
+  20% {
+    left: 15%;
+  }
+
+  100% {
+    left: 15%;
+  }
+}
+
+.form__4 {
+  animation: form__4__move 12s infinite;
+  animation-timing-function: ease-out;
+  z-index: 1;
+}
+
+@keyframes form__4__move {
+  0% {
+    left: -50%;
+    top: 0%;
+  }
+
+  5% {
+  }
+  10% {
+    left: -50%;
+  }
+
+  15% {
+    left: 15%;
+  }
+
+  20% {
+    left: 15%;
+  }
+
+  25% {
+    top: 0%;
+  }
+
+  30% {
+    top: -5%;
+  }
+  100% {
+    left: 15%;
+    top: -5%;
+  }
+}
+
+.thread__line:after {
+  animation: thread_stretch 12s infinite;
+  animation-timing-function: ease-out;
+  width: 10px;
+  height: 100%;
+  background: white;
+  content: "";
+  left: 20%;
+  top: 0%;
+  display: inline-block;
+  position: absolute;
+  z-index: 0;
+}
+
+@keyframes thread_stretch {
+  0% {
+    height: 0;
+  }
+
+  20% {
+    height: 0;
+  }
+  25% {
+    height: 100%;
+  }
+
+  100% {
+  }
+
+  100% {
+    height: 100%;
+  }
+}
+
 .boxshadow {
   box-shadow: 5px -1px 1px rgba(0, 0, 0, 0.12), 5px -2px 2px rgba(0, 0, 0, 0.12),
     5px -4px 3px rgba(0, 0, 0, 0.12), 5px -8px 4px rgba(0, 0, 0, 0.12),
@@ -28,7 +197,6 @@
   animation: animation__disappearing3 25s infinite;
   animation-timing-function: ease-out;
 }
-
 .disappearing4 {
   animation: animation__disappearing4 25s infinite;
   animation-timing-function: ease-out;

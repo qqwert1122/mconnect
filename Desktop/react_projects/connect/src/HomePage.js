@@ -3,7 +3,6 @@ import "./SideBar.css";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import {
-  faCircleXmark,
   faHeart as fasHeart,
   faBookmark as fasBookmark,
 } from "@fortawesome/free-regular-svg-icons";
@@ -13,11 +12,16 @@ import {
   faCircle,
   faHeart as farHeart,
   faBookmark as farBookmark,
+  faMinus,
+  faSquare,
+  faPlus,
+  faDiceD6,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef, useEffect } from "react";
 import { Tag } from "@mui/icons-material";
 import { maxWidth } from "@mui/system";
+import zIndex from "@mui/material/styles/zIndex";
 
 const form_1 = {
   title: "Word Break",
@@ -32,7 +36,7 @@ const form_1 = {
 };
 
 const form_2 = {
-  title: "Word Break",
+  title: "form 2",
   content:
     "텍스트가 자신의 콘텐츠 박스 밖으로 오버플로 할 때 줄을 바꿀 지 지정한다.",
   source: "https://developer.mozilla.org/ko/docs/Web/CSS/word-break",
@@ -44,10 +48,10 @@ const form_2 = {
 };
 
 const form_3 = {
-  title: "",
+  title: "form 3",
   content:
     "텍스트가 자신의 콘텐츠 박스 밖으로 오버플로 할 때 줄을 바꿀 지 지정한다.",
-  source: "",
+  source: "zz",
   tags: ["경영", "경제"],
   like: true,
   bookmark: false,
@@ -56,7 +60,7 @@ const form_3 = {
 };
 
 const form_4 = {
-  title: "Word Break",
+  title: "form 4",
   content:
     "텍스트가 자신의 콘텐츠 박스 밖으로 오버플로 할 때 줄을 바꿀 지 지정한다.",
   source: "https://developer.mozilla.org/ko/docs/Web/CSS/word-break",
@@ -249,7 +253,7 @@ const HomePage = ({ customHooks }) => {
                 fontSize: "1.2rem",
               }}
             >
-              <p class="like__hover">
+              <p class="bookmark__hover">
                 {props.bookmark ? (
                   <FontAwesomeIcon icon={farBookmark} />
                 ) : (
@@ -319,6 +323,7 @@ const HomePage = ({ customHooks }) => {
       class="w-screen relative"
       style={{
         height: "300vh",
+        background: "linear-gradient(45deg, #BFFF00, #FFF44F)",
       }}
     >
       {/* page 1 */}
@@ -350,9 +355,11 @@ const HomePage = ({ customHooks }) => {
           }}
         >
           {/* message */}
-          <p class="highlight mb-5">
-            <b>Find</b>&nbsp;one-line ideas
-          </p>
+          <div class="home__highlight mb-5">
+            <p class="relative " style={{ zIndex: "1" }}>
+              <b>Find</b>&nbsp;one-line ideas
+            </p>
+          </div>
           <p class="pb-3 text-3xl">in news, videos, books, blogs,</p>
           <p class="pb-10 text-3xl">
             and anywhere in work, school, or project.
@@ -364,27 +371,76 @@ const HomePage = ({ customHooks }) => {
       {/* page 2 */}
       <div ref={page2}></div>
       <div
-        class="box-border relative w-full flex justify-center items-center text-5xl font-bold"
+        class="box-border w-full flex justify-center items-center text-5xl font-bold"
         style={{
           height: "100vh",
+          paddingTop: "80px",
         }}
       >
         <div
-          class="absolute w-1 h-full border-l-8 border-black"
-          style={{
-            left: "10%",
-          }}
-        ></div>
+          id="page2_left"
+          class="thread__line relative flex items-center w-1/2 h-full "
+        >
+          <div class="flex-col justify-between content-between w-full h-full ">
+            <div class="relative flex items-end w-full h-1/3">
+              <div class="form__2 absolute">{form(form_2)}</div>
+            </div>
+            <div class="relative flex items-center w-full h-1/3">
+              <div class="form__3 absolute">{form(form_3)}</div>
+            </div>
+            <div class="relative flex items-start w-full h-1/3 ">
+              <div class="form__4 absolute">{form(form_4)}</div>
+            </div>
+          </div>
+        </div>
+        {/* right*/}
+
         <div
-          class="absolute flex-col content-end my-auto"
+          class="text-5xl w-1/2 my-auto"
           style={{
-            paddingTop: "80px",
-            left: "9%",
+            wordBreak: "break-word",
           }}
         >
-          <div class="flex mb-5">{form(form_2)}</div>
-          <div class="flex mb-5">{form(form_3)}</div>
-          <div class="flex">{form(form_4)}</div>
+          {/* message */}
+          <div class=" home__highlight mb-5">
+            <p class="relative" style={{ zIndex: "1" }}>
+              <b>Connect</b>&nbsp;one line ideas
+            </p>
+          </div>
+          <p class="pb-3 text-3xl">to come up with creative ideas</p>
+          <p class="pb-10 text-3xl">
+            and these ideas will be another line of ideas
+          </p>
+
+          <div
+            class="text-2xl rounded-3xl border-white border-4 p-10 m-2"
+            style={{ width: "450px" }}
+          >
+            <p class="mb-2">
+              Connect &nbsp;
+              <FontAwesomeIcon icon={faCircle} size="2xs" />
+              &nbsp; and &nbsp;
+              <FontAwesomeIcon icon={faCircle} size="2xs" />
+              &nbsp; to form &nbsp;
+              <FontAwesomeIcon icon={faMinus} size="" />
+            </p>
+            <p class="mb-2">
+              Connect &nbsp;
+              <FontAwesomeIcon icon={faMinus} size="" />
+              &nbsp; and &nbsp;
+              <FontAwesomeIcon icon={faMinus} size="" />
+              &nbsp; to form &nbsp;
+              <FontAwesomeIcon icon={faSquare} size="xs" />
+            </p>
+            <p>
+              Connect &nbsp;
+              <FontAwesomeIcon icon={faSquare} size="xs" />
+              &nbsp; and &nbsp;
+              <FontAwesomeIcon icon={faSquare} size="xs" />
+              &nbsp; to form &nbsp;
+              <FontAwesomeIcon icon={faDiceD6} size="" />
+            </p>
+          </div>
         </div>
       </div>
 
