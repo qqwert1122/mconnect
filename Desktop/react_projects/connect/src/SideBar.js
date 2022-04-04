@@ -182,14 +182,15 @@ const SideBar = ({ customHooks }) => {
       )}
       {customHooks.editMode ? (
         <form
-          class="h-full"
+          class="relative h-full"
           style={{
             maxWidth: "350px",
+            zIndex: "1",
           }}
           onSubmit={onSubmit}
         >
           <div
-            class="flex-col border__shadow w-full p-2 rounded-3xl"
+            class="relative flex-col border__shadow w-full p-2 rounded-3xl"
             style={{
               color: `${customHooks.textColor}`,
               backgroundColor: `${customHooks.color}`,
@@ -310,7 +311,7 @@ const SideBar = ({ customHooks }) => {
                 <FontAwesomeIcon icon={faQuoteLeft} />
               </span>
               <input
-                class="rounded-xl px-2"
+                class=" rounded-xl px-2"
                 style={{
                   width: "80%",
                   fontSize: "12px",
@@ -333,18 +334,13 @@ const SideBar = ({ customHooks }) => {
 
             {/* tag */}
             <div
-              class="flex-nowrap overflow-y-auto pb-10"
-              style={{ width: "90%" }}
+              class="relative flex-nowrap overflow-y-auto pb-16"
+              style={{ width: "90%", zIndex: "1" }}
             >
               <span class="mx-2">
                 <FontAwesomeIcon icon={faHashtag} />
               </span>
-              <span
-                class="relative mt-1"
-                style={{
-                  bottom: "0px",
-                }}
-              >
+              <span class=" mt-1">
                 {/* input Tag List */}
                 <span>
                   {customHooks.inputTagList.map((mTag) => (
@@ -416,8 +412,9 @@ const SideBar = ({ customHooks }) => {
                     class="absolute rounded-lg px-2"
                     style={{
                       width: "100px",
-                      bottom: "-35px",
+                      top: "20px",
                       overflow: "auto",
+                      maxHeight: "55px",
                       transition: "0.5s",
                       fontSize: "12px",
                       color: "#2C272E",
@@ -432,10 +429,10 @@ const SideBar = ({ customHooks }) => {
                         {customHooks.tagList
                           .filter((fTag) => fTag.includes(customHooks.inputTag))
                           .map((mTag, mIndex) => (
-                            <div>
+                            <div key={mIndex}>
                               <button
                                 id="tagListHover"
-                                class="flex w-full h-full justify-items-start"
+                                class="flex-col w-full h-full justify-items-start"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   if (customHooks.inputTagList.includes(mTag)) {
@@ -748,10 +745,9 @@ const SideBar = ({ customHooks }) => {
                 >
                   <FontAwesomeIcon icon={faCircleInfo} />
                   &nbsp;
-                  <b>Next update - Thread</b>
+                  <b>Next update - Storming</b>
                   <br />
-                  Here, you can find out what kind of notes are connected to
-                  create this idea.
+                  Here, you can storm your creative ideas.
                 </Typography>
                 <Typography>
                   <MobileStepper
@@ -759,7 +755,7 @@ const SideBar = ({ customHooks }) => {
                     variant="progress"
                     steps={10}
                     position="static"
-                    activeStep={6}
+                    activeStep={1}
                     sx={{ width: 240 }}
                   />
                 </Typography>

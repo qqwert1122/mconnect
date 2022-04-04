@@ -151,21 +151,6 @@ const TagBar = ({ customHooks }) => {
         </div>
       )}
 
-      <input
-        class="m-2 px-2 rounded-2xl border text-gray-600"
-        style={{
-          width: "80%",
-          borderColor: "#2C272E",
-        }}
-        type="text"
-        value={customHooks.searchTag}
-        onChange={(e) => {
-          customHooks.setSearchTag(e.target.value);
-        }}
-      />
-      <span style={{ width: "20%" }}>
-        <FontAwesomeIcon icon={faMagnifyingGlass} size="xs" />
-      </span>
       {customHooks.searchTag.length === 0 ? (
         <div>
           {customHooks.tagList.length === 0 ? (

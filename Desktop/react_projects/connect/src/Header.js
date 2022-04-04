@@ -8,8 +8,11 @@ import {
   faMinus,
   faDiceD6,
   faA,
+  faBolt,
+  faCubes,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import {} from "@fortawesome/free-regular-svg-icons";
+import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 import { NavLink } from "react-router-dom";
 
 const Header = ({ customHooks }) => {
@@ -58,6 +61,7 @@ const Header = ({ customHooks }) => {
             style={{
               fontSize: "2rem",
               fontWeight: "900",
+              color: "#FFF44F",
             }}
           >
             <b>Connect</b>
@@ -71,21 +75,51 @@ const Header = ({ customHooks }) => {
           }}
         >
           <NavLink to="/home">
-            <span class="nav__a mx-6">Home</span>
+            <div class="nav__a mx-6">
+              <span class="mr-1" style={{ color: "#DFDFDF" }}>
+                <FontAwesomeIcon icon={faCircleQuestion} />
+              </span>
+              <span>Connect</span>
+            </div>
           </NavLink>
           <NavLink to="/main">
-            <span class="nav__a mx-6">Main</span>
+            <div class="nav__a mx-6">
+              <span class="mr-1" style={{ color: "#BFFF00" }}>
+                <FontAwesomeIcon icon={faCubes} />
+              </span>
+              <span>Memos</span>
+            </div>
           </NavLink>
-          <NavLink to="/public">
+          {/* <NavLink to="/public">
             <span class="nav__a mx-6">Public</span>
-          </NavLink>
+          </NavLink> */}
           <NavLink to="/Lab">
-            <span class="nav__a mx-6">Lab</span>
+            <div class="nav__a mx-6">
+              <span class="mr-1" style={{ color: "#FFF44F" }}>
+                <FontAwesomeIcon icon={faBolt} />
+              </span>
+              <span>Storming</span>
+            </div>
           </NavLink>
         </nav>
       </div>
       <div class="flex items-center">
         <div class="flex items-center" style={{ marginRight: "16px" }}>
+          <input
+            class="m-2 px-2 rounded-2xl border text-gray-600"
+            style={{
+              width: "80%",
+              borderColor: "#2C272E",
+            }}
+            type="text"
+            value={customHooks.searchTag}
+            onChange={(e) => {
+              customHooks.setSearchTag(e.target.value);
+            }}
+          />
+          <span style={{ width: "20%" }}>
+            <FontAwesomeIcon icon={faMagnifyingGlass} size="" />
+          </span>
           <Avatar
             alt="Remy Sharp"
             src="img/duck_avatar.png"

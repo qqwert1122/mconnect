@@ -51,7 +51,12 @@ const Main = ({ customHooks }) => {
         </div>
       ) : (
         // showingPosts
-        <div class="main__box flex flex-wrap">
+        <div
+          class="main__box flex flex-wrap"
+          style={{
+            transition: "0.5s",
+          }}
+        >
           {customHooks.posts
             .filter((fPost) =>
               customHooks.showingPostIds.includes(fPost.postId)
@@ -320,7 +325,7 @@ const Main = ({ customHooks }) => {
             )}
           </b>
         </span>
-        <span class="w-10 flex-nowrap bg-red-200">
+        <span class="w-10 flex-nowrap ">
           {customHooks.filterTag.map((mTag, mIndex) => (
             <span
               key={mIndex}
@@ -351,7 +356,7 @@ const Main = ({ customHooks }) => {
             bottom: "10px",
             borderRadius: "100%",
             boxShadow: "0 0 2px grey",
-            backgroundColor: "#fff44f",
+            backgroundColor: `${customHooks.color}`,
             color: `${customHooks.textColor}`,
             transition: "0.5s",
           }}

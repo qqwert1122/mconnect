@@ -35,7 +35,7 @@ const { persistAtom } = recoilPersist();
 
 const colorAtom = atom({
   key: "colorAtom",
-  default: "#DFDFDF",
+  default: "#2C272E",
   effects_UNSTABLE: [persistAtom],
 });
 

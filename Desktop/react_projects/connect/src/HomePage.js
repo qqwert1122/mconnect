@@ -447,12 +447,12 @@ const HomePage = ({ customHooks }) => {
       {/* page 3 */}
       <div ref={page3}></div>
       <div
-        class="w-full flex justify-center items-center text-5xl font-bold bg-green-200"
+        class="w-full flex justify-center items-center text-5xl font-bold"
         style={{
           height: "100vh",
         }}
       >
-        page3 😍
+        page3
       </div>
       <button
         class="fixed flex justify-center items-center bottom-0 w-full"

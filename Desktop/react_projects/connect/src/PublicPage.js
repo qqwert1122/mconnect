@@ -1,7 +1,9 @@
+import UserPage from "./UserPage";
+
 const PublicPage = ({ customHooks }) => {
   return (
     <div class="w-screen h-screen flex justify-center items-center text-5xl font-bold">
-      PublicPage 공사중 🛠️
+      <UserPage customHooks={customHooks} />
     </div>
   );
 };
