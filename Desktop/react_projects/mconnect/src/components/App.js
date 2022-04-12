@@ -1,14 +1,15 @@
 import AppRouter from "components/Router";
 import { useEffect, useState } from "react";
 import { createTheme } from "@mui/material/styles";
-import fbase, { authService } from "fbase";
+import CircularProgress from "@mui/material/CircularProgress";
+import { authService } from "fbase";
 
 const useCustomHooks = () => {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
 
   useEffect(() => {
-    authService.onAuthStateChanged((user) => {
+    authService.onAuthStateChanged(async (user) => {
       if (user) {
         setIsLoggedIn(true);
       } else {
@@ -48,7 +49,9 @@ const App = () => {
           <AppRouter customHooks={customHooks} />
         </>
       ) : (
-        "Initializing"
+        <div class="w-screen h-screen flex justify-center items-center">
+          <CircularProgress />
+        </div>
       )}
       {customHooks.isLoggedIn ? (
         <footer>&copy; Connect-Ideas {new Date().getFullYear()}</footer>

@@ -16,17 +16,45 @@ const AppRouter = ({ customHooks }) => {
       <Routes>
         {customHooks.isLoggedIn ? (
           <>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/ideas" element={<Ideas />} />
-            <Route exact path="/storming" element={<Storming />} />
-            <Route exact path="/explore" element={<Explore />} />
-            <Route exact path="/setting" element={<Setting />} />
-            <Route exact path="*" element={<Home />} />
+            <Route
+              exact
+              path="/"
+              element={<Home />}
+              customHooks={customHooks}
+            />
+            <Route
+              exact
+              path="/ideas"
+              element={<Ideas />}
+              customHooks={customHooks}
+            />
+            <Route
+              exact
+              path="/storming"
+              element={<Storming />}
+              customHooks={customHooks}
+            />
+            <Route
+              exact
+              path="/explore"
+              element={<Explore />}
+              customHooks={customHooks}
+            />
+            <Route
+              exact
+              path="/setting"
+              element={<Setting />}
+              customHooks={customHooks}
+            />
+            <Route
+              exact
+              path="*"
+              element={<Home />}
+              customHooks={customHooks}
+            />
           </>
         ) : (
-          <Route exact path="/">
-            <Route exact path="/" element={<Auth />} />
-          </Route>
+          <Route exact path="/" element={<Auth />} />
         )}
       </Routes>
     </>
