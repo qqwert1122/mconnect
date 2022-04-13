@@ -54,7 +54,9 @@ const App = () => {
         </div>
       )}
       {customHooks.isLoggedIn ? (
-        <footer>&copy; Connect-Ideas {new Date().getFullYear()}</footer>
+        <footer class="h-52">
+          &copy; Connect-Ideas {new Date().getFullYear()}
+        </footer>
       ) : (
         <></>
       )}
