@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import Paper from "@mui/material/Paper";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
@@ -11,16 +10,9 @@ import { ThemeProvider } from "@mui/material/styles";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 
 const BottomNavigationBar = ({ customHooks }) => {
-  const [navValue, setNavValue] = useState("/");
-  let navigate = useNavigate();
-
-  useEffect(() => {
-    navigate(`${navValue}`, { replace: true });
-  }, [navValue]);
-
   return (
     <>
-      <div class="w-screen fixed bottom-0">
+      <div class="w-screen fixed bottom-0 z-20">
         <ThemeProvider theme={customHooks.theme}>
           <Paper
             sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
@@ -28,9 +20,9 @@ const BottomNavigationBar = ({ customHooks }) => {
           >
             <BottomNavigation
               showLabels={false}
-              value={navValue}
+              value={customHooks.navValue}
               onChange={(event, newValue) => {
-                setNavValue(newValue);
+                customHooks.setNavValue(newValue);
               }}
             >
               <BottomNavigationAction

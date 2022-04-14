@@ -3,16 +3,11 @@
 @tailwind utilities;
 
 body {
+  color: #191919;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Gothic A1", "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
+  font-family: "Gothic A1";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-h1 {
-  font-family: "Black Han Sans", sans-serif;
 }
 
 .english__font {

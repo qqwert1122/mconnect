@@ -1,5 +1,6 @@
 import AppRouter from "components/Router";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { authService } from "fbase";
@@ -7,6 +8,13 @@ import { authService } from "fbase";
 const useCustomHooks = () => {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
+  const [navValue, setNavValue] = useState("/");
+
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    navigate(`${navValue}`, { replace: true });
+  }, [navValue]);
 
   useEffect(() => {
     authService.onAuthStateChanged(async (user) => {
@@ -23,9 +31,13 @@ const useCustomHooks = () => {
     palette: {
       primary: {
         main: "#5bb647",
+        light: "#8ee976",
+        dark: "#238516",
       },
       secondary: {
-        main: "#BFFF00",
+        main: "#fff44f",
+        light: "#ffff83",
+        dark: "#c9c208",
       },
     },
   });
@@ -36,6 +48,8 @@ const useCustomHooks = () => {
     isLoggedIn,
     setIsLoggedIn,
     theme,
+    navValue,
+    setNavValue,
   };
 };
 
@@ -45,17 +59,27 @@ const App = () => {
   return (
     <>
       {customHooks.init ? (
-        <>
-          <AppRouter customHooks={customHooks} />
-        </>
+        <AppRouter customHooks={customHooks} />
       ) : (
-        <div class="w-screen h-screen flex justify-center items-center">
-          <CircularProgress />
+        <div class="w-screen h-screen flex justify-center items-center mx-auto">
+          <div class="flex-col">
+            <div class="flex justify-center text-center">
+              <CircularProgress color="inherit" />
+            </div>
+            <div class="english__font flex justify-center mt-6 text-2xl font-black">
+              Loading
+            </div>
+          </div>
         </div>
       )}
       {customHooks.isLoggedIn ? (
-        <footer class="h-52">
-          &copy; Connect-Ideas {new Date().getFullYear()}
+        <footer
+          class="english__font h-52 p-3 font-black"
+          style={{
+            background: "#eeeeee",
+          }}
+        >
+          &copy; Connecteas {new Date().getFullYear()}
         </footer>
       ) : (
         <></>

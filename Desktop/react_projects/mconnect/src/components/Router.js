@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "routes/Home";
 import Ideas from "routes/Ideas";
+import Writing from "routes/Writing";
 import Storming from "routes/Storming";
 import Explore from "routes/Explore";
 import Setting from "routes/Setting";
@@ -19,42 +20,41 @@ const AppRouter = ({ customHooks }) => {
             <Route
               exact
               path="/"
-              element={<Home />}
-              customHooks={customHooks}
+              element={<Home customHooks={customHooks} />}
             />
             <Route
               exact
               path="/ideas"
-              element={<Ideas />}
-              customHooks={customHooks}
+              element={<Ideas customHooks={customHooks} />}
+            />
+            <Route
+              exact
+              path="/writing"
+              element={<Writing customHooks={customHooks} />}
             />
             <Route
               exact
               path="/storming"
-              element={<Storming />}
-              customHooks={customHooks}
+              element={<Storming customHooks={customHooks} />}
             />
             <Route
               exact
               path="/explore"
-              element={<Explore />}
-              customHooks={customHooks}
+              element={<Explore customHooks={customHooks} />}
             />
             <Route
               exact
               path="/setting"
-              element={<Setting />}
-              customHooks={customHooks}
+              element={<Setting customHooks={customHooks} />}
             />
             <Route
               exact
               path="*"
-              element={<Home />}
-              customHooks={customHooks}
+              element={<Home customHooks={customHooks} />}
             />
           </>
         ) : (
-          <Route exact path="/" element={<Auth />} />
+          <Route exact path="/" element={<Auth customHooks={customHooks} />} />
         )}
       </Routes>
     </>

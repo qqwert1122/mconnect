@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { authService } from "fbase";
 import Avatar from "@mui/material/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,13 +12,13 @@ import {
   faQuoteLeft,
   faHashtag,
   faCircleCheck,
-  faCircleChevronLeft,
-  faDeleteLeft,
   faTrash,
+  faEllipsis,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Home = (customHooks) => {
   const user = authService.currentUser;
+  let navigate = useNavigate();
 
   return (
     <div
@@ -28,8 +29,18 @@ const Home = (customHooks) => {
     >
       {/* top */}
       <div class="relative w-full pb-2 scroll-auto bg-white">
-        <div class="app__logo english__font font-black pt-4 mx-4 text-3xl ">
-          Connect
+        <div class="flex justify-between">
+          <div class=" english__font flex font-black pt-4 mx-4 text-3xl ">
+            Connecteas
+          </div>
+          <button
+            class="pt-4 mx-4"
+            onClick={() => {
+              navigate("/setting", { replace: true });
+            }}
+          >
+            <FontAwesomeIcon icon={faEllipsis} size="2xl" />
+          </button>
         </div>
         <div class="relative highlight mx-4 mt-4 mb-2 text-lg font-black z-10">
           새 아이디어 ✏️
@@ -63,7 +74,7 @@ const Home = (customHooks) => {
         </div>
 
         <div
-          class="borderShadow h-52 mt-4 mx-4 rounded-3xl"
+          class="shadow-xl h-52 mt-4 mx-4 rounded-3xl"
           style={{ background: "#eeeeee" }}
         >
           {/* form */}
@@ -110,10 +121,26 @@ const Home = (customHooks) => {
 
         <div class=""></div>
       </div>
-      <div class="mt-2 h-32 bg-blue-200">ideas</div>
-      <div class="mt-2 h-32 bg-red-200">Connect</div>
-      <div class="mt-2 h-32 bg-blue-200">storming</div>
-      <div class="mt-2 h-32 bg-red-200">explore</div>
+      <div class="english__font mt-2 h-60 bg-white">
+        <div class="relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
+          Ideas 💡
+        </div>
+      </div>
+      <div class="english__font mt-2 h-60 bg-white">
+        <div class="relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
+          Connect ♾️
+        </div>
+      </div>
+      <div class="english__font mt-2 h-60 bg-white">
+        <div class="relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
+          Storming ⚡
+        </div>
+      </div>
+      <div class="english__font mt-2 h-60 bg-white">
+        <div class="relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
+          Explore 🧭
+        </div>
+      </div>
     </div>
   );
 };

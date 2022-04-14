@@ -19,9 +19,8 @@ const Auth = () => {
   return (
     <div class="relative w-screen h-screen flex flex-wrap justify-center content-center">
       <div>
-        <h1 class="text-5xl  font-bold ">환영합니다,</h1>
-        <h2 class="text-3xl font-bold">바사아자차카파타하</h2>
-        <h2 class="text-3xl font-bold">아야어여오요우유.</h2>
+        <h2 class="english__font text-5xl">Welcome to</h2>
+        <h2 class="highlight english__font text-5xl">Connecteas</h2>
       </div>
       <h3 class="mt-16 text-xl font-bold">간편하게 회원가입/로그인 하기</h3>
 
