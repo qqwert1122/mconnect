@@ -1,4 +1,7 @@
 import "css/Writing.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { dbService } from "fbase";
@@ -33,6 +36,15 @@ const Writing = () => {
     }
   };
 
+  const settings = {
+    dots: true,
+    arrows: false,
+    infinite: false,
+    speed: 500,
+    slidesToScroll: 1,
+    centerMode: true,
+  };
+
   return (
     <div
       class="opening flex-col "
@@ -40,12 +52,13 @@ const Writing = () => {
         backgroundColor: "#eeeeee",
       }}
     >
-      <form class="mb-12">
+      <form class="mb-6">
         <div class="bg-white pb-5 rounded-b-3xl shadow-xl">
-          <div class="flex justify-between m-5 ">
+          <div class="flex justify-between items-center m-5 ">
             <button onClick={onBackClick}>
               <FontAwesomeIcon icon={faAngleLeft} size="2xl" />
             </button>
+            <h1 class="text-2xl font-black">새 아이디어 ✏️</h1>
             <div>
               <button class="mx-10">
                 <FontAwesomeIcon icon={faTrash} size="2xl" />
@@ -61,7 +74,7 @@ const Writing = () => {
               <FontAwesomeIcon icon={faT} />
             </span>
             <input
-              class="w-10/12 px-2 rounded-xl border-2 focus:border-current border-gray-300"
+              class="w-10/12 px-2 rounded-xl border-2 focus:border-current border-gray-200"
               type="text"
               placeholder="제목"
             />
@@ -72,7 +85,7 @@ const Writing = () => {
               <FontAwesomeIcon icon={faCircle} size="xs" />
             </span>
             <textarea
-              class="w-10/12 h-60 p-2 rounded-xl border-2 focus:border-current border-gray-300"
+              class="w-10/12 h-60 p-2 rounded-xl border-2 focus:border-current border-gray-200"
               type="text"
               placeholder="내용"
             />
@@ -83,7 +96,7 @@ const Writing = () => {
               <FontAwesomeIcon icon={faQuoteLeft} />
             </span>
             <input
-              class="w-10/12 px-2 rounded-xl border-2 focus:border-current border-gray-300"
+              class="w-10/12 px-2 rounded-xl border-2 focus:border-current border-gray-200"
               type="text"
               placeholder="출처"
             />
@@ -94,7 +107,7 @@ const Writing = () => {
               <FontAwesomeIcon icon={faHashtag} />
             </span>
             <input
-              class="w-10/12 px-2 rounded-xl border-2 focus:border-current border-gray-300"
+              class="w-10/12 px-2 rounded-xl border-2 focus:border-current border-gray-200"
               type="text"
               placeholder="태그"
             />
@@ -112,26 +125,42 @@ const Writing = () => {
           <span class="m-5 text-xl">{Date.now()}</span>
         </div>
       </form>
-
-      <div class="english__font mt-2 h-60 bg-white">
-        <div class="relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
-          Ideas 💡
-        </div>
+      <div class="highlight mx-16 my-2 flex justify-center text-2xl font-black">
+        연관된 아이디어 ♾️
       </div>
-      <div class="english__font mt-2 h-60 bg-white">
-        <div class="relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
-          Connect ♾️
-        </div>
-      </div>
-      <div class="english__font mt-2 h-60 bg-white">
-        <div class="relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
-          Storming ⚡
-        </div>
-      </div>
-      <div class="english__font mt-2 h-60 bg-white">
-        <div class="relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
-          Explore 🧭
-        </div>
+      <div class="relative pb-10 ">
+        <Slider {...settings}>
+          <div>
+            <div class="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+              hello
+            </div>
+          </div>
+          <div>
+            <div class="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+              hello
+            </div>
+          </div>
+          <div>
+            <div class="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+              hello
+            </div>
+          </div>
+          <div>
+            <div class="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+              hello
+            </div>
+          </div>
+          <div>
+            <div class="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+              hello
+            </div>
+          </div>
+          <div>
+            <div class="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+              hello
+            </div>
+          </div>
+        </Slider>
       </div>
     </div>
   );
