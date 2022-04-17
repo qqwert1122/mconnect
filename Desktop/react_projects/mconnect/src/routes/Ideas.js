@@ -26,15 +26,70 @@ import {
   faHashtag,
   faCircleCheck,
   faTrash,
+  faCircleUser,
+  faShapes,
 } from "@fortawesome/free-solid-svg-icons";
-import { faBookmark, faHeart } from "@fortawesome/free-regular-svg-icons";
+import {
+  faBookmark,
+  faCompass,
+  faHeart,
+} from "@fortawesome/free-regular-svg-icons";
 
 const testArr = ["text1", "text2", "text3", "text4", "text5", "text6"];
+const testTags = [
+  "경제",
+  "경영",
+  "비트코인",
+  "사회",
+  "프로그래밍",
+  "레시피",
+  "정치",
+  "러우크라이나전쟁",
+  "세계",
+  "주먹밥",
+  "나뭇잎",
+  "돋보기",
+  "책",
+  "무지개",
+  "삼성전자",
+  "테슬라",
+  "차트",
+  "기술적분석",
+  "기본적분석",
+  "통계",
+  "금리",
+  "물가",
+  "한국은행",
+];
+const testUsers = [
+  "Hugo Lloris",
+  "Matt Doherty",
+  "Sergio Reguilón",
+  "Cristian Romero",
+  "Pierre-Emile Højbjerg",
+  "Davinson Sánchez",
+  "Son Heung-min",
+  "Harry Winks",
+  "Harry Kane",
+  "Emerson Royal",
+  "Joe Rodon",
+  "Eric Dier",
+  "Ryan Sessègnon",
+  "Dejan Kulusevski",
+  "Pierluigi Gollini",
+  "Steven Bergwijn",
+  "Japhet Tanganga",
+  "Lucas Moura",
+  "Oliver Skipp",
+  "Rodrigo Bentancur",
+  "Ben Davies",
+  "Brandon Austin",
+];
 
 const Ideas = ({ customHooks }) => {
   const [value, setValue] = useState(0);
   const [isSearchClicked, setIsSearchClicked] = useState(false);
-
+  const [isConnectClicked, setIsConnectClicked] = useState(false);
   let navigate = useNavigate();
   const user = authService.currentUser;
 
@@ -63,6 +118,11 @@ const Ideas = ({ customHooks }) => {
   };
   const onWritingClick = () => {
     navigate("/writing", { replace: true });
+  };
+
+  const onConnectClick = () => {
+    setIsSearchClicked(false);
+    setIsConnectClicked(!isConnectClicked);
   };
 
   function TabPanel(props) {
@@ -162,74 +222,157 @@ const Ideas = ({ customHooks }) => {
   return (
     <>
       <div
-        class="relative"
         style={{
           background: "#eeeeee",
         }}
       >
         {/* App Bar */}
-        <div
-          class="fixed top-0 flex justify-between items-center p-2 w-full z-20"
-          style={{
-            backgroundColor: "#5bb647",
-            // justifyContent: `${isSearchClicked ? "space-between" : "flex-end"}`,
-          }}
-        >
-          {isSearchClicked ? (
-            <button class="text-white px-2" onClick={onSearchBackClick}>
-              <FontAwesomeIcon icon={faChevronLeft} size="xl" />
-            </button>
-          ) : (
-            <div class="px-2 english__font text-white text-2xl font-black">
-              Ideas
-            </div>
-          )}
-          <button
-            class="flex justify-between items-center h-8 p-2 duration-100  bg-white rounded-3xl"
+
+        <div class="fixed top-0 w-full z-20">
+          <div
+            class="flex justify-between items-center p-2"
             style={{
-              width: `${isSearchClicked ? "90%" : "80px"}`,
-              justifyContent: `${
-                isSearchClicked ? "space-between" : "flex-end"
-              }`,
+              backgroundColor: "#5bb647",
             }}
-            onClick={onSearchClick}
           >
             {isSearchClicked ? (
-              <input
-                id="searchInput"
-                class="w-full mx-2 px-2"
-                placeholder={isSearchClicked ? "Search" : ""}
-              />
+              <button class="text-white px-2" onClick={onSearchBackClick}>
+                <FontAwesomeIcon icon={faChevronLeft} size="xl" />
+              </button>
             ) : (
-              <></>
+              <div class="px-2 english__font text-white text-2xl font-black">
+                Ideas
+              </div>
             )}
-            <FontAwesomeIcon icon={faSearch} />
-          </button>
+            <button
+              class="flex justify-between items-center h-8 p-2 duration-100  bg-white rounded-3xl"
+              style={{
+                width: `${isSearchClicked ? "90%" : "80px"}`,
+                justifyContent: `${
+                  isSearchClicked ? "space-between" : "flex-end"
+                }`,
+              }}
+              onClick={onSearchClick}
+            >
+              {isSearchClicked ? (
+                <input
+                  id="searchInput"
+                  class="w-full mx-2 px-2"
+                  placeholder={isSearchClicked ? "Search" : ""}
+                  autoComplete="off"
+                />
+              ) : (
+                <></>
+              )}
+              <FontAwesomeIcon icon={faSearch} />
+            </button>
+          </div>
+          {/* Search Page /  */}
+          {isSearchClicked ? (
+            <div class="absolute w-full flex-col p-5 shadow-xl bg-white">
+              {/* 필터 검색 */}
+              <div
+                class="text-2xl font-black gap-2 mb-5"
+                style={{ color: "#5bb647" }}
+              >
+                필터&nbsp;
+                <span>
+                  <FontAwesomeIcon icon={faSliders} />
+                </span>
+              </div>
+              <div class="flex text-2xl gap-4 mb-10">
+                <FontAwesomeIcon icon={faHeart} />
+                <FontAwesomeIcon icon={faBookmark} />
+                <FontAwesomeIcon icon={faCompass} />
+              </div>
+              {/* 카테고리 검색 */}
+              <div
+                class="text-2xl font-black gap-2 mb-5"
+                style={{ color: "#5bb647" }}
+              >
+                카테고리&nbsp;
+                <span>
+                  <FontAwesomeIcon icon={faShapes} />
+                </span>
+              </div>
+              <div class="flex items-center text-2xl gap-4 mb-10">
+                <FontAwesomeIcon icon={faCircle} size="sm" />
+                <FontAwesomeIcon icon={faMinus} />
+                <FontAwesomeIcon icon={faSquare} />
+                <FontAwesomeIcon icon={faDiceD6} />
+              </div>
+              {/* 태그 검색 */}
+              <div
+                class="text-2xl font-black gap-2 mb-5"
+                style={{ color: "#5bb647" }}
+              >
+                태그&nbsp;
+                <span>
+                  <FontAwesomeIcon icon={faHashtag} />
+                </span>
+              </div>
+              <div class="flex text-2xl flex-wrap gap-2 mb-10 max-h-28 overflow-scroll">
+                {testTags.map((m, i) => (
+                  <span
+                    key={i}
+                    class="border-2 rounded-3xl border-black px-1  text-base"
+                  >
+                    {m}
+                  </span>
+                ))}
+              </div>
+              {/* 사용자 검색 */}
+              <div
+                class="text-2xl font-black gap-2 mb-5"
+                style={{ color: "#5bb647" }}
+              >
+                사용자&nbsp;
+                <span>
+                  <FontAwesomeIcon icon={faCircleUser} />
+                </span>
+              </div>
+              <div class="flex text-2xl flex-wrap gap-2 max-h-28 overflow-scroll">
+                {testUsers.map((m, i) => (
+                  <span
+                    key={i}
+                    class="flex items-center justify-between border-2 rounded-3xl border-black px-1 text-base gap-1"
+                  >
+                    <img
+                      class="rounded-full"
+                      src={`https://i.pravatar.cc/30?img=${i}`}
+                    />
+                    {m}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : isConnectClicked ? (
+            // Connected Ideas
+            <div class="shadow-xl" style={{ backgroundColor: "#eeeeee" }}>
+              <div class="highlight mx-16 mt-5 mb-2 flex justify-center text-2xl font-black z-10">
+                연관된 아이디어 ♾️
+              </div>
+              <div class="relative pb-10 ">
+                <Slider {...settings}>
+                  {testArr.map((m, i) => (
+                    <div key={i}>
+                      <div class="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+                        {m}
+                      </div>
+                    </div>
+                  ))}
+                </Slider>
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
 
-        {/* Search Page */}
-        <div></div>
-
         {/* Tabs */}
-        <div class="bg-white" style={{ paddingTop: "48px" }}>
-          {/* Connected Ideas */}
-          <div style={{ backgroundColor: "#eeeeee" }}>
-            <div class="highlight mx-16 mt-5 mb-2 flex justify-center text-2xl font-black z-10">
-              연관된 아이디어 ♾️
-            </div>
-            <div class="relative pb-10 ">
-              <Slider {...settings}>
-                {testArr.map((m, i) => (
-                  <div key={i}>
-                    <div class="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
-                      {m}
-                    </div>
-                  </div>
-                ))}
-              </Slider>
-            </div>
-          </div>
-          {/* <ThemeProvider theme={customHooks.theme}>
+
+        {/* Contents */}
+        {/* <ThemeProvider theme={customHooks.theme}>
             <Tabs value={value} onChange={handleChange} centered label="top">
               <Tab
                 icon={<FontAwesomeIcon icon={faLayerGroup} size="xl" />}
@@ -278,17 +421,19 @@ const Ideas = ({ customHooks }) => {
               Item Two
             </TabPanel>
           </ThemeProvider> */}
-        </div>
-
-        {/* Contents */}
-        <div class=" mt-2 bg-white">
+        <div
+          class=" bg-white duration-100"
+          style={{ paddingTop: `${isConnectClicked ? "400px" : "48px"}` }}
+        >
           <div class="english__font relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
             Ideas 💡
           </div>
-          {ideaDummy}
-          {ideaDummy}
-          {ideaDummy}
-          {ideaDummy}
+          <div class={isSearchClicked ? "blur-sm" : ""}>
+            {ideaDummy}
+            {ideaDummy}
+            {ideaDummy}
+            {ideaDummy}
+          </div>
         </div>
 
         <div class="fixed bottom-24 right-10 z-10">
@@ -305,11 +450,12 @@ const Ideas = ({ customHooks }) => {
         </div>
         <div class="fixed bottom-40 right-10 z-10">
           <button
-            class="shadow-2xl rounded-full w-14 h-14"
+            class="shadow-2xl rounded-full w-14 h-14 duration-200"
             style={{
               color: "#ffffff",
-              backgroundColor: "#767676",
+              backgroundColor: `${isConnectClicked ? "#5bb647" : "#767676"}`,
             }}
+            onClick={onConnectClick}
           >
             <FontAwesomeIcon icon={faCircleNodes} size="xl" />
           </button>

@@ -19,7 +19,7 @@ import {
   faEllipsis,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Home = (customHooks) => {
+const Home = ({ customHooks }) => {
   const user = authService.currentUser;
   let navigate = useNavigate();
 
@@ -30,6 +30,27 @@ const Home = (customHooks) => {
     speed: 500,
     slidesToScroll: 1,
     centerMode: true,
+  };
+
+  const onEllipsisClick = () => {
+    customHooks.setNavValue("/setting");
+    navigate("/setting", { replace: true });
+  };
+  const onIdeasClick = () => {
+    customHooks.setNavValue("/ideas");
+    navigate("/ideas", { replace: true });
+  };
+  const onConnectClick = () => {
+    customHooks.setNavValue("/ideas");
+    navigate("/ideas", { replace: true });
+  };
+  const onStormingClick = () => {
+    customHooks.setNavValue("/storming");
+    navigate("/storming", { replace: true });
+  };
+  const onExploreClick = () => {
+    customHooks.setNavValue("/explore");
+    navigate("/explore", { replace: true });
   };
 
   return (
@@ -45,12 +66,7 @@ const Home = (customHooks) => {
           <div class=" english__font flex font-black pt-4 mx-4 text-3xl ">
             Connecteas
           </div>
-          <button
-            class="pt-4 mx-4"
-            onClick={() => {
-              navigate("/setting", { replace: true });
-            }}
-          >
+          <button class="pt-4 mx-4" onClick={onEllipsisClick}>
             <FontAwesomeIcon icon={faEllipsis} size="2xl" />
           </button>
         </div>
@@ -138,9 +154,12 @@ const Home = (customHooks) => {
           <div class="english__font absolute highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
             Ideas 💡
           </div>
-          <div class="absolute right-16 mt-4 mb-2 text-xl font-black z-10">
+          <button
+            class="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
+            onClick={onIdeasClick}
+          >
             더보기
-          </div>
+          </button>
         </div>
         <div class="relative pb-10 ">
           <Slider {...settings}>
@@ -212,9 +231,12 @@ const Home = (customHooks) => {
           <div class="english__font absolute highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
             Connect ♾️
           </div>
-          <div class="absolute right-16 mt-4 mb-2 text-xl font-black z-10">
+          <button
+            class="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
+            onClick={onConnectClick}
+          >
             더보기
-          </div>
+          </button>
         </div>
         <div class="relative pb-10 ">
           <Slider {...settings}>
@@ -286,9 +308,12 @@ const Home = (customHooks) => {
           <div class="english__font absolute highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
             Storming ⚡
           </div>
-          <div class="absolute right-16 mt-4 mb-2 text-xl font-black z-10">
+          <button
+            class="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
+            onClick={onStormingClick}
+          >
             더보기
-          </div>
+          </button>
         </div>
         <div class="relative px-10 pb-10 flex flex-wrap">
           <div class="border-box flex w-1/2 p-1">
@@ -330,9 +355,12 @@ const Home = (customHooks) => {
           <div class="absolute english__font highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
             Explore 🧭
           </div>
-          <div class="absolute right-16 mt-4 mb-2 text-xl font-black z-10">
+          <button
+            class="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
+            onClick={onExploreClick}
+          >
             더보기
-          </div>
+          </button>
         </div>
         <div class="relative pb-10 ">
           <Slider {...settings}>
