@@ -143,9 +143,9 @@ const Ideas = ({ customHooks }) => {
 
   const ideaDummy = (
     <>
-      <div class="flex justify-between items-end mx-4 mt-2">
-        <div class="flex items-end">
-          <div class="flex mx-3">
+      <div className="flex justify-between items-end mx-4 mt-2">
+        <div className="flex items-end">
+          <div className="flex mx-3">
             <Avatar
               alt="avatar"
               src={user.photoURL}
@@ -161,43 +161,43 @@ const Ideas = ({ customHooks }) => {
           </h2>
         </div>
         {/* button */}
-        <div class="flex text-2xl">
-          <button class="mt-3 ">
+        <div className="flex text-2xl">
+          <button className="mt-3 ">
             <FontAwesomeIcon icon={faTrash} />
           </button>
-          <button class="mt-3 mx-5">
+          <button className="mt-3 mx-5">
             <FontAwesomeIcon icon={faCircleCheck} />
           </button>
         </div>
       </div>
 
       <div
-        class="shadow-xl h-52 mt-4 mx-4 rounded-3xl"
+        className="shadow-xl h-52 mt-4 mx-4 rounded-3xl"
         style={{ background: "#eeeeee" }}
       >
         {/* form */}
-        <form class="flex-col w-full h-full">
-          <div class="flex items-center p-3">
+        <form className="flex-col w-full h-full">
+          <div className="flex items-center p-3">
             <FontAwesomeIcon icon={faCircle} size="xs" />
             <textarea
-              class=" rounded-xl border-2 mx-3 p-2 w-full h-24"
+              className=" rounded-xl border-2 mx-3 p-2 w-full h-24"
               type="text"
               placeholder="내용을 입력하세요"
               required
             />
           </div>
-          <div class="flex items-center px-3 py-1">
+          <div className="flex items-center px-3 py-1">
             <FontAwesomeIcon icon={faQuoteLeft} />
             <input
-              class=" rounded-xl border-2 mx-3 px-2 w-full"
+              className=" rounded-xl border-2 mx-3 px-2 w-full"
               type="text"
               placeholder="출처를 입력하세요"
             />
           </div>
-          <div class="flex items-center px-3 py-1">
+          <div className="flex items-center px-3 py-1">
             <FontAwesomeIcon icon={faHashtag} />
             <input
-              class=" rounded-xl border-2 mx-3 px-2 w-full"
+              className=" rounded-xl border-2 mx-3 px-2 w-full"
               type="text"
               placeholder="태그를 입력하세요"
             />
@@ -205,16 +205,16 @@ const Ideas = ({ customHooks }) => {
         </form>
       </div>
       {/* like, bookmark, time */}
-      <div class="flex justify-between items-center mx-6 my-4">
+      <div className="flex justify-between items-center mx-6 my-4">
         <div>
-          <button class="mx-5 text-2xl text-red-600">
+          <button className="mx-5 text-2xl text-red-600">
             <FontAwesomeIcon icon={faHeart} />
           </button>
-          <button class="text-2xl text-orange-400">
+          <button className="text-2xl text-orange-400">
             <FontAwesomeIcon icon={faBookmark} />
           </button>
         </div>
-        <div class="mx-3 text-xl">{Date.now()}</div>
+        <div className="mx-3 text-xl">{Date.now()}</div>
       </div>
     </>
   );
@@ -228,24 +228,24 @@ const Ideas = ({ customHooks }) => {
       >
         {/* App Bar */}
 
-        <div class="fixed top-0 w-full z-20">
+        <div className="fixed top-0 w-full z-20">
           <div
-            class="flex justify-between items-center p-2"
+            className="flex justify-between items-center p-2"
             style={{
               backgroundColor: "#5bb647",
             }}
           >
             {isSearchClicked ? (
-              <button class="text-white px-2" onClick={onSearchBackClick}>
+              <button className="text-white px-2" onClick={onSearchBackClick}>
                 <FontAwesomeIcon icon={faChevronLeft} size="xl" />
               </button>
             ) : (
-              <div class="px-2 english__font text-white text-2xl font-black">
+              <div className="px-2 english__font text-white text-2xl font-black">
                 Ideas
               </div>
             )}
             <button
-              class="flex justify-between items-center h-8 p-2 duration-100  bg-white rounded-3xl"
+              className="flex justify-between items-center h-8 p-2 duration-100  bg-white rounded-3xl"
               style={{
                 width: `${isSearchClicked ? "90%" : "80px"}`,
                 justifyContent: `${
@@ -257,7 +257,7 @@ const Ideas = ({ customHooks }) => {
               {isSearchClicked ? (
                 <input
                   id="searchInput"
-                  class="w-full mx-2 px-2"
+                  className="w-full mx-2 px-2"
                   placeholder={isSearchClicked ? "Search" : ""}
                   autoComplete="off"
                 />
@@ -269,95 +269,106 @@ const Ideas = ({ customHooks }) => {
           </div>
           {/* Search Page /  */}
           {isSearchClicked ? (
-            <div class="absolute w-full flex-col p-5 shadow-xl bg-white">
+            <div
+              className="absolute w-full flex-col shadow-xl"
+              style={{ backgroundColor: "#eeeeee" }}
+            >
               {/* 필터 검색 */}
-              <div
-                class="text-2xl font-black gap-2 mb-5"
-                style={{ color: "#5bb647" }}
-              >
-                필터&nbsp;
-                <span>
-                  <FontAwesomeIcon icon={faSliders} />
-                </span>
-              </div>
-              <div class="flex text-2xl gap-4 mb-10">
-                <FontAwesomeIcon icon={faHeart} />
-                <FontAwesomeIcon icon={faBookmark} />
-                <FontAwesomeIcon icon={faCompass} />
+              <div class="p-5 mb-2 bg-white">
+                <div
+                  className="text-2xl font-black gap-2 mb-5"
+                  style={{ color: "#5bb647" }}
+                >
+                  필터&nbsp;
+                  <span>
+                    <FontAwesomeIcon icon={faSliders} />
+                  </span>
+                </div>
+                <div className="flex text-2xl gap-4">
+                  <FontAwesomeIcon icon={faHeart} />
+                  <FontAwesomeIcon icon={faBookmark} />
+                  <FontAwesomeIcon icon={faCompass} />
+                </div>
               </div>
               {/* 카테고리 검색 */}
-              <div
-                class="text-2xl font-black gap-2 mb-5"
-                style={{ color: "#5bb647" }}
-              >
-                카테고리&nbsp;
-                <span>
-                  <FontAwesomeIcon icon={faShapes} />
-                </span>
-              </div>
-              <div class="flex items-center text-2xl gap-4 mb-10">
-                <FontAwesomeIcon icon={faCircle} size="sm" />
-                <FontAwesomeIcon icon={faMinus} />
-                <FontAwesomeIcon icon={faSquare} />
-                <FontAwesomeIcon icon={faDiceD6} />
+              <div class="p-5 mb-2 bg-white">
+                <div
+                  className="text-2xl font-black gap-2 mb-5"
+                  style={{ color: "#5bb647" }}
+                >
+                  카테고리&nbsp;
+                  <span>
+                    <FontAwesomeIcon icon={faShapes} />
+                  </span>
+                </div>
+                <div className="flex items-center text-2xl gap-4">
+                  <FontAwesomeIcon icon={faCircle} size="sm" />
+                  <FontAwesomeIcon icon={faMinus} />
+                  <FontAwesomeIcon icon={faSquare} />
+                  <FontAwesomeIcon icon={faDiceD6} />
+                </div>
               </div>
               {/* 태그 검색 */}
-              <div
-                class="text-2xl font-black gap-2 mb-5"
-                style={{ color: "#5bb647" }}
-              >
-                태그&nbsp;
-                <span>
-                  <FontAwesomeIcon icon={faHashtag} />
-                </span>
-              </div>
-              <div class="flex text-2xl flex-wrap gap-2 mb-10 max-h-28 overflow-scroll">
-                {testTags.map((m, i) => (
-                  <span
-                    key={i}
-                    class="border-2 rounded-3xl border-black px-1  text-base"
-                  >
-                    {m}
+              <div class="p-5 mb-2 bg-white">
+                <div
+                  className="text-2xl font-black gap-2 mb-5"
+                  style={{ color: "#5bb647" }}
+                >
+                  태그&nbsp;
+                  <span>
+                    <FontAwesomeIcon icon={faHashtag} />
                   </span>
-                ))}
+                </div>
+                <div className="flex text-2xl flex-wrap gap-2 max-h-28 overflow-scroll">
+                  {testTags.map((m, i) => (
+                    <span
+                      key={i}
+                      className="border-2 rounded-3xl border-black px-1  text-base"
+                    >
+                      {m}
+                    </span>
+                  ))}
+                </div>
               </div>
               {/* 사용자 검색 */}
-              <div
-                class="text-2xl font-black gap-2 mb-5"
-                style={{ color: "#5bb647" }}
-              >
-                사용자&nbsp;
-                <span>
-                  <FontAwesomeIcon icon={faCircleUser} />
-                </span>
-              </div>
-              <div class="flex text-2xl flex-wrap gap-2 max-h-28 overflow-scroll">
-                {testUsers.map((m, i) => (
-                  <span
-                    key={i}
-                    class="flex items-center justify-between border-2 rounded-3xl border-black px-1 text-base gap-1"
-                  >
-                    <img
-                      class="rounded-full"
-                      src={`https://i.pravatar.cc/30?img=${i}`}
-                    />
-                    {m}
+              <div class="p-5 bg-white">
+                <div
+                  className="text-2xl font-black gap-2 mb-5"
+                  style={{ color: "#5bb647" }}
+                >
+                  사용자&nbsp;
+                  <span>
+                    <FontAwesomeIcon icon={faCircleUser} />
                   </span>
-                ))}
+                </div>
+                <div className="flex text-2xl flex-wrap gap-2 max-h-28 overflow-scroll">
+                  {testUsers.map((user, i) => (
+                    <span
+                      key={i}
+                      className="flex items-center justify-between border-2 rounded-3xl border-black px-1 text-base gap-1"
+                    >
+                      <img
+                        className="rounded-full"
+                        src={`https://i.pravatar.cc/30?img=${i}`}
+                      />
+                      {user}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ) : isConnectClicked ? (
             // Connected Ideas
-            <div class="shadow-xl" style={{ backgroundColor: "#eeeeee" }}>
-              <div class="highlight mx-16 mt-5 mb-2 flex justify-center text-2xl font-black z-10">
+            <div className="shadow-xl" style={{ backgroundColor: "#eeeeee" }}>
+              <div className="highlight mx-16 mt-5 mb-2 flex justify-center text-2xl font-black z-10">
                 연관된 아이디어 ♾️
               </div>
-              <div class="relative pb-10 ">
+              <div className="relative pb-10 ">
                 <Slider {...settings}>
-                  {testArr.map((m, i) => (
+                  {testArr.map((arr, i) => (
                     <div key={i}>
-                      <div class="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
-                        {m}
+                      <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+                        {arr}
                       </div>
                     </div>
                   ))}
@@ -368,77 +379,25 @@ const Ideas = ({ customHooks }) => {
             <></>
           )}
         </div>
-
-        {/* Tabs */}
-
-        {/* Contents */}
-        {/* <ThemeProvider theme={customHooks.theme}>
-            <Tabs value={value} onChange={handleChange} centered label="top">
-              <Tab
-                icon={<FontAwesomeIcon icon={faLayerGroup} size="xl" />}
-                label="List"
-                aria-label="List"
-              />
-              <Tab
-                icon={<FontAwesomeIcon icon={faCircleNodes} size="xl" />}
-                label="Connect"
-                aria-label="Connect"
-              />
-            </Tabs>
-            <TabPanel value={value} index={0}>
-              <div class="flex justify-start gap-2">
-                <Chip
-                  sx={{ fontSize: "1rem", p: "0.2rem" }}
-                  icon={<FontAwesomeIcon icon={faCircle} size="2xs" />}
-                  label="Dot"
-                  variant="outlined"
-                  onClick={() => {}}
-                />
-                <Chip
-                  sx={{ fontSize: "1rem", p: "0.2rem" }}
-                  icon={<FontAwesomeIcon icon={faMinus} />}
-                  label="Line"
-                  variant="outlined"
-                  onClick={() => {}}
-                />
-                <Chip
-                  sx={{ fontSize: "1rem", p: "0.2rem" }}
-                  icon={<FontAwesomeIcon icon={faSquare} size="xs" />}
-                  label="Square"
-                  variant="outlined"
-                  onClick={() => {}}
-                />
-                <Chip
-                  sx={{ fontSize: "1rem", p: "0.2rem" }}
-                  icon={<FontAwesomeIcon icon={faDiceD6} />}
-                  label="Cube"
-                  variant="outlined"
-                  onClick={() => {}}
-                />
-              </div>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              Item Two
-            </TabPanel>
-          </ThemeProvider> */}
+        {/*Contens*/}
         <div
-          class=" bg-white duration-100"
+          className=" bg-white duration-100"
           style={{ paddingTop: `${isConnectClicked ? "400px" : "48px"}` }}
         >
-          <div class="english__font relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
+          <div className="english__font relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
             Ideas 💡
           </div>
-          <div class={isSearchClicked ? "blur-sm" : ""}>
+          <div className={isSearchClicked ? "blur-sm" : ""}>
             {ideaDummy}
             {ideaDummy}
             {ideaDummy}
             {ideaDummy}
           </div>
         </div>
-
-        <div class="fixed bottom-24 right-10 z-10">
+        {/* Floating Action Button, FAB */}
+        <div className="fixed bottom-24 right-10 z-10">
           <button
-            class="shadow-2xl rounded-full w-14 h-14"
+            className="shadow-2xl rounded-full w-14 h-14"
             style={{
               color: "#ffffff",
               backgroundColor: "#767676",
@@ -448,9 +407,9 @@ const Ideas = ({ customHooks }) => {
             <FontAwesomeIcon icon={faFeatherPointed} size="xl" />
           </button>
         </div>
-        <div class="fixed bottom-40 right-10 z-10">
+        <div className="fixed bottom-40 right-10 z-10">
           <button
-            class="shadow-2xl rounded-full w-14 h-14 duration-200"
+            className="shadow-2xl rounded-full w-14 h-14 duration-200"
             style={{
               color: "#ffffff",
               backgroundColor: `${isConnectClicked ? "#5bb647" : "#767676"}`,

@@ -12,7 +12,7 @@ import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 const BottomNavigationBar = ({ customHooks }) => {
   return (
     <>
-      <div class="w-screen fixed bottom-0 z-20">
+      <div className="w-screen fixed bottom-0 z-20">
         <ThemeProvider theme={customHooks.theme}>
           <Paper
             sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}

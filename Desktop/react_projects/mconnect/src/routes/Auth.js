@@ -17,16 +17,16 @@ const Auth = () => {
   };
 
   return (
-    <div class="relative w-screen h-screen flex flex-wrap justify-center content-center">
+    <div className="relative w-screen h-screen flex flex-wrap justify-center content-center">
       <div>
-        <h2 class="english__font text-5xl">Welcome to</h2>
-        <h2 class="highlight english__font text-5xl">Connecteas</h2>
+        <h2 className="english__font text-5xl">Welcome to</h2>
+        <h2 className="highlight english__font text-5xl">Connecteas</h2>
       </div>
-      <h3 class="mt-16 text-xl font-bold">간편하게 회원가입/로그인 하기</h3>
+      <h3 className="mt-16 text-xl font-bold">간편하게 회원가입/로그인 하기</h3>
 
-      <button class="flex" onClick={onGoogleClick}>
+      <button className="flex" onClick={onGoogleClick}>
         <img
-          class="mt-8"
+          className="mt-8"
           style={{
             width: "auto",
             height: "4rem",

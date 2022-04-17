@@ -15,8 +15,8 @@ const Setting = () => {
   return (
     <div>
       <div>Setting</div>
-      <div class="flex items-center mt-8 m-4">
-        <div class="flex mr-2">
+      <div className="flex items-center mt-8 m-4">
+        <div className="flex mr-2">
           <Avatar
             alt="avatar"
             src={user.photoURL}
@@ -27,9 +27,9 @@ const Setting = () => {
             }}
           />
         </div>
-        <div class="flex-col">
-          <h2 class="text-base ">반갑습니다</h2>
-          <h2 class="text-xl ">
+        <div className="flex-col">
+          <h2 className="text-base ">반갑습니다</h2>
+          <h2 className="text-xl ">
             <b>{user.displayName}</b>님
           </h2>
         </div>

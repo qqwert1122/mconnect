@@ -61,12 +61,12 @@ const App = () => {
       {customHooks.init ? (
         <AppRouter customHooks={customHooks} />
       ) : (
-        <div class="w-screen h-screen flex justify-center items-center mx-auto">
-          <div class="flex-col">
-            <div class="flex justify-center text-center">
+        <div className="w-screen h-screen flex justify-center items-center mx-auto">
+          <div className="flex-col">
+            <div className="flex justify-center text-center">
               <CircularProgress color="inherit" />
             </div>
-            <div class="english__font flex justify-center mt-6 text-2xl font-black">
+            <div className="english__font flex justify-center mt-6 text-2xl font-black">
               Loading
             </div>
           </div>
@@ -74,7 +74,7 @@ const App = () => {
       )}
       {customHooks.isLoggedIn ? (
         <footer
-          class="english__font h-52 p-3 font-black"
+          className="english__font h-52 p-3 font-black"
           style={{
             background: "#eeeeee",
           }}

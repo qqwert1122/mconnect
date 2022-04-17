@@ -6,17 +6,23 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark, faHeart } from "@fortawesome/free-regular-svg-icons";
+import {
+  faBookmark,
+  faHeart as farHeart,
+} from "@fortawesome/free-regular-svg-icons";
 import {
   faCircle,
   faDiceD6,
   faSquare,
   faMinus,
+  faHeart as fasHeart,
   faQuoteLeft,
   faHashtag,
   faCircleCheck,
   faTrash,
   faEllipsis,
+  faFireFlameCurved,
+  faDice,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Home = ({ customHooks }) => {
@@ -31,6 +37,29 @@ const Home = ({ customHooks }) => {
     slidesToScroll: 1,
     centerMode: true,
   };
+  const menuItems = [
+    {
+      icon: <FontAwesomeIcon icon={faFireFlameCurved} />,
+      label: "인기",
+      bgColor: "bg-red-500",
+    },
+    {
+      icon: <FontAwesomeIcon icon={fasHeart} />,
+      label: "좋아요",
+      bgColor: "bg-orange-500",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faHashtag} />,
+      label: "태그",
+      bgColor: "bg-lime-500",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faDice} />,
+      label: "랜덤",
+      bgColor: "bg-sky-500",
+    },
+  ];
+  const testArr = ["text-1", "text-2", "text-3", "text-4", "text-5"];
 
   const onEllipsisClick = () => {
     customHooks.setNavValue("/setting");
@@ -53,29 +82,46 @@ const Home = ({ customHooks }) => {
     navigate("/explore", { replace: true });
   };
 
+  const testArrSlide = (
+    <Slider {...settings}>
+      {testArr.map((arr, index) => (
+        <div key={index}>
+          <div
+            className="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
+            style={{
+              backgroundColor: "#eeeeee",
+            }}
+          >
+            {arr}
+          </div>
+        </div>
+      ))}
+    </Slider>
+  );
+
   return (
     <div
-      class="w-screen"
+      className="w-screen"
       style={{
         background: "#eeeeee",
       }}
     >
       {/* top */}
-      <div class="relative w-full pb-2 bg-white">
-        <div class="flex justify-between">
-          <div class=" english__font flex font-black pt-4 mx-4 text-3xl ">
+      <div className="relative w-full pb-2 bg-white">
+        <div className="flex justify-between">
+          <div className=" english__font flex font-black pt-4 mx-4 text-3xl ">
             Connecteas
           </div>
-          <button class="pt-4 mx-4" onClick={onEllipsisClick}>
+          <button className="pt-4 mx-4" onClick={onEllipsisClick}>
             <FontAwesomeIcon icon={faEllipsis} size="2xl" />
           </button>
         </div>
-        <div class="relative highlight mx-4 mt-4 mb-2 text-lg font-black z-10">
+        <div className="relative highlight mx-4 mt-4 mb-2 text-lg font-black z-10">
           새 아이디어 ✏️
         </div>
-        <div class="flex justify-between items-end mx-4 mt-2">
-          <div class="flex items-end">
-            <div class="flex mx-3">
+        <div className="flex justify-between items-end mx-4 mt-2">
+          <div className="flex items-end">
+            <div className="flex mx-3">
               <Avatar
                 alt="avatar"
                 src={user.photoURL}
@@ -91,43 +137,43 @@ const Home = ({ customHooks }) => {
             </h2>
           </div>
           {/* button */}
-          <div class="flex text-2xl">
-            <button class="mt-3 ">
+          <div className="flex text-2xl">
+            <button className="mt-3 ">
               <FontAwesomeIcon icon={faTrash} />
             </button>
-            <button class="mt-3 mx-5">
+            <button className="mt-3 mx-5">
               <FontAwesomeIcon icon={faCircleCheck} />
             </button>
           </div>
         </div>
 
         <div
-          class="shadow-xl h-52 mt-4 mx-4 rounded-3xl"
+          className="shadow-xl h-52 mt-4 mx-4 rounded-3xl"
           style={{ background: "#eeeeee" }}
         >
           {/* form */}
-          <form class="flex-col w-full h-full">
-            <div class="flex items-center p-3">
+          <form className="flex-col w-full h-full">
+            <div className="flex items-center p-3">
               <FontAwesomeIcon icon={faCircle} size="xs" />
               <textarea
-                class=" rounded-xl border-2 mx-3 p-2 w-full h-24"
+                className=" rounded-xl border-2 mx-3 p-2 w-full h-24"
                 type="text"
                 placeholder="내용을 입력하세요"
                 required
               />
             </div>
-            <div class="flex items-center px-3 py-1">
+            <div className="flex items-center px-3 py-1">
               <FontAwesomeIcon icon={faQuoteLeft} />
               <input
-                class=" rounded-xl border-2 mx-3 px-2 w-full"
+                className=" rounded-xl border-2 mx-3 px-2 w-full"
                 type="text"
                 placeholder="출처를 입력하세요"
               />
             </div>
-            <div class="flex items-center px-3 py-1">
+            <div className="flex items-center px-3 py-1">
               <FontAwesomeIcon icon={faHashtag} />
               <input
-                class=" rounded-xl border-2 mx-3 px-2 w-full"
+                className=" rounded-xl border-2 mx-3 px-2 w-full"
                 type="text"
                 placeholder="태그를 입력하세요"
               />
@@ -135,297 +181,91 @@ const Home = ({ customHooks }) => {
           </form>
         </div>
         {/* like, bookmark, time */}
-        <div class="flex justify-between items-center mx-6 my-4">
+        <div className="flex justify-between items-center mx-6 my-4">
           <div>
-            <button class="mx-5 text-2xl text-red-600">
-              <FontAwesomeIcon icon={faHeart} />
+            <button className="mx-5 text-2xl text-red-600">
+              <FontAwesomeIcon icon={farHeart} />
             </button>
-            <button class="text-2xl text-orange-400">
+            <button className="text-2xl text-orange-400">
               <FontAwesomeIcon icon={faBookmark} />
             </button>
           </div>
-          <div class="mx-3 text-xl">{Date.now()}</div>
+          <div className="mx-3 text-xl">{Date.now()}</div>
         </div>
 
-        <div class=""></div>
+        <div className=""></div>
       </div>
-      <div class=" mt-2 bg-white">
-        <div class="flex justify-between items-center">
-          <div class="english__font absolute highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
+      {/* Ideas */}
+      <div className=" mt-2 bg-white">
+        <div className="flex justify-between items-center">
+          <div className="english__font absolute highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
             Ideas 💡
           </div>
           <button
-            class="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
+            className="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
             onClick={onIdeasClick}
           >
             더보기
           </button>
         </div>
-        <div class="relative pb-10 ">
-          <Slider {...settings}>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-          </Slider>
-        </div>
+        <div className="relative pb-10 ">{testArrSlide}</div>
       </div>
-      <div class=" mt-2 bg-white">
-        <div class="flex justify-between items-center">
-          <div class="english__font absolute highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
+      <div className=" mt-2 bg-white">
+        <div className="flex justify-between items-center">
+          <div className="english__font absolute highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
             Connect ♾️
           </div>
           <button
-            class="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
+            className="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
             onClick={onConnectClick}
           >
             더보기
           </button>
         </div>
-        <div class="relative pb-10 ">
-          <Slider {...settings}>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-          </Slider>
-        </div>
+        <div className="relative pb-10 ">{testArrSlide}</div>
       </div>
-      <div class=" mt-2 bg-white">
-        <div class="flex justify-between items-center">
-          <div class="english__font absolute highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
+      {/* Storming */}
+      <div className=" mt-2 bg-white">
+        <div className="flex justify-between items-center">
+          <div className="english__font absolute highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
             Storming ⚡
           </div>
           <button
-            class="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
+            className="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
             onClick={onStormingClick}
           >
             더보기
           </button>
         </div>
-        <div class="relative px-10 pb-10 flex flex-wrap">
-          <div class="border-box flex w-1/2 p-1">
-            <div
-              class="shadow-xl w-full h-24 m-1 p-2 rounded-xl "
-              style={{
-                backgroundColor: "#ffff83",
-              }}
-            ></div>
-          </div>
-          <div class="border-box flex w-1/2 p-1">
-            <div
-              class="shadow-xl w-full h-24 m-1 p-2 rounded-xl "
-              style={{
-                backgroundColor: "#5bb647",
-              }}
-            ></div>
-          </div>
-          <div class="border-box flex w-1/2 p-1">
-            <div
-              class="shadow-xl w-full h-24 m-1 p-2 rounded-xl "
-              style={{
-                backgroundColor: "#8ee976",
-              }}
-            ></div>
-          </div>
-          <div class="border-box flex w-1/2 p-1">
-            <div
-              class="shadow-xl w-full h-24 m-1 p-2 rounded-xl "
-              style={{
-                backgroundColor: "#fff44f",
-              }}
-            ></div>
-          </div>
+        <div className="relative px-10 pb-10 flex flex-wrap">
+          {menuItems.map((item, index) => (
+            <div key={index} className="border-box flex w-1/2 p-1">
+              <div
+                className={`relative shadow-xl w-full h-24 m-1 p-2 rounded-xl text-white ${item.bgColor}`}
+              >
+                <p className="absolute left-2 top-2 text-5xl">{item.icon}</p>
+                <p className="absolute bottom-2 right-2 text-2xl font-black">
+                  {item.label}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-      <div class=" mt-2 bg-white">
-        <div class="relative flex justify-between items-center">
-          <div class="absolute english__font highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
+      {/* Explore */}
+      <div className=" mt-2 bg-white">
+        <div className="relative flex justify-between items-center">
+          <div className="absolute english__font highlight left-16 mt-4 mb-2 text-2xl font-black z-10">
             Explore 🧭
           </div>
           <button
-            class="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
+            className="underline absolute right-16 mt-4 mb-2 text-xl font-black z-10"
             onClick={onExploreClick}
           >
             더보기
           </button>
         </div>
-        <div class="relative pb-10 ">
-          <Slider {...settings}>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-            <div>
-              <div
-                class="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-                style={{
-                  backgroundColor: "#eeeeee",
-                }}
-              >
-                hello
-              </div>
-            </div>
-          </Slider>
-        </div>
+        <div className="relative pb-10 ">{testArrSlide}</div>
       </div>
     </div>
   );
