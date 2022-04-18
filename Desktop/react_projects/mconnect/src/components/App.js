@@ -73,12 +73,7 @@ const App = () => {
         </div>
       )}
       {customHooks.isLoggedIn ? (
-        <footer
-          className="english__font h-52 p-3 font-black"
-          style={{
-            background: "#eeeeee",
-          }}
-        >
+        <footer className="english__font h-52 p-3 font-black bg-stone-200">
           &copy; Connecteas {new Date().getFullYear()}
         </footer>
       ) : (

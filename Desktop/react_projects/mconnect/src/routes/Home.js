@@ -12,9 +12,6 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import {
   faCircle,
-  faDiceD6,
-  faSquare,
-  faMinus,
   faHeart as fasHeart,
   faQuoteLeft,
   faHashtag,
@@ -86,12 +83,7 @@ const Home = ({ customHooks }) => {
     <Slider {...settings}>
       {testArr.map((arr, index) => (
         <div key={index}>
-          <div
-            className="relative h-52 p-5 m-1 rounded-3xl shadow-lg "
-            style={{
-              backgroundColor: "#eeeeee",
-            }}
-          >
+          <div className="relative h-52 p-5 m-1 rounded-3xl shadow-lg bg-stone-300">
             {arr}
           </div>
         </div>
@@ -100,12 +92,7 @@ const Home = ({ customHooks }) => {
   );
 
   return (
-    <div
-      className="w-screen"
-      style={{
-        background: "#eeeeee",
-      }}
-    >
+    <div className="w-screen bg-stone-200">
       {/* top */}
       <div className="relative w-full pb-2 bg-white">
         <div className="flex justify-between">
@@ -147,10 +134,7 @@ const Home = ({ customHooks }) => {
           </div>
         </div>
 
-        <div
-          className="shadow-xl h-52 mt-4 mx-4 rounded-3xl"
-          style={{ background: "#eeeeee" }}
-        >
+        <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-400">
           {/* form */}
           <form className="flex-col w-full h-full">
             <div className="flex items-center p-3">
@@ -183,7 +167,7 @@ const Home = ({ customHooks }) => {
         {/* like, bookmark, time */}
         <div className="flex justify-between items-center mx-6 my-4">
           <div>
-            <button className="mx-5 text-2xl text-red-600">
+            <button className="mx-5 text-2xl text-red-500">
               <FontAwesomeIcon icon={farHeart} />
             </button>
             <button className="text-2xl text-orange-400">
@@ -244,7 +228,7 @@ const Home = ({ customHooks }) => {
                 className={`relative shadow-xl w-full h-24 m-1 p-2 rounded-xl text-white ${item.bgColor}`}
               >
                 <p className="absolute left-2 top-2 text-5xl">{item.icon}</p>
-                <p className="absolute bottom-2 right-2 text-2xl font-black">
+                <p className="absolute bottom-2 right-2 text-xl font-black">
                   {item.label}
                 </p>
               </div>

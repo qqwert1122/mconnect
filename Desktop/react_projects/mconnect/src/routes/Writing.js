@@ -47,12 +47,7 @@ const Writing = () => {
   };
 
   return (
-    <div
-      className="opening flex-col "
-      style={{
-        backgroundColor: "#eeeeee",
-      }}
-    >
+    <div className="opening flex-col bg-stone-200">
       <form className="mb-6">
         <div className="bg-white pb-5 rounded-b-3xl shadow-xl">
           <div className="flex justify-between items-center m-5 ">

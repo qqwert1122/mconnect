@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ThemeProvider } from "@mui/material/styles";
 import { authService } from "fbase";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Slider from "react-slick";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Chip from "@mui/material/Chip";
-import Divider from "@mui/material/Divider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -28,11 +23,16 @@ import {
   faTrash,
   faCircleUser,
   faShapes,
+  faChevronUp,
+  faChevronDown,
+  faHeart as fasHeart,
+  faBookmark as fasBookmark,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faBookmark,
   faCompass,
-  faHeart,
+  faHeart as farHeart,
+  faBookmark as farBookmark,
 } from "@fortawesome/free-regular-svg-icons";
 
 const testArr = ["text1", "text2", "text3", "text4", "text5", "text6"];
@@ -86,10 +86,65 @@ const testUsers = [
   "Brandon Austin",
 ];
 
+const toggleItems = [
+  {
+    icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
+    label: "점",
+    bgColor: "bg-stone-200",
+    color: "",
+    borderColor: "border-stone-200",
+  },
+  {
+    icon: <FontAwesomeIcon icon={faMinus} />,
+    label: "선",
+    bgColor: "bg-stone-200",
+    color: "",
+    borderColor: "border-stone-200",
+  },
+  {
+    icon: <FontAwesomeIcon icon={faSquare} />,
+    label: "면",
+    bgColor: "bg-stone-200",
+    color: "",
+    borderColor: "border-stone-200",
+  },
+  {
+    icon: <FontAwesomeIcon icon={faDiceD6} />,
+    label: "상자",
+    bgColor: "bg-stone-200",
+    color: "",
+    borderColor: "border-stone-200",
+  },
+  {
+    icon: <FontAwesomeIcon icon={fasHeart} />,
+    label: "좋아요",
+    bgColor: "bg-red-200",
+    color: "text-red-500",
+    borderColor: "border-red-200",
+  },
+  {
+    icon: <FontAwesomeIcon icon={fasBookmark} />,
+    label: "저장",
+    bgColor: "bg-orange-200",
+    color: "text-orange-500",
+    borderColor: "border-orange-200",
+  },
+  {
+    icon: <FontAwesomeIcon icon={faCompass} />,
+    label: "공개",
+    bgColor: "bg-sky-200",
+    color: "text-sky-500",
+    borderColor: "border-sky-200",
+  },
+];
+
 const Ideas = ({ customHooks }) => {
   const [value, setValue] = useState(0);
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [isConnectClicked, setIsConnectClicked] = useState(false);
+  const [isConnectToggleClicked, setIsConnectToggleClicked] = useState(false);
+  const [selectedToggleItem, setSelectedToggleItem] = useState("");
+
   let navigate = useNavigate();
   const user = authService.currentUser;
 
@@ -119,27 +174,16 @@ const Ideas = ({ customHooks }) => {
   const onWritingClick = () => {
     navigate("/writing", { replace: true });
   };
-
   const onConnectClick = () => {
     setIsSearchClicked(false);
     setIsConnectClicked(!isConnectClicked);
   };
-
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`vertical-tabpanel-${index}`}
-        aria-labelledby={`vertical-tab-${index}`}
-        {...other}
-      >
-        {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-      </div>
-    );
-  }
+  const onConnectToggle = () => {
+    setIsConnectToggleClicked(!isConnectToggleClicked);
+  };
+  const onToggleItemClick = (label) => {
+    setSelectedToggleItem(label);
+  };
 
   const ideaDummy = (
     <>
@@ -161,20 +205,17 @@ const Ideas = ({ customHooks }) => {
           </h2>
         </div>
         {/* button */}
-        <div className="flex text-2xl">
-          <button className="mt-3 ">
+        <div className="flex text-2xl gap-5">
+          <button className="">
             <FontAwesomeIcon icon={faTrash} />
           </button>
-          <button className="mt-3 mx-5">
+          <button className="">
             <FontAwesomeIcon icon={faCircleCheck} />
           </button>
         </div>
       </div>
 
-      <div
-        className="shadow-xl h-52 mt-4 mx-4 rounded-3xl"
-        style={{ background: "#eeeeee" }}
-      >
+      <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-300">
         {/* form */}
         <form className="flex-col w-full h-full">
           <div className="flex items-center p-3">
@@ -207,11 +248,11 @@ const Ideas = ({ customHooks }) => {
       {/* like, bookmark, time */}
       <div className="flex justify-between items-center mx-6 my-4">
         <div>
-          <button className="mx-5 text-2xl text-red-600">
-            <FontAwesomeIcon icon={faHeart} />
+          <button className="mx-5 text-2xl text-red-500">
+            <FontAwesomeIcon icon={fasHeart} />
           </button>
           <button className="text-2xl text-orange-400">
-            <FontAwesomeIcon icon={faBookmark} />
+            <FontAwesomeIcon icon={fasBookmark} />
           </button>
         </div>
         <div className="mx-3 text-xl">{Date.now()}</div>
@@ -221,11 +262,7 @@ const Ideas = ({ customHooks }) => {
 
   return (
     <>
-      <div
-        style={{
-          background: "#eeeeee",
-        }}
-      >
+      <div className="bg-stone-200">
         {/* App Bar */}
 
         <div className="fixed top-0 w-full z-20">
@@ -269,57 +306,19 @@ const Ideas = ({ customHooks }) => {
           </div>
           {/* Search Page /  */}
           {isSearchClicked ? (
-            <div
-              className="absolute w-full flex-col shadow-xl"
-              style={{ backgroundColor: "#eeeeee" }}
-            >
-              {/* 필터 검색 */}
-              <div class="p-5 mb-2 bg-white">
-                <div
-                  className="text-2xl font-black gap-2 mb-5"
-                  style={{ color: "#5bb647" }}
-                >
-                  필터&nbsp;
-                  <span>
-                    <FontAwesomeIcon icon={faSliders} />
-                  </span>
-                </div>
-                <div className="flex text-2xl gap-4">
-                  <FontAwesomeIcon icon={faHeart} />
-                  <FontAwesomeIcon icon={faBookmark} />
-                  <FontAwesomeIcon icon={faCompass} />
-                </div>
-              </div>
-              {/* 카테고리 검색 */}
-              <div class="p-5 mb-2 bg-white">
-                <div
-                  className="text-2xl font-black gap-2 mb-5"
-                  style={{ color: "#5bb647" }}
-                >
-                  카테고리&nbsp;
-                  <span>
-                    <FontAwesomeIcon icon={faShapes} />
-                  </span>
-                </div>
-                <div className="flex items-center text-2xl gap-4">
-                  <FontAwesomeIcon icon={faCircle} size="sm" />
-                  <FontAwesomeIcon icon={faMinus} />
-                  <FontAwesomeIcon icon={faSquare} />
-                  <FontAwesomeIcon icon={faDiceD6} />
-                </div>
-              </div>
+            <div className="absolute w-full flex-col shadow-xl bg-stone-200">
               {/* 태그 검색 */}
-              <div class="p-5 mb-2 bg-white">
-                <div
-                  className="text-2xl font-black gap-2 mb-5"
-                  style={{ color: "#5bb647" }}
-                >
-                  태그&nbsp;
-                  <span>
-                    <FontAwesomeIcon icon={faHashtag} />
-                  </span>
-                </div>
-                <div className="flex text-2xl flex-wrap gap-2 max-h-28 overflow-scroll">
+              <div
+                className="mx-5 mt-5 mb-2 text-xl font-black gap-2"
+                style={{ color: "#5bb647" }}
+              >
+                태그&nbsp;
+                <span>
+                  <FontAwesomeIcon icon={faHashtag} />
+                </span>
+              </div>
+              <div className="m-4 p-5 mb-2 rounded-3xl bg-white">
+                <div className="flex text-2xl flex-wrap gap-2 max-h-40 overflow-scroll">
                   {testTags.map((m, i) => (
                     <span
                       key={i}
@@ -331,17 +330,17 @@ const Ideas = ({ customHooks }) => {
                 </div>
               </div>
               {/* 사용자 검색 */}
-              <div class="p-5 bg-white">
-                <div
-                  className="text-2xl font-black gap-2 mb-5"
-                  style={{ color: "#5bb647" }}
-                >
-                  사용자&nbsp;
-                  <span>
-                    <FontAwesomeIcon icon={faCircleUser} />
-                  </span>
-                </div>
-                <div className="flex text-2xl flex-wrap gap-2 max-h-28 overflow-scroll">
+              <div
+                className="mx-5 mt-5 mb-2 text-xl font-black gap-2 "
+                style={{ color: "#5bb647" }}
+              >
+                사용자&nbsp;
+                <span>
+                  <FontAwesomeIcon icon={faCircleUser} />
+                </span>
+              </div>
+              <div className="m-4 p-5 mb-2 rounded-3xl bg-white">
+                <div className="flex text-2xl flex-wrap gap-2 max-h-40 overflow-scroll">
                   {testUsers.map((user, i) => (
                     <span
                       key={i}
@@ -357,35 +356,86 @@ const Ideas = ({ customHooks }) => {
                 </div>
               </div>
             </div>
-          ) : isConnectClicked ? (
-            // Connected Ideas
-            <div className="shadow-xl" style={{ backgroundColor: "#eeeeee" }}>
-              <div className="highlight mx-16 mt-5 mb-2 flex justify-center text-2xl font-black z-10">
-                연관된 아이디어 ♾️
+          ) : (
+            <></>
+          )}
+          {isConnectClicked ? (
+            !isConnectToggleClicked ? (
+              // Connected Ideas
+              <div className="py-2 flex-col text-2xl font-black shadow-xl bg-lime-200">
+                <div className="flex justify-center">
+                  연관된 아이디어 ♾️ : &nbsp;&nbsp;&nbsp;1개
+                </div>
+                <button
+                  className="flex justify-center w-full mt-2 text-lime-600"
+                  onClick={onConnectToggle}
+                >
+                  <FontAwesomeIcon icon={faChevronDown} />
+                </button>
               </div>
-              <div className="relative pb-10 ">
-                <Slider {...settings}>
-                  {testArr.map((arr, i) => (
-                    <div key={i}>
-                      <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
-                        {arr}
+            ) : (
+              <div className="shadow-xl" style={{ backgroundColor: "#eeeeee" }}>
+                <div className="highlight mx-16 mt-5 mb-2 flex justify-center text-2xl font-black z-10">
+                  연관된 아이디어 ♾️
+                </div>
+                <div className="relative pb-10 ">
+                  <Slider {...settings}>
+                    {testArr.map((arr, i) => (
+                      <div key={i}>
+                        <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+                          {arr}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </Slider>
+                    ))}
+                  </Slider>
+                </div>
+                <div>
+                  <button
+                    className="flex justify-center w-full py-2 text-2xl"
+                    onClick={onConnectToggle}
+                  >
+                    <FontAwesomeIcon icon={faChevronUp} />
+                  </button>
+                </div>
               </div>
-            </div>
+            )
           ) : (
             <></>
           )}
         </div>
+
         {/*Contens*/}
         <div
-          className=" bg-white duration-100"
-          style={{ paddingTop: `${isConnectClicked ? "400px" : "48px"}` }}
+          className="bg-white duration-100"
+          style={{
+            paddingTop: `${
+              isConnectClicked
+                ? isConnectToggleClicked
+                  ? "400px"
+                  : "130px"
+                : "50px"
+            }`,
+          }}
         >
-          <div className="english__font relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
-            Ideas 💡
+          {/* ToggleButton */}
+          <div className="mx-5 mt-10 font-black text-xl ">카테고리</div>
+          <div className="flex flex-wrap justify-start mx-5 mt-2 mb-10 gap-3">
+            {toggleItems.map((item, index) => (
+              <button
+                key={index}
+                className={`border-box rounded-3xl ${
+                  item.label === selectedToggleItem ? item.bgColor : ""
+                } ${item.color} ${
+                  item.borderColor
+                } border-2 px-4 py-1 text-lg font-black shadow-lg duration-500`}
+                onClick={() => {
+                  onToggleItemClick(item.label);
+                }}
+              >
+                <span className="text-base">{item.icon}</span>
+                &nbsp;{item.label}
+              </button>
+            ))}
           </div>
           <div className={isSearchClicked ? "blur-sm" : ""}>
             {ideaDummy}
@@ -395,24 +445,24 @@ const Ideas = ({ customHooks }) => {
           </div>
         </div>
         {/* Floating Action Button, FAB */}
-        <div className="fixed bottom-24 right-10 z-10">
+        <div className="fixed bottom-20 right-6 z-10">
           <button
             className="shadow-2xl rounded-full w-14 h-14"
             style={{
               color: "#ffffff",
-              backgroundColor: "#767676",
+              backgroundColor: "#57534e",
             }}
             onClick={onWritingClick}
           >
             <FontAwesomeIcon icon={faFeatherPointed} size="xl" />
           </button>
         </div>
-        <div className="fixed bottom-40 right-10 z-10">
+        <div className="fixed bottom-36 right-6 z-10">
           <button
             className="shadow-2xl rounded-full w-14 h-14 duration-200"
             style={{
               color: "#ffffff",
-              backgroundColor: `${isConnectClicked ? "#5bb647" : "#767676"}`,
+              backgroundColor: `${isConnectClicked ? "#5bb647" : "#57534e"}`,
             }}
             onClick={onConnectClick}
           >
