@@ -5,6 +5,7 @@ import Avatar from "@mui/material/Avatar";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import Badge from "@mui/material/Badge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookmark,
@@ -20,6 +21,9 @@ import {
   faEllipsis,
   faFireFlameCurved,
   faDice,
+  faMinus,
+  faSquare,
+  faDiceD6,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Home = ({ customHooks }) => {
@@ -34,6 +38,14 @@ const Home = ({ customHooks }) => {
     slidesToScroll: 1,
     centerMode: true,
   };
+
+  const categoryItems = [
+    { icon: <FontAwesomeIcon icon={faCircle} size="xs" /> },
+    { icon: <FontAwesomeIcon icon={faMinus} /> },
+    { icon: <FontAwesomeIcon icon={faSquare} size="xs" /> },
+    { icon: <FontAwesomeIcon icon={faDiceD6} /> },
+  ];
+
   const menuItems = [
     {
       icon: <FontAwesomeIcon icon={faFireFlameCurved} />,
@@ -83,7 +95,7 @@ const Home = ({ customHooks }) => {
     <Slider {...settings}>
       {testArr.map((arr, index) => (
         <div key={index}>
-          <div className="relative h-52 p-5 m-1 rounded-3xl shadow-lg bg-stone-300">
+          <div className="relative h-52 p-5 m-1 rounded-3xl shadow-lg bg-stone-200">
             {arr}
           </div>
         </div>
@@ -94,90 +106,120 @@ const Home = ({ customHooks }) => {
   return (
     <div className="w-screen bg-stone-200">
       {/* top */}
-      <div className="relative w-full pb-2 bg-white">
-        <div className="flex justify-between">
-          <div className=" english__font flex font-black pt-4 mx-4 text-3xl ">
-            Connecteas
-          </div>
-          <button className="pt-4 mx-4" onClick={onEllipsisClick}>
-            <FontAwesomeIcon icon={faEllipsis} size="2xl" />
-          </button>
-        </div>
-        <div className="relative highlight mx-4 mt-4 mb-2 text-lg font-black z-10">
-          새 아이디어 ✏️
-        </div>
-        <div className="flex justify-between items-end mx-4 mt-2">
-          <div className="flex items-end">
-            <div className="flex mx-3">
-              <Avatar
-                alt="avatar"
-                src={user.photoURL}
-                sx={{
-                  display: "flex",
-                  width: "50px",
-                  height: "50px",
-                }}
-              />
+      <div
+        className="relative w-full"
+        style={{
+          background: "linear-gradient(45deg, #fff44f, #facc15)",
+        }}
+      >
+        <div className="flex-col">
+          <div className="flex justify-between items-start py-2">
+            <div className=" english__font flex font-black pt-4 mx-4 text-3xl ">
+              Connecteas
             </div>
-            <h2>
-              <b>{user.displayName}</b>
-            </h2>
+            <button className="pt-4 mx-4" onClick={onEllipsisClick}>
+              <FontAwesomeIcon icon={faEllipsis} size="2xl" />
+            </button>
           </div>
-          {/* button */}
-          <div className="flex text-2xl">
-            <button className="mt-3 ">
-              <FontAwesomeIcon icon={faTrash} />
-            </button>
-            <button className="mt-3 mx-5">
-              <FontAwesomeIcon icon={faCircleCheck} />
-            </button>
+          <div className="mx-4 py-2 text-xl font-black">
+            전체 아이디어 : 51개
+          </div>
+          <div className="flex gap-4 mx-4 pt-2 pb-8 text-xl font-black">
+            {categoryItems.map((item, index) => (
+              <span key={index}>
+                <Badge
+                  color="success"
+                  badgeContent={4}
+                  max={99}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                >
+                  <div className="flex justify-center items-center w-8 h-8 rounded-xl bg-white">
+                    {item.icon}
+                  </div>
+                </Badge>
+              </span>
+            ))}
           </div>
         </div>
+        <div className="pb-2 rounded-t-3xl bg-white">
+          <div className="relative highlight mx-4 mt-4 mb-2 text-lg font-black z-10">
+            새 아이디어 ✏️
+          </div>
+          <div className="flex justify-between items-end mx-4 mt-2">
+            <div className="flex items-end">
+              <div className="flex mx-3">
+                <Avatar
+                  alt="avatar"
+                  src={user.photoURL}
+                  sx={{
+                    display: "flex",
+                    width: "50px",
+                    height: "50px",
+                  }}
+                />
+              </div>
+              <h2>
+                <b>{user.displayName}</b>
+              </h2>
+            </div>
+            {/* button */}
+            <div className="flex text-2xl">
+              <button className="mt-3 ">
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+              <button className="mt-3 mx-5">
+                <FontAwesomeIcon icon={faCircleCheck} />
+              </button>
+            </div>
+          </div>
 
-        <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-400">
-          {/* form */}
-          <form className="flex-col w-full h-full">
-            <div className="flex items-center p-3">
-              <FontAwesomeIcon icon={faCircle} size="xs" />
-              <textarea
-                className=" rounded-xl border-2 mx-3 p-2 w-full h-24"
-                type="text"
-                placeholder="내용을 입력하세요"
-                required
-              />
-            </div>
-            <div className="flex items-center px-3 py-1">
-              <FontAwesomeIcon icon={faQuoteLeft} />
-              <input
-                className=" rounded-xl border-2 mx-3 px-2 w-full"
-                type="text"
-                placeholder="출처를 입력하세요"
-              />
-            </div>
-            <div className="flex items-center px-3 py-1">
-              <FontAwesomeIcon icon={faHashtag} />
-              <input
-                className=" rounded-xl border-2 mx-3 px-2 w-full"
-                type="text"
-                placeholder="태그를 입력하세요"
-              />
-            </div>
-          </form>
-        </div>
-        {/* like, bookmark, time */}
-        <div className="flex justify-between items-center mx-6 my-4">
-          <div>
-            <button className="mx-5 text-2xl text-red-500">
-              <FontAwesomeIcon icon={farHeart} />
-            </button>
-            <button className="text-2xl text-orange-400">
-              <FontAwesomeIcon icon={faBookmark} />
-            </button>
+          <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-400">
+            {/* form */}
+            <form className="flex-col w-full h-full">
+              <div className="flex items-center p-3">
+                <FontAwesomeIcon icon={faCircle} size="xs" />
+                <textarea
+                  className=" rounded-xl border-2 mx-3 p-2 w-full h-24"
+                  type="text"
+                  placeholder="내용을 입력하세요"
+                  required
+                />
+              </div>
+              <div className="flex items-center px-3 py-1">
+                <FontAwesomeIcon icon={faQuoteLeft} />
+                <input
+                  className=" rounded-xl border-2 mx-3 px-2 w-full"
+                  type="text"
+                  placeholder="출처를 입력하세요"
+                />
+              </div>
+              <div className="flex items-center px-3 py-1">
+                <FontAwesomeIcon icon={faHashtag} />
+                <input
+                  className=" rounded-xl border-2 mx-3 px-2 w-full"
+                  type="text"
+                  placeholder="태그를 입력하세요"
+                />
+              </div>
+            </form>
           </div>
-          <div className="mx-3 text-xl">{Date.now()}</div>
-        </div>
 
-        <div className=""></div>
+          {/* like, bookmark, time */}
+          <div className="flex justify-between items-center mx-6 my-4">
+            <div>
+              <button className="mx-5 text-2xl text-red-500">
+                <FontAwesomeIcon icon={farHeart} />
+              </button>
+              <button className="text-2xl text-orange-400">
+                <FontAwesomeIcon icon={faBookmark} />
+              </button>
+            </div>
+            <div className="mx-3 text-xl">{Date.now()}</div>
+          </div>
+        </div>
       </div>
       {/* Ideas */}
       <div className=" mt-2 bg-white">

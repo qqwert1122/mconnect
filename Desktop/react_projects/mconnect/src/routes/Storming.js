@@ -39,8 +39,8 @@ const Storming = () => {
   return (
     <div className="bg-stone-200">
       <div className="relative bg-white mb-2">
-        <div className="english__font relative highlight mx-4 mt-4 mb-2 text-2xl font-black z-10">
-          Storming ⚡
+        <div className="english__font relative mb-2 p-2 px-4 text-2xl font-black z-10 text-white bg-orange-400">
+          Storming
         </div>
         <div className="px-5 flex flex-wrap pb-2">
           {menuItems.map((item, index) => (

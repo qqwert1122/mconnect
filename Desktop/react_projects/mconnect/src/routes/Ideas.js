@@ -90,28 +90,28 @@ const toggleItems = [
   {
     icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
     label: "점",
-    bgColor: "bg-stone-200",
+    bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
   },
   {
     icon: <FontAwesomeIcon icon={faMinus} />,
     label: "선",
-    bgColor: "bg-stone-200",
+    bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
   },
   {
     icon: <FontAwesomeIcon icon={faSquare} />,
     label: "면",
-    bgColor: "bg-stone-200",
+    bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
   },
   {
     icon: <FontAwesomeIcon icon={faDiceD6} />,
     label: "상자",
-    bgColor: "bg-stone-200",
+    bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
   },
@@ -215,7 +215,7 @@ const Ideas = ({ customHooks }) => {
         </div>
       </div>
 
-      <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-300">
+      <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-200">
         {/* form */}
         <form className="flex-col w-full h-full">
           <div className="flex items-center p-3">
@@ -278,7 +278,7 @@ const Ideas = ({ customHooks }) => {
               </button>
             ) : (
               <div className="px-2 english__font text-white text-2xl font-black">
-                Ideas
+                Ideas 💡
               </div>
             )}
             <button
@@ -322,7 +322,7 @@ const Ideas = ({ customHooks }) => {
                   {testTags.map((m, i) => (
                     <span
                       key={i}
-                      className="border-2 rounded-3xl border-black px-1  text-base"
+                      className="border-2 rounded-3xl border-stone-200 px-1 text-base"
                     >
                       {m}
                     </span>
@@ -344,7 +344,7 @@ const Ideas = ({ customHooks }) => {
                   {testUsers.map((user, i) => (
                     <span
                       key={i}
-                      className="flex items-center justify-between border-2 rounded-3xl border-black px-1 text-base gap-1"
+                      className="flex items-center justify-between border-2 rounded-3xl  border-stone-200 px-1 text-base gap-1"
                     >
                       <img
                         className="rounded-full"
