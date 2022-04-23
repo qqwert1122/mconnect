@@ -33,6 +33,13 @@ const Setting = () => {
             <b>{user.displayName}</b>님
           </h2>
         </div>
+        <button
+          onClick={() => {
+            console.log(user);
+          }}
+        >
+          show log
+        </button>
       </div>
       <button onClick={onSignOutClick}>Sign out</button>
     </div>

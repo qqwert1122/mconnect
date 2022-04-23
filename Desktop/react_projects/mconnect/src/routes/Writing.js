@@ -48,13 +48,13 @@ const Writing = () => {
 
   return (
     <div className="opening flex-col bg-stone-200">
-      <form className="mb-6">
+      <form className="mb-6" onSubmit={onIdeaSubmit}>
         <div className="bg-white pb-5 rounded-b-3xl shadow-xl">
           <div className="flex justify-between items-center m-5 ">
             <button onClick={onBackClick}>
               <FontAwesomeIcon icon={faAngleLeft} size="2xl" />
             </button>
-            <h1 className="text-2xl font-black">새 아이디어 ✏️</h1>
+            <h1 className="text-lg font-black">새 아이디어 ✏️</h1>
             <div>
               <button className="mx-10">
                 <FontAwesomeIcon icon={faTrash} size="2xl" />
@@ -65,8 +65,8 @@ const Writing = () => {
             </div>
           </div>
           {/* 제목 */}
-          <div className="border-box text-xl m-5 mt-10">
-            <span className="mr-5 w-2/12">
+          <div className="border-box  m-5 mt-10">
+            <span className="mr-5 w-2/12 text-xl">
               <FontAwesomeIcon icon={faT} />
             </span>
             <input
@@ -76,8 +76,8 @@ const Writing = () => {
             />
           </div>
           {/* 텍스트 */}
-          <div className="flex border-box text-xl m-5 mt-5">
-            <span className="items-start mr-5 ">
+          <div className="flex border-box m-5 mt-5">
+            <span className="items-start mr-5 text-xl ">
               <FontAwesomeIcon icon={faCircle} size="xs" />
             </span>
             <textarea
@@ -87,8 +87,8 @@ const Writing = () => {
             />
           </div>
           {/* 출처 */}
-          <div className="flex border-box text-xl m-5">
-            <span className="items-start mr-5 ">
+          <div className="flex border-box  m-5">
+            <span className="items-start mr-5 text-xl">
               <FontAwesomeIcon icon={faQuoteLeft} />
             </span>
             <input
@@ -98,8 +98,8 @@ const Writing = () => {
             />
           </div>
           {/* 태그 */}
-          <div className="flex border-box text-xl m-5">
-            <span className="items-start mr-5 ">
+          <div className="flex border-box  m-5">
+            <span className="items-start mr-5 text-xl">
               <FontAwesomeIcon icon={faHashtag} />
             </span>
             <input
@@ -121,7 +121,7 @@ const Writing = () => {
           <span className="m-5 text-xl">{Date.now()}</span>
         </div>
       </form>
-      <div className="highlight mx-16 my-2 flex justify-center text-2xl font-black">
+      <div className="highlight mx-16 my-2 flex justify-center text-xl font-black">
         연관된 아이디어 ♾️
       </div>
       <div className="relative pb-10 ">

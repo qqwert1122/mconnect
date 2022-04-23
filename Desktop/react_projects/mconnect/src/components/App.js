@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { createTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { authService } from "fbase";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
 
 const useCustomHooks = () => {
   const [init, setInit] = useState(false);
@@ -26,6 +28,14 @@ const useCustomHooks = () => {
       setInit(true);
     });
   }, []);
+
+  const timeDisplay = (idea) => {
+    if (dayjs().diff(dayjs(idea.time), "day") >= 31) {
+      return <div>{dayjs(idea.time).format("YYYY. MM. DD. HH:mm:ss")}</div>;
+    }
+
+    return <div>{dayjs(idea.time).fromNow()}</div>;
+  };
 
   const theme = createTheme({
     palette: {
@@ -50,6 +60,7 @@ const useCustomHooks = () => {
     theme,
     navValue,
     setNavValue,
+    timeDisplay,
   };
 };
 

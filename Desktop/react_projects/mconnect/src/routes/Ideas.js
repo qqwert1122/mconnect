@@ -216,34 +216,26 @@ const Ideas = ({ customHooks }) => {
       </div>
 
       <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-200">
-        {/* form */}
-        <form className="flex-col w-full h-full">
-          <div className="flex items-center p-3">
-            <FontAwesomeIcon icon={faCircle} size="xs" />
-            <textarea
-              className=" rounded-xl border-2 mx-3 p-2 w-full h-24"
-              type="text"
-              placeholder="내용을 입력하세요"
-              required
-            />
-          </div>
-          <div className="flex items-center px-3 py-1">
-            <FontAwesomeIcon icon={faQuoteLeft} />
-            <input
-              className=" rounded-xl border-2 mx-3 px-2 w-full"
-              type="text"
-              placeholder="출처를 입력하세요"
-            />
-          </div>
-          <div className="flex items-center px-3 py-1">
-            <FontAwesomeIcon icon={faHashtag} />
-            <input
-              className=" rounded-xl border-2 mx-3 px-2 w-full"
-              type="text"
-              placeholder="태그를 입력하세요"
-            />
-          </div>
-        </form>
+        <div className="flex items-center p-3">
+          <FontAwesomeIcon icon={faCircle} size="xs" />
+          <div className="border-2 mx-3 p-2 w-full h-24">{/* text */}</div>
+        </div>
+        <div className="flex items-center px-3 py-1">
+          <FontAwesomeIcon icon={faQuoteLeft} />
+          <input
+            className=" rounded-xl border-2 mx-3 px-2 w-full"
+            type="text"
+            placeholder="출처를 입력하세요"
+          />
+        </div>
+        <div className="flex items-center px-3 py-1">
+          <FontAwesomeIcon icon={faHashtag} />
+          <input
+            className=" rounded-xl border-2 mx-3 px-2 w-full"
+            type="text"
+            placeholder="태그를 입력하세요"
+          />
+        </div>
       </div>
       {/* like, bookmark, time */}
       <div className="flex justify-between items-center mx-6 my-4">
@@ -269,7 +261,7 @@ const Ideas = ({ customHooks }) => {
           <div
             className="flex justify-between items-center p-2"
             style={{
-              backgroundColor: "#5bb647",
+              background: "#5bb647",
             }}
           >
             {isSearchClicked ? (
@@ -309,7 +301,7 @@ const Ideas = ({ customHooks }) => {
             <div className="absolute w-full flex-col shadow-xl bg-stone-200">
               {/* 태그 검색 */}
               <div
-                className="mx-5 mt-5 mb-2 text-xl font-black gap-2"
+                className="mx-5 mt-5 mb-2 text-lg font-black gap-2"
                 style={{ color: "#5bb647" }}
               >
                 태그&nbsp;
@@ -322,7 +314,7 @@ const Ideas = ({ customHooks }) => {
                   {testTags.map((m, i) => (
                     <span
                       key={i}
-                      className="border-2 rounded-3xl border-stone-200 px-1 text-base"
+                      className="border-2 rounded-3xl border-stone-200 px-1 text-sm"
                     >
                       {m}
                     </span>
@@ -331,7 +323,7 @@ const Ideas = ({ customHooks }) => {
               </div>
               {/* 사용자 검색 */}
               <div
-                className="mx-5 mt-5 mb-2 text-xl font-black gap-2 "
+                className="mx-5 mt-5 mb-2 text-lg font-black gap-2 "
                 style={{ color: "#5bb647" }}
               >
                 사용자&nbsp;
@@ -344,7 +336,7 @@ const Ideas = ({ customHooks }) => {
                   {testUsers.map((user, i) => (
                     <span
                       key={i}
-                      className="flex items-center justify-between border-2 rounded-3xl  border-stone-200 px-1 text-base gap-1"
+                      className="flex items-center justify-between border-2 rounded-3xl  border-stone-200 px-1 text-sm gap-1"
                     >
                       <img
                         className="rounded-full"
@@ -362,7 +354,12 @@ const Ideas = ({ customHooks }) => {
           {isConnectClicked ? (
             !isConnectToggleClicked ? (
               // Connected Ideas
-              <div className="py-2 flex-col text-2xl font-black shadow-xl bg-lime-200">
+              <div
+                className="py-2 flex-col text-xl font-black shadow-xl"
+                style={{
+                  background: "linear-gradient(45deg, #d9f99d, #a3e635)",
+                }}
+              >
                 <div className="flex justify-center">
                   연관된 아이디어 ♾️ : &nbsp;&nbsp;&nbsp;1개
                 </div>
@@ -375,7 +372,7 @@ const Ideas = ({ customHooks }) => {
               </div>
             ) : (
               <div className="shadow-xl" style={{ backgroundColor: "#eeeeee" }}>
-                <div className="highlight mx-16 mt-5 mb-2 flex justify-center text-2xl font-black z-10">
+                <div className="highlight mx-16 mt-5 mb-2 flex justify-center text-xl font-black z-10">
                   연관된 아이디어 ♾️
                 </div>
                 <div className="relative pb-10 ">
@@ -416,6 +413,9 @@ const Ideas = ({ customHooks }) => {
                 : "50px"
             }`,
           }}
+          onClick={() => {
+            setIsSearchClicked(false);
+          }}
         >
           {/* ToggleButton */}
           <div className="mx-5 mt-10 font-black text-xl ">카테고리</div>
@@ -427,7 +427,7 @@ const Ideas = ({ customHooks }) => {
                   item.label === selectedToggleItem ? item.bgColor : ""
                 } ${item.color} ${
                   item.borderColor
-                } border-2 px-4 py-1 text-lg font-black shadow-lg duration-500`}
+                } border-2 px-4 py-1 text-base font-black shadow-md duration-500`}
                 onClick={() => {
                   onToggleItemClick(item.label);
                 }}
@@ -447,7 +447,7 @@ const Ideas = ({ customHooks }) => {
         {/* Floating Action Button, FAB */}
         <div className="fixed bottom-20 right-6 z-10">
           <button
-            className="shadow-2xl rounded-full w-14 h-14"
+            className="shadow-2xl rounded-full w-14 h-14 border-2 border-white"
             style={{
               color: "#ffffff",
               backgroundColor: "#57534e",
@@ -459,7 +459,7 @@ const Ideas = ({ customHooks }) => {
         </div>
         <div className="fixed bottom-36 right-6 z-10">
           <button
-            className="shadow-2xl rounded-full w-14 h-14 duration-200"
+            className="shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white"
             style={{
               color: "#ffffff",
               backgroundColor: `${isConnectClicked ? "#5bb647" : "#57534e"}`,
