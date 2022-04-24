@@ -3,16 +3,31 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
-import { authService } from "fbase";
+import { authService, dbService } from "fbase";
+import { collection, getDocs, query } from "firebase/firestore";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
+import { CommentsDisabledOutlined } from "@mui/icons-material";
 
 const useCustomHooks = () => {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
   const [navValue, setNavValue] = useState("/");
+  const [dbIdeas, setdbIdeas] = useState([]);
 
   let navigate = useNavigate();
+
+  const getdbIdeas = async () => {
+    const q = query(collection(dbService, "ideas"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      setdbIdeas((prev) => [doc.data(), ...prev]);
+    });
+  };
+
+  useEffect(() => {
+    getdbIdeas();
+  }, []);
 
   useEffect(() => {
     navigate(`${navValue}`, { replace: true });
@@ -61,12 +76,13 @@ const useCustomHooks = () => {
     navValue,
     setNavValue,
     timeDisplay,
+    dbIdeas,
+    setdbIdeas,
   };
 };
 
 const App = () => {
   const customHooks = useCustomHooks();
-
   return (
     <>
       {customHooks.init ? (

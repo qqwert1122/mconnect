@@ -138,25 +138,21 @@ const Home = ({ customHooks }) => {
     const form = event.target;
     try {
       await addDoc(collection(dbService, "ideas"), {
-        idea: {
-          category: 0,
-          title: "",
-          text: form.formText.value,
-          source: form.formSource.value,
-          tags: [],
-          like: formLike,
-          bookmark: formBookmark,
-          public: formPublic,
-          connectedIdeas: [],
-          likeUsers: [],
-          createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-        },
-        user: {
-          userId: user.uid,
-          userEmail: user.email,
-          userName: user.displayName,
-          userPhotoURL: user.photoURL,
-        },
+        category: 0,
+        title: "",
+        text: form.formText.value,
+        source: form.formSource.value,
+        tags: [],
+        like: formLike,
+        bookmark: formBookmark,
+        public: formPublic,
+        connectedIdeas: [],
+        likeUsers: [],
+        createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+        userId: user.uid,
+        userEmail: user.email,
+        userName: user.displayName,
+        userPhotoURL: user.photoURL,
       });
     } catch (event) {
       console.error("Error adding document: ", event);

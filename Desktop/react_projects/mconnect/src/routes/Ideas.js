@@ -185,72 +185,12 @@ const Ideas = ({ customHooks }) => {
     setSelectedToggleItem(label);
   };
 
-  const ideaDummy = (
-    <>
-      <div className="flex justify-between items-end mx-4 mt-2">
-        <div className="flex items-end">
-          <div className="flex mx-3">
-            <Avatar
-              alt="avatar"
-              src={user.photoURL}
-              sx={{
-                display: "flex",
-                width: "50px",
-                height: "50px",
-              }}
-            />
-          </div>
-          <h2>
-            <b>{user.displayName}</b>
-          </h2>
-        </div>
-        {/* button */}
-        <div className="flex text-2xl gap-5">
-          <button className="">
-            <FontAwesomeIcon icon={faTrash} />
-          </button>
-          <button className="">
-            <FontAwesomeIcon icon={faCircleCheck} />
-          </button>
-        </div>
-      </div>
+  // console.log(JSON.stringify(customHooks.dbIdeas));
+  // const showIdeas = (dbIdea) => {
+  //   return (
 
-      <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-200">
-        <div className="flex items-center p-3">
-          <FontAwesomeIcon icon={faCircle} size="xs" />
-          <div className="border-2 mx-3 p-2 w-full h-24">{/* text */}</div>
-        </div>
-        <div className="flex items-center px-3 py-1">
-          <FontAwesomeIcon icon={faQuoteLeft} />
-          <input
-            className=" rounded-xl border-2 mx-3 px-2 w-full"
-            type="text"
-            placeholder="출처를 입력하세요"
-          />
-        </div>
-        <div className="flex items-center px-3 py-1">
-          <FontAwesomeIcon icon={faHashtag} />
-          <input
-            className=" rounded-xl border-2 mx-3 px-2 w-full"
-            type="text"
-            placeholder="태그를 입력하세요"
-          />
-        </div>
-      </div>
-      {/* like, bookmark, time */}
-      <div className="flex justify-between items-center mx-6 my-4">
-        <div>
-          <button className="mx-5 text-2xl text-red-500">
-            <FontAwesomeIcon icon={fasHeart} />
-          </button>
-          <button className="text-2xl text-orange-400">
-            <FontAwesomeIcon icon={fasBookmark} />
-          </button>
-        </div>
-        <div className="mx-3 text-xl">{Date.now()}</div>
-      </div>
-    </>
-  );
+  //   );
+  // };
 
   return (
     <>
@@ -438,10 +378,74 @@ const Ideas = ({ customHooks }) => {
             ))}
           </div>
           <div className={isSearchClicked ? "blur-sm" : ""}>
-            {ideaDummy}
-            {ideaDummy}
-            {ideaDummy}
-            {ideaDummy}
+            {customHooks.dbIdeas.map((dbIdea, index) => (
+              <div key={index}>
+                <div className="flex justify-between items-end mx-4 mt-2">
+                  <div className="flex items-end">
+                    <div className="flex mx-3">
+                      <Avatar
+                        alt="avatar"
+                        src={dbIdea.userPhotoURL}
+                        sx={{
+                          display: "flex",
+                          width: "50px",
+                          height: "50px",
+                        }}
+                      />
+                    </div>
+                    <h2>
+                      <b>{dbIdea.userName}</b>
+                    </h2>
+                  </div>
+                  {/* button */}
+                  <div className="flex text-2xl gap-5">
+                    <button className="">
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                    <button className="">
+                      <FontAwesomeIcon icon={faCircleCheck} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-200">
+                  <div className="flex items-center p-3">
+                    <FontAwesomeIcon icon={faCircle} size="xs" />
+                    <div className="border-2 mx-3 p-2 w-full h-24">
+                      {dbIdea.text}
+                    </div>
+                  </div>
+                  <div className="flex items-center px-3 py-1">
+                    <FontAwesomeIcon icon={faQuoteLeft} />
+                    <div className="border-2 mx-3 p-2 w-full">
+                      {dbIdea.source}
+                    </div>
+                  </div>
+                  <div className="flex items-center px-3 py-1">
+                    <FontAwesomeIcon icon={faHashtag} />
+                    <div className="border-2 mx-3 p-2 w-full">
+                      {dbIdea.tags}
+                    </div>
+                  </div>
+                </div>
+                {/* like, bookmark, time */}
+                <div className="flex justify-between items-center mx-6 my-4">
+                  <div>
+                    <button className="mx-5 text-2xl text-red-500">
+                      <FontAwesomeIcon
+                        icon={dbIdea.like ? fasHeart : farHeart}
+                      />
+                    </button>
+                    <button className="text-2xl text-orange-400">
+                      <FontAwesomeIcon
+                        icon={dbIdea.bookmark ? fasBookmark : farBookmark}
+                      />
+                    </button>
+                  </div>
+                  <div className="mx-3 text-xl">{dbIdea.createdAt}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         {/* Floating Action Button, FAB */}
