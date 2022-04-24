@@ -59,10 +59,59 @@ const Home = ({ customHooks }) => {
   };
 
   const categoryItems = [
-    { icon: <FontAwesomeIcon icon={faCircle} size="xs" /> },
-    { icon: <FontAwesomeIcon icon={faMinus} /> },
-    { icon: <FontAwesomeIcon icon={faSquare} size="xs" /> },
-    { icon: <FontAwesomeIcon icon={faDiceD6} /> },
+    {
+      icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
+      bgColor: "bg-white",
+      color: "text-black",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faMinus} />,
+      bgColor: "bg-white",
+      color: "text-black",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faSquare} size="xs" />,
+      bgColor: "bg-white",
+      color: "text-black",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faDiceD6} />,
+      bgColor: "bg-white",
+      color: "text-black",
+    },
+    {
+      icon: <FontAwesomeIcon icon={fasHeart} />,
+      bgColor: "bg-red-400",
+      color: "text-white",
+    },
+    {
+      icon: <FontAwesomeIcon icon={fasBookmark} />,
+      bgColor: "bg-orange-400",
+      color: "text-white",
+    },
+  ];
+
+  const achievementItems = [
+    {
+      label: "뉴비🧐",
+      bgColor: "bg-green-400",
+      color: "text-white",
+    },
+    {
+      label: "불타는 열정🔥",
+      bgColor: "bg-red-400",
+      color: "text-white",
+    },
+    {
+      label: "인기쟁이😎",
+      bgColor: "be-orange-400",
+      color: "text-white",
+    },
+    {
+      label: "항해자🗺️",
+      bgColor: "bg-sky-400",
+      color: "text-white",
+    },
   ];
 
   const menuItems = [
@@ -148,6 +197,7 @@ const Home = ({ customHooks }) => {
         public: formPublic,
         connectedIdeas: [],
         likeUsers: [],
+        isClicked: false,
         createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
         userId: user.uid,
         userEmail: user.email,
@@ -189,10 +239,20 @@ const Home = ({ customHooks }) => {
               <FontAwesomeIcon icon={faEllipsis} size="2xl" />
             </button>
           </div>
-          <div className="mx-4 pt-12 pb-2 text-lg font-black">
-            전체 아이디어 : 51개
+          <div className="flex items-end gap-2 mx-4 pt-10 pb-4 font-black ">
+            <Avatar
+              alt="avatar"
+              src={user.photoURL}
+              sx={{
+                display: "flex",
+                width: "50px",
+                height: "50px",
+              }}
+            />
+            <div className="text-lg">{user.displayName}님 안녕하세요😚</div>
           </div>
-          <div className="flex gap-4 mx-4 pt-2 pb-8 text-2xl font-black">
+          <div className="mx-4 pb-2 text-lg font-black">카테고리</div>
+          <div className="flex gap-4 mx-4 pb-4 text-2xl font-black">
             {categoryItems.map((item, index) => (
               <span key={index}>
                 <Badge
@@ -204,46 +264,42 @@ const Home = ({ customHooks }) => {
                     horizontal: "right",
                   }}
                 >
-                  <div className="flex justify-center items-center w-10 h-10 rounded-xl bg-white shadow-xl">
+                  <div
+                    className={`flex justify-center items-center w-10 h-10 rounded-xl ${item.bgColor} ${item.color} shadow-xl`}
+                  >
                     {item.icon}
                   </div>
                 </Badge>
               </span>
             ))}
           </div>
+          <div className="mx-4 pb-2 text-lg font-black">업적</div>
+          <div className="flex flex-wrap gap-2 mx-4 pb-8 font-black">
+            {achievementItems.map((item, index) => (
+              <div
+                key={index}
+                className={`flex justify-center items-center p-1 rounded-3xl ${item.bgColor} ${item.color} shadow-xl border-2 border-white`}
+              >
+                {item.label}
+              </div>
+            ))}
+          </div>
         </div>
         <div className="pb-2 rounded-t-3xl bg-white">
-          <div className="relative highlight mx-4 mt-4 mb-2 text-lg font-black z-10">
-            새 아이디어 ✏️
-          </div>
           {/* form */}
           <form onSubmit={onSubmit}>
-            <div className="flex justify-between items-end mx-7 mt-2">
-              <div className="flex items-end">
-                <div className="flex mr-3">
-                  <Avatar
-                    alt="avatar"
-                    src={user.photoURL}
-                    sx={{
-                      display: "flex",
-                      width: "50px",
-                      height: "50px",
-                    }}
-                  />
-                </div>
-                <h2>
-                  <b>{user.displayName}</b>
-                </h2>
+            <div className="flex justify-between items-center mx-7 mt-2 pt-5">
+              <div className="relative highlight text-lg font-black z-10">
+                새 아이디어를 입력해주세요
               </div>
-              {/* button */}
               <input
                 type="submit"
-                className="p-1 w-12 rounded-xl text-lg font-black text-center text-white bg-black"
-                value="작성"
+                className="p-1 rounded-xl text-lg font-black text-center shadow-md text-white bg-green-600"
+                value="작성 ✏️"
               />
             </div>
 
-            <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-400">
+            <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-200">
               <div className="flex items-center p-3">
                 <FontAwesomeIcon icon={faCircle} size="xs" />
                 <textarea

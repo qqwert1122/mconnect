@@ -4,10 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { createTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { authService, dbService } from "fbase";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
-import { CommentsDisabledOutlined } from "@mui/icons-material";
 
 const useCustomHooks = () => {
   const [init, setInit] = useState(false);
@@ -17,16 +16,18 @@ const useCustomHooks = () => {
 
   let navigate = useNavigate();
 
-  const getdbIdeas = async () => {
-    const q = query(collection(dbService, "ideas"));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      setdbIdeas((prev) => [doc.data(), ...prev]);
-    });
-  };
-
   useEffect(() => {
-    getdbIdeas();
+    const q = query(
+      collection(dbService, "ideas"),
+      orderBy("createdAt", "desc")
+    );
+    onSnapshot(q, (snapshot) => {
+      const ideas = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setdbIdeas(ideas);
+    });
   }, []);
 
   useEffect(() => {
@@ -44,12 +45,12 @@ const useCustomHooks = () => {
     });
   }, []);
 
-  const timeDisplay = (idea) => {
-    if (dayjs().diff(dayjs(idea.time), "day") >= 31) {
-      return <div>{dayjs(idea.time).format("YYYY. MM. DD. HH:mm:ss")}</div>;
+  const timeDisplay = (createdAt) => {
+    if (dayjs().diff(dayjs(createdAt), "day") >= 31) {
+      return <div>{dayjs(createdAt).format("YYYY. MM. DD. HH:mm:ss")}</div>;
     }
 
-    return <div>{dayjs(idea.time).fromNow()}</div>;
+    return <div>{dayjs(createdAt).fromNow()}</div>;
   };
 
   const theme = createTheme({
