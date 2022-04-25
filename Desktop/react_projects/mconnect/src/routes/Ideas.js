@@ -1,7 +1,7 @@
+import Idea from "routes/Idea";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "fbase";
-import Avatar from "@mui/material/Avatar";
 import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -24,11 +24,6 @@ import {
   faHeart as fasHeart,
   faBookmark as fasBookmark,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faCompass as farCompass,
-  faHeart as farHeart,
-  faBookmark as farBookmark,
-} from "@fortawesome/free-regular-svg-icons";
 
 const testArr = ["text1", "text2", "text3", "text4", "text5", "text6"];
 const testTags = [
@@ -134,11 +129,14 @@ const toggleItems = [
 ];
 
 const Ideas = ({ customHooks }) => {
-  const [value, setValue] = useState(0);
+  // event handler
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [isConnectClicked, setIsConnectClicked] = useState(false);
   const [isConnectToggleClicked, setIsConnectToggleClicked] = useState(false);
   const [selectedToggleItem, setSelectedToggleItem] = useState("");
+
+  // connect
+  const [selectedIdeas, setSelectedIdeas] = useState([]);
 
   let navigate = useNavigate();
   const user = authService.currentUser;
@@ -152,10 +150,6 @@ const Ideas = ({ customHooks }) => {
     centerMode: true,
     focusOnSelect: true,
     initialSlide: 0,
-  };
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
   };
 
   const onSearchClick = () => {
@@ -178,6 +172,14 @@ const Ideas = ({ customHooks }) => {
   };
   const onToggleItemClick = (label) => {
     setSelectedToggleItem(label);
+  };
+  const onDetailsClick = () => {};
+  const onIdeasClick = (dbIdea) => {
+    if (selectedIdeas.includes(dbIdea)) {
+      setSelectedIdeas(selectedIdeas.filter((idea) => idea != dbIdea));
+    } else {
+      setSelectedIdeas([dbIdea, ...selectedIdeas]);
+    }
   };
 
   // console.log(JSON.stringify(customHooks.dbIdeas));
@@ -286,17 +288,19 @@ const Ideas = ({ customHooks }) => {
           ) : (
             <></>
           )}
-          {isConnectClicked ? (
+          {selectedIdeas.length > 0 ? (
             !isConnectToggleClicked ? (
               // Connected Ideas
               <div
                 className="py-2 flex-col text-xl font-black shadow-xl"
                 style={{
-                  background: "linear-gradient(45deg, #d9f99d, #a3e635)",
+                  background:
+                    "linear-gradient(45deg, #fef9c3, #d9f99d , #fde047)",
                 }}
               >
                 <div className="flex justify-center">
-                  연관된 아이디어 ♾️ : &nbsp;&nbsp;&nbsp;1개
+                  선택된 아이디어 ♾️ : &nbsp;&nbsp;&nbsp;{selectedIdeas.length}
+                  개
                 </div>
                 <button
                   className="flex justify-center w-full mt-2 text-lime-600"
@@ -308,14 +312,24 @@ const Ideas = ({ customHooks }) => {
             ) : (
               <div className="shadow-xl" style={{ backgroundColor: "#eeeeee" }}>
                 <div className="highlight mx-16 mt-5 mb-2 flex justify-center text-xl font-black z-10">
-                  연관된 아이디어 ♾️
+                  선택된 아이디어 ♾️
                 </div>
                 <div className="relative pb-10 ">
                   <Slider {...settings}>
-                    {testArr.map((arr, i) => (
-                      <div key={i}>
+                    {selectedIdeas.map((idea, index) => (
+                      <div key={index}>
                         <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
-                          {arr}
+                          {idea.text.length < 100 ? (
+                            idea.text
+                          ) : (
+                            <>
+                              {idea.text.substr(0, 100)}
+                              <span>...</span>
+                              <span className="font-black underline">
+                                더보기
+                              </span>
+                            </>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -337,24 +351,23 @@ const Ideas = ({ customHooks }) => {
         </div>
 
         {/*Contens*/}
-        <div
-          className="bg-white duration-100"
-          style={{
-            paddingTop: `${
-              isConnectClicked
-                ? isConnectToggleClicked
-                  ? "400px"
-                  : "130px"
-                : "50px"
-            }`,
-          }}
-          onClick={() => {
-            setIsSearchClicked(false);
-          }}
-        >
-          {/* ToggleButton */}
-          <div className="mx-5 mt-10 font-black text-xl ">카테고리</div>
-          <div className="flex flex-wrap justify-start mx-5 mt-2 mb-10 gap-3">
+        {/* ToggleButton */}
+        <div className="bg-white px-5 pb-10 mb-2 ">
+          <div
+            className="font-black text-xl duration-100 pb-5"
+            style={{
+              paddingTop: `${
+                selectedIdeas.length > 0
+                  ? isConnectToggleClicked
+                    ? "440px"
+                    : "160px"
+                  : "80px"
+              }`,
+            }}
+          >
+            카테고리
+          </div>
+          <div className="flex flex-wrap justify-start gap-3">
             {toggleItems.map((item, index) => (
               <button
                 key={index}
@@ -372,101 +385,29 @@ const Ideas = ({ customHooks }) => {
               </button>
             ))}
           </div>
-          {/* 아이디어 */}
-          <div className="mx-5 mt-10 font-black text-xl ">아이디어</div>
+        </div>
+        {/* 아이디어 */}
+        <div
+          className="bg-white py-5"
+          onClick={() => {
+            setIsSearchClicked(false);
+          }}
+        >
+          <div className="font-black text-xl px-5 py-5">아이디어</div>
           {customHooks.dbIdeas.length === 0 ? (
-            <div className="flex justify-center items-center m-10 text-xl font-black">
+            <div className="flex justify-center items-center text-xl font-black text-gray-400 ">
               새 아이디어를 입력해주세요 ✏️
             </div>
           ) : (
             <div className={isSearchClicked ? "blur-sm" : ""}>
-              {customHooks.dbIdeas.map((dbIdea, index) => (
-                <div key={index} className="mt-5 mb-5">
-                  <div className="flex justify-between items-end mx-4 mt-2">
-                    <div className="flex items-end">
-                      <div className="flex mx-3">
-                        <Avatar
-                          alt="avatar"
-                          src={dbIdea.userPhotoURL}
-                          sx={{
-                            display: "flex",
-                            width: "35px",
-                            height: "35px",
-                          }}
-                        />
-                      </div>
-                      <h2>
-                        <b>{dbIdea.userName}</b>
-                      </h2>
-                    </div>
-                    {/* time */}
-                    <div className="mx-3 font-black">
-                      <div className="flex items-center gap-2">
-                        {dbIdea.isClicked ? (
-                          <></>
-                        ) : (
-                          <span className="w-2 h-2 bg-red-400 text-white rounded-full" />
-                        )}
-                        {customHooks.timeDisplay(dbIdea.createdAt)}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="border-box shadow-xl m-4 p-5 rounded-2xl bg-stone-200">
-                    <div className="flex items-center">
-                      <FontAwesomeIcon icon={faCircle} size="xs" />
-                      <div className="mx-3 w-full">
-                        {dbIdea.text.length > 200
-                          ? dbIdea.text.substr(0, 200) + "...더보기"
-                          : dbIdea.text}
-                      </div>
-                    </div>
-                    {dbIdea.source === "" ? (
-                      <></>
-                    ) : (
-                      <div className="flex items-center pt-3 pb-1">
-                        <FontAwesomeIcon icon={faQuoteLeft} />
-                        <div className="mx-3 w-full">{dbIdea.source}</div>
-                      </div>
-                    )}
-                    {dbIdea.source === "" ? (
-                      <></>
-                    ) : (
-                      <div className="flex items-center ">
-                        <FontAwesomeIcon icon={faHashtag} />
-                        <div className="mx-3 w-full">{dbIdea.tags}</div>
-                      </div>
-                    )}
-                  </div>
-                  {/* like, bookmark, ellipsis */}
-                  <div className="flex justify-between items-center mx-6 my-4">
-                    <div className="flex mx-3 gap-4">
-                      <button className="text-xl text-red-500">
-                        <FontAwesomeIcon
-                          icon={dbIdea.like ? fasHeart : farHeart}
-                        />
-                      </button>
-                      <button className="text-xl text-orange-400">
-                        <FontAwesomeIcon
-                          icon={dbIdea.bookmark ? fasBookmark : farBookmark}
-                        />
-                      </button>
-                      <button className="text-xl text-sky-400">
-                        <FontAwesomeIcon
-                          icon={dbIdea.public ? fasCompass : farCompass}
-                        />
-                      </button>
-                    </div>
-                    <div className="flex mx-3 text-xl gap-4">
-                      <button className="">
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                      <button className="">
-                        <FontAwesomeIcon icon={faCircleCheck} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+              {customHooks.dbIdeas.map((dbIdea) => (
+                <Idea
+                  key={dbIdea.id}
+                  dbIdea={dbIdea}
+                  customHooks={customHooks}
+                  onIdeasClick={onIdeasClick}
+                  selectedIdeas={selectedIdeas}
+                />
               ))}
             </div>
           )}

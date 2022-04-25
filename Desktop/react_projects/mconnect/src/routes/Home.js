@@ -41,6 +41,7 @@ const Home = ({ customHooks }) => {
   const user = authService.currentUser;
   let navigate = useNavigate();
 
+  // form
   const [formText, setFormText] = useState("");
   const [formSource, setFormSource] = useState("");
   const [formTag, setFormTag] = useState("");
@@ -93,7 +94,7 @@ const Home = ({ customHooks }) => {
 
   const achievementItems = [
     {
-      label: "뉴비🧐",
+      label: "뉴비🥳",
       bgColor: "bg-green-400",
       color: "text-white",
     },
@@ -104,12 +105,27 @@ const Home = ({ customHooks }) => {
     },
     {
       label: "인기쟁이😎",
-      bgColor: "be-orange-400",
+      bgColor: "bg-orange-400",
       color: "text-white",
     },
     {
       label: "항해자🗺️",
       bgColor: "bg-sky-400",
+      color: "text-white",
+    },
+    {
+      label: "공부벌레✏️",
+      bgColor: "bg-yellow-400",
+      color: "text-white",
+    },
+    {
+      label: "소통왕🤗",
+      bgColor: "bg-purple-400",
+      color: "text-white",
+    },
+    {
+      label: "주가 떡상중📈",
+      bgColor: "bg-red-500",
       color: "text-white",
     },
   ];
@@ -227,32 +243,41 @@ const Home = ({ customHooks }) => {
   );
 
   return (
-    <div className="w-screen bg-stone-200">
+    <div className="bg-stone-200">
       {/* top */}
-      <div className="relative w-full bg-yellow-300">
+      <div
+        className="relative w-full"
+        style={{
+          background: "linear-gradient(45deg, #fef9c3, #d9f99d , #fde047)",
+        }}
+      >
         <div className="flex-col">
           <div className="flex justify-between items-start py-2">
-            <div className=" english__font flex font-black pt-4 mx-4 text-3xl ">
+            <div className=" english__font flex font-black pt-4 mx-4 text-3xl text-black">
               Connecteas
             </div>
             <button className="pt-4 mx-4" onClick={onEllipsisClick}>
               <FontAwesomeIcon icon={faEllipsis} size="2xl" />
             </button>
           </div>
-          <div className="flex items-end gap-2 mx-4 pt-10 pb-4 font-black ">
-            <Avatar
-              alt="avatar"
-              src={user.photoURL}
-              sx={{
-                display: "flex",
-                width: "50px",
-                height: "50px",
-              }}
-            />
+          <div className="flex items-end gap-2 mx-4 pt-10 pb-6 font-black ">
+            <div className="shadow-xl rounded-full">
+              <Avatar
+                alt="avatar"
+                src={user.photoURL}
+                sx={{
+                  display: "flex",
+                  width: "50px",
+                  height: "50px",
+                  borderWidth: "2px",
+                  borderColor: "white",
+                }}
+              />
+            </div>
             <div className="text-lg">{user.displayName}님 안녕하세요😚</div>
           </div>
-          <div className="mx-4 pb-2 text-lg font-black">카테고리</div>
-          <div className="flex gap-4 mx-4 pb-4 text-2xl font-black">
+          <div className="mx-4 pb-4 text-lg font-black">카테고리</div>
+          <div className="flex gap-4 mx-4 pb-8 text-2xl font-black">
             {categoryItems.map((item, index) => (
               <span key={index}>
                 <Badge
@@ -273,7 +298,7 @@ const Home = ({ customHooks }) => {
               </span>
             ))}
           </div>
-          <div className="mx-4 pb-2 text-lg font-black">업적</div>
+          <div className="mx-4 pb-4 text-lg font-black">업적</div>
           <div className="flex flex-wrap gap-2 mx-4 pb-8 font-black">
             {achievementItems.map((item, index) => (
               <div

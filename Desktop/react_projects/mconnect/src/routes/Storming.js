@@ -44,9 +44,9 @@ const Storming = () => {
         </div>
         <div className="px-5 flex flex-wrap pb-2">
           {menuItems.map((item, index) => (
-            <div key={index} className="border-box flex w-1/4 p-1">
+            <div key={index} className="border-box flex w-1/4 p-1 ">
               <div
-                className={`relative shadow-xl w-full h-20 m-1 p-1 rounded-xl text-white ${item.bgColor}`}
+                className={`relative shadow-lg w-full h-20 m-1 p-1 rounded-xl text-white ${item.bgColor}`}
               >
                 <p className="absolute left-2 top-2 text-3xl">{item.icon}</p>
                 <p className="absolute bottom-2 right-2 text-lg font-black">
