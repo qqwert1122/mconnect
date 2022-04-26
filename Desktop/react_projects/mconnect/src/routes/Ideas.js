@@ -13,10 +13,7 @@ import {
   faMinus,
   faSearch,
   faSquare,
-  faQuoteLeft,
   faHashtag,
-  faCircleCheck,
-  faTrash,
   faCircleUser,
   faChevronUp,
   faChevronDown,
@@ -181,13 +178,6 @@ const Ideas = ({ customHooks }) => {
       setSelectedIdeas([dbIdea, ...selectedIdeas]);
     }
   };
-
-  // console.log(JSON.stringify(customHooks.dbIdeas));
-  // const showIdeas = (dbIdea) => {
-  //   return (
-
-  //   );
-  // };
 
   return (
     <>
