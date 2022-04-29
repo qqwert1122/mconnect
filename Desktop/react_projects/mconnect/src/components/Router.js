@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "routes/Home";
-import Ideas from "routes/Ideas";
+import Ideas from "routes/ideas/Ideas";
 import Writing from "routes/Writing";
 import Storming from "routes/Storming";
 import Explore from "routes/Explore";

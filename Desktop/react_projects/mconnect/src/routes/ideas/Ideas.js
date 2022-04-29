@@ -1,5 +1,6 @@
-import Idea from "routes/Idea";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Idea from "routes/ideas/Idea";
+import ToggleButton from "routes/ideas/ToggleButton";
 import { useNavigate } from "react-router-dom";
 import { authService } from "fbase";
 import Slider from "react-slick";
@@ -73,13 +74,14 @@ const testUsers = [
   "Brandon Austin",
 ];
 
-const toggleItems = [
+const categories = [
   {
     icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
     label: "점",
     bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
+    value: 0,
   },
   {
     icon: <FontAwesomeIcon icon={faMinus} />,
@@ -87,6 +89,7 @@ const toggleItems = [
     bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
+    value: 2,
   },
   {
     icon: <FontAwesomeIcon icon={faSquare} />,
@@ -94,6 +97,7 @@ const toggleItems = [
     bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
+    value: 3,
   },
   {
     icon: <FontAwesomeIcon icon={faDiceD6} />,
@@ -101,13 +105,18 @@ const toggleItems = [
     bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
+    value: 4,
   },
+];
+
+const filters = [
   {
     icon: <FontAwesomeIcon icon={fasHeart} />,
     label: "좋아요",
     bgColor: "bg-red-200",
     color: "text-red-500",
     borderColor: "border-red-200",
+    value: "like",
   },
   {
     icon: <FontAwesomeIcon icon={fasBookmark} />,
@@ -115,6 +124,7 @@ const toggleItems = [
     bgColor: "bg-orange-200",
     color: "text-orange-500",
     borderColor: "border-orange-200",
+    value: "bookmark",
   },
   {
     icon: <FontAwesomeIcon icon={fasCompass} />,
@@ -122,6 +132,7 @@ const toggleItems = [
     bgColor: "bg-sky-200",
     color: "text-sky-500",
     borderColor: "border-sky-200",
+    value: "public",
   },
 ];
 
@@ -130,7 +141,11 @@ const Ideas = ({ customHooks }) => {
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [isConnectClicked, setIsConnectClicked] = useState(false);
   const [isConnectToggleClicked, setIsConnectToggleClicked] = useState(false);
-  const [selectedToggleItem, setSelectedToggleItem] = useState("");
+
+  //toggleItem
+  const [categoryPrmtr, setCategoryPrmtr] = useState("");
+  const [filterPrmtr, setFilterPrmtr] = useState("");
+  const [showingIdeas, setShowingIdeas] = useState(customHooks.dbIdeas);
 
   // connect
   const [selectedIdeas, setSelectedIdeas] = useState([]);
@@ -166,9 +181,6 @@ const Ideas = ({ customHooks }) => {
   };
   const onConnectToggle = () => {
     setIsConnectToggleClicked(!isConnectToggleClicked);
-  };
-  const onToggleItemClick = (label) => {
-    setSelectedToggleItem(label);
   };
   const onDetailsClick = () => {};
   const onIdeasClick = (dbIdea) => {
@@ -258,7 +270,7 @@ const Ideas = ({ customHooks }) => {
                   <FontAwesomeIcon icon={faCircleUser} />
                 </span>
               </div>
-              <div className="m-4 p-5 mb-2 rounded-3xl bg-white">
+              <div className="m-4 p-5 mb-5 rounded-3xl bg-white">
                 <div className="flex text-2xl flex-wrap gap-2 max-h-40 overflow-scroll">
                   {testUsers.map((user, i) => (
                     <span
@@ -342,40 +354,19 @@ const Ideas = ({ customHooks }) => {
 
         {/*Contens*/}
         {/* ToggleButton */}
-        <div className="bg-white px-5 pb-10 mb-2 ">
-          <div
-            className="font-black text-xl duration-100 pb-5"
-            style={{
-              paddingTop: `${
-                selectedIdeas.length > 0
-                  ? isConnectToggleClicked
-                    ? "440px"
-                    : "160px"
-                  : "80px"
-              }`,
-            }}
-          >
-            카테고리
-          </div>
-          <div className="flex flex-wrap justify-start gap-3">
-            {toggleItems.map((item, index) => (
-              <button
-                key={index}
-                className={`border-box rounded-3xl ${
-                  item.label === selectedToggleItem ? item.bgColor : ""
-                } ${item.color} ${
-                  item.borderColor
-                } border-2 px-4 py-1 text-base font-black shadow-md duration-500`}
-                onClick={() => {
-                  onToggleItemClick(item.label);
-                }}
-              >
-                <span className="text-base">{item.icon}</span>
-                &nbsp;{item.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <ToggleButton
+          selectedIdeas={selectedIdeas}
+          isConnectToggleClicked={isConnectToggleClicked}
+          categories={categories}
+          categoryPrmtr={categoryPrmtr}
+          setCategoryPrmtr={setCategoryPrmtr}
+          filters={filters}
+          filterPrmtr={filterPrmtr}
+          setFilterPrmtr={setFilterPrmtr}
+          showingIdeas={showingIdeas}
+          setShowingIdeas={setShowingIdeas}
+          dbIdeas={customHooks.dbIdeas}
+        />
         {/* 아이디어 */}
         <div
           className="bg-white py-5"
@@ -384,13 +375,12 @@ const Ideas = ({ customHooks }) => {
           }}
         >
           <div className="font-black text-xl px-5 py-5">아이디어</div>
-          {customHooks.dbIdeas.length === 0 ? (
-            <div className="flex justify-center items-center text-xl font-black text-gray-400 ">
-              새 아이디어를 입력해주세요 ✏️
-            </div>
-          ) : (
-            <div className={isSearchClicked ? "blur-sm" : ""}>
-              {customHooks.dbIdeas.map((dbIdea) => (
+
+          <div
+            className={isSearchClicked ? "bg-black bg-opacity-20 blur-sm" : ""}
+          >
+            {showingIdeas.length > 0 ? (
+              showingIdeas.map((dbIdea) => (
                 <Idea
                   key={dbIdea.id}
                   dbIdea={dbIdea}
@@ -398,9 +388,13 @@ const Ideas = ({ customHooks }) => {
                   onIdeasClick={onIdeasClick}
                   selectedIdeas={selectedIdeas}
                 />
-              ))}
-            </div>
-          )}
+              ))
+            ) : (
+              <div className="flex justify-center items-center text-xl font-black text-gray-400 ">
+                새 아이디어를 입력해주세요 ✏️
+              </div>
+            )}
+          </div>
         </div>
         {/* Floating Action Button, FAB */}
         <div className="fixed bottom-20 right-6 z-10">

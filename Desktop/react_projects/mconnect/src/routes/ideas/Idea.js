@@ -1,3 +1,4 @@
+import "css/Idea.css";
 import Avatar from "@mui/material/Avatar";
 import React, { useState } from "react";
 import { dbService } from "fbase";
@@ -143,7 +144,7 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
           className={`box-border shadow-xl m-4 p-5 rounded-2xl duration-500 ${
             selectedIdeas.includes(dbIdea)
               ? "bg-stone-500 text-stone-300"
-              : "bg-stone-200"
+              : "bg-stone-100"
           }`}
           onClick={() => {
             onIdeasClick(dbIdea);

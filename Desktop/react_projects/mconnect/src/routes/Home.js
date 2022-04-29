@@ -234,7 +234,7 @@ const Home = ({ customHooks }) => {
     <Slider {...settings}>
       {testArr.map((arr, index) => (
         <div key={index}>
-          <div className="relative h-52 p-5 m-1 rounded-3xl shadow-lg bg-stone-200">
+          <div className="relative h-52 p-5 m-1 rounded-3xl shadow bg-stone-100">
             {arr}
           </div>
         </div>
