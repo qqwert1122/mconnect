@@ -11,9 +11,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import Snackbar from "@mui/material/Snackbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircle,
@@ -41,6 +38,9 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   // dialog
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
+  const onCancleClick = () => {
+    setDeleteDialogOpen(false);
+  };
   const onDeleteClick = async () => {
     setDeleteDialogOpen(false);
     setAnchorEl(null);
@@ -67,37 +67,17 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"삭제 알림"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"알림🚨"}</DialogTitle>
         <DialogContent>
-          <DialogContentText
-            id="alert-dialog-description"
-            style={{
-              fontSize: "12px",
-            }}
-          >
-            정말 글을 지우시겠다면 '삭제'를 눌러주세요.
+          <DialogContentText id="alert-dialog-description">
+            지운 글은 복구할 수 없습니다.
             <br />
-            삭제된 글은 한 달간 휴지통에 보관됩니다.
+            글을 지우겠다면 '삭제'를 눌러주세요.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => {
-              setDeleteDialogOpen(false);
-            }}
-            style={{
-              fontSize: "12px",
-            }}
-          >
-            취소
-          </Button>
-          <Button
-            onClick={onDeleteClick}
-            autoFocus
-            style={{
-              fontSize: "12px",
-            }}
-          >
+          <Button onClick={onCancleClick}>취소</Button>
+          <Button onClick={onDeleteClick} autoFocus>
             삭제
           </Button>
         </DialogActions>

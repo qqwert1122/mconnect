@@ -1,4 +1,5 @@
 import HomeForm from "./HomeForm";
+import "css/Idea.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService, dbService } from "fbase";
@@ -24,7 +25,6 @@ import {
   faMinus,
   faSquare,
   faDiceD6,
-  faT,
 } from "@fortawesome/free-solid-svg-icons";
 
 // dayjs extends

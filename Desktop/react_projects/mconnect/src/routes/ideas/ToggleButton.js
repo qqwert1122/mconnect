@@ -116,7 +116,7 @@ const ToggleButton = ({
               item.value === categoryPrmtr ? item.bgColor : ""
             } ${item.color} ${
               item.borderColor
-            } border-2 px-4 py-1 text-base font-black shadow-md duration-500`}
+            } border-2 px-4 py-1 text-sm font-black shadow-md duration-500`}
             onClick={() => {
               onCategoryPrmtrClick(item);
             }}

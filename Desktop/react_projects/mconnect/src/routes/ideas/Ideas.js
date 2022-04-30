@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Idea from "routes/ideas/Idea";
+import SearchPage from "routes/ideas/SearchPage";
+import SelectedIdeasSlide from "routes/ideas/SelectedIdeasSlide";
 import ToggleButton from "routes/ideas/ToggleButton";
 import { useNavigate } from "react-router-dom";
 import { authService } from "fbase";
-import Slider from "react-slick";
+// import List from "react-virtualized/List";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -139,8 +141,11 @@ const filters = [
 ];
 
 const Ideas = ({ customHooks }) => {
+  let navigate = useNavigate();
+  const user = authService.currentUser;
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
+  const dbIdeas = customHooks.dbIdeas;
 
   // event handler
   const [isSearchClicked, setIsSearchClicked] = useState(false);
@@ -152,23 +157,26 @@ const Ideas = ({ customHooks }) => {
   const [filterPrmtr, setFilterPrmtr] = useState("");
   const [showingIdeas, setShowingIdeas] = useState([]);
 
+  // searchPage
+  const [tagList, setTagList] = useState([]);
+
   useEffect(() => {
-    setShowingIdeas(customHooks.dbIdeas);
-  }, [customHooks.dbIdeas]);
+    setShowingIdeas(dbIdeas);
+  }, [dbIdeas]);
+  useEffect(() => {
+    const tempoTagList = [];
+    const tempoUserIdList = [];
 
-  let navigate = useNavigate();
-  const user = authService.currentUser;
-
-  const settings = {
-    dots: true,
-    arrows: false,
-    infinite: false,
-    speed: 500,
-    slidesToScroll: 1,
-    centerMode: true,
-    focusOnSelect: true,
-    initialSlide: 0,
-  };
+    for (var a in dbIdeas) {
+      for (var b in dbIdeas[a].tags) {
+        if (tempoTagList.includes(dbIdeas[a].tags[b])) {
+        } else {
+          tempoTagList.push(dbIdeas[a].tags[b]);
+        }
+      }
+    }
+    setTagList(tempoTagList);
+  }, [dbIdeas]);
 
   const onSearchClick = () => {
     if (isSearchClicked === false) {
@@ -218,7 +226,7 @@ const Ideas = ({ customHooks }) => {
               </div>
             )}
             <button
-              className="flex justify-between items-center h-8 p-2 duration-100  bg-white rounded-3xl"
+              className="flex justify-between items-center h-8 p-2 bg-white rounded-3xl"
               style={{
                 width: `${isSearchClicked ? "90%" : "80px"}`,
                 justifyContent: `${
@@ -230,7 +238,7 @@ const Ideas = ({ customHooks }) => {
               {isSearchClicked ? (
                 <input
                   id="searchInput"
-                  className="w-full mx-2 px-2"
+                  className="w-full mx-2 px-2 duration-500"
                   placeholder={isSearchClicked ? "Search" : ""}
                   autoComplete="off"
                 />
@@ -242,119 +250,15 @@ const Ideas = ({ customHooks }) => {
           </div>
           {/* Search Page /  */}
           {isSearchClicked ? (
-            <div className="absolute w-full flex-col shadow-xl bg-stone-200">
-              {/* 태그 검색 */}
-              <div
-                className="mx-5 mt-5 mb-2 text-lg font-black gap-2"
-                style={{ color: "#5bb647" }}
-              >
-                태그&nbsp;
-                <span>
-                  <FontAwesomeIcon icon={faHashtag} />
-                </span>
-              </div>
-              <div className="m-4 p-5 mb-2 rounded-3xl bg-white">
-                <div className="flex text-2xl flex-wrap gap-2 max-h-40 overflow-scroll">
-                  {testTags.map((m, i) => (
-                    <span
-                      key={i}
-                      className="border-2 rounded-3xl border-stone-200 px-1 text-sm"
-                    >
-                      {m}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              {/* 사용자 검색 */}
-              <div
-                className="mx-5 mt-5 mb-2 text-lg font-black gap-2 "
-                style={{ color: "#5bb647" }}
-              >
-                사용자&nbsp;
-                <span>
-                  <FontAwesomeIcon icon={faCircleUser} />
-                </span>
-              </div>
-              <div className="m-4 p-5 mb-5 rounded-3xl bg-white">
-                <div className="flex text-2xl flex-wrap gap-2 max-h-40 overflow-scroll">
-                  {testUsers.map((user, i) => (
-                    <span
-                      key={i}
-                      className="flex items-center justify-between border-2 rounded-3xl  border-stone-200 px-1 text-sm gap-1"
-                    >
-                      <img
-                        className="rounded-full"
-                        src={`https://i.pravatar.cc/30?img=${i}`}
-                      />
-                      {user}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <SearchPage dbIdeas={dbIdeas} tagList={tagList} />
           ) : (
             <></>
           )}
-          {selectedIdeas.length > 0 ? (
-            !isConnectToggleClicked ? (
-              // Connected Ideas
-              <div
-                className="py-2 flex-col text-xl font-black shadow-xl"
-                style={{
-                  background:
-                    "linear-gradient(45deg, #fef9c3, #d9f99d , #fde047)",
-                }}
-              >
-                <div className="flex justify-center">
-                  선택된 아이디어 ♾️ : &nbsp;&nbsp;&nbsp;{selectedIdeas.length}
-                  개
-                </div>
-                <button
-                  className="flex justify-center w-full mt-2 text-lime-600"
-                  onClick={onConnectToggle}
-                >
-                  <FontAwesomeIcon icon={faChevronDown} />
-                </button>
-              </div>
-            ) : (
-              <div className="shadow-xl" style={{ backgroundColor: "#eeeeee" }}>
-                <div className="highlight mx-16 mt-5 mb-2 flex justify-center text-xl font-black z-10">
-                  선택된 아이디어 ♾️
-                </div>
-                <div className="relative pb-10 ">
-                  <Slider {...settings}>
-                    {selectedIdeas.map((idea, index) => (
-                      <div key={index}>
-                        <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
-                          {idea.text.length < 100 ? (
-                            idea.text
-                          ) : (
-                            <>
-                              {idea.text.substr(0, 100)}
-                              <span>...</span>
-                              <span className="font-black underline">
-                                더보기
-                              </span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </Slider>
-                </div>
-                <div>
-                  <button
-                    className="flex justify-center w-full py-2 text-2xl"
-                    onClick={onConnectToggle}
-                  >
-                    <FontAwesomeIcon icon={faChevronUp} />
-                  </button>
-                </div>
-              </div>
-            )
-          ) : (
-            <></>
-          )}
+          <SelectedIdeasSlide
+            selectedIdeas={selectedIdeas}
+            isConnectToggleClicked={isConnectToggleClicked}
+            onConnectToggle={onConnectToggle}
+          />
         </div>
 
         {/*Contens*/}
@@ -370,7 +274,7 @@ const Ideas = ({ customHooks }) => {
           setFilterPrmtr={setFilterPrmtr}
           showingIdeas={showingIdeas}
           setShowingIdeas={setShowingIdeas}
-          dbIdeas={customHooks.dbIdeas}
+          dbIdeas={dbIdeas}
         />
         {/* 아이디어 */}
         <div
@@ -380,26 +284,21 @@ const Ideas = ({ customHooks }) => {
           }}
         >
           <div className="font-black text-xl px-5 py-5">아이디어</div>
-
-          <div
-            className={isSearchClicked ? "bg-black bg-opacity-20 blur-sm" : ""}
-          >
-            {showingIdeas.length > 0 ? (
-              showingIdeas.map((dbIdea) => (
-                <Idea
-                  key={dbIdea.id}
-                  dbIdea={dbIdea}
-                  customHooks={customHooks}
-                  onIdeasClick={onIdeasClick}
-                  selectedIdeas={selectedIdeas}
-                />
-              ))
-            ) : (
-              <div className="py-10 flex justify-center items-center text-xl font-black text-gray-400 ">
-                새 아이디어를 입력해주세요 ✏️
-              </div>
-            )}
-          </div>
+          {showingIdeas.length > 0 ? (
+            showingIdeas.map((dbIdea) => (
+              <Idea
+                key={dbIdea.id}
+                dbIdea={dbIdea}
+                customHooks={customHooks}
+                onIdeasClick={onIdeasClick}
+                selectedIdeas={selectedIdeas}
+              />
+            ))
+          ) : (
+            <div className="py-10 flex justify-center items-center text-xl font-black text-gray-400 ">
+              새 아이디어를 입력해주세요 ✏️
+            </div>
+          )}
         </div>
         {/* Floating Action Button, FAB */}
         {selectedIdeas.length > 0 ? (
