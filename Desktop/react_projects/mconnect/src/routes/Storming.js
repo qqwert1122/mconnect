@@ -37,7 +37,7 @@ const Storming = () => {
   ];
 
   return (
-    <div className="bg-stone-200">
+    <div className="bg-stone-200 min-h-screen">
       <div className="relative bg-white mb-2">
         <div className="english__font relative mb-2 p-2 px-4 text-2xl font-black z-10 text-white bg-orange-400">
           Storming

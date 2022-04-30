@@ -1,3 +1,4 @@
+import HomeForm from "./HomeForm";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService, dbService } from "fbase";
@@ -10,17 +11,12 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import Badge from "@mui/material/Badge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBookmark as farBookmark,
-  faHeart as farHeart,
-  faCompass as farCompass,
-} from "@fortawesome/free-regular-svg-icons";
+import {} from "@fortawesome/free-regular-svg-icons";
 import {
   faCircle,
   faBookmark as fasBookmark,
   faHeart as fasHeart,
   faCompass as fasCompass,
-  faQuoteLeft,
   faHashtag,
   faEllipsis,
   faFireFlameCurved,
@@ -28,6 +24,7 @@ import {
   faMinus,
   faSquare,
   faDiceD6,
+  faT,
 } from "@fortawesome/free-solid-svg-icons";
 
 // dayjs extends
@@ -207,7 +204,7 @@ const Home = ({ customHooks }) => {
         title: "",
         text: form.formText.value,
         source: form.formSource.value,
-        tags: [],
+        tags: formTags,
         like: formLike,
         bookmark: formBookmark,
         public: formPublic,
@@ -225,10 +222,49 @@ const Home = ({ customHooks }) => {
     }
     setFormText("");
     setFormSource("");
+    setFormTag("");
+    setFormTags([]);
     setFormLike(false);
     setFormBookmark(false);
     setFormPublic(false);
   };
+
+  const ideasSlider = (
+    <Slider {...settings}>
+      {customHooks.dbIdeas
+        .filter((idea, index) => index < 5)
+        .map((idea, index) => (
+          <div key={index}>
+            <div className="relative h-52 p-5 m-1 rounded-3xl shadow bg-stone-100">
+              {idea.title === "" ? (
+                idea.text.length < 130 ? (
+                  idea.text
+                ) : (
+                  <>
+                    {idea.text.substr(0, 130)}
+                    <span>...</span>
+                    <span className="font-black underline">더보기</span>
+                  </>
+                )
+              ) : (
+                <>
+                  <div className="mb-2 font-black text-lg">{idea.title}</div>
+                  {idea.text.length < 100 ? (
+                    idea.text
+                  ) : (
+                    <>
+                      {idea.text.substr(0, 100)}
+                      <span>...</span>
+                      <span className="font-black underline">더보기</span>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        ))}
+    </Slider>
+  );
 
   const testArrSlide = (
     <Slider {...settings}>
@@ -299,7 +335,7 @@ const Home = ({ customHooks }) => {
             ))}
           </div>
           <div className="mx-4 pb-4 text-lg font-black">업적</div>
-          <div className="flex flex-wrap gap-2 mx-4 pb-8 font-black">
+          <div className="flex flex-wrap gap-2 mx-4 pb-8 font-black text-sm">
             {achievementItems.map((item, index) => (
               <div
                 key={index}
@@ -312,83 +348,24 @@ const Home = ({ customHooks }) => {
         </div>
         <div className="pb-2 rounded-t-3xl bg-white">
           {/* form */}
-          <form onSubmit={onSubmit}>
-            <div className="flex justify-between items-center mx-7 mt-2 pt-5">
-              <div className="relative highlight text-lg font-black z-10">
-                새 아이디어를 입력해주세요
-              </div>
-              <input
-                type="submit"
-                className="p-1 rounded-xl text-lg font-black text-center shadow-md text-white bg-green-600"
-                value="작성 ✏️"
-              />
-            </div>
-
-            <div className="shadow-xl h-52 mt-4 mx-4 rounded-3xl bg-stone-200">
-              <div className="flex items-center p-3">
-                <FontAwesomeIcon icon={faCircle} size="xs" />
-                <textarea
-                  className=" rounded-xl border-2 mx-3 p-2 w-full h-24"
-                  name="formText"
-                  type="text"
-                  value={formText}
-                  onChange={onTextChange}
-                  placeholder="내용을 입력하세요"
-                  onKeyDown={onKeyDownPreventDefault}
-                  required
-                />
-              </div>
-              <div className="flex items-center px-3 py-1">
-                <FontAwesomeIcon icon={faQuoteLeft} />
-                <input
-                  className=" rounded-xl border-2 mx-3 px-2 w-full"
-                  name="formSource"
-                  type="text"
-                  value={formSource}
-                  onChange={onSourceChange}
-                  onKeyDown={onKeyDownPreventDefault}
-                  placeholder="출처를 입력하세요"
-                />
-              </div>
-              <div className="flex items-center px-3 py-1">
-                <FontAwesomeIcon icon={faHashtag} />
-                <input
-                  className=" rounded-xl border-2 mx-3 px-2 w-full"
-                  name="tags"
-                  type="text"
-                  placeholder="태그를 입력하세요"
-                />
-              </div>
-            </div>
-
-            {/* like, bookmark, time */}
-            <div className="flex justify-between items-center mx-6 my-4">
-              <div className="flex mx-3 gap-4">
-                <button className="text-2xl text-red-500" onClick={onLikeClick}>
-                  <FontAwesomeIcon icon={formLike ? fasHeart : farHeart} />
-                </button>
-                <button
-                  className="text-2xl text-orange-400"
-                  onClick={onBookmarkClick}
-                >
-                  <FontAwesomeIcon
-                    icon={formBookmark ? fasBookmark : farBookmark}
-                  />
-                </button>
-                <button
-                  className="text-2xl text-sky-400"
-                  onClick={onPublicClick}
-                >
-                  <FontAwesomeIcon
-                    icon={formPublic ? fasCompass : farCompass}
-                  />
-                </button>
-              </div>
-              <div className="mx-3 text-base font-black">
-                {dayjs().format("YYYY. MM. DD. HH:mm:ss")}
-              </div>
-            </div>
-          </form>
+          <HomeForm
+            onSubmit={onSubmit}
+            formText={formText}
+            onTextChange={onTextChange}
+            onKeyDownPreventDefault={onKeyDownPreventDefault}
+            formSource={formSource}
+            onSourceChange={onSourceChange}
+            formLike={formLike}
+            onLikeClick={onLikeClick}
+            formBookmark={formBookmark}
+            onBookmarkClick={onBookmarkClick}
+            formPublic={formPublic}
+            onPublicClick={onPublicClick}
+            formTags={formTags}
+            setFormTags={setFormTags}
+            formTag={formTag}
+            setFormTag={setFormTag}
+          />
         </div>
       </div>
       {/* Ideas */}
@@ -404,7 +381,7 @@ const Home = ({ customHooks }) => {
             더보기
           </button>
         </div>
-        <div className="relative pb-10 ">{testArrSlide}</div>
+        <div className="relative pb-10 ">{ideasSlider}</div>
       </div>
       <div className=" mt-2 bg-white">
         <div className="flex justify-between items-center pt-4 pb-2">

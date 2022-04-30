@@ -12,7 +12,12 @@ const useCustomHooks = () => {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
   const [navValue, setNavValue] = useState("/");
+
+  // db props
   const [dbIdeas, setdbIdeas] = useState([]);
+
+  // ideas props
+  const [selectedIdeas, setSelectedIdeas] = useState([]);
 
   let navigate = useNavigate();
 
@@ -79,27 +84,30 @@ const useCustomHooks = () => {
     timeDisplay,
     dbIdeas,
     setdbIdeas,
+    selectedIdeas,
+    setSelectedIdeas,
   };
 };
 
 const App = () => {
   const customHooks = useCustomHooks();
+
+  const loading = (
+    <div className="w-screen h-screen flex justify-center items-center mx-auto">
+      <div className="flex-col">
+        <div className="flex justify-center text-center">
+          <CircularProgress color="inherit" />
+        </div>
+        <div className="english__font flex justify-center mt-6 text-2xl font-black">
+          Loading
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
-      {customHooks.init ? (
-        <AppRouter customHooks={customHooks} />
-      ) : (
-        <div className="w-screen h-screen flex justify-center items-center mx-auto">
-          <div className="flex-col">
-            <div className="flex justify-center text-center">
-              <CircularProgress color="inherit" />
-            </div>
-            <div className="english__font flex justify-center mt-6 text-2xl font-black">
-              Loading
-            </div>
-          </div>
-        </div>
-      )}
+      {customHooks.init ? <AppRouter customHooks={customHooks} /> : loading}
       {customHooks.isLoggedIn ? (
         <footer className="english__font h-52 p-3 font-black bg-stone-200">
           &copy; Connecteas {new Date().getFullYear()}

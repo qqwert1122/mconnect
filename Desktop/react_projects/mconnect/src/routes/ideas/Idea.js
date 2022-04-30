@@ -32,6 +32,7 @@ import {
   faHeart as farHeart,
   faBookmark as farBookmark,
   faCopy,
+  faPenToSquare,
 } from "@fortawesome/free-regular-svg-icons";
 
 const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
@@ -107,7 +108,7 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   return (
     <div>
       <hr />
-      <div className="mt-5 mb-5">
+      <div className="mt-5 mb-5 opacity">
         <div className="flex justify-between items-center mx-4 mt-2">
           <div className="flex items-end">
             <div className="flex mx-3">
@@ -150,7 +151,11 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
             onIdeasClick(dbIdea);
           }}
         >
-          <div className="flex items-center">
+          <div
+            className={`flex items-center ${
+              dbIdea.source === "" && dbIdea.tags.length === 0 ? "" : "pb-3"
+            }`}
+          >
             <FontAwesomeIcon icon={faCircle} size="xs" />
             <div className="mx-3 w-full">
               {dbIdea.text.length > 200 ? (
@@ -167,7 +172,7 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
           {dbIdea.source === "" ? (
             <></>
           ) : (
-            <div className="flex items-center pt-3 pb-1">
+            <div className="flex items-center pb-1">
               <FontAwesomeIcon icon={faQuoteLeft} />
               <div className="mx-3 w-full text-sm ">{dbIdea.source}</div>
             </div>
@@ -177,7 +182,20 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
           ) : (
             <div className="flex items-center ">
               <FontAwesomeIcon icon={faHashtag} />
-              <div className="mx-3 w-full text-sm ">{dbIdea.tags}</div>
+              <div className="mx-3 w-full text-sm ">
+                {dbIdea.tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className={`mr-2 p-1 rounded-xl text-sm duration-500 ${
+                      selectedIdeas.includes(dbIdea)
+                        ? "bg-stone-200 text-black"
+                        : "bg-stone-600 text-white"
+                    } `}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -224,6 +242,10 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
                 horizontal: "left",
               }}
             >
+              <MenuItem onClick={handleClose}>
+                <FontAwesomeIcon icon={faPenToSquare} />
+                &nbsp; 수정
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   setDeleteDialogOpen(true);

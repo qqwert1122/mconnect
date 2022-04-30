@@ -18,10 +18,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Writing = () => {
+const Writing = ({ customHooks }) => {
+  const selectedIdeas = customHooks.selectedIdeas;
+  const setSelectedIdeas = customHooks.setSelectedIdeas;
+
   let navigate = useNavigate();
 
-  const onBackClick = () => {
+  const onBackClick = (e) => {
+    e.preventDefault();
     navigate("/ideas", { replace: true });
   };
 
@@ -47,8 +51,8 @@ const Writing = () => {
   };
 
   return (
-    <div className="opening flex-col bg-stone-200">
-      <form className="mb-6" onSubmit={onIdeaSubmit}>
+    <div className="opening flex-col bg-stone-200 min-h-screen">
+      <form className="pb-6" onSubmit={onIdeaSubmit}>
         <div className="bg-white pb-5 rounded-b-3xl shadow-xl">
           <div className="flex justify-between items-center m-5 ">
             <button onClick={onBackClick}>
@@ -121,20 +125,26 @@ const Writing = () => {
           <span className="m-5 text-xl">{Date.now()}</span>
         </div>
       </form>
-      <div className="highlight mx-16 my-2 flex justify-center text-xl font-black">
-        연관된 아이디어 ♾️
-      </div>
-      <div className="relative pb-10 ">
-        <Slider {...settings}>
-          {testArr.map((arr, index) => (
-            <div key={index}>
-              <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
-                {arr}
-              </div>
-            </div>
-          ))}
-        </Slider>
-      </div>
+      {selectedIdeas.length > 0 ? (
+        <>
+          <div className="highlight mx-16 my-2 flex justify-center text-xl font-black">
+            연관된 아이디어 ♾️
+          </div>
+          <div className="relative pb-10 ">
+            <Slider {...settings}>
+              {selectedIdeas.map((idea, index) => (
+                <div key={index}>
+                  <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+                    {idea.text}
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

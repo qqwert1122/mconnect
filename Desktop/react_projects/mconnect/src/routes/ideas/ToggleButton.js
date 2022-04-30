@@ -23,32 +23,60 @@ const ToggleButton = ({
         dbIdeas.filter((idea) => idea.category === categoryPrmtr)
       );
     }
-  }, [categoryPrmtr]);
+  }, [categoryPrmtr, dbIdeas]);
   useEffect(() => {
-    if (filterPrmtr === "") {
-      if (categoryPrmtr === "") {
+    if (categoryPrmtr === "") {
+      if (filterPrmtr === "") {
         setShowingIdeas(dbIdeas);
+        return;
       } else {
+        switch (filterPrmtr) {
+          case "like":
+            setShowingIdeas(dbIdeas.filter((idea) => idea.like === true));
+            break;
+          case "bookmark":
+            setShowingIdeas(dbIdeas.filter((idea) => idea.bookmark === true));
+            break;
+          case "public":
+            setShowingIdeas(dbIdeas.filter((idea) => idea.public === true));
+            break;
+        }
+        return;
+      }
+    } else {
+      if (filterPrmtr === "") {
         setShowingIdeas(
           dbIdeas.filter((idea) => idea.category === categoryPrmtr)
         );
-      }
-    } else {
-      switch (filterPrmtr) {
-        case "like":
-          setShowingIdeas(showingIdeas.filter((idea) => idea.like === true));
-          break;
-        case "bookmark":
-          setShowingIdeas(
-            showingIdeas.filter((idea) => idea.bookmark === true)
-          );
-          break;
-        case "public":
-          setShowingIdeas(showingIdeas.filter((idea) => idea.public === true));
-          break;
+        return;
+      } else {
+        switch (filterPrmtr) {
+          case "like":
+            setShowingIdeas(
+              dbIdeas
+                .filter((idea) => idea.category === categoryPrmtr)
+                .filter((idea) => idea.like === true)
+            );
+            break;
+          case "bookmark":
+            setShowingIdeas(
+              dbIdeas
+                .filter((idea) => idea.category === categoryPrmtr)
+                .filter((idea) => idea.bookmark === true)
+            );
+            break;
+          case "public":
+            setShowingIdeas(
+              dbIdeas
+                .filter((idea) => idea.category === categoryPrmtr)
+                .filter((idea) => idea.public === true)
+            );
+            break;
+        }
+        return;
       }
     }
-  }, [filterPrmtr]);
+  }, [filterPrmtr, dbIdeas]);
   const onCategoryPrmtrClick = (item) => {
     if (categoryPrmtr === item.value) {
       setCategoryPrmtr("");

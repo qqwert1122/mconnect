@@ -21,6 +21,8 @@ import {
   faCompass as fasCompass,
   faHeart as fasHeart,
   faBookmark as fasBookmark,
+  faArrowCircleRight,
+  faArrowRotateRight,
 } from "@fortawesome/free-solid-svg-icons";
 
 const testArr = ["text1", "text2", "text3", "text4", "text5", "text6"];
@@ -137,6 +139,9 @@ const filters = [
 ];
 
 const Ideas = ({ customHooks }) => {
+  const selectedIdeas = customHooks.selectedIdeas;
+  const setSelectedIdeas = customHooks.setSelectedIdeas;
+
   // event handler
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [isConnectClicked, setIsConnectClicked] = useState(false);
@@ -145,10 +150,11 @@ const Ideas = ({ customHooks }) => {
   //toggleItem
   const [categoryPrmtr, setCategoryPrmtr] = useState("");
   const [filterPrmtr, setFilterPrmtr] = useState("");
-  const [showingIdeas, setShowingIdeas] = useState(customHooks.dbIdeas);
+  const [showingIdeas, setShowingIdeas] = useState([]);
 
-  // connect
-  const [selectedIdeas, setSelectedIdeas] = useState([]);
+  useEffect(() => {
+    setShowingIdeas(customHooks.dbIdeas);
+  }, [customHooks.dbIdeas]);
 
   let navigate = useNavigate();
   const user = authService.currentUser;
@@ -173,14 +179,13 @@ const Ideas = ({ customHooks }) => {
     setIsSearchClicked(false);
   };
   const onWritingClick = () => {
-    navigate("/writing", { replace: true });
-  };
-  const onConnectClick = () => {
-    setIsSearchClicked(false);
-    setIsConnectClicked(!isConnectClicked);
+    navigate("/ideas/writing", { replace: true });
   };
   const onConnectToggle = () => {
     setIsConnectToggleClicked(!isConnectToggleClicked);
+  };
+  const onRefreshClick = () => {
+    setSelectedIdeas([]);
   };
   const onDetailsClick = () => {};
   const onIdeasClick = (dbIdea) => {
@@ -369,7 +374,7 @@ const Ideas = ({ customHooks }) => {
         />
         {/* 아이디어 */}
         <div
-          className="bg-white py-5"
+          className="bg-white min-h-screen py-5"
           onClick={() => {
             setIsSearchClicked(false);
           }}
@@ -390,37 +395,54 @@ const Ideas = ({ customHooks }) => {
                 />
               ))
             ) : (
-              <div className="flex justify-center items-center text-xl font-black text-gray-400 ">
+              <div className="py-10 flex justify-center items-center text-xl font-black text-gray-400 ">
                 새 아이디어를 입력해주세요 ✏️
               </div>
             )}
           </div>
         </div>
         {/* Floating Action Button, FAB */}
-        <div className="fixed bottom-20 right-6 z-10">
-          <button
-            className="shadow-2xl rounded-full w-14 h-14 border-2 border-white"
-            style={{
-              color: "#ffffff",
-              backgroundColor: "#57534e",
-            }}
-            onClick={onWritingClick}
-          >
-            <FontAwesomeIcon icon={faFeatherPointed} size="xl" />
-          </button>
-        </div>
-        <div className="fixed bottom-36 right-6 z-10">
-          <button
-            className="shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white"
-            style={{
-              color: "#ffffff",
-              backgroundColor: `${isConnectClicked ? "#5bb647" : "#57534e"}`,
-            }}
-            onClick={onConnectClick}
-          >
-            <FontAwesomeIcon icon={faCircleNodes} size="xl" />
-          </button>
-        </div>
+        {selectedIdeas.length > 0 ? (
+          <>
+            <div className="fixed bottom-20 right-6 z-10">
+              <button
+                className="shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white"
+                style={{
+                  color: "#ffffff",
+                  backgroundColor: "#5bb647",
+                }}
+                onClick={onWritingClick}
+              >
+                <FontAwesomeIcon icon={faCircleNodes} size="xl" />
+              </button>
+            </div>
+            <div className="fixed bottom-36 right-6 z-10">
+              <button
+                className="shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white"
+                style={{
+                  color: "#ffffff",
+                  backgroundColor: "#57534e",
+                }}
+                onClick={onRefreshClick}
+              >
+                <FontAwesomeIcon icon={faArrowRotateRight} size="xl" />
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="fixed bottom-20 right-6 z-10">
+            <button
+              className="shadow-2xl rounded-full w-14 h-14 border-2 border-white"
+              style={{
+                color: "#ffffff",
+                backgroundColor: "#57534e",
+              }}
+              onClick={onWritingClick}
+            >
+              <FontAwesomeIcon icon={faFeatherPointed} size="xl" />
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

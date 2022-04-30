@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "routes/Home";
+import Home from "routes/home/Home";
 import Ideas from "routes/ideas/Ideas";
-import Writing from "routes/Writing";
+import Writing from "routes/ideas/Writing";
 import Storming from "routes/Storming";
 import Explore from "routes/Explore";
 import Setting from "routes/Setting";
@@ -19,7 +19,7 @@ const AppRouter = ({ customHooks }) => {
           <>
             <Route
               exact
-              path="/"
+              path="/home"
               element={<Home customHooks={customHooks} />}
             />
             <Route
@@ -29,7 +29,7 @@ const AppRouter = ({ customHooks }) => {
             />
             <Route
               exact
-              path="/writing"
+              path="/ideas/writing"
               element={<Writing customHooks={customHooks} />}
             />
             <Route
