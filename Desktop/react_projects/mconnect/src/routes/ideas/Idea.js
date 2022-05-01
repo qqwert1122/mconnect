@@ -22,6 +22,10 @@ import {
   faBookmark as fasBookmark,
   faEllipsis,
   faArrowRotateLeft,
+  faT,
+  faDiceD6,
+  faSquare,
+  faMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTrashCan,
@@ -88,7 +92,7 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   return (
     <div>
       <hr />
-      <div className="mt-5 mb-5 opacity">
+      <div className="mt-5 mb-5 opacity text-sm">
         <div className="flex justify-between items-center mx-4 mt-2">
           <div className="flex items-end">
             <div className="flex mx-3">
@@ -131,13 +135,31 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
             onIdeasClick(dbIdea);
           }}
         >
+          {dbIdea.title === "" ? (
+            <></>
+          ) : (
+            <div className="flex items-center pb-3">
+              <FontAwesomeIcon icon={faT} />
+              <div className="mx-3 w-full font-black text-lg">
+                {dbIdea.title}
+              </div>
+            </div>
+          )}
           <div
             className={`flex items-center ${
               dbIdea.source === "" && dbIdea.tags.length === 0 ? "" : "pb-3"
             }`}
           >
-            <FontAwesomeIcon icon={faCircle} size="xs" />
-            <div className="mx-3 w-full">
+            {dbIdea.category === 4 ? (
+              <FontAwesomeIcon icon={faDiceD6} />
+            ) : dbIdea.category === 3 ? (
+              <FontAwesomeIcon icon={faSquare} size="sm" />
+            ) : dbIdea.category === 2 ? (
+              <FontAwesomeIcon icon={faMinus} />
+            ) : (
+              <FontAwesomeIcon icon={faCircle} size="xs" />
+            )}
+            <div className="mx-3 w-full break-all">
               {dbIdea.text.length > 200 ? (
                 <>
                   {dbIdea.text.substr(0, 200)}
@@ -160,22 +182,22 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
           {dbIdea.tags.length === 0 ? (
             <></>
           ) : (
-            <div className="flex items-center ">
+            <div className="flex">
               <FontAwesomeIcon icon={faHashtag} />
-              <div className="mx-3 w-full text-sm ">
+              <span className="mx-3 flex flex-wrap">
                 {dbIdea.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className={`mr-2 p-1 rounded-xl text-sm duration-500 ${
+                    className={`mr-1 mb-1 px-1 rounded-xl duration-500  ${
                       selectedIdeas.includes(dbIdea)
                         ? "bg-stone-200 text-black"
-                        : "bg-stone-600 text-white"
+                        : "bg-stone-500 text-white"
                     } `}
                   >
                     {tag}
                   </span>
                 ))}
-              </div>
+              </span>
             </div>
           )}
         </div>

@@ -20,7 +20,7 @@ const ToggleButton = ({
     } else {
       setFilterPrmtr("");
       setShowingIdeas(
-        dbIdeas.filter((idea) => idea.category === categoryPrmtr)
+        dbIdeas.filter((idea) => idea.category === categoryPrmtr.value)
       );
     }
   }, [categoryPrmtr, dbIdeas]);
@@ -30,7 +30,7 @@ const ToggleButton = ({
         setShowingIdeas(dbIdeas);
         return;
       } else {
-        switch (filterPrmtr) {
+        switch (filterPrmtr.value) {
           case "like":
             setShowingIdeas(dbIdeas.filter((idea) => idea.like === true));
             break;
@@ -46,29 +46,29 @@ const ToggleButton = ({
     } else {
       if (filterPrmtr === "") {
         setShowingIdeas(
-          dbIdeas.filter((idea) => idea.category === categoryPrmtr)
+          dbIdeas.filter((idea) => idea.category === categoryPrmtr.value)
         );
         return;
       } else {
-        switch (filterPrmtr) {
+        switch (filterPrmtr.value) {
           case "like":
             setShowingIdeas(
               dbIdeas
-                .filter((idea) => idea.category === categoryPrmtr)
+                .filter((idea) => idea.category === categoryPrmtr.value)
                 .filter((idea) => idea.like === true)
             );
             break;
           case "bookmark":
             setShowingIdeas(
               dbIdeas
-                .filter((idea) => idea.category === categoryPrmtr)
+                .filter((idea) => idea.category === categoryPrmtr.value)
                 .filter((idea) => idea.bookmark === true)
             );
             break;
           case "public":
             setShowingIdeas(
               dbIdeas
-                .filter((idea) => idea.category === categoryPrmtr)
+                .filter((idea) => idea.category === categoryPrmtr.value)
                 .filter((idea) => idea.public === true)
             );
             break;
@@ -78,17 +78,17 @@ const ToggleButton = ({
     }
   }, [filterPrmtr, dbIdeas]);
   const onCategoryPrmtrClick = (item) => {
-    if (categoryPrmtr === item.value) {
+    if (categoryPrmtr === item) {
       setCategoryPrmtr("");
     } else {
-      setCategoryPrmtr(item.value);
+      setCategoryPrmtr(item);
     }
   };
   const onFilterPrmtrClick = (item) => {
-    if (filterPrmtr === item.value) {
+    if (filterPrmtr === item) {
       setFilterPrmtr("");
     } else {
-      setFilterPrmtr(item.value);
+      setFilterPrmtr(item);
     }
   };
 
@@ -113,7 +113,7 @@ const ToggleButton = ({
           <button
             key={index}
             className={`border-box rounded-3xl ${
-              item.value === categoryPrmtr ? item.bgColor : ""
+              item.value === categoryPrmtr.value ? item.bgColor : ""
             } ${item.color} ${
               item.borderColor
             } border-2 px-4 py-1 text-sm font-black shadow-md duration-500`}
@@ -129,7 +129,7 @@ const ToggleButton = ({
           <button
             key={index}
             className={`border-box rounded-3xl ${
-              item.value === filterPrmtr ? item.bgColor : ""
+              item.value === filterPrmtr.value ? item.bgColor : ""
             } ${item.color} ${
               item.borderColor
             } border-2 px-4 py-1 text-base font-black shadow-md duration-500`}

@@ -6,6 +6,8 @@ import ToggleButton from "routes/ideas/ToggleButton";
 import { useNavigate } from "react-router-dom";
 import { authService } from "fbase";
 // import List from "react-virtualized/List";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -146,19 +148,17 @@ const Ideas = ({ customHooks }) => {
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
   const dbIdeas = customHooks.dbIdeas;
+  const tagList = customHooks.tagList;
+  const setTagList = customHooks.setTagList;
 
   // event handler
   const [isSearchClicked, setIsSearchClicked] = useState(false);
-  const [isConnectClicked, setIsConnectClicked] = useState(false);
   const [isConnectToggleClicked, setIsConnectToggleClicked] = useState(false);
 
   //toggleItem
   const [categoryPrmtr, setCategoryPrmtr] = useState("");
   const [filterPrmtr, setFilterPrmtr] = useState("");
   const [showingIdeas, setShowingIdeas] = useState([]);
-
-  // searchPage
-  const [tagList, setTagList] = useState([]);
 
   useEffect(() => {
     setShowingIdeas(dbIdeas);
@@ -187,7 +187,13 @@ const Ideas = ({ customHooks }) => {
     setIsSearchClicked(false);
   };
   const onWritingClick = () => {
-    navigate("/ideas/writing", { replace: true });
+    if (selectedIdeas.length === 1) {
+      toast.error("아이디어를 연결하려면 2개 이상을 선택하세요", {
+        theme: "colored",
+      });
+    } else {
+      navigate("/ideas/writing", { replace: true });
+    }
   };
   const onConnectToggle = () => {
     setIsConnectToggleClicked(!isConnectToggleClicked);
@@ -283,7 +289,11 @@ const Ideas = ({ customHooks }) => {
             setIsSearchClicked(false);
           }}
         >
-          <div className="font-black text-xl px-5 py-5">아이디어</div>
+          <div className="font-black text-xl px-5 py-5">
+            아이디어
+            {categoryPrmtr === "" ? "" : ` > ${categoryPrmtr.label}`}
+            {filterPrmtr === "" ? "" : ` > ${filterPrmtr.label}`}
+          </div>
           {showingIdeas.length > 0 ? (
             showingIdeas.map((dbIdea) => (
               <Idea
@@ -308,7 +318,9 @@ const Ideas = ({ customHooks }) => {
                 className="shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white"
                 style={{
                   color: "#ffffff",
-                  backgroundColor: "#5bb647",
+                  backgroundColor: `${
+                    selectedIdeas.length === 1 ? "#57534e" : "#5bb647"
+                  }`,
                 }}
                 onClick={onWritingClick}
               >
@@ -342,6 +354,18 @@ const Ideas = ({ customHooks }) => {
             </button>
           </div>
         )}
+        <ToastContainer
+          className="black-background"
+          position="bottom-center"
+          autoClose={3000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
     </>
   );

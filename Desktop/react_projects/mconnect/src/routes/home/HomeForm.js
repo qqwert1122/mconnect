@@ -101,13 +101,13 @@ const HomeForm = ({
           />
         </div>
         {/* Tags */}
-        <div className="flexitems-center mb-1 px-3">
+        <div className="mb-1 px-3">
           <FontAwesomeIcon icon={faHashtag} />
-          <span className="ml-3 flex-nowrap items-center verflow-y-auto ">
+          <span className="ml-3 flex-nowrap items-center overflow-y-auto ">
             {formTags.map((tag, index) => (
               <button
                 key={index}
-                className="mr-2 px-2 rounded-xl text-sm duration-500 bg-stone-600 text-white"
+                className="mr-2 px-2 rounded-xl text-sm duration-500 bg-stone-500 text-white"
                 onClick={(e) => {
                   e.preventDefault();
                   setFormTags(formTags.filter((_tag) => _tag != tag));
