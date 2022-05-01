@@ -95,7 +95,7 @@ const categories = [
     bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
-    value: 2,
+    value: 1,
   },
   {
     icon: <FontAwesomeIcon icon={faSquare} />,
@@ -103,7 +103,7 @@ const categories = [
     bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
-    value: 3,
+    value: 2,
   },
   {
     icon: <FontAwesomeIcon icon={faDiceD6} />,
@@ -111,7 +111,7 @@ const categories = [
     bgColor: "bg-stone-400",
     color: "",
     borderColor: "border-stone-200",
-    value: 4,
+    value: 3,
   },
 ];
 

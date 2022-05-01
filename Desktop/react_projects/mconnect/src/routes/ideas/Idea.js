@@ -150,11 +150,11 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
               dbIdea.source === "" && dbIdea.tags.length === 0 ? "" : "pb-3"
             }`}
           >
-            {dbIdea.category === 4 ? (
+            {dbIdea.category === 3 ? (
               <FontAwesomeIcon icon={faDiceD6} />
-            ) : dbIdea.category === 3 ? (
-              <FontAwesomeIcon icon={faSquare} size="sm" />
             ) : dbIdea.category === 2 ? (
+              <FontAwesomeIcon icon={faSquare} size="sm" />
+            ) : dbIdea.category === 1 ? (
               <FontAwesomeIcon icon={faMinus} />
             ) : (
               <FontAwesomeIcon icon={faCircle} size="xs" />

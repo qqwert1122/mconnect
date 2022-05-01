@@ -1,5 +1,5 @@
 import "css/Writing.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService, dbService } from "fbase";
 import { collection, addDoc } from "firebase/firestore";
@@ -24,6 +24,9 @@ import {
   faCircle,
   faQuoteLeft,
   faHashtag,
+  faDiceD6,
+  faSquare,
+  faMinus,
 } from "@fortawesome/free-solid-svg-icons";
 
 var relativeTime = require("dayjs/plugin/relativeTime");
@@ -36,11 +39,11 @@ const Writing = ({ customHooks }) => {
   const user = authService.currentUser;
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
-
   let navigate = useNavigate();
 
   // form
   const [formTitle, setFormTitle] = useState("");
+  const [formCategory, setFormCategory] = useState(1);
   const [formText, setFormText] = useState("");
   const [formSource, setFormSource] = useState("");
   const [formTag, setFormTag] = useState("");
@@ -48,6 +51,26 @@ const Writing = ({ customHooks }) => {
   const [formLike, setFormLike] = useState(false);
   const [formBookmark, setFormBookmark] = useState(false);
   const [formPublic, setFormPublic] = useState(false);
+
+  useEffect(() => {
+    if (selectedIdeas.length === 0) {
+      setFormCategory(0);
+    } else {
+      const newCategory = selectedIdeas
+        .map((idea) => idea.category)
+        .sort(function (a, b) {
+          return b - a;
+        })[0];
+      switch (newCategory) {
+        case 3:
+          setFormCategory(3);
+          break;
+        default:
+          setFormCategory(newCategory + 1);
+          break;
+      }
+    }
+  }, []);
 
   const onBackClick = (e) => {
     e.preventDefault();
@@ -112,7 +135,7 @@ const Writing = ({ customHooks }) => {
     const form = event.target;
     try {
       await addDoc(collection(dbService, "ideas"), {
-        category: 0,
+        category: formCategory,
         title: formTitle,
         text: formText,
         source: formSource,
@@ -188,6 +211,7 @@ const Writing = ({ customHooks }) => {
                 value={formTitle}
                 onChange={onTitleChange}
                 onKeyDown={onKeyDownPreventDefault}
+                autoComplete="off"
               />
             </div>
           )}
@@ -198,13 +222,22 @@ const Writing = ({ customHooks }) => {
             }`}
           >
             <span className="items-start mr-5 text-xl ">
-              <FontAwesomeIcon icon={faCircle} size="xs" />
+              {formCategory === 3 ? (
+                <FontAwesomeIcon icon={faDiceD6} />
+              ) : formCategory === 2 ? (
+                <FontAwesomeIcon icon={faSquare} size="sm" />
+              ) : formCategory === 1 ? (
+                <FontAwesomeIcon icon={faMinus} />
+              ) : (
+                <FontAwesomeIcon icon={faCircle} size="xs" />
+              )}
             </span>
             <textarea
               className="w-10/12 h-60 p-2 rounded-xl border-2 focus:border-current border-gray-200"
               type="text"
               name="formText"
               placeholder="내용"
+              autoComplete="off"
               value={formText}
               onChange={onTextChange}
               required
@@ -220,6 +253,7 @@ const Writing = ({ customHooks }) => {
               type="text"
               name="formSource"
               placeholder="출처"
+              autoComplete="off"
               value={formSource}
               onChange={onSourceChange}
               onKeyDown={onKeyDownPreventDefault}
@@ -246,10 +280,10 @@ const Writing = ({ customHooks }) => {
               name="tags"
               type="text"
               placeholder="태그"
+              autoComplete="off"
               value={formTag}
               onChange={(e) => onTagChange(e)}
               onKeyDown={(e) => onEnterKeyDown(e)}
-              autoComplete="off"
             />
           </div>
         </div>
@@ -275,19 +309,19 @@ const Writing = ({ customHooks }) => {
       {selectedIdeas.length > 0 ? (
         <>
           <div className="highlight mx-16 my-2 flex justify-center text-xl font-black">
-            연관된 아이디어 ♾️
+            연결된 아이디어 ♾️
           </div>
           <div className="relative pb-10 ">
             <Slider {...settings}>
               {selectedIdeas.map((idea, index) => (
                 <div key={index}>
-                  <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
+                  <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg break-all">
                     {idea.title === "" ? (
-                      idea.text.length < 130 ? (
+                      idea.text.length < 150 ? (
                         idea.text
                       ) : (
                         <>
-                          {idea.text.substr(0, 130)}
+                          {idea.text.substr(0, 150)}
                           <span>...</span>
                           <span className="font-black underline">더보기</span>
                         </>
@@ -297,11 +331,11 @@ const Writing = ({ customHooks }) => {
                         <div className="mb-2 font-black text-lg">
                           {idea.title}
                         </div>
-                        {idea.text.length < 100 ? (
+                        {idea.text.length < 130 ? (
                           idea.text
                         ) : (
                           <>
-                            {idea.text.substr(0, 100)}
+                            {idea.text.substr(0, 130)}
                             <span>...</span>
                             <span className="font-black underline">더보기</span>
                           </>

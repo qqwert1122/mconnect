@@ -37,6 +37,7 @@ dayjs.locale("ko");
 const Home = ({ customHooks }) => {
   const user = authService.currentUser;
   let navigate = useNavigate();
+  const dbIdeas = customHooks.dbIdeas;
 
   // form
   const [formText, setFormText] = useState("");
@@ -61,31 +62,52 @@ const Home = ({ customHooks }) => {
       icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
       bgColor: "bg-white",
       color: "text-black",
+      label: dbIdeas.filter((idea) => idea.category === 0).length,
+      value: 0,
     },
     {
       icon: <FontAwesomeIcon icon={faMinus} />,
       bgColor: "bg-white",
       color: "text-black",
+      label: dbIdeas.filter((idea) => idea.category === 1).length,
+      value: 1,
     },
     {
       icon: <FontAwesomeIcon icon={faSquare} size="xs" />,
       bgColor: "bg-white",
       color: "text-black",
+      label: dbIdeas.filter((idea) => idea.category === 2).length,
+      value: 2,
     },
     {
       icon: <FontAwesomeIcon icon={faDiceD6} />,
       bgColor: "bg-white",
       color: "text-black",
+      label: dbIdeas.filter((idea) => idea.category === 3).length,
+      value: 3,
     },
+  ];
+  const filterItems = [
     {
       icon: <FontAwesomeIcon icon={fasHeart} />,
       bgColor: "bg-red-400",
       color: "text-white",
+      label: dbIdeas.filter((idea) => idea.like === true).length,
+      value: "like",
     },
     {
       icon: <FontAwesomeIcon icon={fasBookmark} />,
       bgColor: "bg-orange-400",
       color: "text-white",
+      label: dbIdeas.filter((idea) => idea.bookmark === true).length,
+      value: "bookmark",
+    },
+    {
+      icon: <FontAwesomeIcon icon={fasCompass} />,
+      bgColor: "bg-sky-400",
+      color: "text-white",
+      label: dbIdeas.filter((idea) => idea.public === true).length,
+      value: "public",
     },
   ];
 
@@ -235,7 +257,7 @@ const Home = ({ customHooks }) => {
         .filter((idea, index) => index < 5)
         .map((idea, index) => (
           <div key={index}>
-            <div className="relative h-52 p-5 m-1 rounded-3xl shadow bg-stone-100">
+            <div className="relative h-52 p-5 m-1 rounded-3xl shadow bg-stone-100 break-all">
               {idea.title === "" ? (
                 idea.text.length < 130 ? (
                   idea.text
@@ -296,7 +318,7 @@ const Home = ({ customHooks }) => {
               <FontAwesomeIcon icon={faEllipsis} size="2xl" />
             </button>
           </div>
-          <div className="flex items-end gap-2 mx-4 pt-10 pb-6 font-black ">
+          <div className="flex items-end gap-2 mx-4 pt-8 pb-6 font-black ">
             <div className="shadow-xl rounded-full">
               <Avatar
                 alt="avatar"
@@ -313,26 +335,49 @@ const Home = ({ customHooks }) => {
             <div className="text-lg">{user.displayName}님 안녕하세요😚</div>
           </div>
           <div className="mx-4 pb-4 text-lg font-black">카테고리</div>
-          <div className="flex gap-4 mx-4 pb-8 text-2xl font-black">
-            {categoryItems.map((item, index) => (
-              <span key={index}>
-                <Badge
-                  color="success"
-                  badgeContent={testArr.length}
-                  max={999}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                >
-                  <div
-                    className={`flex justify-center items-center w-10 h-10 rounded-xl ${item.bgColor} ${item.color} shadow-xl`}
+          <div className="mx-4 pb-8 text-2xl font-black">
+            <div className="flex flex-wrap gap-4 mb-4">
+              {categoryItems.map((item, index) => (
+                <span key={index}>
+                  <Badge
+                    color="success"
+                    badgeContent={item.label}
+                    max={999}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
                   >
-                    {item.icon}
-                  </div>
-                </Badge>
-              </span>
-            ))}
+                    <div
+                      className={`flex justify-center items-center w-10 h-10 rounded-xl ${item.bgColor} ${item.color} shadow-xl`}
+                    >
+                      {item.icon}
+                    </div>
+                  </Badge>
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-4">
+              {filterItems.map((item, index) => (
+                <span key={index}>
+                  <Badge
+                    color="success"
+                    badgeContent={item.label}
+                    max={999}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <div
+                      className={`flex justify-center items-center w-10 h-10 rounded-xl ${item.bgColor} ${item.color} shadow-xl`}
+                    >
+                      {item.icon}
+                    </div>
+                  </Badge>
+                </span>
+              ))}
+            </div>
           </div>
           <div className="mx-4 pb-4 text-lg font-black">업적</div>
           <div className="flex flex-wrap gap-2 mx-4 pb-8 font-black text-sm">

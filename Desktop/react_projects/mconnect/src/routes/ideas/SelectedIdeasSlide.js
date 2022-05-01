@@ -47,14 +47,33 @@ const SelectedIdeasSlide = ({
               <Slider {...settings}>
                 {selectedIdeas.map((idea, index) => (
                   <div key={index}>
-                    <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg ">
-                      {idea.text.length < 100 ? (
-                        idea.text
+                    <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg break-all">
+                      {idea.title === "" ? (
+                        idea.text.length < 130 ? (
+                          idea.text
+                        ) : (
+                          <>
+                            {idea.text.substr(0, 130)}
+                            <span>...</span>
+                            <span className="font-black underline">더보기</span>
+                          </>
+                        )
                       ) : (
                         <>
-                          {idea.text.substr(0, 100)}
-                          <span>...</span>
-                          <span className="font-black underline">더보기</span>
+                          <div className="mb-2 font-black text-lg">
+                            {idea.title}
+                          </div>
+                          {idea.text.length < 100 ? (
+                            idea.text
+                          ) : (
+                            <>
+                              {idea.text.substr(0, 100)}
+                              <span>...</span>
+                              <span className="font-black underline">
+                                더보기
+                              </span>
+                            </>
+                          )}
                         </>
                       )}
                     </div>
