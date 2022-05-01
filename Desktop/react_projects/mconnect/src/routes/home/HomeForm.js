@@ -81,7 +81,6 @@ const HomeForm = ({
             value={formText}
             onChange={onTextChange}
             placeholder="내용"
-            onKeyDown={onKeyDownPreventDefault}
             autoComplete="off"
             required
           />

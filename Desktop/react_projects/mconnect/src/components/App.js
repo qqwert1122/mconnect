@@ -16,9 +16,6 @@ const useCustomHooks = () => {
   // db props
   const [dbIdeas, setdbIdeas] = useState([]);
 
-  // Home props
-  const [homeClickedItem, setHomeClickedItem] = useState();
-
   // Ideas props
   const [selectedIdeas, setSelectedIdeas] = useState([]);
   const [tagList, setTagList] = useState([]);

@@ -287,7 +287,7 @@ const Writing = ({ customHooks }) => {
             />
           </div>
         </div>
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <div className="flex m-5 text-2xl gap-4">
             <button className="text-red-600" onClick={onLikeClick}>
               <FontAwesomeIcon icon={formLike ? fasHeart : farHeart} />
@@ -301,7 +301,7 @@ const Writing = ({ customHooks }) => {
               <FontAwesomeIcon icon={formPublic ? fasCompass : farCompass} />
             </button>
           </div>
-          <span className="m-5 text-xl font-black">
+          <span className="m-5 text-base font-black">
             {dayjs().format("YYYY. MM. DD. HH:mm:ss")}
           </span>
         </div>

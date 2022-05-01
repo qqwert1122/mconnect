@@ -26,6 +26,8 @@ import {
   faDiceD6,
   faSquare,
   faMinus,
+  faCertificate,
+  faStarOfLife,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTrashCan,
@@ -36,7 +38,7 @@ import {
   faPenToSquare,
 } from "@fortawesome/free-regular-svg-icons";
 
-const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
+const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   // dialog
@@ -50,6 +52,18 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
     setAnchorEl(null);
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
     await deleteDoc(ideaRef);
+  };
+  const onLikeClick = async () => {
+    const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
+    await updateDoc(ideaRef, { like: !dbIdea.like });
+  };
+  const onBookmarkClick = async () => {
+    const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
+    await updateDoc(ideaRef, { bookmark: !dbIdea.bookmark });
+  };
+  const onPublicClick = async () => {
+    const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
+    await updateDoc(ideaRef, { public: !dbIdea.public });
   };
 
   // handle ellipsis menu
@@ -94,21 +108,22 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
       <hr />
       <div className="mt-5 mb-5 opacity text-sm">
         <div className="flex justify-between items-center mx-4 mt-2">
-          <div className="flex items-end">
-            <div className="flex mx-3">
-              <Avatar
-                alt="avatar"
-                src={dbIdea.userPhotoURL}
-                sx={{
-                  display: "flex",
-                  width: "35px",
-                  height: "35px",
-                }}
-              />
-            </div>
-            <h2>
-              <b>{dbIdea.userName}</b>
-            </h2>
+          <div className="flex items-center ml-3 gap-2">
+            <Avatar
+              alt="avatar"
+              src={dbIdea.userPhotoURL}
+              sx={{
+                display: "flex",
+                width: "35px",
+                height: "35px",
+              }}
+            />
+            <b>{dbIdea.userName}</b>
+            {user.uid === dbIdea.userId && (
+              <p className="text-sky-400 ">
+                <FontAwesomeIcon icon={faStarOfLife} size="2xs" />
+              </p>
+            )}
           </div>
           {/* time */}
           <div className="mx-3">
@@ -204,15 +219,18 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
         {/* like, bookmark, ellipsis */}
         <div className="flex justify-between items-center mx-6 my-4">
           <div className="flex mx-3 gap-4">
-            <button className="text-xl text-red-500">
+            <button className="text-xl text-red-500" onClick={onLikeClick}>
               <FontAwesomeIcon icon={dbIdea.like ? fasHeart : farHeart} />
             </button>
-            <button className="text-xl text-orange-400">
+            <button
+              className="text-xl text-orange-400"
+              onClick={onBookmarkClick}
+            >
               <FontAwesomeIcon
                 icon={dbIdea.bookmark ? fasBookmark : farBookmark}
               />
             </button>
-            <button className="text-xl text-sky-400">
+            <button className="text-xl text-sky-400" onClick={onPublicClick}>
               <FontAwesomeIcon icon={dbIdea.public ? fasCompass : farCompass} />
             </button>
           </div>
@@ -244,10 +262,12 @@ const Idea = ({ dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={handleClose}>
-                <FontAwesomeIcon icon={faPenToSquare} />
-                &nbsp; 수정
-              </MenuItem>
+              {user.uid === dbIdea.userId && (
+                <MenuItem onClick={handleClose}>
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                  &nbsp; 수정
+                </MenuItem>
+              )}
               <MenuItem
                 onClick={() => {
                   setDeleteDialogOpen(true);

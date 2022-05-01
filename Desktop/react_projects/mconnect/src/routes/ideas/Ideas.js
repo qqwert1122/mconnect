@@ -297,6 +297,7 @@ const Ideas = ({ customHooks }) => {
           {showingIdeas.length > 0 ? (
             showingIdeas.map((dbIdea) => (
               <Idea
+                user={user}
                 key={dbIdea.id}
                 dbIdea={dbIdea}
                 customHooks={customHooks}
@@ -315,13 +316,14 @@ const Ideas = ({ customHooks }) => {
           <>
             <div className="fixed bottom-20 right-6 z-10">
               <button
-                className="shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white"
-                style={{
-                  color: "#ffffff",
-                  backgroundColor: `${
-                    selectedIdeas.length === 1 ? "#57534e" : "#5bb647"
-                  }`,
-                }}
+                className={`shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white text-white ${
+                  selectedIdeas.length === 1 ? "bg-stone-600" : "bg-green-600"
+                }`}
+                // style={{
+                //   backgroundColor: `${
+                //     selectedIdeas.length === 1 ? "#57534e" : "#5bb647"
+                //   }`,
+                // }}
                 onClick={onWritingClick}
               >
                 <FontAwesomeIcon icon={faCircleNodes} size="xl" />
@@ -329,11 +331,7 @@ const Ideas = ({ customHooks }) => {
             </div>
             <div className="fixed bottom-36 right-6 z-10">
               <button
-                className="shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white"
-                style={{
-                  color: "#ffffff",
-                  backgroundColor: "#57534e",
-                }}
+                className="shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white bg-stone-600 text-white"
                 onClick={onRefreshClick}
               >
                 <FontAwesomeIcon icon={faArrowRotateRight} size="xl" />
@@ -343,11 +341,7 @@ const Ideas = ({ customHooks }) => {
         ) : (
           <div className="fixed bottom-20 right-6 z-10">
             <button
-              className="shadow-2xl rounded-full w-14 h-14 border-2 border-white"
-              style={{
-                color: "#ffffff",
-                backgroundColor: "#57534e",
-              }}
+              className="shadow-2xl rounded-full w-14 h-14 border-2 border-white bg-stone-600 text-white"
               onClick={onWritingClick}
             >
               <FontAwesomeIcon icon={faFeatherPointed} size="xl" />

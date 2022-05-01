@@ -59,6 +59,13 @@ const Home = ({ customHooks }) => {
 
   const categoryItems = [
     {
+      icon: "all",
+      bgColor: "bg-white",
+      color: "text-black",
+      label: dbIdeas.length,
+      value: 0,
+    },
+    {
       icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
       bgColor: "bg-white",
       color: "text-black",
