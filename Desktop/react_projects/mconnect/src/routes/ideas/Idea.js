@@ -106,7 +106,7 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   return (
     <div>
       <hr />
-      <div className="mt-5 mb-5 opacity text-sm">
+      <div className="mt-5 mb-3 opacity text-sm">
         <div className="flex justify-between items-center mx-4 mt-2">
           <div className="flex items-center ml-3 gap-2">
             <Avatar
@@ -141,7 +141,7 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
         </div>
 
         <div
-          className={`box-border shadow-xl m-4 p-5 rounded-2xl duration-500 ${
+          className={`box-border shadow-xl mx-4 mt-2 p-5 rounded-2xl duration-200 ${
             selectedIdeas.includes(dbIdea)
               ? "bg-stone-500 text-stone-300"
               : "bg-stone-100"
@@ -217,7 +217,7 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
           )}
         </div>
         {/* like, bookmark, ellipsis */}
-        <div className="flex justify-between items-center mx-6 my-4">
+        <div className="flex justify-between items-center mx-6 mt-2">
           <div className="flex mx-3 gap-4">
             <button className="text-xl text-red-500" onClick={onLikeClick}>
               <FontAwesomeIcon icon={dbIdea.like ? fasHeart : farHeart} />

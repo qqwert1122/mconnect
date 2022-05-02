@@ -308,7 +308,7 @@ const Writing = ({ customHooks }) => {
       </form>
       {selectedIdeas.length > 0 ? (
         <>
-          <div className="highlight mx-16 my-2 flex justify-center text-xl font-black">
+          <div className="highlight mx-16 my-2 flex justify-center text-lg font-black">
             연결된 아이디어 ♾️
           </div>
           <div className="relative pb-10 ">
@@ -331,11 +331,11 @@ const Writing = ({ customHooks }) => {
                         <div className="mb-2 font-black text-lg">
                           {idea.title}
                         </div>
-                        {idea.text.length < 130 ? (
+                        {idea.text.length < 120 ? (
                           idea.text
                         ) : (
                           <>
-                            {idea.text.substr(0, 130)}
+                            {idea.text.substr(0, 120)}
                             <span>...</span>
                             <span className="font-black underline">더보기</span>
                           </>

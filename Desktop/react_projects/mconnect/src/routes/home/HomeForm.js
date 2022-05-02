@@ -65,7 +65,7 @@ const HomeForm = ({
         </div>
         <input
           type="submit"
-          className="p-1 rounded-xl text-lg font-black text-center shadow-md text-white bg-green-600"
+          className="p-1 rounded-xl text-base font-black text-center shadow-md text-white bg-green-600"
           value="작성 ✏️"
         />
       </div>

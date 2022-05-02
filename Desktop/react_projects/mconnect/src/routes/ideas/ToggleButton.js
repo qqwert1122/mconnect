@@ -95,7 +95,7 @@ const ToggleButton = ({
   return (
     <div className="bg-white px-5 pb-10 mb-2 ">
       <div
-        className="font-black text-xl duration-100 pb-5"
+        className="font-black text-lg duration-100 pb-5"
         style={{
           paddingTop: `${
             selectedIdeas.length > 0
@@ -108,7 +108,7 @@ const ToggleButton = ({
       >
         카테고리
       </div>
-      <div className="flex flex-wrap justify-start gap-3">
+      <div className="flex flex-wrap justify-start gap-2">
         {categories.map((item, index) => (
           <button
             key={index}
@@ -116,12 +116,12 @@ const ToggleButton = ({
               item.value === categoryPrmtr.value ? item.bgColor : ""
             } ${item.color} ${
               item.borderColor
-            } border-2 px-4 py-1 text-sm font-black shadow-md duration-500`}
+            } border-2 px-3 py-1 text-base font-black shadow-md duration-500`}
             onClick={() => {
               onCategoryPrmtrClick(item);
             }}
           >
-            <span className="text-base">{item.icon}</span>
+            <span className="text-sm">{item.icon}</span>
             &nbsp;{item.label}
           </button>
         ))}
@@ -132,7 +132,7 @@ const ToggleButton = ({
               item.value === filterPrmtr.value ? item.bgColor : ""
             } ${item.color} ${
               item.borderColor
-            } border-2 px-4 py-1 text-base font-black shadow-md duration-500`}
+            } border-2 px-3 py-1 text-base font-black shadow-md duration-500`}
             onClick={() => {
               onFilterPrmtrClick(item);
             }}

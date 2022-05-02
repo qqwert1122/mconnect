@@ -16,11 +16,11 @@ const SearchPage = ({ tagList, dbIdeas }) => {
         </span>
       </div>
       <div className="m-4 p-5 mb-2 rounded-3xl bg-white">
-        <div className="flex text-2xl flex-wrap gap-2 max-h-40 overflow-scroll">
+        <div className="flex text-2xl flex-wrap gap-2 max-h-48 overflow-scroll">
           {tagList.map((tag, index) => (
             <span
               key={index}
-              className="border-2 rounded-3xl border-stone-200 px-1 text-sm"
+              className="border-2 rounded-3xl border-stone-200 p-1 font-black text-sm"
             >
               {tag}
             </span>
@@ -38,7 +38,7 @@ const SearchPage = ({ tagList, dbIdeas }) => {
         </span>
       </div>
       <div className="m-4 p-5 mb-5 rounded-3xl bg-white">
-        <div className="flex text-2xl flex-wrap gap-2 max-h-40 overflow-scroll">
+        <div className="flex text-2xl flex-wrap gap-2 max-h-48 overflow-scroll">
           {dbIdeas
             .filter(
               (idea, index, callback) =>
@@ -47,9 +47,9 @@ const SearchPage = ({ tagList, dbIdeas }) => {
             .map((user, index) => (
               <span
                 key={index}
-                className="flex items-center justify-between border-2 rounded-3xl  border-stone-200 text-sm gap-1"
+                className="flex items-center justify-between border-2 rounded-3xl  border-stone-200 gap-1"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <div className="flex">
                     <Avatar
                       alt="avatar"
@@ -61,7 +61,7 @@ const SearchPage = ({ tagList, dbIdeas }) => {
                       }}
                     />
                   </div>
-                  <h2 className="mr-1">
+                  <h2 className="mr-1 font-black text-sm">
                     <b>{user.userName}</b>
                   </h2>
                 </div>

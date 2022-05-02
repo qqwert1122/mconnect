@@ -6,6 +6,7 @@ import {
   faHashtag,
   faFireFlameCurved,
   faDice,
+  faBolt,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Storming = () => {
@@ -40,7 +41,8 @@ const Storming = () => {
     <div className="bg-stone-200 min-h-screen">
       <div className="relative bg-white mb-2">
         <div className="english__font relative mb-2 p-2 px-4 text-2xl font-black z-10 text-white bg-orange-400">
-          Storming
+          Storming&nbsp;
+          <FontAwesomeIcon icon={faBolt} />
         </div>
         <div className="px-5 flex flex-wrap pb-2">
           {menuItems.map((item, index) => (
@@ -49,7 +51,7 @@ const Storming = () => {
                 className={`relative shadow-lg w-full h-20 m-1 p-1 rounded-xl text-white ${item.bgColor}`}
               >
                 <p className="absolute left-2 top-2 text-3xl">{item.icon}</p>
-                <p className="absolute bottom-2 right-2 text-lg font-black">
+                <p className="absolute bottom-2 right-2 text-base font-black">
                   {item.label}
                 </p>
               </div>
@@ -59,7 +61,7 @@ const Storming = () => {
       </div>
       <div className="relative bg-white mb-2">
         {menuItems.map((item, index) => (
-          <div key={index} className={`p-5 text-2xl font-black ${item.color}`}>
+          <div key={index} className={`p-5 text-lg font-black ${item.color}`}>
             {item.label}&nbsp;
             {item.icon}
           </div>

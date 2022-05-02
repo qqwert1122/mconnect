@@ -27,6 +27,7 @@ import {
   faBookmark as fasBookmark,
   faArrowCircleRight,
   faArrowRotateRight,
+  faLightbulb,
 } from "@fortawesome/free-solid-svg-icons";
 
 const testArr = ["text1", "text2", "text3", "text4", "text5", "text6"];
@@ -98,7 +99,7 @@ const categories = [
     value: 1,
   },
   {
-    icon: <FontAwesomeIcon icon={faSquare} />,
+    icon: <FontAwesomeIcon icon={faSquare} size="xs" />,
     label: "면",
     bgColor: "bg-stone-400",
     color: "",
@@ -228,7 +229,8 @@ const Ideas = ({ customHooks }) => {
               </button>
             ) : (
               <div className="px-2 english__font text-white text-2xl font-black">
-                Ideas 💡
+                Ideas&nbsp;
+                <FontAwesomeIcon icon={faLightbulb} size="sm" />
               </div>
             )}
             <button
@@ -289,7 +291,7 @@ const Ideas = ({ customHooks }) => {
             setIsSearchClicked(false);
           }}
         >
-          <div className="font-black text-xl px-5 py-5">
+          <div className="font-black text-lg px-5 py-5">
             아이디어
             {categoryPrmtr === "" ? "" : ` > ${categoryPrmtr.label}`}
             {filterPrmtr === "" ? "" : ` > ${filterPrmtr.label}`}
@@ -316,7 +318,7 @@ const Ideas = ({ customHooks }) => {
           <>
             <div className="fixed bottom-20 right-6 z-10">
               <button
-                className={`shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white text-white ${
+                className={`shadow-2xl rounded-full w-14 h-14 duration-200 border-4 border-white text-white ${
                   selectedIdeas.length === 1 ? "bg-stone-600" : "bg-green-600"
                 }`}
                 // style={{
@@ -331,7 +333,7 @@ const Ideas = ({ customHooks }) => {
             </div>
             <div className="fixed bottom-36 right-6 z-10">
               <button
-                className="shadow-2xl rounded-full w-14 h-14 duration-200 border-2 border-white bg-stone-600 text-white"
+                className="shadow-2xl rounded-full w-14 h-14 duration-200 border-4 border-white bg-stone-600 text-white"
                 onClick={onRefreshClick}
               >
                 <FontAwesomeIcon icon={faArrowRotateRight} size="xl" />
@@ -341,7 +343,7 @@ const Ideas = ({ customHooks }) => {
         ) : (
           <div className="fixed bottom-20 right-6 z-10">
             <button
-              className="shadow-2xl rounded-full w-14 h-14 border-2 border-white bg-stone-600 text-white"
+              className="shadow-2xl rounded-full w-14 h-14 border-4 border-white bg-stone-600 text-white"
               onClick={onWritingClick}
             >
               <FontAwesomeIcon icon={faFeatherPointed} size="xl" />

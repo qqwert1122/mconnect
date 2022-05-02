@@ -264,13 +264,13 @@ const Home = ({ customHooks }) => {
         .filter((idea, index) => index < 5)
         .map((idea, index) => (
           <div key={index}>
-            <div className="relative h-52 p-5 m-1 rounded-3xl shadow bg-stone-100 break-all">
+            <div className="relative h-52 p-5 m-1 rounded-3xl shadow text-sm bg-stone-100 break-all">
               {idea.title === "" ? (
-                idea.text.length < 130 ? (
+                idea.text.length < 150 ? (
                   idea.text
                 ) : (
                   <>
-                    {idea.text.substr(0, 130)}
+                    {idea.text.substr(0, 150)}
                     <span>...</span>
                     <span className="font-black underline">더보기</span>
                   </>
@@ -278,11 +278,11 @@ const Home = ({ customHooks }) => {
               ) : (
                 <>
                   <div className="mb-2 font-black text-lg">{idea.title}</div>
-                  {idea.text.length < 100 ? (
+                  {idea.text.length < 120 ? (
                     idea.text
                   ) : (
                     <>
-                      {idea.text.substr(0, 100)}
+                      {idea.text.substr(0, 120)}
                       <span>...</span>
                       <span className="font-black underline">더보기</span>
                     </>
@@ -339,10 +339,12 @@ const Home = ({ customHooks }) => {
                 }}
               />
             </div>
-            <div className="text-lg">{user.displayName}님 안녕하세요😚</div>
+            <div className="text-lg z-10">
+              {user.displayName}님 안녕하세요😚
+            </div>
           </div>
           <div className="mx-4 pb-4 text-lg font-black">카테고리</div>
-          <div className="mx-4 pb-8 text-2xl font-black">
+          <div className="mx-4 pb-8 ">
             <div className="flex flex-wrap gap-4 mb-4">
               {categoryItems.map((item, index) => (
                 <span key={index}>
@@ -356,7 +358,7 @@ const Home = ({ customHooks }) => {
                     }}
                   >
                     <div
-                      className={`flex justify-center items-center w-10 h-10 rounded-xl ${item.bgColor} ${item.color} shadow-xl`}
+                      className={`flex justify-center items-center w-10 h-10 rounded-xl font-black text-base ${item.bgColor} ${item.color} shadow-xl`}
                     >
                       {item.icon}
                     </div>
@@ -377,7 +379,7 @@ const Home = ({ customHooks }) => {
                     }}
                   >
                     <div
-                      className={`flex justify-center items-center w-10 h-10 rounded-xl ${item.bgColor} ${item.color} shadow-xl`}
+                      className={`flex justify-center items-center w-10 h-10 rounded-xl text-lg ${item.bgColor} ${item.color} shadow-xl`}
                     >
                       {item.icon}
                     </div>
@@ -387,11 +389,11 @@ const Home = ({ customHooks }) => {
             </div>
           </div>
           <div className="mx-4 pb-4 text-lg font-black">업적</div>
-          <div className="flex flex-wrap gap-2 mx-4 pb-8 font-black text-sm">
+          <div className="flex flex-wrap gap-1 mx-4 pb-8">
             {achievementItems.map((item, index) => (
               <div
                 key={index}
-                className={`flex justify-center items-center p-1 rounded-3xl ${item.bgColor} ${item.color} shadow-xl border-2 border-white`}
+                className={`flex justify-center items-center p-1 rounded-3xl text-sm  font-black ${item.bgColor} ${item.color} shadow-xl border-2 border-white`}
               >
                 {item.label}
               </div>
@@ -423,11 +425,11 @@ const Home = ({ customHooks }) => {
       {/* Ideas */}
       <div className=" mt-2 bg-white">
         <div className="flex justify-between items-center pt-4 pb-2 ">
-          <div className="english__font absolute highlight left-16 text-2xl font-black z-10">
+          <div className="english__font absolute highlight left-16 text-xl font-black z-10">
             Ideas 💡
           </div>
           <button
-            className="underline absolute right-16 text-base font-black z-10"
+            className="underline absolute right-16 text-sm font-black z-10"
             onClick={onIdeasClick}
           >
             더보기
@@ -437,11 +439,11 @@ const Home = ({ customHooks }) => {
       </div>
       <div className=" mt-2 bg-white">
         <div className="flex justify-between items-center pt-4 pb-2">
-          <div className="english__font absolute highlight left-16  text-2xl font-black z-10">
+          <div className="english__font absolute highlight left-16  text-xl font-black z-10">
             Connect ♾️
           </div>
           <button
-            className="underline absolute right-16 text-base font-black z-10"
+            className="underline absolute right-16 text-sm font-black z-10"
             onClick={onConnectClick}
           >
             더보기
@@ -452,11 +454,11 @@ const Home = ({ customHooks }) => {
       {/* Storming */}
       <div className=" mt-2 bg-white">
         <div className="flex justify-between items-center pt-4 pb-2">
-          <div className="english__font absolute highlight left-16 text-2xl font-black z-10">
+          <div className="english__font absolute highlight left-16 text-xl font-black z-10">
             Storming ⚡
           </div>
           <button
-            className="underline absolute right-16 text-base font-black z-10"
+            className="underline absolute right-16 text-sm font-black z-10"
             onClick={onStormingClick}
           >
             더보기
@@ -469,7 +471,7 @@ const Home = ({ customHooks }) => {
                 className={`relative shadow-xl w-full h-24 m-1 p-2 rounded-xl text-white ${item.bgColor}`}
               >
                 <p className="absolute left-2 top-2 text-5xl">{item.icon}</p>
-                <p className="absolute bottom-2 right-2 text-xl font-black">
+                <p className="absolute bottom-2 right-2 text-base font-black">
                   {item.label}
                 </p>
               </div>
@@ -480,11 +482,11 @@ const Home = ({ customHooks }) => {
       {/* Explore */}
       <div className=" mt-2 bg-white">
         <div className="relative flex justify-between items-center pt-4 pb-2">
-          <div className="absolute english__font highlight left-16 text-2xl font-black z-10">
+          <div className="absolute english__font highlight left-16 text-xl font-black z-10">
             Explore 🧭
           </div>
           <button
-            className="underline absolute right-16 text-base font-black z-10"
+            className="underline absolute right-16 text-sm font-black z-10"
             onClick={onExploreClick}
           >
             더보기
