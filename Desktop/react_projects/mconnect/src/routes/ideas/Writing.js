@@ -177,7 +177,7 @@ const Writing = ({ customHooks }) => {
   };
 
   return (
-    <div className="opening flex-col bg-stone-200 min-h-screen text-sm">
+    <div className="opening flex-col bg-stone-100 min-h-screen text-sm">
       <form className="pb-6" onSubmit={onSubmit}>
         <div className="bg-white pb-5 rounded-b-3xl shadow-xl">
           <div className="flex justify-between items-center m-5 ">
@@ -308,7 +308,7 @@ const Writing = ({ customHooks }) => {
       </form>
       {selectedIdeas.length > 0 ? (
         <>
-          <div className="highlight mx-16 my-2 flex justify-center text-lg font-black">
+          <div className="mx-16 my-2 text-lg font-black">
             연결된 아이디어 ♾️
           </div>
           <div className="relative pb-10 ">

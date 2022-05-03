@@ -55,7 +55,10 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   };
   const onLikeClick = async () => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
-    await updateDoc(ideaRef, { like: !dbIdea.like });
+    await updateDoc(ideaRef, {
+      like: !dbIdea.like,
+      likeUsers: [],
+    });
   };
   const onBookmarkClick = async () => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
@@ -104,9 +107,13 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   );
 
   return (
-    <div>
+    <div
+      className={`duration-500 ${
+        selectedIdeas.includes(dbIdea) && "bg-stone-100"
+      }`}
+    >
       <hr />
-      <div className="mt-5 mb-3 opacity text-sm">
+      <div className="mt-5 mb-3 opacity text-sm ">
         <div className="flex justify-between items-center mx-4 mt-2">
           <div className="flex items-center ml-3 gap-2">
             <Avatar
@@ -141,11 +148,7 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
         </div>
 
         <div
-          className={`box-border shadow-xl mx-4 mt-2 p-5 rounded-2xl duration-200 ${
-            selectedIdeas.includes(dbIdea)
-              ? "bg-stone-500 text-stone-300"
-              : "bg-stone-100"
-          }`}
+          className="box-border mx-4 mt-2 p-3 duration-200"
           onClick={() => {
             onIdeasClick(dbIdea);
           }}
@@ -203,11 +206,7 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
                 {dbIdea.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className={`mr-1 mb-1 px-1 rounded-xl duration-500  ${
-                      selectedIdeas.includes(dbIdea)
-                        ? "bg-stone-200 text-black"
-                        : "bg-stone-500 text-white"
-                    } `}
+                    className="mr-1 mb-1 px-2 rounded-xl duration-500 bg-stone-400 text-stone-100"
                   >
                     {tag}
                   </span>
@@ -219,8 +218,14 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
         {/* like, bookmark, ellipsis */}
         <div className="flex justify-between items-center mx-6 mt-2">
           <div className="flex mx-3 gap-4">
-            <button className="text-xl text-red-500" onClick={onLikeClick}>
+            <button
+              className="relative text-xl text-red-500"
+              onClick={onLikeClick}
+            >
               <FontAwesomeIcon icon={dbIdea.like ? fasHeart : farHeart} />
+              <span className="absolute left-5 bottom-0 text-xs">
+                {dbIdea.likeUsers.length != 0 && dbIdea.likeUsers.length}
+              </span>
             </button>
             <button
               className="text-xl text-orange-400"

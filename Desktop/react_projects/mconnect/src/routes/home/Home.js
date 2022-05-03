@@ -120,8 +120,8 @@ const Home = ({ customHooks }) => {
 
   const achievementItems = [
     {
-      label: "뉴비🥳",
-      bgColor: "bg-green-400",
+      label: "주가 떡상중📈",
+      bgColor: "bg-red-500",
       color: "text-white",
     },
     {
@@ -135,23 +135,23 @@ const Home = ({ customHooks }) => {
       color: "text-white",
     },
     {
-      label: "항해자🗺️",
-      bgColor: "bg-sky-400",
-      color: "text-white",
-    },
-    {
       label: "공부벌레✏️",
       bgColor: "bg-yellow-400",
       color: "text-white",
     },
     {
-      label: "소통왕🤗",
-      bgColor: "bg-purple-400",
+      label: "뉴비🥳",
+      bgColor: "bg-green-400",
       color: "text-white",
     },
     {
-      label: "주가 떡상중📈",
-      bgColor: "bg-red-500",
+      label: "항해자🗺️",
+      bgColor: "bg-sky-400",
+      color: "text-white",
+    },
+    {
+      label: "소통왕🤗",
+      bgColor: "bg-purple-400",
       color: "text-white",
     },
   ];

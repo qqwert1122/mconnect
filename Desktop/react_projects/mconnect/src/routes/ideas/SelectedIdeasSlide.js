@@ -39,8 +39,8 @@ const SelectedIdeasSlide = ({
             </button>
           </div>
         ) : (
-          <div className="shadow-xl" style={{ backgroundColor: "#eeeeee" }}>
-            <div className="highlight mx-16 mt-5 mb-2 flex justify-center text-xl font-black z-10">
+          <div className="shadow-xl bg-stone-100">
+            <div className="mx-16 pt-5 mb-2 text-xl font-black z-10">
               선택된 아이디어 ♾️
             </div>
             <div className="relative pb-10 ">

@@ -13,7 +13,7 @@ const Setting = () => {
   };
 
   return (
-    <div className="bg-stone-200">
+    <div className="bg-stone-100">
       <div>Setting</div>
       <div className="flex items-center mt-8 m-4">
         <div className="flex mr-2">
