@@ -1,6 +1,7 @@
 import "css/Idea.css";
 import Avatar from "@mui/material/Avatar";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { dbService } from "fbase";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import Menu from "@mui/material/Menu";
@@ -28,6 +29,7 @@ import {
   faMinus,
   faCertificate,
   faStarOfLife,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTrashCan,
@@ -43,6 +45,8 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   const open = Boolean(anchorEl);
   // dialog
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  let navigate = useNavigate();
 
   const onCancleClick = () => {
     setDeleteDialogOpen(false);
@@ -68,7 +72,10 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
     await updateDoc(ideaRef, { public: !dbIdea.public });
   };
-
+  const onViewIdeaClick = (dbIdea) => {
+    customHooks.setViewIdea(dbIdea);
+    navigate("/ideas/viewidea", { replace: true });
+  };
   // handle ellipsis menu
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -239,7 +246,14 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
               <FontAwesomeIcon icon={dbIdea.public ? fasCompass : farCompass} />
             </button>
           </div>
-          <div className="flex gap-4">
+          <div className="flex text-xl">
+            <button
+              onClick={() => {
+                onViewIdeaClick(dbIdea);
+              }}
+            >
+              <FontAwesomeIcon icon={faEye} />
+            </button>
             <Button
               id="demo-positioned-button"
               aria-controls={open ? "demo-positioned-menu" : undefined}

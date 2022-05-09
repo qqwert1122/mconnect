@@ -1,6 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "routes/home/Home";
 import Ideas from "routes/ideas/Ideas";
+import SearchPage from "routes/ideas/SearchPage";
+import ViewIdea from "routes/ideas/ViewIdea";
 import Writing from "routes/ideas/Writing";
 import Storming from "routes/Storming";
 import Explore from "routes/Explore";
@@ -29,8 +31,18 @@ const AppRouter = ({ customHooks }) => {
             />
             <Route
               exact
+              path="/ideas/searchpage"
+              element={<SearchPage customHooks={customHooks} />}
+            />
+            <Route
+              exact
               path="/ideas/writing"
               element={<Writing customHooks={customHooks} />}
+            />
+            <Route
+              exact
+              path="/ideas/viewidea"
+              element={<ViewIdea customHooks={customHooks} />}
             />
             <Route
               exact

@@ -1,7 +1,7 @@
 .opening {
   opacity: 0%;
   animation-name: opening__animation;
-  animation-duration: 0.5s;
+  animation-duration: 0.2s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
 }

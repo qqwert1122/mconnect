@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Idea from "routes/ideas/Idea";
-import SearchPage from "routes/ideas/SearchPage";
 import SelectedIdeasSlide from "routes/ideas/SelectedIdeasSlide";
 import ToggleButton from "routes/ideas/ToggleButton";
 import { useNavigate } from "react-router-dom";
@@ -153,7 +152,6 @@ const Ideas = ({ customHooks }) => {
   const setTagList = customHooks.setTagList;
 
   // event handler
-  const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [isConnectToggleClicked, setIsConnectToggleClicked] = useState(false);
 
   //toggleItem
@@ -166,7 +164,6 @@ const Ideas = ({ customHooks }) => {
   }, [dbIdeas]);
   useEffect(() => {
     const tempoTagList = [];
-    const tempoUserIdList = [];
 
     for (var a in dbIdeas) {
       for (var b in dbIdeas[a].tags) {
@@ -180,12 +177,7 @@ const Ideas = ({ customHooks }) => {
   }, [dbIdeas]);
 
   const onSearchClick = () => {
-    if (isSearchClicked === false) {
-      setIsSearchClicked(true);
-    }
-  };
-  const onSearchBackClick = () => {
-    setIsSearchClicked(false);
+    navigate("/ideas/searchpage", { replace: true });
   };
   const onWritingClick = () => {
     if (selectedIdeas.length === 1) {
@@ -202,7 +194,6 @@ const Ideas = ({ customHooks }) => {
   const onRefreshClick = () => {
     setSelectedIdeas([]);
   };
-  const onDetailsClick = () => {};
   const onIdeasClick = (dbIdea) => {
     if (selectedIdeas.includes(dbIdea)) {
       setSelectedIdeas(selectedIdeas.filter((idea) => idea != dbIdea));
@@ -223,45 +214,17 @@ const Ideas = ({ customHooks }) => {
               background: "#5bb647",
             }}
           >
-            {isSearchClicked ? (
-              <button className="text-white px-2" onClick={onSearchBackClick}>
-                <FontAwesomeIcon icon={faChevronLeft} size="xl" />
-              </button>
-            ) : (
-              <div className="px-2 english__font text-white text-2xl font-black">
-                Ideas&nbsp;
-                <FontAwesomeIcon icon={faLightbulb} size="sm" />
-              </div>
-            )}
+            <div className="px-2 english__font text-white text-2xl font-black">
+              Ideas&nbsp;
+              <FontAwesomeIcon icon={faLightbulb} size="sm" />
+            </div>
             <button
-              className="flex justify-between items-center h-8 p-2 bg-white rounded-3xl"
-              style={{
-                width: `${isSearchClicked ? "90%" : "80px"}`,
-                justifyContent: `${
-                  isSearchClicked ? "space-between" : "flex-end"
-                }`,
-              }}
+              className="flex justify-end items-center h-8 p-2 w-20  bg-white rounded-3xl"
               onClick={onSearchClick}
             >
-              {isSearchClicked ? (
-                <input
-                  id="searchInput"
-                  className="w-full mx-2 px-2 duration-500"
-                  placeholder={isSearchClicked ? "Search" : ""}
-                  autoComplete="off"
-                />
-              ) : (
-                <></>
-              )}
               <FontAwesomeIcon icon={faSearch} />
             </button>
           </div>
-          {/* Search Page /  */}
-          {isSearchClicked ? (
-            <SearchPage dbIdeas={dbIdeas} tagList={tagList} />
-          ) : (
-            <></>
-          )}
           <SelectedIdeasSlide
             selectedIdeas={selectedIdeas}
             isConnectToggleClicked={isConnectToggleClicked}
@@ -285,12 +248,7 @@ const Ideas = ({ customHooks }) => {
           dbIdeas={dbIdeas}
         />
         {/* 아이디어 */}
-        <div
-          className="bg-white min-h-screen py-5"
-          onClick={() => {
-            setIsSearchClicked(false);
-          }}
-        >
+        <div className="bg-white min-h-screen py-5">
           <div className="font-black text-lg px-5 py-5">
             아이디어
             {categoryPrmtr === "" ? "" : ` > ${categoryPrmtr.label}`}

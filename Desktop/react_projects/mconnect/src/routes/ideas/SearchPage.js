@@ -1,13 +1,43 @@
+import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHashtag, faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHashtag,
+  faCircleUser,
+  faChevronLeft,
+} from "@fortawesome/free-solid-svg-icons";
 
-const SearchPage = ({ tagList, dbIdeas }) => {
+const SearchPage = ({ customHooks }) => {
+  const dbIdeas = customHooks.dbIdeas;
+  const tagList = customHooks.tagList;
+  let navigate = useNavigate();
+
+  const onBackClick = (e) => {
+    e.preventDefault();
+    navigate("/ideas", { replace: true });
+  };
+
   return (
-    <div className="absolute w-full min-h-screen flex-col shadow-xl bg-stone-100 duration-500">
+    <div className="w-full min-h-screen flex-col shadow-xl bg-stone-100 duration-500">
+      <div
+        className="flex justify-between items-center p-2"
+        style={{
+          background: "#5bb647",
+        }}
+      >
+        <button className="text-white px-2" onClick={onBackClick}>
+          <FontAwesomeIcon icon={faChevronLeft} size="xl" />
+        </button>
+        <input
+          id="searchInput"
+          className="w-full mx-2 px-2 h-8 duration-500 rounded-3xl"
+          placeholder="Search"
+          autoComplete="off"
+        />
+      </div>
       {/* 태그 검색 */}
       <div
-        className="flex mx-5 mt-5 mb-2 text-lg font-black gap-2"
+        className="flex mx-5 pt-5 mb-2 text-lg font-black gap-2"
         style={{ color: "#5bb647" }}
       >
         태그&nbsp;

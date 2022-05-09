@@ -19,6 +19,7 @@ const useCustomHooks = () => {
   // Ideas props
   const [selectedIdeas, setSelectedIdeas] = useState([]);
   const [tagList, setTagList] = useState([]);
+  const [viewIdea, setViewIdea] = useState();
 
   let navigate = useNavigate();
 
@@ -89,6 +90,8 @@ const useCustomHooks = () => {
     setSelectedIdeas,
     tagList,
     setTagList,
+    viewIdea,
+    setViewIdea,
   };
 };
 
