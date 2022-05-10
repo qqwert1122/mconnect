@@ -9,7 +9,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faChevronLeft,
   faCircle,
   faCircleNodes,
   faDiceD6,
@@ -17,14 +16,9 @@ import {
   faMinus,
   faSearch,
   faSquare,
-  faHashtag,
-  faCircleUser,
-  faChevronUp,
-  faChevronDown,
   faCompass as fasCompass,
   faHeart as fasHeart,
   faBookmark as fasBookmark,
-  faArrowCircleRight,
   faArrowRotateRight,
   faLightbulb,
 } from "@fortawesome/free-solid-svg-icons";
@@ -147,6 +141,7 @@ const Ideas = ({ customHooks }) => {
   const user = authService.currentUser;
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
+  const setViewIdea = customHooks.setViewIdea;
   const dbIdeas = customHooks.dbIdeas;
   const tagList = customHooks.tagList;
   const setTagList = customHooks.setTagList;
@@ -227,6 +222,8 @@ const Ideas = ({ customHooks }) => {
           </div>
           <SelectedIdeasSlide
             selectedIdeas={selectedIdeas}
+            setSelectedIdeas={setSelectedIdeas}
+            setViewIdea={setViewIdea}
             isConnectToggleClicked={isConnectToggleClicked}
             onConnectToggle={onConnectToggle}
           />

@@ -1,12 +1,22 @@
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 const SelectedIdeasSlide = ({
   selectedIdeas,
+  setSelectedIdeas,
+  setViewIdea,
   isConnectToggleClicked,
   onConnectToggle,
 }) => {
+  let navigate = useNavigate();
+
+  const onIdeaClick = (idea) => {
+    setViewIdea(idea);
+    navigate("/ideas/viewidea", { replace: true });
+  };
+
   const settings = {
     dots: true,
     arrows: false,
@@ -47,7 +57,12 @@ const SelectedIdeasSlide = ({
               <Slider {...settings}>
                 {selectedIdeas.map((idea, index) => (
                   <div key={index}>
-                    <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg break-all">
+                    <div
+                      className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg break-all"
+                      onClick={() => {
+                        onIdeaClick(idea);
+                      }}
+                    >
                       {idea.title === "" ? (
                         idea.text.length < 130 ? (
                           idea.text
