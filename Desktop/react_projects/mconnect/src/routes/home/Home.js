@@ -160,22 +160,22 @@ const Home = ({ customHooks }) => {
     {
       icon: <FontAwesomeIcon icon={faFireFlameCurved} />,
       label: "인기",
-      bgColor: "bg-red-500",
+      bgColor: "bg-red-400",
     },
     {
       icon: <FontAwesomeIcon icon={fasHeart} />,
       label: "좋아요",
-      bgColor: "bg-orange-500",
+      bgColor: "bg-orange-400",
     },
     {
       icon: <FontAwesomeIcon icon={faHashtag} />,
       label: "태그",
-      bgColor: "bg-lime-500",
+      bgColor: "bg-lime-400",
     },
     {
       icon: <FontAwesomeIcon icon={faDice} />,
       label: "랜덤",
-      bgColor: "bg-sky-500",
+      bgColor: "bg-sky-400",
     },
   ];
   const testArr = ["text-1", "text-2", "text-3", "text-4", "text-5"];
@@ -425,7 +425,7 @@ const Home = ({ customHooks }) => {
       {/* Ideas */}
       <div className=" mt-2 bg-white">
         <div className="flex justify-between items-center pt-4 pb-2 ">
-          <div className="english__font absolute highlight left-16 text-xl font-black z-10">
+          <div className="english__font absolute left-16 text-xl font-black z-10">
             Ideas 💡
           </div>
           <button
@@ -439,7 +439,7 @@ const Home = ({ customHooks }) => {
       </div>
       <div className=" mt-2 bg-white">
         <div className="flex justify-between items-center pt-4 pb-2">
-          <div className="english__font absolute highlight left-16  text-xl font-black z-10">
+          <div className="english__font absolute left-16  text-xl font-black z-10">
             Connect ♾️
           </div>
           <button
@@ -454,7 +454,7 @@ const Home = ({ customHooks }) => {
       {/* Storming */}
       <div className=" mt-2 bg-white">
         <div className="flex justify-between items-center pt-4 pb-2">
-          <div className="english__font absolute highlight left-16 text-xl font-black z-10">
+          <div className="english__font absolute left-16 text-xl font-black z-10">
             Storming ⚡
           </div>
           <button
@@ -482,7 +482,7 @@ const Home = ({ customHooks }) => {
       {/* Explore */}
       <div className=" mt-2 bg-white">
         <div className="relative flex justify-between items-center pt-4 pb-2">
-          <div className="absolute english__font highlight left-16 text-xl font-black z-10">
+          <div className="absolute english__font left-16 text-xl font-black z-10">
             Explore 🧭
           </div>
           <button

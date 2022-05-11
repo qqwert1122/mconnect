@@ -13,9 +13,9 @@ import BottomNavigationBar from "routes/BottomNavigationBar";
 const AppRouter = ({ customHooks }) => {
   return (
     <>
-      {customHooks.isLoggedIn && (
+      {/* {customHooks.isLoggedIn && (
         <BottomNavigationBar customHooks={customHooks} />
-      )}
+      )} */}
       <Routes>
         {customHooks.isLoggedIn ? (
           <>
@@ -62,7 +62,7 @@ const AppRouter = ({ customHooks }) => {
             <Route
               exact
               path="*"
-              element={<Home customHooks={customHooks} />}
+              element={<Ideas customHooks={customHooks} />}
             />
           </>
         ) : (

@@ -30,11 +30,11 @@ const ViewIdea = ({ customHooks }) => {
   return (
     <div className="text-sm min-h-screen bg-stone-100">
       <div className="flex-col  bg-white">
-        <div className="p-3 flex justify-between items-center ">
+        <div className="p-3 flex justify-between items-center bg-green-600 text-white">
           <button onClick={onBackClick}>
             <FontAwesomeIcon icon={faChevronLeft} size="xl" />
           </button>
-          <span className="p-1 text-base font-black text-white bg-green-600 rounded-xl">
+          <span className="p-1 px-2 text-base font-black text-green-600 bg-white rounded">
             수정
           </span>
         </div>
@@ -117,7 +117,7 @@ const ViewIdea = ({ customHooks }) => {
             }}
           />
           <input className="px-2 w-full" placeholder="댓글 추가..." />
-          <button className="text-green-600">
+          <button className="w-16 text-green-600">
             <FontAwesomeIcon icon={faPaperPlane} size="lg" />
           </button>
         </div>

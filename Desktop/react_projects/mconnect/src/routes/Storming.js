@@ -1,3 +1,4 @@
+import BottomNavigationBar from "routes/BottomNavigationBar";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {} from "@fortawesome/free-regular-svg-icons";
@@ -9,7 +10,7 @@ import {
   faBolt,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Storming = () => {
+const Storming = ({ customHooks }) => {
   const menuItems = [
     {
       icon: <FontAwesomeIcon icon={faFireFlameCurved} />,
@@ -38,36 +39,39 @@ const Storming = () => {
   ];
 
   return (
-    <div className="bg-stone-100 min-h-screen">
-      <div className="relative bg-white mb-2">
-        <div className="english__font relative mb-2 p-2 px-4 text-2xl font-black z-10 text-white bg-orange-400">
-          Storming&nbsp;
-          <FontAwesomeIcon icon={faBolt} />
-        </div>
-        <div className="px-5 flex flex-wrap pb-2">
-          {menuItems.map((item, index) => (
-            <div key={index} className="border-box flex w-1/4 p-1 ">
-              <div
-                className={`relative shadow-lg w-full h-20 m-1 p-1 rounded-xl text-white ${item.bgColor}`}
-              >
-                <p className="absolute left-2 top-2 text-3xl">{item.icon}</p>
-                <p className="absolute bottom-2 right-2 text-base font-black">
-                  {item.label}
-                </p>
+    <>
+      <BottomNavigationBar customHooks={customHooks} />
+      <div className="bg-stone-100 min-h-screen">
+        <div className="relative bg-white mb-2">
+          <div className="english__font relative mb-2 p-2 px-4 text-2xl font-black z-10 text-white bg-orange-400">
+            Storming&nbsp;
+            <FontAwesomeIcon icon={faBolt} />
+          </div>
+          <div className="px-5 flex flex-wrap pb-2">
+            {menuItems.map((item, index) => (
+              <div key={index} className="border-box flex w-1/4 p-1 ">
+                <div
+                  className={`relative shadow-lg w-full h-20 m-1 p-1 rounded-xl text-white ${item.bgColor}`}
+                >
+                  <p className="absolute left-2 top-2 text-3xl">{item.icon}</p>
+                  <p className="absolute bottom-2 right-2 text-base font-black">
+                    {item.label}
+                  </p>
+                </div>
               </div>
+            ))}
+          </div>
+        </div>
+        <div className="relative bg-white mb-2">
+          {menuItems.map((item, index) => (
+            <div key={index} className={`p-5 text-lg font-black ${item.color}`}>
+              {item.label}&nbsp;
+              {item.icon}
             </div>
           ))}
         </div>
       </div>
-      <div className="relative bg-white mb-2">
-        {menuItems.map((item, index) => (
-          <div key={index} className={`p-5 text-lg font-black ${item.color}`}>
-            {item.label}&nbsp;
-            {item.icon}
-          </div>
-        ))}
-      </div>
-    </div>
+    </>
   );
 };
 

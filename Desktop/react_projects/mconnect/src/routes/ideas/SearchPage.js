@@ -19,12 +19,7 @@ const SearchPage = ({ customHooks }) => {
 
   return (
     <div className="w-full min-h-screen flex-col shadow-xl bg-stone-100 duration-500">
-      <div
-        className="flex justify-between items-center p-2"
-        style={{
-          background: "#5bb647",
-        }}
-      >
+      <div className="flex justify-between items-center p-2 bg-green-600">
         <button className="text-white px-2" onClick={onBackClick}>
           <FontAwesomeIcon icon={faChevronLeft} size="xl" />
         </button>
@@ -36,10 +31,7 @@ const SearchPage = ({ customHooks }) => {
         />
       </div>
       {/* 태그 검색 */}
-      <div
-        className="flex mx-5 pt-5 mb-2 text-lg font-black gap-2"
-        style={{ color: "#5bb647" }}
-      >
+      <div className="flex mx-5 pt-5 mb-2 text-lg font-black gap-2 text-green-600">
         태그&nbsp;
         <span className="flex items-center">
           <FontAwesomeIcon icon={faHashtag} />
@@ -50,7 +42,7 @@ const SearchPage = ({ customHooks }) => {
           {tagList.map((tag, index) => (
             <span
               key={index}
-              className="border-2 rounded-3xl border-stone-200 p-1 font-black text-sm"
+              className="border-2 rounded-3xl border-stone-200 p-1 text-sm"
             >
               {tag}
             </span>
@@ -58,10 +50,7 @@ const SearchPage = ({ customHooks }) => {
         </div>
       </div>
       {/* 사용자 검색 */}
-      <div
-        className="flex mx-5 mt-5 mb-2 text-lg font-black gap-2 "
-        style={{ color: "#5bb647" }}
-      >
+      <div className="flex mx-5 mt-5 mb-2 text-lg font-black gap-2 text-green-600">
         사용자&nbsp;
         <span className="flex items-center">
           <FontAwesomeIcon icon={faCircleUser} />

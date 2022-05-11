@@ -1,3 +1,4 @@
+import BottomNavigationBar from "routes/BottomNavigationBar";
 import React, { useEffect, useState } from "react";
 import Idea from "routes/ideas/Idea";
 import SelectedIdeasSlide from "routes/ideas/SelectedIdeasSlide";
@@ -21,6 +22,7 @@ import {
   faBookmark as fasBookmark,
   faArrowRotateRight,
   faLightbulb,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
 const testArr = ["text1", "text2", "text3", "text4", "text5", "text6"];
@@ -176,7 +178,7 @@ const Ideas = ({ customHooks }) => {
   };
   const onWritingClick = () => {
     if (selectedIdeas.length === 1) {
-      toast.error("아이디어를 연결하려면 2개 이상을 선택하세요", {
+      toast.error("2개 이상을 선택하세요", {
         theme: "colored",
       });
     } else {
@@ -199,16 +201,12 @@ const Ideas = ({ customHooks }) => {
 
   return (
     <>
+      <BottomNavigationBar customHooks={customHooks} />
       <div className="bg-stone-200">
         {/* App Bar */}
 
         <div className="fixed top-0 w-full z-20">
-          <div
-            className="flex justify-between items-center p-2"
-            style={{
-              background: "#5bb647",
-            }}
-          >
+          <div className="flex justify-between items-center p-2 bg-green-600">
             <div className="px-2 english__font text-white text-2xl font-black">
               Ideas&nbsp;
               <FontAwesomeIcon icon={faLightbulb} size="sm" />
@@ -288,7 +286,7 @@ const Ideas = ({ customHooks }) => {
             </div>
             <div className="fixed bottom-36 right-6 z-10">
               <button
-                className="shadow-2xl rounded-full w-14 h-14 duration-200 border-4 border-white bg-stone-600 text-white"
+                className="shadow-2xl rounded-full w-14 h-14 duration-200 border-4 border-white bg-green-600 text-white"
                 onClick={onRefreshClick}
               >
                 <FontAwesomeIcon icon={faArrowRotateRight} size="xl" />
@@ -298,10 +296,10 @@ const Ideas = ({ customHooks }) => {
         ) : (
           <div className="fixed bottom-20 right-6 z-10">
             <button
-              className="shadow-2xl rounded-full w-14 h-14 border-4 border-white bg-stone-600 text-white"
+              className="shadow-2xl rounded-full w-14 h-14 border-4 border-white bg-green-600 text-white"
               onClick={onWritingClick}
             >
-              <FontAwesomeIcon icon={faFeatherPointed} size="xl" />
+              <FontAwesomeIcon icon={faPlus} size="xl" />
             </button>
           </div>
         )}

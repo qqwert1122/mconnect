@@ -1,3 +1,4 @@
+import InputTagBar from "./InputTagBar";
 import "css/Writing.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +36,11 @@ var customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 dayjs.locale("ko");
 
+const tags = [
+  { label: "", category: 0, bgColor: "" },
+  { label: "", category: 0, bgColor: "" },
+];
+
 const Writing = ({ customHooks }) => {
   const user = authService.currentUser;
   const selectedIdeas = customHooks.selectedIdeas;
@@ -51,6 +57,12 @@ const Writing = ({ customHooks }) => {
   const [formLike, setFormLike] = useState(false);
   const [formBookmark, setFormBookmark] = useState(false);
   const [formPublic, setFormPublic] = useState(false);
+  const [toggleTagBar, setToggleTagBar] = useState(false);
+
+  const onTagHolderClick = (e) => {
+    e.preventDefault();
+    setToggleTagBar(!toggleTagBar);
+  };
 
   useEffect(() => {
     if (selectedIdeas.length === 0) {
@@ -179,8 +191,8 @@ const Writing = ({ customHooks }) => {
   return (
     <div className="opening flex-col bg-stone-100 min-h-screen text-sm">
       <form className="pb-6" onSubmit={onSubmit}>
-        <div className="bg-white pb-5 rounded-b-3xl shadow-xl">
-          <div className="flex justify-between items-center m-5 ">
+        <div className="bg-white pb-5 shadow-xl">
+          <div className="flex justify-between items-center p-3 bg-green-600 text-white">
             <button onClick={onBackClick}>
               <FontAwesomeIcon icon={faAngleLeft} size="2xl" />
             </button>
@@ -191,37 +203,37 @@ const Writing = ({ customHooks }) => {
             </h1>
             <input
               type="submit"
-              className="p-1 rounded-xl text-lg font-black text-center shadow-md text-white bg-stone-600"
+              className="p-1 px-2 rounded text-lg font-black text-center shadow-md bg-white text-green-600"
               value="작성"
             />
           </div>
+          <hr />
           {/* 제목 */}
           {selectedIdeas.length === 0 ? (
             <></>
           ) : (
-            <div className="border-box  m-5 mt-10">
-              <span className="mr-5 w-2/12 text-xl">
-                <FontAwesomeIcon icon={faT} />
-              </span>
-              <input
-                className="w-10/12 px-2 rounded-xl border-2 focus:border-current border-gray-200"
-                type="text"
-                name="formTitle"
-                placeholder="제목"
-                value={formTitle}
-                onChange={onTitleChange}
-                onKeyDown={onKeyDownPreventDefault}
-                autoComplete="off"
-              />
+            <div>
+              <div className="flex border-box  p-3 ">
+                <span className="mr-3 text-xl">
+                  <FontAwesomeIcon icon={faT} />
+                </span>
+                <input
+                  className="w-full px-2 text-lg font-black"
+                  type="text"
+                  name="formTitle"
+                  placeholder="제목..."
+                  value={formTitle}
+                  onChange={onTitleChange}
+                  onKeyDown={onKeyDownPreventDefault}
+                  autoComplete="off"
+                />
+              </div>
+              <hr />
             </div>
           )}
           {/* 텍스트 */}
-          <div
-            className={`flex border-box m-5 ${
-              selectedIdeas.length === 0 ? "mt-10" : "mt-5"
-            }`}
-          >
-            <span className="items-start mr-5 text-xl ">
+          <div className="flex border-box p-3 ">
+            <span className="items-start mr-3 text-xl ">
               {formCategory === 3 ? (
                 <FontAwesomeIcon icon={faDiceD6} />
               ) : formCategory === 2 ? (
@@ -233,35 +245,38 @@ const Writing = ({ customHooks }) => {
               )}
             </span>
             <textarea
-              className="w-10/12 h-60 p-2 rounded-xl border-2 focus:border-current border-gray-200"
+              className="w-full p-2"
+              style={{ minHeight: "240px" }}
               type="text"
               name="formText"
-              placeholder="내용"
+              placeholder="내용..."
               autoComplete="off"
               value={formText}
               onChange={onTextChange}
               required
             />
           </div>
+          <hr />
           {/* 출처 */}
-          <div className="flex border-box m-5 mb-0">
-            <span className="items-start mr-5 text-xl">
+          <div className="flex border-box px-3 py-2">
+            <span className="items-start mr-3 text-xl">
               <FontAwesomeIcon icon={faQuoteLeft} />
             </span>
             <input
-              className="w-10/12 px-2 rounded-xl border-2 focus:border-current border-gray-200"
+              className="w-full px-2"
               type="text"
               name="formSource"
-              placeholder="출처"
+              placeholder="출처..."
               autoComplete="off"
               value={formSource}
               onChange={onSourceChange}
               onKeyDown={onKeyDownPreventDefault}
             />
           </div>
+          <hr />
           {/* 태그 */}
-          <div className="m-5 my-2">
-            <span className="mr-5 text-xl">
+          <div className="px-3 py-2">
+            <span className="mr-3 text-xl">
               <FontAwesomeIcon icon={faHashtag} />
             </span>
             {formTags.map((tag, index) => (
@@ -275,8 +290,11 @@ const Writing = ({ customHooks }) => {
                 {tag}
               </button>
             ))}
-            <input
-              className=" rounded-xl border-2 px-2 w-24"
+            <button className="px-2 text-gray-400" onClick={onTagHolderClick}>
+              태그 ...
+            </button>
+            {/* <input
+              className=" rounded-xl px-2 w-24"
               name="tags"
               type="text"
               placeholder="태그"
@@ -284,7 +302,7 @@ const Writing = ({ customHooks }) => {
               value={formTag}
               onChange={(e) => onTagChange(e)}
               onKeyDown={(e) => onEnterKeyDown(e)}
-            />
+            /> */}
           </div>
         </div>
         <div className="flex items-center justify-between">
@@ -351,6 +369,7 @@ const Writing = ({ customHooks }) => {
       ) : (
         <></>
       )}
+      {toggleTagBar && <InputTagBar />}
     </div>
   );
 };
