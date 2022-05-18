@@ -204,17 +204,10 @@ const Ideas = ({ customHooks }) => {
       <BottomNavigationBar customHooks={customHooks} />
       <div className="bg-stone-200">
         {/* App Bar */}
-
         <div className="fixed top-0 w-full z-20">
-          <div className="flex justify-between items-center p-2 bg-green-600">
-            <div className="px-2 english__font text-white text-2xl font-black">
-              Ideas&nbsp;
-              <FontAwesomeIcon icon={faLightbulb} size="sm" />
-            </div>
-            <button
-              className="flex justify-end items-center h-8 p-2 w-20  bg-white rounded-3xl"
-              onClick={onSearchClick}
-            >
+          <div className="flex justify-between items-center px-2 py-5 bg-white shadow">
+            <div className="px-2 text-xl font-black">아이디어</div>
+            <button className="px-2" onClick={onSearchClick}>
               <FontAwesomeIcon icon={faSearch} />
             </button>
           </div>
@@ -243,8 +236,8 @@ const Ideas = ({ customHooks }) => {
           dbIdeas={dbIdeas}
         />
         {/* 아이디어 */}
-        <div className="bg-white min-h-screen py-5">
-          <div className="font-black text-lg px-5 py-5">
+        <div className="min-h-screen py-5">
+          <div className="font-black text-lg px-5 py-5 bg-white">
             아이디어
             {categoryPrmtr === "" ? "" : ` > ${categoryPrmtr.label}`}
             {filterPrmtr === "" ? "" : ` > ${filterPrmtr.label}`}

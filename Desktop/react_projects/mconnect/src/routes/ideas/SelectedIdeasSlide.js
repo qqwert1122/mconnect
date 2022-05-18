@@ -33,13 +33,13 @@ const SelectedIdeasSlide = ({
         !isConnectToggleClicked ? (
           // Connected Ideas
           <div
-            className="py-2 flex-col text-xl font-black shadow-xl"
-            style={{
-              background: "linear-gradient(45deg, #fef9c3, #d9f99d , #fde047)",
-            }}
+            className="py-2 flex-col text-lg font-black shadow-xl bg-white "
+            // style={{
+            //   background: "linear-gradient(45deg, #fef9c3, #d9f99d , #fde047)",
+            // }}
           >
             <div className="flex justify-center">
-              선택된 아이디어 ♾️ : &nbsp;&nbsp;&nbsp;{selectedIdeas.length}개
+              {selectedIdeas.length}개 선택됨
             </div>
             <button
               className="flex justify-center w-full mt-2 text-lime-600"
@@ -49,40 +49,40 @@ const SelectedIdeasSlide = ({
             </button>
           </div>
         ) : (
-          <div className="shadow-xl bg-stone-100">
-            <div className="mx-16 pt-5 mb-2 text-xl font-black z-10">
-              선택된 아이디어 ♾️
+          <div className="shadow-xl bg-white">
+            <div className="mx-16 pt-5 mb-2 text-center text-lg font-black z-10">
+              선택된 아이디어
             </div>
             <div className="relative pb-10 ">
               <Slider {...settings}>
                 {selectedIdeas.map((idea, index) => (
                   <div key={index}>
                     <div
-                      className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg break-all"
+                      className="relative h-52 p-5 m-1 bg-stone-100 shadow-sm rounded-3xl break-all text-sm"
                       onClick={() => {
                         onIdeaClick(idea);
                       }}
                     >
                       {idea.title === "" ? (
-                        idea.text.length < 130 ? (
+                        idea.text.length < 150 ? (
                           idea.text
                         ) : (
                           <>
-                            {idea.text.substr(0, 130)}
+                            {idea.text.substr(0, 150)}
                             <span>...</span>
                             <span className="font-black underline">더보기</span>
                           </>
                         )
                       ) : (
                         <>
-                          <div className="mb-2 font-black text-lg">
+                          <div className="mb-2 font-black text-base">
                             {idea.title}
                           </div>
-                          {idea.text.length < 100 ? (
+                          {idea.text.length < 130 ? (
                             idea.text
                           ) : (
                             <>
-                              {idea.text.substr(0, 100)}
+                              {idea.text.substr(0, 130)}
                               <span>...</span>
                               <span className="font-black underline">
                                 더보기

@@ -95,16 +95,9 @@ const ToggleButton = ({
   return (
     <div className="bg-white px-5 pb-10 mb-2 ">
       <div
-        className="font-black text-lg duration-100 pb-5"
-        style={{
-          paddingTop: `${
-            selectedIdeas.length > 0
-              ? isConnectToggleClicked
-                ? "440px"
-                : "160px"
-              : "80px"
-          }`,
-        }}
+        className={`font-black text-lg duration-100 pb-5 ${
+          selectedIdeas.length > 0 ? "pt-44" : "pt-24"
+        }`}
       >
         카테고리
       </div>

@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { dbService } from "fbase";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { useLongPress } from "use-long-press";
+import dayjs from "dayjs";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Dialog from "@mui/material/Dialog";
@@ -30,6 +32,7 @@ import {
   faCertificate,
   faStarOfLife,
   faEye,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTrashCan,
@@ -41,6 +44,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 
 const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
+  const [isClicked, setIsClicked] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   // dialog
@@ -72,7 +76,11 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
     await updateDoc(ideaRef, { public: !dbIdea.public });
   };
-  const onViewIdeaClick = (dbIdea) => {
+  const onViewIdeaClick = async (dbIdea) => {
+    if (dbIdea.isClicked == false) {
+      const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
+      await updateDoc(ideaRef, { isClicked: true });
+    }
     customHooks.setViewIdea(dbIdea);
     navigate("/ideas/viewidea", { replace: true });
   };
@@ -82,6 +90,27 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const bind = useLongPress(() => {
+    onIdeasClick(dbIdea);
+  });
+  const setCategory = (dbIdea) => {
+    switch (dbIdea.category) {
+      case 3:
+        return { icon: <FontAwesomeIcon icon={faDiceD6} />, label: "상자" };
+      case 2:
+        return {
+          icon: <FontAwesomeIcon icon={faSquare} size="sm" />,
+          label: "면",
+        };
+      case 1:
+        return { icon: <FontAwesomeIcon icon={faMinus} />, label: "선" };
+      default:
+        return {
+          icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
+          label: "점",
+        };
+    }
   };
 
   const deleteDialog = (
@@ -114,77 +143,123 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   );
 
   return (
-    <div
-      className={`duration-500 ${
-        selectedIdeas.includes(dbIdea) && "bg-stone-100"
-      }`}
-    >
+    <div className="mb-2 pb-2 duration-500 bg-white">
       <hr />
-      <div className="mt-5 mb-3 opacity text-sm ">
-        <div className="flex justify-between items-center mx-4 mt-2">
-          <div className="flex items-center ml-3 gap-2">
+      <div className="mt-4 mb-3 opacity text-sm ">
+        <div className="flex justify-between items-center ml-4">
+          {/* avatar, name, time */}
+          <div className="flex items-center gap-2">
+            {selectedIdeas.length === 0 ? (
+              <></>
+            ) : (
+              <button
+                className={`opacity rounded-full ${
+                  selectedIdeas.includes(dbIdea)
+                    ? "bg-red-400 text-white"
+                    : "border-2 border-stone-400"
+                } w-6 h-6`}
+                onClick={() => {
+                  onIdeasClick(dbIdea);
+                }}
+              >
+                {selectedIdeas.includes(dbIdea) ? (
+                  <FontAwesomeIcon icon={faCheck} />
+                ) : (
+                  <></>
+                )}
+              </button>
+            )}
             <Avatar
               alt="avatar"
               src={dbIdea.userPhotoURL}
               sx={{
                 display: "flex",
-                width: "35px",
-                height: "35px",
+                width: "30px",
+                height: "30px",
               }}
             />
-            <b>{dbIdea.userName}</b>
-            {user.uid === dbIdea.userId && (
-              <p className="text-sky-400 ">
-                <FontAwesomeIcon icon={faStarOfLife} size="2xs" />
-              </p>
-            )}
-          </div>
-          {/* time */}
-          <div className="mx-3">
-            <div className="flex items-center gap-2">
-              {dbIdea.isClicked ? (
-                <></>
-              ) : (
-                <span className="w-2 h-2 bg-red-400 text-white rounded-full" />
-              )}
-              <span className="text-sm">
-                {customHooks.timeDisplay(dbIdea.createdAt)}
-              </span>
+            <div className="flex-col">
+              <div className="flex gap-1">
+                <b>{dbIdea.userName}</b>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs">
+                  {customHooks.timeDisplay(dbIdea.createdAt)}
+                </span>
+                {dbIdea.isClicked ||
+                dayjs().diff(dayjs(dbIdea.createdAt), "day") > 3 ? (
+                  <></>
+                ) : (
+                  <span className="w-2 h-2 bg-red-400 text-white rounded-full" />
+                )}
+              </div>
             </div>
           </div>
+          {/* ellipsis */}
+          <Button
+            id="demo-positioned-button"
+            aria-controls={open ? "demo-positioned-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+            sx={{
+              color: "inherit",
+            }}
+          >
+            <FontAwesomeIcon icon={faEllipsis} size="lg" />
+          </Button>
+          <Menu
+            id="demo-positioned-menu"
+            aria-labelledby="demo-positioned-button"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
+            {user.uid === dbIdea.userId && (
+              <MenuItem onClick={handleClose}>
+                <FontAwesomeIcon icon={faPenToSquare} />
+                &nbsp; 수정
+              </MenuItem>
+            )}
+            <MenuItem
+              onClick={() => {
+                setDeleteDialogOpen(true);
+                handleClose();
+              }}
+            >
+              <FontAwesomeIcon icon={faTrashCan} />
+              &nbsp; 삭제
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <FontAwesomeIcon icon={faCopy} />
+              &nbsp; 복사
+            </MenuItem>
+          </Menu>
         </div>
-
         <div
-          className="box-border mx-4 mt-2 p-3 duration-200"
+          className="box-border mx-4 mt-4 mb-4 duration-200"
           onClick={() => {
-            onIdeasClick(dbIdea);
+            onViewIdeaClick(dbIdea);
           }}
+          {...bind()}
         >
           {dbIdea.title === "" ? (
             <></>
           ) : (
-            <div className="flex items-center pb-3">
-              <FontAwesomeIcon icon={faT} />
-              <div className="mx-3 w-full font-black text-lg">
-                {dbIdea.title}
-              </div>
+            <div className="flex items-center pb-3 w-full font-black">
+              {dbIdea.title}
             </div>
           )}
-          <div
-            className={`flex items-center ${
-              dbIdea.source === "" && dbIdea.tags.length === 0 ? "" : "pb-3"
-            }`}
-          >
-            {dbIdea.category === 3 ? (
-              <FontAwesomeIcon icon={faDiceD6} />
-            ) : dbIdea.category === 2 ? (
-              <FontAwesomeIcon icon={faSquare} size="sm" />
-            ) : dbIdea.category === 1 ? (
-              <FontAwesomeIcon icon={faMinus} />
-            ) : (
-              <FontAwesomeIcon icon={faCircle} size="xs" />
-            )}
-            <div className="mx-3 w-full break-all">
+          <div className="flex items-center pb-3">
+            <div className="w-full break-all">
               {dbIdea.text.length > 200 ? (
                 <>
                   {dbIdea.text.substr(0, 200)}
@@ -196,114 +271,66 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
               )}
             </div>
           </div>
+          {/* source */}
           {dbIdea.source === "" ? (
             <></>
           ) : (
-            <div className="flex items-center pb-1">
+            <div className="flex items-center ml-2 pb-1 text-xs text-stone-500">
               <FontAwesomeIcon icon={faQuoteLeft} />
-              <div className="mx-3 w-full text-sm ">{dbIdea.source}</div>
+              <div className="mx-2 w-full  ">{dbIdea.source}</div>
             </div>
           )}
-          {dbIdea.tags.length === 0 ? (
-            <></>
-          ) : (
-            <div className="flex">
-              <FontAwesomeIcon icon={faHashtag} />
-              <span className="mx-3 flex flex-wrap">
+          {/* category, tags */}
+          <span className="flex flex-wrap">
+            <span className="border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500">
+              {setCategory(dbIdea).icon}&nbsp;{setCategory(dbIdea).label}
+            </span>
+            {dbIdea.tags.length === 0 ? (
+              <></>
+            ) : (
+              <>
                 {dbIdea.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="mr-1 mb-1 px-2 rounded-xl duration-500 bg-stone-400 text-stone-100"
+                    className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 text-xs shadow-sm duration-500"
                   >
                     {tag}
                   </span>
                 ))}
-              </span>
-            </div>
-          )}
+              </>
+            )}
+          </span>
         </div>
         {/* like, bookmark, ellipsis */}
-        <div className="flex justify-between items-center mx-6 mt-2">
-          <div className="flex mx-3 gap-4">
-            <button
-              className="relative text-xl text-red-500"
-              onClick={onLikeClick}
-            >
-              <FontAwesomeIcon icon={dbIdea.like ? fasHeart : farHeart} />
-              <span className="absolute left-5 bottom-0 text-xs">
-                {dbIdea.likeUsers.length != 0 && dbIdea.likeUsers.length}
-              </span>
-            </button>
-            <button
-              className="text-xl text-orange-400"
-              onClick={onBookmarkClick}
-            >
-              <FontAwesomeIcon
-                icon={dbIdea.bookmark ? fasBookmark : farBookmark}
-              />
-            </button>
-            <button className="text-xl text-sky-400" onClick={onPublicClick}>
-              <FontAwesomeIcon icon={dbIdea.public ? fasCompass : farCompass} />
-            </button>
-          </div>
-          <div className="flex text-xl">
-            <button
-              onClick={() => {
-                onViewIdeaClick(dbIdea);
-              }}
-            >
-              <FontAwesomeIcon icon={faEye} />
-            </button>
-            <Button
-              id="demo-positioned-button"
-              aria-controls={open ? "demo-positioned-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-              sx={{
-                color: "inherit",
-              }}
-            >
-              <FontAwesomeIcon icon={faEllipsis} size="xl" />
-            </Button>
-            <Menu
-              id="demo-positioned-menu"
-              aria-labelledby="demo-positioned-button"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              {user.uid === dbIdea.userId && (
-                <MenuItem onClick={handleClose}>
-                  <FontAwesomeIcon icon={faPenToSquare} />
-                  &nbsp; 수정
-                </MenuItem>
-              )}
-              <MenuItem
-                onClick={() => {
-                  setDeleteDialogOpen(true);
-                  handleClose();
-                }}
-              >
-                <FontAwesomeIcon icon={faTrashCan} />
-                &nbsp; 삭제
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <FontAwesomeIcon icon={faCopy} />
-                &nbsp; 복사
-              </MenuItem>
-            </Menu>
-          </div>
+        <hr />
+        <div className="flex justify-between items-center mx-6 mt-2 ">
+          <button className="text-red-500" onClick={onLikeClick}>
+            <FontAwesomeIcon
+              icon={dbIdea.like ? fasHeart : farHeart}
+              size="xl"
+            />
+            &nbsp; 좋아요
+            <span className="absolute left-5 bottom-0 text-xs">
+              {dbIdea.likeUsers.length != 0 && dbIdea.likeUsers.length}
+            </span>
+          </button>
+          <button className=" text-orange-400" onClick={onBookmarkClick}>
+            <FontAwesomeIcon
+              icon={dbIdea.bookmark ? fasBookmark : farBookmark}
+              size="xl"
+            />
+            &nbsp; 저장
+          </button>
+          <button className="text-sky-400" onClick={onPublicClick}>
+            <FontAwesomeIcon
+              icon={dbIdea.public ? fasCompass : farCompass}
+              size="xl"
+            />
+            &nbsp; 공개
+          </button>
         </div>
       </div>
+      <hr />
       {deleteDialog}
     </div>
   );
