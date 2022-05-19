@@ -148,9 +148,6 @@ const Ideas = ({ customHooks }) => {
   const tagList = customHooks.tagList;
   const setTagList = customHooks.setTagList;
 
-  // event handler
-  const [isConnectToggleClicked, setIsConnectToggleClicked] = useState(false);
-
   //toggleItem
   const [categoryPrmtr, setCategoryPrmtr] = useState("");
   const [filterPrmtr, setFilterPrmtr] = useState("");
@@ -185,9 +182,6 @@ const Ideas = ({ customHooks }) => {
       navigate("/ideas/writing", { replace: true });
     }
   };
-  const onConnectToggle = () => {
-    setIsConnectToggleClicked(!isConnectToggleClicked);
-  };
   const onRefreshClick = () => {
     setSelectedIdeas([]);
   };
@@ -202,7 +196,7 @@ const Ideas = ({ customHooks }) => {
   return (
     <>
       <BottomNavigationBar customHooks={customHooks} />
-      <div className="bg-stone-200">
+      <div className="bg-stone-100">
         {/* App Bar */}
         <div className="fixed top-0 w-full z-20">
           <div className="flex justify-between items-center px-2 py-5 bg-white shadow">
@@ -211,20 +205,19 @@ const Ideas = ({ customHooks }) => {
               <FontAwesomeIcon icon={faSearch} />
             </button>
           </div>
-          <SelectedIdeasSlide
-            selectedIdeas={selectedIdeas}
-            setSelectedIdeas={setSelectedIdeas}
-            setViewIdea={setViewIdea}
-            isConnectToggleClicked={isConnectToggleClicked}
-            onConnectToggle={onConnectToggle}
-          />
+          {selectedIdeas.length > 0 && (
+            <SelectedIdeasSlide
+              selectedIdeas={selectedIdeas}
+              setSelectedIdeas={setSelectedIdeas}
+              setViewIdea={setViewIdea}
+            />
+          )}
         </div>
 
         {/*Contens*/}
         {/* ToggleButton */}
         <ToggleButton
           selectedIdeas={selectedIdeas}
-          isConnectToggleClicked={isConnectToggleClicked}
           categories={categories}
           categoryPrmtr={categoryPrmtr}
           setCategoryPrmtr={setCategoryPrmtr}
@@ -236,7 +229,7 @@ const Ideas = ({ customHooks }) => {
           dbIdeas={dbIdeas}
         />
         {/* 아이디어 */}
-        <div className="min-h-screen py-5">
+        <div className="min-h-screen py-2 pb-14">
           <div className="font-black text-lg px-5 py-5 bg-white">
             아이디어
             {categoryPrmtr === "" ? "" : ` > ${categoryPrmtr.label}`}

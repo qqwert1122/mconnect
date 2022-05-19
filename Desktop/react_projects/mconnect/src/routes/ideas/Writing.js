@@ -1,4 +1,5 @@
-import InputTagBar from "./InputTagBar";
+import BottomBar from "./BottomBar";
+import SelectedIdeasSlide from "./SelectedIdeasSlide";
 import "css/Writing.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -84,6 +85,10 @@ const Writing = ({ customHooks }) => {
     }
   }, []);
 
+  useEffect(() => {
+    // ref
+  }, []);
+
   const onBackClick = (e) => {
     e.preventDefault();
     navigate("/ideas", { replace: true });
@@ -94,46 +99,6 @@ const Writing = ({ customHooks }) => {
   };
   const onTextChange = (e) => {
     setFormText(e.target.value);
-  };
-  const onSourceChange = (e) => {
-    setFormSource(e.target.value);
-  };
-  const onLikeClick = (e) => {
-    e.preventDefault();
-    setFormLike(!formLike);
-  };
-  const onBookmarkClick = (e) => {
-    e.preventDefault();
-    setFormBookmark(!formBookmark);
-  };
-  const onPublicClick = (e) => {
-    e.preventDefault();
-    setFormPublic(!formPublic);
-  };
-  const onKeyDownPreventDefault = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-    }
-  };
-  const onEnterKeyDown = (e) => {
-    if (e.key === "Process") {
-      return;
-    }
-
-    if (e.code === "Enter") {
-      if (e.target.value.trim().length == 0) {
-        e.preventDefault();
-        return;
-      }
-
-      e.preventDefault();
-      if (formTags.includes(e.target.value)) {
-        setFormTag("");
-      } else {
-        setFormTags([...formTags, e.target.value]);
-        setFormTag("");
-      }
-    }
   };
   const onTagChange = (e) => {
     setFormTag(e.target.value);
@@ -188,96 +153,84 @@ const Writing = ({ customHooks }) => {
     centerMode: true,
   };
 
+  const setCategory = (formCategory) => {
+    switch (formCategory) {
+      case 3:
+        return { icon: <FontAwesomeIcon icon={faDiceD6} />, label: "상자" };
+      case 2:
+        return {
+          icon: <FontAwesomeIcon icon={faSquare} size="sm" />,
+          label: "면",
+        };
+      case 1:
+        return { icon: <FontAwesomeIcon icon={faMinus} />, label: "선" };
+      default:
+        return {
+          icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
+          label: "점",
+        };
+    }
+  };
+
   return (
-    <div className="opening flex-col bg-stone-100 min-h-screen text-sm">
-      <form className="pb-6" onSubmit={onSubmit}>
-        <div className="bg-white pb-5 shadow-xl">
-          <div className="flex justify-between items-center p-3 bg-green-600 text-white">
-            <button onClick={onBackClick}>
-              <FontAwesomeIcon icon={faAngleLeft} size="2xl" />
-            </button>
-            <h1 className="text-lg font-black">
-              {selectedIdeas.length === 0
-                ? "새 아이디어 ✏️"
-                : "아이디어 연결 ♾️"}
-            </h1>
-            <input
-              type="submit"
-              className="p-1 px-2 rounded text-lg font-black text-center shadow-md bg-white text-green-600"
-              value="작성"
-            />
-          </div>
-          <hr />
-          {/* 제목 */}
-          {selectedIdeas.length === 0 ? (
-            <></>
-          ) : (
-            <div>
-              <div className="flex border-box  p-3 ">
-                <span className="mr-3 text-xl">
-                  <FontAwesomeIcon icon={faT} />
-                </span>
-                <input
-                  className="w-full px-2 text-lg font-black"
-                  type="text"
-                  name="formTitle"
-                  placeholder="제목..."
-                  value={formTitle}
-                  onChange={onTitleChange}
-                  onKeyDown={onKeyDownPreventDefault}
-                  autoComplete="off"
-                />
+    <div className="opening flex-col bg-stone-100 text-sm">
+      <form onSubmit={onSubmit}>
+        <div
+          className={`bg-white min-h-screen ${
+            selectedIdeas.length > 0 ? "pt-40" : "pt-20"
+          }`}
+        >
+          <div className="fixed top-0 w-full z-20 flex-col bg-white shadow">
+            <div className="p-3 flex justify-between items-center">
+              <div className="flex gap-4">
+                <button onClick={onBackClick}>
+                  <FontAwesomeIcon icon={faAngleLeft} size="xl" />
+                </button>
+                {/* 제목 */}
+                {selectedIdeas.length > 0 && (
+                  <input
+                    className="w-full px-2 text-lg font-black"
+                    type="text"
+                    name="formTitle"
+                    placeholder="제목"
+                    value={formTitle}
+                    onChange={onTitleChange}
+                    autoComplete="off"
+                  />
+                )}
               </div>
-              <hr />
+              <input
+                type="submit"
+                className="p-1 px-2 rounded text-lg font-black text-center shadow-md text-white bg-green-600"
+                value="작성"
+              />
             </div>
-          )}
+            {selectedIdeas.length > 0 && (
+              <SelectedIdeasSlide
+                selectedIdeas={selectedIdeas}
+                setSelectedIdeas={setSelectedIdeas}
+              />
+            )}
+          </div>
+
           {/* 텍스트 */}
-          <div className="flex border-box p-3 ">
-            <span className="items-start mr-3 text-xl ">
-              {formCategory === 3 ? (
-                <FontAwesomeIcon icon={faDiceD6} />
-              ) : formCategory === 2 ? (
-                <FontAwesomeIcon icon={faSquare} size="sm" />
-              ) : formCategory === 1 ? (
-                <FontAwesomeIcon icon={faMinus} />
-              ) : (
-                <FontAwesomeIcon icon={faCircle} size="xs" />
-              )}
-            </span>
-            <textarea
-              className="w-full p-2"
-              style={{ minHeight: "240px" }}
-              type="text"
-              name="formText"
-              placeholder="내용..."
-              autoComplete="off"
-              value={formText}
-              onChange={onTextChange}
-              required
-            />
-          </div>
-          <hr />
-          {/* 출처 */}
-          <div className="flex border-box px-3 py-2">
-            <span className="items-start mr-3 text-xl">
-              <FontAwesomeIcon icon={faQuoteLeft} />
-            </span>
-            <input
-              className="w-full px-2"
-              type="text"
-              name="formSource"
-              placeholder="출처..."
-              autoComplete="off"
-              value={formSource}
-              onChange={onSourceChange}
-              onKeyDown={onKeyDownPreventDefault}
-            />
-          </div>
-          <hr />
-          {/* 태그 */}
+          <textarea
+            className="w-full p-2"
+            style={{ minHeight: "500px" }}
+            type="text"
+            name="formText"
+            placeholder="내용..."
+            autoComplete="off"
+            value={formText}
+            onChange={onTextChange}
+            required
+          />
+
+          {/* category, tags */}
           <div className="px-3 py-2">
-            <span className="mr-3 text-xl">
-              <FontAwesomeIcon icon={faHashtag} />
+            <span className="border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500">
+              {setCategory(formCategory).icon}&nbsp;
+              {setCategory(formCategory).label}
             </span>
             {formTags.map((tag, index) => (
               <button
@@ -293,83 +246,10 @@ const Writing = ({ customHooks }) => {
             <button className="px-2 text-gray-400" onClick={onTagHolderClick}>
               태그 ...
             </button>
-            {/* <input
-              className=" rounded-xl px-2 w-24"
-              name="tags"
-              type="text"
-              placeholder="태그"
-              autoComplete="off"
-              value={formTag}
-              onChange={(e) => onTagChange(e)}
-              onKeyDown={(e) => onEnterKeyDown(e)}
-            /> */}
           </div>
         </div>
-        <div className="flex items-center justify-between">
-          <div className="flex m-5 text-2xl gap-4">
-            <button className="text-red-600" onClick={onLikeClick}>
-              <FontAwesomeIcon icon={formLike ? fasHeart : farHeart} />
-            </button>
-            <button className="text-orange-400" onClick={onBookmarkClick}>
-              <FontAwesomeIcon
-                icon={formBookmark ? fasBookmark : farBookmark}
-              />
-            </button>
-            <button className="text-sky-400" onClick={onPublicClick}>
-              <FontAwesomeIcon icon={formPublic ? fasCompass : farCompass} />
-            </button>
-          </div>
-          <span className="m-5 text-base font-black">
-            {dayjs().format("YYYY. MM. DD. HH:mm:ss")}
-          </span>
-        </div>
+        <BottomBar formSource={formSource} setFormSource={setFormSource} />
       </form>
-      {selectedIdeas.length > 0 ? (
-        <>
-          <div className="mx-16 my-2 text-lg font-black">
-            연결된 아이디어 ♾️
-          </div>
-          <div className="relative pb-10 ">
-            <Slider {...settings}>
-              {selectedIdeas.map((idea, index) => (
-                <div key={index}>
-                  <div className="relative h-52 p-5 m-1 bg-white rounded-3xl shadow-lg break-all">
-                    {idea.title === "" ? (
-                      idea.text.length < 150 ? (
-                        idea.text
-                      ) : (
-                        <>
-                          {idea.text.substr(0, 150)}
-                          <span>...</span>
-                          <span className="font-black underline">더보기</span>
-                        </>
-                      )
-                    ) : (
-                      <>
-                        <div className="mb-2 font-black text-lg">
-                          {idea.title}
-                        </div>
-                        {idea.text.length < 120 ? (
-                          idea.text
-                        ) : (
-                          <>
-                            {idea.text.substr(0, 120)}
-                            <span>...</span>
-                            <span className="font-black underline">더보기</span>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </Slider>
-          </div>
-        </>
-      ) : (
-        <></>
-      )}
-      {toggleTagBar && <InputTagBar />}
     </div>
   );
 };

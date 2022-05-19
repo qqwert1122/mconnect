@@ -112,16 +112,7 @@ const App = () => {
   );
 
   return (
-    <>
-      {customHooks.init ? <AppRouter customHooks={customHooks} /> : loading}
-      {customHooks.isLoggedIn ? (
-        <footer className="english__font h-52 p-3 font-black bg-stone-100">
-          &copy; Connecteas {new Date().getFullYear()}
-        </footer>
-      ) : (
-        <></>
-      )}
-    </>
+    <>{customHooks.init ? <AppRouter customHooks={customHooks} /> : loading}</>
   );
 };
 

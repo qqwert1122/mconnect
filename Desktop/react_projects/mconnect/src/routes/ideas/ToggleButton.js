@@ -2,7 +2,6 @@ import { useEffect } from "react";
 
 const ToggleButton = ({
   selectedIdeas,
-  isConnectToggleClicked,
   categories,
   categoryPrmtr,
   setCategoryPrmtr,
