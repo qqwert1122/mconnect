@@ -175,80 +175,50 @@ const Writing = ({ customHooks }) => {
   return (
     <div className="opening flex-col bg-stone-100 text-sm">
       <form onSubmit={onSubmit}>
-        <div
-          className={`bg-white min-h-screen ${
-            selectedIdeas.length > 0 ? "pt-40" : "pt-20"
-          }`}
-        >
-          <div className="fixed top-0 w-full z-20 flex-col bg-white shadow">
-            <div className="p-3 flex justify-between items-center">
-              <div className="flex gap-4">
-                <button onClick={onBackClick}>
-                  <FontAwesomeIcon icon={faAngleLeft} size="xl" />
-                </button>
-                {/* 제목 */}
-                {selectedIdeas.length > 0 && (
-                  <input
-                    className="w-full px-2 text-lg font-black"
-                    type="text"
-                    name="formTitle"
-                    placeholder="제목"
-                    value={formTitle}
-                    onChange={onTitleChange}
-                    autoComplete="off"
-                  />
-                )}
-              </div>
-              <input
-                type="submit"
-                className="p-1 px-2 rounded text-lg font-black text-center shadow-md text-white bg-green-600"
-                value="작성"
-              />
-            </div>
+        <div className="fixed top-0 w-full z-20 p-3 flex justify-between items-center bg-white shadow-lg">
+          <div className="flex gap-4">
+            <button onClick={onBackClick}>
+              <FontAwesomeIcon icon={faAngleLeft} size="xl" />
+            </button>
+            {/* 제목 */}
             {selectedIdeas.length > 0 && (
-              <SelectedIdeasSlide
-                selectedIdeas={selectedIdeas}
-                setSelectedIdeas={setSelectedIdeas}
+              <input
+                className="w-full px-2 text-lg font-black"
+                type="text"
+                name="formTitle"
+                placeholder="제목"
+                value={formTitle}
+                onChange={onTitleChange}
+                autoComplete="off"
               />
             )}
           </div>
-
-          {/* 텍스트 */}
-          <textarea
-            className="w-full p-2"
-            style={{ minHeight: "500px" }}
-            type="text"
-            name="formText"
-            placeholder="내용..."
-            autoComplete="off"
-            value={formText}
-            onChange={onTextChange}
-            required
+          <input
+            type="submit"
+            className="p-1 px-2 rounded text-lg font-black text-center shadow-md text-white bg-green-600"
+            value="작성"
           />
-
-          {/* category, tags */}
-          <div className="px-3 py-2">
-            <span className="border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500">
-              {setCategory(formCategory).icon}&nbsp;
-              {setCategory(formCategory).label}
-            </span>
-            {formTags.map((tag, index) => (
-              <button
-                key={index}
-                className="mr-2 mb-1 px-2 rounded-xl text-sm duration-500 bg-stone-500 text-white"
-                onClick={(e) => {
-                  onTagClick(e, tag);
-                }}
-              >
-                {tag}
-              </button>
-            ))}
-            <button className="px-2 text-gray-400" onClick={onTagHolderClick}>
-              태그 ...
-            </button>
-          </div>
         </div>
-        <BottomBar formSource={formSource} setFormSource={setFormSource} />
+        {/* 텍스트 */}
+        <textarea
+          className="w-full p-4 "
+          style={{ height: "calc(100vh - 128px)", marginTop: "60px" }}
+          type="text"
+          name="formText"
+          placeholder="내용..."
+          autoComplete="off"
+          value={formText}
+          onChange={onTextChange}
+          required
+        />
+        <BottomBar
+          formSource={formSource}
+          setFormSource={setFormSource}
+          setCategory={setCategory}
+          formCategory={formCategory}
+          selectedIdeas={selectedIdeas}
+          setSelectedIdeas={setSelectedIdeas}
+        />
       </form>
     </div>
   );
