@@ -37,15 +37,11 @@ var customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 dayjs.locale("ko");
 
-const tags = [
-  { label: "", category: 0, bgColor: "" },
-  { label: "", category: 0, bgColor: "" },
-];
-
 const Writing = ({ customHooks }) => {
   const user = authService.currentUser;
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
+  const tagList = customHooks.tagList;
   let navigate = useNavigate();
 
   // form
@@ -58,12 +54,6 @@ const Writing = ({ customHooks }) => {
   const [formLike, setFormLike] = useState(false);
   const [formBookmark, setFormBookmark] = useState(false);
   const [formPublic, setFormPublic] = useState(false);
-  const [toggleTagBar, setToggleTagBar] = useState(false);
-
-  const onTagHolderClick = (e) => {
-    e.preventDefault();
-    setToggleTagBar(!toggleTagBar);
-  };
 
   useEffect(() => {
     if (selectedIdeas.length === 0) {
@@ -85,10 +75,6 @@ const Writing = ({ customHooks }) => {
     }
   }, []);
 
-  useEffect(() => {
-    // ref
-  }, []);
-
   const onBackClick = (e) => {
     e.preventDefault();
     navigate("/ideas", { replace: true });
@@ -99,13 +85,6 @@ const Writing = ({ customHooks }) => {
   };
   const onTextChange = (e) => {
     setFormText(e.target.value);
-  };
-  const onTagChange = (e) => {
-    setFormTag(e.target.value);
-  };
-  const onTagClick = (e, tag) => {
-    e.preventDefault();
-    setFormTags(formTags.filter((_tag) => _tag != tag));
   };
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -144,15 +123,6 @@ const Writing = ({ customHooks }) => {
     navigate("/ideas", { replace: true });
   };
 
-  const settings = {
-    dots: true,
-    arrows: false,
-    infinite: false,
-    speed: 500,
-    slidesToScroll: 1,
-    centerMode: true,
-  };
-
   const setCategory = (formCategory) => {
     switch (formCategory) {
       case 3:
@@ -173,9 +143,9 @@ const Writing = ({ customHooks }) => {
   };
 
   return (
-    <div className="opening flex-col bg-stone-100 text-sm">
+    <div className="opening flex-col text-sm">
       <form onSubmit={onSubmit}>
-        <div className="fixed top-0 w-full z-20 p-3 flex justify-between items-center bg-white shadow-lg">
+        <div className="fixed top-0 w-full z-20 p-3 flex justify-between items-center bg-white">
           <div className="flex gap-4">
             <button onClick={onBackClick}>
               <FontAwesomeIcon icon={faAngleLeft} size="xl" />
@@ -201,8 +171,8 @@ const Writing = ({ customHooks }) => {
         </div>
         {/* 텍스트 */}
         <textarea
-          className="w-full p-4 "
-          style={{ height: "calc(100vh - 128px)", marginTop: "60px" }}
+          className="w-full p-4"
+          style={{ height: "calc(100vh - 112px)", marginTop: "60px" }}
           type="text"
           name="formText"
           placeholder="내용..."
@@ -214,10 +184,15 @@ const Writing = ({ customHooks }) => {
         <BottomBar
           formSource={formSource}
           setFormSource={setFormSource}
+          formTag={formTag}
+          setFormTag={setFormTag}
+          formTags={formTags}
+          setFormTags={setFormTags}
           setCategory={setCategory}
           formCategory={formCategory}
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
+          tagList={tagList}
         />
       </form>
     </div>

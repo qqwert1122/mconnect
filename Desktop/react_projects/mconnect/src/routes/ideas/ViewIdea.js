@@ -27,6 +27,8 @@ const ViewIdea = ({ customHooks }) => {
     navigate("/ideas", { replace: true });
   };
 
+  // ideas에서 인입된 거랑 , selectedIdeas에서 인입된 거랑 구분해서 back 버튼 클릭 시 다르게 보내줘야 함. 각자의 context를 props로 받아야 할듯?
+
   return (
     <div className="text-sm min-h-screen bg-stone-100">
       <div className="flex-col  bg-white">
