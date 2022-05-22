@@ -3,7 +3,7 @@ import Home from "routes/home/Home";
 import Ideas from "routes/ideas/Ideas";
 import SearchPage from "routes/ideas/SearchPage";
 import ViewIdea from "routes/ideas/ViewIdea";
-import Writing from "routes/ideas/Writing";
+import WritingIdea from "routes/ideas/WritingIdea";
 import Storming from "routes/Storming";
 import Explore from "routes/Explore";
 import Setting from "routes/Setting";
@@ -37,7 +37,7 @@ const AppRouter = ({ customHooks }) => {
             <Route
               exact
               path="/ideas/writing"
-              element={<Writing customHooks={customHooks} />}
+              element={<WritingIdea customHooks={customHooks} />}
             />
             <Route
               exact

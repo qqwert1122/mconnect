@@ -6,6 +6,8 @@ import { dbService } from "fbase";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { useLongPress } from "use-long-press";
 import dayjs from "dayjs";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Dialog from "@mui/material/Dialog";
@@ -43,7 +45,14 @@ import {
   faPenToSquare,
 } from "@fortawesome/free-regular-svg-icons";
 
-const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
+const Idea = ({
+  user,
+  dbIdea,
+  customHooks,
+  onIdeaSelect,
+  selectedIdeas,
+  isSelectMode,
+}) => {
   const [isClicked, setIsClicked] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -92,19 +101,25 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
     setAnchorEl(null);
   };
   const bind = useLongPress(() => {
-    onIdeasClick(dbIdea);
+    onIdeaSelect(dbIdea);
   });
   const setCategory = (dbIdea) => {
     switch (dbIdea.category) {
       case 3:
-        return { icon: <FontAwesomeIcon icon={faDiceD6} />, label: "상자" };
+        return {
+          icon: <FontAwesomeIcon icon={faDiceD6} />,
+          label: "상자",
+        };
       case 2:
         return {
           icon: <FontAwesomeIcon icon={faSquare} size="sm" />,
           label: "면",
         };
       case 1:
-        return { icon: <FontAwesomeIcon icon={faMinus} />, label: "선" };
+        return {
+          icon: <FontAwesomeIcon icon={faMinus} />,
+          label: "선",
+        };
       default:
         return {
           icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
@@ -143,15 +158,13 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
   );
 
   return (
-    <div className="mb-2 pb-2 duration-500 bg-white">
+    <div className="duration-500 bg-white">
       <hr />
-      <div className="mt-4 mb-3 opacity text-sm ">
+      <div className="mt-4 opacity text-sm ">
         <div className="flex justify-between items-center ml-4">
           {/* avatar, name, time */}
           <div className="flex items-center gap-2">
-            {selectedIdeas.length === 0 ? (
-              <></>
-            ) : (
+            {isSelectMode && (
               <button
                 className={`opacity rounded-full ${
                   selectedIdeas.includes(dbIdea)
@@ -159,7 +172,7 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
                     : "border-2 border-stone-400"
                 } w-6 h-6`}
                 onClick={() => {
-                  onIdeasClick(dbIdea);
+                  onIdeaSelect(dbIdea);
                 }}
               >
                 {selectedIdeas.includes(dbIdea) ? (
@@ -178,14 +191,12 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
                 height: "30px",
               }}
             />
-            <div className="flex-col">
+            <div className="flex-col text-xs">
               <div className="flex gap-1">
                 <b>{dbIdea.userName}</b>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs">
-                  {customHooks.timeDisplay(dbIdea.createdAt)}
-                </span>
+                {customHooks.timeDisplay(dbIdea.createdAt)}
                 {dbIdea.isClicked ||
                 dayjs().diff(dayjs(dbIdea.createdAt), "day") > 3 ? (
                   <></>
@@ -254,16 +265,16 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
           {dbIdea.title === "" ? (
             <></>
           ) : (
-            <div className="flex items-center pb-3 w-full font-black">
+            <div className="flex items-center pb-2 w-full font-black">
               {dbIdea.title}
             </div>
           )}
-          <div className="flex items-center pb-3">
+          <div className="flex items-center pb-5">
             <div className="w-full break-all">
               {dbIdea.text.length > 200 ? (
                 <>
                   {dbIdea.text.substr(0, 200)}
-                  <span>...</span>
+                  <span> ... </span>
                   <button className="font-black underline">더보기</button>
                 </>
               ) : (
@@ -275,24 +286,38 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
           {dbIdea.source === "" ? (
             <></>
           ) : (
-            <div className="flex items-center ml-2 pb-1 text-xs text-stone-500">
+            <div className="flex items-center ml-2 pb-2 text-xs text-stone-500">
               <FontAwesomeIcon icon={faQuoteLeft} />
               <div className="mx-2 w-full  ">{dbIdea.source}</div>
             </div>
           )}
           {/* category, tags */}
-          <span className="flex flex-wrap">
-            <span className="border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500">
+          <span className="flex flex-wrap text-xs">
+            <span className="border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 shadow-sm duration-500">
               {setCategory(dbIdea).icon}&nbsp;{setCategory(dbIdea).label}
             </span>
-            {dbIdea.tags.length === 0 ? (
-              <></>
+            {dbIdea.tags.length > 4 ? (
+              <>
+                {dbIdea.tags
+                  .filter((tag, index) => index < 4)
+                  .map((tag, index) => (
+                    <span
+                      key={index}
+                      className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                <span className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500">
+                  ...
+                </span>
+              </>
             ) : (
               <>
                 {dbIdea.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 text-xs shadow-sm duration-500"
+                    className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500"
                   >
                     {tag}
                   </span>
@@ -303,32 +328,44 @@ const Idea = ({ user, dbIdea, customHooks, onIdeasClick, selectedIdeas }) => {
         </div>
         {/* like, bookmark, ellipsis */}
         <hr />
-        <div className="flex justify-between items-center mx-6 mt-2 ">
-          <button className="text-red-500" onClick={onLikeClick}>
+
+        <Stack
+          direction="row"
+          divider={<Divider orientation="vertical" flexItem />}
+          spacing={2}
+          className="flex justify-around items-center py-2"
+        >
+          <button
+            className="text-red-500 text-center w-full"
+            onClick={onLikeClick}
+          >
             <FontAwesomeIcon
               icon={dbIdea.like ? fasHeart : farHeart}
               size="xl"
             />
-            &nbsp; 좋아요
             <span className="absolute left-5 bottom-0 text-xs">
               {dbIdea.likeUsers.length != 0 && dbIdea.likeUsers.length}
             </span>
           </button>
-          <button className=" text-orange-400" onClick={onBookmarkClick}>
+          <button
+            className=" text-orange-400 text-center w-full"
+            onClick={onBookmarkClick}
+          >
             <FontAwesomeIcon
               icon={dbIdea.bookmark ? fasBookmark : farBookmark}
               size="xl"
             />
-            &nbsp; 저장
           </button>
-          <button className="text-sky-400" onClick={onPublicClick}>
+          <button
+            className="text-sky-400 text-center w-full"
+            onClick={onPublicClick}
+          >
             <FontAwesomeIcon
               icon={dbIdea.public ? fasCompass : farCompass}
               size="xl"
             />
-            &nbsp; 공개
           </button>
-        </div>
+        </Stack>
       </div>
       <hr />
       {deleteDialog}

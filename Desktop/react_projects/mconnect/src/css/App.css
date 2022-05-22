@@ -2,6 +2,13 @@
   text-shadow: 0.1em 0.1em 0 #ffff83;
 }
 
+body {
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
 .highlight {
   display: inline-block;
   position: relative;

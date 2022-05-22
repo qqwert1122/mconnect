@@ -7,6 +7,13 @@ import { authService, dbService } from "fbase";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircle,
+  faDiceD6,
+  faSquare,
+  faMinus,
+} from "@fortawesome/free-solid-svg-icons";
 
 const useCustomHooks = () => {
   const [init, setInit] = useState(false);
@@ -19,6 +26,7 @@ const useCustomHooks = () => {
   // Ideas props
   const [selectedIdeas, setSelectedIdeas] = useState([]);
   const [tagList, setTagList] = useState([]);
+  const [sourceList, setSourceList] = useState([]);
   const [viewIdea, setViewIdea] = useState();
 
   let navigate = useNavigate();
@@ -75,6 +83,45 @@ const useCustomHooks = () => {
     },
   });
 
+  const colorList = [
+    "bg-red-400",
+    "bg-orange-400",
+    "bg-amber-400",
+    "bg-yellow-400",
+    "bg-lime-400",
+    "bg-green-400",
+    "bg-emerald-400",
+    "bg-teal-400",
+    "bg-cyan-400",
+    "bg-sky-400",
+    "bg-blue-400",
+    "bg-indigo-400",
+    "bg-violet-400",
+    "bg-purple-400",
+    "bg-fuchsia-400",
+    "bg-pink-400",
+    "bg-rose-400",
+  ];
+
+  const setCategory = (formCategory) => {
+    switch (formCategory) {
+      case 3:
+        return { icon: <FontAwesomeIcon icon={faDiceD6} />, label: "상자" };
+      case 2:
+        return {
+          icon: <FontAwesomeIcon icon={faSquare} size="sm" />,
+          label: "면",
+        };
+      case 1:
+        return { icon: <FontAwesomeIcon icon={faMinus} />, label: "선" };
+      default:
+        return {
+          icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
+          label: "점",
+        };
+    }
+  };
+
   return {
     init,
     setInit,
@@ -92,6 +139,10 @@ const useCustomHooks = () => {
     setTagList,
     viewIdea,
     setViewIdea,
+    sourceList,
+    setSourceList,
+    setCategory,
+    colorList,
   };
 };
 

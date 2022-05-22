@@ -6,6 +6,8 @@ import {
   faChevronUp,
   faChevronDown,
   faXmark,
+  faArrowRotateLeft,
+  faRotateBack,
 } from "@fortawesome/free-solid-svg-icons";
 
 const SelectedIdeasSlide = ({
@@ -25,7 +27,6 @@ const SelectedIdeasSlide = ({
     e.preventDefault();
     setIsConnectToggleClicked(!isConnectToggleClicked);
   };
-
   const onXmarkClick = (e, index) => {
     e.preventDefault();
     setSelectedIdeas(selectedIdeas.filter((fIdea, fIndex) => fIndex != index));
@@ -50,7 +51,7 @@ const SelectedIdeasSlide = ({
       >
         {!isConnectToggleClicked ? (
           <>
-            <div className="mx-16 pt-5 mb-2 text-center text-lg font-black z-10">
+            <div className="mx-16 pt-5 mb-2 text-center font-black z-10">
               {selectedIdeas.length}개 선택됨
             </div>
             <button
@@ -62,7 +63,7 @@ const SelectedIdeasSlide = ({
           </>
         ) : (
           <>
-            <div className="mx-16 pt-5 mb-2 text-center text-lg font-black z-10">
+            <div className="mx-16 pt-5 mb-2 text-center font-black z-10">
               선택된 아이디어
             </div>
             <div className="relative pb-10 ">
@@ -79,11 +80,11 @@ const SelectedIdeasSlide = ({
                         <FontAwesomeIcon icon={faXmark} />
                       </button>
                       {idea.title === "" ? (
-                        idea.text.length < 200 ? (
+                        idea.text.length < 180 ? (
                           idea.text
                         ) : (
                           <>
-                            {idea.text.substr(0, 200)}
+                            {idea.text.substr(0, 180)}
                             <span>...</span>
                             <span
                               className="font-black underline"
@@ -100,11 +101,11 @@ const SelectedIdeasSlide = ({
                           <div className="mb-2 font-black text-base">
                             {idea.title}
                           </div>
-                          {idea.text.length < 180 ? (
+                          {idea.text.length < 140 ? (
                             idea.text
                           ) : (
                             <>
-                              {idea.text.substr(0, 180)}
+                              {idea.text.substr(0, 140)}
                               <span>...</span>
                               <span
                                 className="font-black underline"

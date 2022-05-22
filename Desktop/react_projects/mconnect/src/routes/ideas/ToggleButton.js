@@ -94,7 +94,7 @@ const ToggleButton = ({
   return (
     <div className="bg-white px-5 pb-10 mb-2 ">
       <div
-        className={`font-black text-lg duration-100 pb-5 ${
+        className={`font-black duration-100 pb-5 ${
           selectedIdeas.length > 0 ? "pt-44" : "pt-24"
         }`}
       >
@@ -108,7 +108,7 @@ const ToggleButton = ({
               item.value === categoryPrmtr.value ? item.bgColor : ""
             } ${item.color} ${
               item.borderColor
-            } border-2 px-3 py-1 text-base font-black shadow-md duration-500`}
+            } border-2 px-3 py-1 text-sm font-black shadow-md duration-500`}
             onClick={() => {
               onCategoryPrmtrClick(item);
             }}
@@ -124,7 +124,7 @@ const ToggleButton = ({
               item.value === filterPrmtr.value ? item.bgColor : ""
             } ${item.color} ${
               item.borderColor
-            } border-2 px-3 py-1 text-base font-black shadow-md duration-500`}
+            } border-2 px-3 py-1 text-sm font-black shadow-md duration-500`}
             onClick={() => {
               onFilterPrmtrClick(item);
             }}

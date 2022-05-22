@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ToastContainer, toast } from "react-toastify";
 import Slider from "react-slick";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -37,11 +38,14 @@ var customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 dayjs.locale("ko");
 
-const Writing = ({ customHooks }) => {
+const WritingIdea = ({ customHooks }) => {
   const user = authService.currentUser;
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
   const tagList = customHooks.tagList;
+  const sourceList = customHooks.sourceList;
+  const setCategory = customHooks.setCategory;
+  const colorList = customHooks.colorList;
   let navigate = useNavigate();
 
   // form
@@ -81,74 +85,71 @@ const Writing = ({ customHooks }) => {
   };
 
   const onTitleChange = (e) => {
-    setFormTitle(e.target.value);
+    if (e.target.value === " ") {
+      setFormTitle("");
+    } else {
+      setFormTitle(e.target.value);
+    }
   };
   const onTextChange = (e) => {
-    setFormText(e.target.value);
+    if (e.target.value === " ") {
+      setFormText("");
+    } else {
+      setFormText(e.target.value);
+    }
   };
   const onSubmit = async (event) => {
     event.preventDefault();
     const form = event.target;
-    try {
-      await addDoc(collection(dbService, "ideas"), {
-        category: formCategory,
-        title: formTitle,
-        text: formText,
-        source: formSource,
-        tags: formTags,
-        like: formLike,
-        bookmark: formBookmark,
-        public: formPublic,
-        connectedIdeas: selectedIdeas,
-        likeUsers: [],
-        isClicked: false,
-        createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-        userId: user.uid,
-        userEmail: user.email,
-        userName: user.displayName,
-        userPhotoURL: user.photoURL,
-      });
-    } catch (event) {
-      console.error("Error adding document: ", event);
-    }
-    setFormTitle("");
-    setFormText("");
-    setFormSource("");
-    setFormTag("");
-    setFormTags([]);
-    setFormLike(false);
-    setFormBookmark(false);
-    setFormPublic(false);
-    setSelectedIdeas([]);
-    navigate("/ideas", { replace: true });
-  };
 
-  const setCategory = (formCategory) => {
-    switch (formCategory) {
-      case 3:
-        return { icon: <FontAwesomeIcon icon={faDiceD6} />, label: "상자" };
-      case 2:
-        return {
-          icon: <FontAwesomeIcon icon={faSquare} size="sm" />,
-          label: "면",
-        };
-      case 1:
-        return { icon: <FontAwesomeIcon icon={faMinus} />, label: "선" };
-      default:
-        return {
-          icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
-          label: "점",
-        };
+    if (formCategory > 0 && selectedIdeas.length < 2) {
+      toast.error("아이디어 2개 이상을 선택하세요", {
+        theme: "colored",
+      });
+      return;
+    } else {
+      try {
+        await addDoc(collection(dbService, "ideas"), {
+          category: formCategory,
+          title: formTitle,
+          text: formText,
+          source: formSource,
+          tags: formTags,
+          like: false,
+          bookmark: false,
+          public: formPublic,
+          connectedIdeas: selectedIdeas,
+          likeUsers: [],
+          isClicked: false,
+          createdAt: dayjs().format("YYYY. MM. DD. HH:mm"),
+          userId: user.uid,
+          userEmail: user.email,
+          userName: user.displayName,
+          userPhotoURL: user.photoURL,
+        });
+      } catch (event) {
+        console.error("Error adding document: ", event);
+      }
+      setFormTitle("");
+      setFormText("");
+      setFormSource("");
+      setFormTag("");
+      setFormTags([]);
+      setFormLike(false);
+      setFormBookmark(false);
+      setFormPublic(false);
+      setSelectedIdeas([]);
+      navigate("/ideas", { replace: true });
     }
   };
 
   return (
     <div className="opening flex-col text-sm">
       <form onSubmit={onSubmit}>
-        <div className="fixed top-0 w-full z-20 p-3 flex justify-between items-center bg-white">
+        <div className="fixed top-0 w-full z-20 p-3 flex justify-between items-center shadow bg-white">
           <div className="flex gap-4">
             <button onClick={onBackClick}>
-              <FontAwesomeIcon icon={faAngleLeft} size="xl" />
+              <FontAwesomeIcon icon={faAngleLeft} size="lg" />
             </button>
             {/* 제목 */}
             {selectedIdeas.length > 0 && (
@@ -165,14 +166,14 @@ const Writing = ({ customHooks }) => {
           </div>
           <input
             type="submit"
-            className="p-1 px-2 rounded text-lg font-black text-center shadow-md text-white bg-green-600"
+            className="p-1 px-2 rounded font-black text-center shadow-md text-white bg-green-600"
             value="작성"
           />
         </div>
         {/* 텍스트 */}
         <textarea
           className="w-full p-4"
-          style={{ height: "calc(100vh - 112px)", marginTop: "60px" }}
+          style={{ height: "calc(100vh - 104px)", marginTop: "52px" }}
           type="text"
           name="formText"
           placeholder="내용..."
@@ -193,10 +194,26 @@ const Writing = ({ customHooks }) => {
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
           tagList={tagList}
+          formPublic={formPublic}
+          setFormPublic={setFormPublic}
+          sourceList={sourceList}
+          colorList={colorList}
         />
       </form>
+      <ToastContainer
+        className="black-background"
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };
 
-export default Writing;
+export default WritingIdea;

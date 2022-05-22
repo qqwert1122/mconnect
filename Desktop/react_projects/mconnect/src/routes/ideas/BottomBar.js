@@ -1,22 +1,21 @@
 import "css/Idea.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import Stack from "@mui/material/Stack";
 import Slider from "react-slick";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faAngleDown,
   faAngleUp,
-  faChevronUp,
   faHashtag,
   faMagnifyingGlass,
   faPlus,
   faQuoteLeft,
-  faRotateBack,
   faXmark,
+  faCompass as fasCompass,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SelectedIdeasSlide from "./SelectedIdeasSlide";
-import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import {
+  faThumbsUp,
+  faCompass as farCompass,
+} from "@fortawesome/free-regular-svg-icons";
 
 const commonTags = [
   "경영",
@@ -34,26 +33,6 @@ const commonTags = [
   "사업",
 ];
 
-const colorList = [
-  "bg-red-400",
-  "bg-orange-400",
-  "bg-amber-400",
-  "bg-yellow-400",
-  "bg-lime-400",
-  "bg-green-400",
-  "bg-emerald-400",
-  "bg-teal-400",
-  "bg-cyan-400",
-  "bg-sky-400",
-  "bg-blue-400",
-  "bg-indigo-400",
-  "bg-violet-400",
-  "bg-purple-400",
-  "bg-fuchsia-400",
-  "bg-pink-400",
-  "bg-rose-400",
-];
-
 const BottomBar = ({
   formSource,
   setFormSource,
@@ -66,6 +45,10 @@ const BottomBar = ({
   selectedIdeas,
   setSelectedIdeas,
   tagList,
+  formPublic,
+  setFormPublic,
+  sourceList,
+  colorList,
 }) => {
   const [itemChangeProps, setItemChangeProps] = useState(0);
   const [viewIdea, setViewIdea] = useState();
@@ -83,6 +66,21 @@ const BottomBar = ({
         break;
     }
   }, [itemChangeProps]);
+
+  useEffect(() => {
+    const tempoinputTagList = [];
+
+    for (var a in selectedIdeas) {
+      for (var b in selectedIdeas[a].tags) {
+        if (tempoinputTagList.includes(selectedIdeas[a].tags[b])) {
+        } else {
+          tempoinputTagList.push(selectedIdeas[a].tags[b]);
+        }
+      }
+    }
+
+    setFormTags(tempoinputTagList);
+  }, []);
 
   const itemChange = (e, props) => {
     e.preventDefault();
@@ -111,7 +109,11 @@ const BottomBar = ({
     }
   };
   const onSourceChange = (e) => {
-    setFormSource(e.target.value);
+    if (e.target.value === " ") {
+      setFormSource("");
+    } else {
+      setFormSource(e.target.value);
+    }
   };
   const onTagChange = (e) => {
     setFormTag(e.target.value);
@@ -135,9 +137,13 @@ const BottomBar = ({
       setFormTags([...formTags, tag]);
     }
   };
-  const onTagDeleteClick = (e, tag) => {
+  const onSourceClick = (e, source) => {
     e.preventDefault();
-    setFormTags(formTags.filter((_tag) => _tag != tag));
+    setFormSource(source);
+  };
+  const onPublicClick = (e) => {
+    e.preventDefault();
+    setFormPublic((prev) => !prev);
   };
 
   const onIdeaClick = (idea) => {
@@ -163,11 +169,11 @@ const BottomBar = ({
   return (
     <div className="w-screen fixed bottom-0 z-30">
       {itemChangeProps === 0 && (
-        <div className="opacity flex justify-end gap-2 p-2 ">
+        <div className="opacity flex justify-end gap-2 p-3 ">
           {selectedIdeas.map((idea, index) => (
             <div
               key={index}
-              className={`w-2 h-2 rounded-full ${
+              className={`w-3 h-3 rounded-full ${
                 colorList[index % colorList.length]
               }`}
             ></div>
@@ -176,7 +182,32 @@ const BottomBar = ({
       )}
 
       {itemChangeProps === 1 && (
-        <>
+        <div className="opacity overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
+          <div className="pt-4 px-4 text-stone-400">
+            검색 <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </div>
+          {sourceList.length === 0 ? (
+            <div className="p-4 pt-2 text-sm">기존 태그가 없습니다</div>
+          ) : (
+            <div className="p-4 pt-2 flex flex-nowrap overflow-x-auto">
+              {sourceList
+                .filter((source) => source.includes(formSource))
+                .map((source, index) => (
+                  <button
+                    key={index}
+                    className={`flex-shrink-0 flex-grow-0 rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 ${
+                      source === formSource
+                        ? "bg-stone-600 text-white"
+                        : "bg-white"
+                    }`}
+                    style={{ flexBasis: "auto" }}
+                    onClick={(e) => onSourceClick(e, source)}
+                  >
+                    {source}
+                  </button>
+                ))}
+            </div>
+          )}
           <input
             className="opacity flex p-2 w-full shadow-inner bg-white"
             type="text"
@@ -194,12 +225,12 @@ const BottomBar = ({
           >
             <FontAwesomeIcon icon={faQuoteLeft} /> 출처
           </div>
-        </>
+        </div>
       )}
 
       {itemChangeProps === 2 && (
         <>
-          <div className="opacity overflow-y-scroll flex-col border-box shadow-inner bg-white">
+          <div className="opacity overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
             {formTags.length > 0 && (
               <div className="p-4 flex flex-nowrap overflow-x-scroll">
                 {formTags.map((tag, index) => (
@@ -207,7 +238,7 @@ const BottomBar = ({
                     key={index}
                     className="flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words bg-stone-600 text-white"
                     style={{ flexBasis: "auto" }}
-                    onClick={(e) => onTagDeleteClick(e, tag)}
+                    onClick={(e) => onTagClick(e, tag)}
                   >
                     {tag}
                   </button>
@@ -227,7 +258,7 @@ const BottomBar = ({
                 <button
                   key={index}
                   className={`border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words ${
-                    formTags.includes(tag) && "bg-stone-600 text-white"
+                    formTags.includes(tag) ? "bg-stone-300 " : "bg-white"
                   }`}
                   onClick={(e) => onTagClick(e, tag)}
                 >
@@ -238,23 +269,27 @@ const BottomBar = ({
             <div className="px-4 text-stone-400">
               검색 <FontAwesomeIcon icon={faMagnifyingGlass} />
             </div>
+            {tagList.length === 0 ? (
+              <div className="p-4 pt-2 text-sm">기존 태그가 없습니다</div>
+            ) : (
+              <div className="p-4 pt-2 flex flex-nowrap overflow-x-auto">
+                {tagList
+                  .filter((tag) => tag.includes(formTag))
+                  .map((tag, index) => (
+                    <button
+                      key={index}
+                      className={`flex-shrink-0 flex-grow-0  rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 ${
+                        formTags.includes(tag) ? "bg-stone-300 " : "bg-white"
+                      }`}
+                      style={{ flexBasis: "auto" }}
+                      onClick={(e) => onTagClick(e, tag)}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+              </div>
+            )}
 
-            <div className="p-4 pt-2 flex flex-nowrap overflow-x-auto">
-              {tagList
-                .filter((tag) => tag.includes(formTag))
-                .map((tag, index) => (
-                  <div
-                    key={index}
-                    className={`flex-shrink-0 flex-grow-0  rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 ${
-                      formTags.includes(tag) && "bg-stone-600 text-white"
-                    }`}
-                    style={{ flexBasis: "auto" }}
-                    onClick={(e) => onTagClick(e, tag)}
-                  >
-                    {tag}
-                  </div>
-                ))}
-            </div>
             <div className="flex justify-between ">
               <input
                 className="w-full p-2 shadow-inner"
@@ -278,7 +313,7 @@ const BottomBar = ({
       )}
 
       {itemChangeProps === 3 && selectedIdeas.length > 0 && (
-        <div className="opacity bg-white shadow-inner">
+        <div className="opacity bg-stone-50 shadow-inner">
           <div className="mx-16 pt-5 mb-2 text-center text-base font-black z-10">
             {selectedIdeas.length}개 선택됨
           </div>
@@ -286,7 +321,7 @@ const BottomBar = ({
             <Slider {...settings}>
               {selectedIdeas.map((idea, index) => (
                 <div key={index}>
-                  <div className="relative h-60 p-5 m-1 bg-stone-100 shadow-sm rounded-3xl break-all">
+                  <div className="relative h-60 p-5 m-1 bg-white shadow rounded-3xl break-all">
                     <button
                       className="absolute w-6 h-6 rounded-full border-2 border-stone-200 bg-white shadow right-0 top-0"
                       onClick={(e) => {
@@ -301,11 +336,11 @@ const BottomBar = ({
                       }}
                     >
                       {idea.title === "" ? (
-                        idea.text.length < 200 ? (
+                        idea.text.length < 180 ? (
                           idea.text
                         ) : (
                           <>
-                            {idea.text.substr(0, 200)}
+                            {idea.text.substr(0, 180)}
                             <span>...</span>
                             <span className="font-black underline">더보기</span>
                           </>
@@ -315,11 +350,11 @@ const BottomBar = ({
                           <div className="mb-2 font-black text-base">
                             {idea.title}
                           </div>
-                          {idea.text.length < 180 ? (
+                          {idea.text.length < 140 ? (
                             idea.text
                           ) : (
                             <>
-                              {idea.text.substr(0, 180)}
+                              {idea.text.substr(0, 140)}
                               <span>...</span>
                               <span className="font-black underline">
                                 더보기
@@ -345,7 +380,7 @@ const BottomBar = ({
             {setCategory(formCategory).label}
           </span>
           <button
-            className={`${formSource.length > 0 ? "" : "text-stone-400"} px-2`}
+            className={`${formSource.length === 0 && "text-stone-400"} px-2`}
             onClick={(e) => itemChange(e, 1)}
           >
             <FontAwesomeIcon icon={faQuoteLeft} />
@@ -366,9 +401,29 @@ const BottomBar = ({
               </div>
             )}
           </button>
+          <button
+            className={`relative ${
+              formPublic === false && "text-stone-400"
+            } px-2`}
+            onClick={onPublicClick}
+          >
+            <FontAwesomeIcon icon={farCompass} />
+            {formPublic && (
+              <div
+                className="absolute bottom-0 -right-2 text-xs px-1 bg-stone-600 text-white rounded-3xl"
+                style={{ minWidth: "20px" }}
+              >
+                공개
+              </div>
+            )}
+          </button>
         </div>
         {selectedIdeas.length > 0 && (
-          <div className="flex justify-end items-center gap-2 ">
+          <div
+            className={`flex justify-end items-center gap-2 ${
+              selectedIdeas.length < 2 && "text-red-400"
+            }`}
+          >
             <button
               className="text-base font-black"
               onClick={(e) => itemChange(e, 3)}
