@@ -30,57 +30,6 @@ import {
   faCircleCheck as farCircleCheck,
 } from "@fortawesome/free-regular-svg-icons";
 
-const testArr = ["text1", "text2", "text3", "text4", "text5", "text6"];
-const testTags = [
-  "경제",
-  "경영",
-  "비트코인",
-  "사회",
-  "프로그래밍",
-  "레시피",
-  "정치",
-  "러우크라이나전쟁",
-  "세계",
-  "주먹밥",
-  "나뭇잎",
-  "돋보기",
-  "책",
-  "무지개",
-  "삼성전자",
-  "테슬라",
-  "차트",
-  "기술적분석",
-  "기본적분석",
-  "통계",
-  "금리",
-  "물가",
-  "한국은행",
-];
-const testUsers = [
-  "Hugo Lloris",
-  "Matt Doherty",
-  "Sergio Reguilón",
-  "Cristian Romero",
-  "Pierre-Emile Højbjerg",
-  "Davinson Sánchez",
-  "Son Heung-min",
-  "Harry Winks",
-  "Harry Kane",
-  "Emerson Royal",
-  "Joe Rodon",
-  "Eric Dier",
-  "Ryan Sessègnon",
-  "Dejan Kulusevski",
-  "Pierluigi Gollini",
-  "Steven Bergwijn",
-  "Japhet Tanganga",
-  "Lucas Moura",
-  "Oliver Skipp",
-  "Rodrigo Bentancur",
-  "Ben Davies",
-  "Brandon Austin",
-];
-
 const categories = [
   {
     icon: <FontAwesomeIcon icon={faCircle} size="xs" />,

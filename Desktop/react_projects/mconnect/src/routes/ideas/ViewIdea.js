@@ -27,12 +27,15 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 
 const ViewIdea = ({ customHooks }) => {
+  const dbIdeas = customHooks.dbIdeas;
   const viewIdea = customHooks.viewIdea;
   const setViewIdea = customHooks.setViewIdea;
   const setCategory = customHooks.setCategory;
   let navigate = useNavigate();
   const user = authService.currentUser;
   const colorList = customHooks.colorList;
+  const selectedIdeas = customHooks.selectedIdeas;
+  const setSelectedIdeas = customHooks.setSelectedIdeas;
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -191,10 +194,13 @@ const ViewIdea = ({ customHooks }) => {
         </div>
       </div>
       <ViewIdeaBottomBar
+        dbIdeas={dbIdeas}
         viewIdea={viewIdea}
         setViewIdea={setViewIdea}
         setCategory={setCategory}
         colorList={colorList}
+        selectedIdeas={selectedIdeas}
+        setSelectedIdeas={setSelectedIdeas}
       />
     </div>
   );
