@@ -8,22 +8,21 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import { ThemeProvider } from "@mui/material/styles";
 
 const BottomNavigationBar = ({ customHooks }) => {
+  const theme = customHooks.theme;
+  const navValue = customHooks.navValue;
+  const setNavValue = customHooks.setNavValue;
+
   return (
     <>
       <div className="w-screen fixed bottom-0 z-20">
-        <ThemeProvider theme={customHooks.theme}>
+        <ThemeProvider theme={theme}>
           <BottomNavigation
             showLabels={false}
-            value={customHooks.navValue}
+            value={navValue}
             onChange={(event, newValue) => {
-              customHooks.setNavValue(newValue);
+              setNavValue(newValue);
             }}
           >
-            {/* <BottomNavigationAction
-                label="Home"
-                value="/"
-                icon={<HomeRoundedIcon />}
-              /> */}
             <BottomNavigationAction
               label="Ideas"
               value="/"
@@ -34,11 +33,6 @@ const BottomNavigationBar = ({ customHooks }) => {
               value="/storming"
               icon={<BoltRoundedIcon />}
             />
-            {/* <BottomNavigationAction
-                label="Explore"
-                value="/explore"
-                icon={<ExploreRoundedIcon />}
-              /> */}
             <BottomNavigationAction
               label="MyPage"
               value="/setting"

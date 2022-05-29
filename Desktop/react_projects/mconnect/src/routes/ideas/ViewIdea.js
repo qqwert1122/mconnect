@@ -30,7 +30,7 @@ const ViewIdea = ({ customHooks }) => {
   const dbIdeas = customHooks.dbIdeas;
   const viewIdea = customHooks.viewIdea;
   const setViewIdea = customHooks.setViewIdea;
-  const setCategory = customHooks.setCategory;
+  const getCategory = customHooks.getCategory;
   let navigate = useNavigate();
   const user = authService.currentUser;
   const colorList = customHooks.colorList;
@@ -197,7 +197,7 @@ const ViewIdea = ({ customHooks }) => {
         dbIdeas={dbIdeas}
         viewIdea={viewIdea}
         setViewIdea={setViewIdea}
-        setCategory={setCategory}
+        getCategory={getCategory}
         colorList={colorList}
         selectedIdeas={selectedIdeas}
         setSelectedIdeas={setSelectedIdeas}

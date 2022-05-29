@@ -3,19 +3,14 @@ import Home from "routes/home/Home";
 import Ideas from "routes/ideas/Ideas";
 import SearchPage from "routes/ideas/SearchPage";
 import ViewIdea from "routes/ideas/ViewIdea";
-import WritingIdea from "routes/ideas/WritingIdea";
+import WritingIdea from "routes/writingIdea/WritingIdea";
 import Storming from "routes/Storming";
-import Explore from "routes/Explore";
 import Setting from "routes/Setting";
 import Auth from "routes/Auth";
-import BottomNavigationBar from "routes/BottomNavigationBar";
 
 const AppRouter = ({ customHooks }) => {
   return (
     <>
-      {/* {customHooks.isLoggedIn && (
-        <BottomNavigationBar customHooks={customHooks} />
-      )} */}
       <Routes>
         {customHooks.isLoggedIn ? (
           <>
@@ -36,7 +31,7 @@ const AppRouter = ({ customHooks }) => {
             />
             <Route
               exact
-              path="/ideas/writing"
+              path="/writingidea"
               element={<WritingIdea customHooks={customHooks} />}
             />
             <Route
@@ -48,11 +43,6 @@ const AppRouter = ({ customHooks }) => {
               exact
               path="/storming"
               element={<Storming customHooks={customHooks} />}
-            />
-            <Route
-              exact
-              path="/explore"
-              element={<Explore customHooks={customHooks} />}
             />
             <Route
               exact

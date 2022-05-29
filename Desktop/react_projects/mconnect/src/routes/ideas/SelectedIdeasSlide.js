@@ -11,22 +11,24 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const SelectedIdeasSlide = ({
+  setNavValue,
   selectedIdeas,
   setSelectedIdeas,
   setViewIdea,
 }) => {
-  let navigate = useNavigate();
   // event handler
-  const [isConnectToggleClicked, setIsConnectToggleClicked] = useState(false);
+  const [isViewDetailsClicked, setisViewDetailsClicked] = useState(false);
 
   const onIdeaClick = (idea) => {
     setViewIdea(idea);
-    navigate("/ideas/viewidea", { replace: true });
+    setNavValue("/ideas/viewidea");
   };
-  const onConnectToggle = (e) => {
+
+  const onViewDetailsClick = (e) => {
     e.preventDefault();
-    setIsConnectToggleClicked(!isConnectToggleClicked);
+    setisViewDetailsClicked((prev) => !prev);
   };
+
   const onXmarkClick = (e, index) => {
     e.preventDefault();
     setSelectedIdeas(selectedIdeas.filter((fIdea, fIndex) => fIndex != index));
@@ -42,24 +44,19 @@ const SelectedIdeasSlide = ({
     focusOnSelect: true,
     initialSlide: 0,
   };
+
   return (
     <>
       <div
         className={`${
-          isConnectToggleClicked ? "h-96" : "h-20"
+          isViewDetailsClicked ? "h-96" : "h-20"
         } shadow-lg bg-white duration-100`}
       >
-        {!isConnectToggleClicked ? (
+        {isViewDetailsClicked === false ? (
           <>
             <div className="mx-16 pt-5 mb-2 text-center font-black z-10">
               {selectedIdeas.length}개 선택됨
             </div>
-            <button
-              className="flex justify-center w-full mt-2"
-              onClick={onConnectToggle}
-            >
-              <FontAwesomeIcon icon={faChevronDown} />
-            </button>
           </>
         ) : (
           <>
@@ -79,61 +76,41 @@ const SelectedIdeasSlide = ({
                       >
                         <FontAwesomeIcon icon={faXmark} />
                       </button>
-                      {idea.title === "" ? (
-                        idea.text.length < 180 ? (
-                          idea.text
-                        ) : (
-                          <>
-                            {idea.text.substr(0, 180)}
-                            <span>...</span>
-                            <span
-                              className="font-black underline"
-                              onClick={() => {
-                                onIdeaClick(idea);
-                              }}
-                            >
-                              더보기
-                            </span>
-                          </>
-                        )
-                      ) : (
-                        <>
-                          <div className="mb-2 font-black text-base">
-                            {idea.title}
-                          </div>
-                          {idea.text.length < 140 ? (
+                      <div onClick={() => onIdeaClick(idea)}>
+                        {idea.title === "" ? (
+                          idea.text.length < 180 ? (
                             idea.text
                           ) : (
-                            <>
-                              {idea.text.substr(0, 140)}
-                              <span>...</span>
-                              <span
-                                className="font-black underline"
-                                onClick={() => {
-                                  onIdeaClick(idea);
-                                }}
-                              >
-                                더보기
-                              </span>
-                            </>
-                          )}
-                        </>
-                      )}
+                            <>{idea.text.substr(0, 180)}...</>
+                          )
+                        ) : (
+                          <>
+                            <div className="mb-2 font-black text-base">
+                              {idea.title}
+                            </div>
+                            {idea.text.length < 140 ? (
+                              idea.text
+                            ) : (
+                              <>{idea.text.substr(0, 140)}...</>
+                            )}
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
               </Slider>
             </div>
-            <div>
-              <button
-                className="flex justify-center w-full py-2"
-                onClick={onConnectToggle}
-              >
-                <FontAwesomeIcon icon={faChevronUp} />
-              </button>
-            </div>
           </>
         )}
+        <button
+          className={`flex mx-auto p-2 px-10 mt-2 ${
+            isViewDetailsClicked && "rotate-180"
+          }`}
+          onClick={onViewDetailsClick}
+        >
+          <FontAwesomeIcon icon={faChevronDown} />
+        </button>
       </div>
     </>
   );

@@ -19,6 +19,7 @@ const useCustomHooks = () => {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
   const [navValue, setNavValue] = useState("/");
+  const [userContext, setUserContext] = useState(0);
 
   // db props
   const [dbIdeas, setdbIdeas] = useState([]);
@@ -62,7 +63,7 @@ const useCustomHooks = () => {
 
   const timeDisplay = (createdAt) => {
     if (dayjs().diff(dayjs(createdAt), "day") >= 31) {
-      return <div>{dayjs(createdAt).format("YYYY. MM. DD. HH:mm:ss")}</div>;
+      return <div>{dayjs(createdAt).format("YYYY. MM. DD. HH:mm")}</div>;
     }
 
     return <div>{dayjs(createdAt).fromNow()}</div>;
@@ -103,7 +104,7 @@ const useCustomHooks = () => {
     "bg-rose-400",
   ];
 
-  const setCategory = (formCategory) => {
+  const getCategory = (formCategory) => {
     switch (formCategory) {
       case 3:
         return { icon: <FontAwesomeIcon icon={faDiceD6} />, label: "상자" };
@@ -114,6 +115,7 @@ const useCustomHooks = () => {
         };
       case 1:
         return { icon: <FontAwesomeIcon icon={faMinus} />, label: "선" };
+      case 0:
       default:
         return {
           icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
@@ -127,22 +129,24 @@ const useCustomHooks = () => {
     setInit,
     isLoggedIn,
     setIsLoggedIn,
-    theme,
     navValue,
     setNavValue,
-    timeDisplay,
     dbIdeas,
     setdbIdeas,
+    userContext,
+    setUserContext,
+    viewIdea,
+    setViewIdea,
     selectedIdeas,
     setSelectedIdeas,
     tagList,
     setTagList,
-    viewIdea,
-    setViewIdea,
     sourceList,
     setSourceList,
-    setCategory,
+    getCategory,
     colorList,
+    theme,
+    timeDisplay,
   };
 };
 

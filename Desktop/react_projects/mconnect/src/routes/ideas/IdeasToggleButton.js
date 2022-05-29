@@ -1,31 +1,31 @@
 import { useEffect } from "react";
 
-const ToggleButton = ({
-  selectedIdeas,
+const IdeasToggleButton = ({
+  dbIdeas,
+  setShowingIdeas,
   categories,
   categoryPrmtr,
   setCategoryPrmtr,
   filters,
   filterPrmtr,
   setFilterPrmtr,
-  showingIdeas,
-  setShowingIdeas,
-  dbIdeas,
+  isSelectMode,
 }) => {
   useEffect(() => {
-    if (categoryPrmtr === "") {
-      setFilterPrmtr("");
+    if (categoryPrmtr === null) {
+      setFilterPrmtr(null);
       setShowingIdeas(dbIdeas);
     } else {
-      setFilterPrmtr("");
+      setFilterPrmtr(null);
       setShowingIdeas(
         dbIdeas.filter((idea) => idea.category === categoryPrmtr.value)
       );
     }
   }, [categoryPrmtr, dbIdeas]);
+
   useEffect(() => {
-    if (categoryPrmtr === "") {
-      if (filterPrmtr === "") {
+    if (categoryPrmtr === null) {
+      if (filterPrmtr === null) {
         setShowingIdeas(dbIdeas);
         return;
       } else {
@@ -43,7 +43,7 @@ const ToggleButton = ({
         return;
       }
     } else {
-      if (filterPrmtr === "") {
+      if (filterPrmtr === null) {
         setShowingIdeas(
           dbIdeas.filter((idea) => idea.category === categoryPrmtr.value)
         );
@@ -76,16 +76,18 @@ const ToggleButton = ({
       }
     }
   }, [filterPrmtr, dbIdeas]);
+
   const onCategoryPrmtrClick = (item) => {
     if (categoryPrmtr === item) {
-      setCategoryPrmtr("");
+      setCategoryPrmtr(null);
     } else {
       setCategoryPrmtr(item);
     }
   };
+
   const onFilterPrmtrClick = (item) => {
     if (filterPrmtr === item) {
-      setFilterPrmtr("");
+      setFilterPrmtr(null);
     } else {
       setFilterPrmtr(item);
     }
@@ -95,7 +97,7 @@ const ToggleButton = ({
     <div className="bg-white px-5 pb-10 mb-2 ">
       <div
         className={`font-black duration-100 pb-5 ${
-          selectedIdeas.length > 0 ? "pt-44" : "pt-24"
+          isSelectMode ? "pt-44" : "pt-24"
         }`}
       >
         카테고리
@@ -105,7 +107,7 @@ const ToggleButton = ({
           <button
             key={index}
             className={`border-box rounded-3xl ${
-              item.value === categoryPrmtr.value ? item.bgColor : ""
+              item === categoryPrmtr && item.bgColor
             } ${item.color} ${
               item.borderColor
             } border-2 px-3 py-1 text-sm font-black shadow-md duration-500`}
@@ -121,7 +123,7 @@ const ToggleButton = ({
           <button
             key={index}
             className={`border-box rounded-3xl ${
-              item.value === filterPrmtr.value ? item.bgColor : ""
+              item === filterPrmtr && item.bgColor
             } ${item.color} ${
               item.borderColor
             } border-2 px-3 py-1 text-sm font-black shadow-md duration-500`}
@@ -138,4 +140,4 @@ const ToggleButton = ({
   );
 };
 
-export default ToggleButton;
+export default IdeasToggleButton;
