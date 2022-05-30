@@ -172,6 +172,9 @@ const WritingIdea = ({ customHooks }) => {
         />
         <WritingBottom
           dbIdeas={dbIdeas}
+          userContext={userContext}
+          setViewIdea={setViewIdea}
+          setNavValue={setNavValue}
           formSource={formSource}
           setFormSource={setFormSource}
           formTag={formTag}
@@ -189,7 +192,6 @@ const WritingIdea = ({ customHooks }) => {
           setFormPublic={setFormPublic}
           sourceList={sourceList}
           colorList={colorList}
-          userContext={userContext}
         />
       </form>
       <ToastContainer

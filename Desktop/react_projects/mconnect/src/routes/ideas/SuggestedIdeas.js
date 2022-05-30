@@ -21,11 +21,13 @@ const SuggestedIdeas = ({
 }) => {
   const [tagChangeProps, setTagChangeProps] = useState(tagsPrmtr[0]);
 
-  const onSuggestedTagClick = (tag) => {
+  const onSuggestedTagClick = (e, tag) => {
+    e.preventDefault();
     setTagChangeProps(tag);
   };
 
-  const onIdeaSelect = (dbIdea) => {
+  const onIdeaSelect = (e, dbIdea) => {
+    e.preventDefault();
     if (selectedIdeas.includes(dbIdea)) {
       setSelectedIdeas(selectedIdeas.filter((idea) => idea != dbIdea));
     } else {
@@ -52,7 +54,10 @@ const SuggestedIdeas = ({
     <>
       <div className="flex justify-center pt-5 mb-2 z-10">
         {thumbsUp ? (
-          <></>
+          <div className="text-base font-black">
+            추천 &nbsp;
+            <FontAwesomeIcon icon={faThumbsUp} />
+          </div>
         ) : (
           <button
             className="text-base font-black"
@@ -71,7 +76,7 @@ const SuggestedIdeas = ({
               tag === tagChangeProps && "bg-stone-600 text-white"
             }`}
             style={{ flexBasis: "auto" }}
-            onClick={() => onSuggestedTagClick(tag)}
+            onClick={(e) => onSuggestedTagClick(e, tag)}
           >
             {tag}
           </button>
@@ -99,8 +104,8 @@ const SuggestedIdeas = ({
                           ? "bg-red-400 text-white"
                           : "border-2 border-stone-400"
                       } w-6 h-6`}
-                      onClick={() => {
-                        onIdeaSelect(idea);
+                      onClick={(e) => {
+                        onIdeaSelect(e, idea);
                       }}
                     >
                       {selectedIdeas.includes(idea) ? (
@@ -110,7 +115,7 @@ const SuggestedIdeas = ({
                       )}
                     </button>
                     <div
-                      onClick={() => {
+                      onClick={(e) => {
                         onIdeaClick(idea);
                       }}
                     >

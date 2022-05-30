@@ -1,14 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronUp,
-  faChevronDown,
-  faXmark,
-  faArrowRotateLeft,
-  faRotateBack,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const SelectedIdeasSlide = ({
   setNavValue,

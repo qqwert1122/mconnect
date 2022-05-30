@@ -34,7 +34,7 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
         </div>
       )}
       {/* text */}
-      <div className="w-full pb-5 flex items-center break-all">
+      <div className="w-full pb-5 flex items-center break-all whitespace-pre-line">
         {dbIdea.text.length > 200 ? (
           <>
             {dbIdea.text.substr(0, 200)}

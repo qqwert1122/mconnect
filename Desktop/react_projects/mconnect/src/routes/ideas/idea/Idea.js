@@ -4,7 +4,6 @@ import IdeaMiddle from "./IdeaMiddle";
 import IdeaBottom from "./IdeaBottom";
 import DeleteDialog from "./DeleteDialog";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { dbService } from "fbase";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 
@@ -18,8 +17,8 @@ const Idea = ({
   selectedIdeas,
   onSelectIdea,
 }) => {
-  let navigate = useNavigate();
   const timeDisplay = customHooks.timeDisplay;
+  const setNavValue = customHooks.setNavValue;
   const setUserContext = customHooks.setUserContext;
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -30,7 +29,7 @@ const Idea = ({
       await updateDoc(ideaRef, { isClicked: true });
     }
     setViewIdea(dbIdea);
-    navigate("/ideas/viewidea", { replace: true });
+    setNavValue("/ideas/viewidea");
   };
 
   // 삭제 대화상자
@@ -46,9 +45,9 @@ const Idea = ({
       <hr />
       <div className="mt-4 opacity text-sm">
         <IdeaTop
-          navigate={navigate}
           user={user}
           dbIdea={dbIdea}
+          setNavValue={setNavValue}
           setUserContext={setUserContext}
           setViewIdea={setViewIdea}
           isSelectMode={isSelectMode}

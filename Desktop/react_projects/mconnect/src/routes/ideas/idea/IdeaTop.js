@@ -10,12 +10,11 @@ import {
   faCopy,
   faPenToSquare,
 } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
 
 const IdeaTop = ({
-  navigate,
   user,
   dbIdea,
+  setNavValue,
   setUserContext,
   setViewIdea,
   isSelectMode,
@@ -41,7 +40,7 @@ const IdeaTop = ({
     setAnchorEl(null);
     setUserContext(1);
     setViewIdea(dbIdea);
-    navigate("/ideas/writing", { replace: true });
+    setNavValue("/writingidea");
   };
 
   return (

@@ -19,9 +19,12 @@ const WritingTopBar = ({
       case 1:
         setViewIdea();
         setNavValue("/ideas");
+        break;
       case 2:
-        setNavValue("/viewidea");
+        setNavValue("/ideas/viewidea");
+        break;
       default:
+        break;
     }
   };
 
