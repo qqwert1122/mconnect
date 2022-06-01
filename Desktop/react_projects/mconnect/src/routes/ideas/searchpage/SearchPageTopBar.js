@@ -10,7 +10,7 @@ const SearchPageTopBar = ({ setNavValue, searchTerm, setSearchTerm }) => {
     setNavValue("/ideas");
   };
   return (
-    <div className="fixed top-0 w-full p-3 flex justify-between items-center bg-white shadow">
+    <div className="fixed top-0 w-full p-3 flex justify-between items-center bg-white shadow z-10">
       <button onClick={onBackClick}>
         <FontAwesomeIcon icon={faChevronLeft} size="lg" />
       </button>

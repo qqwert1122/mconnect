@@ -1,16 +1,25 @@
 import SearchPageTopBar from "./SearchPageTopBar";
+import SearchCriteria from "./SearchCriteria";
+import CriteriaSource from "./CriteriaSource";
+import CriteriaTag from "./CriteriaTag";
+import CriteriaUser from "./CriteriaUser";
+import CriteriaAll from "./CriteriaAll";
 import { useEffect, useState } from "react";
-import Avatar from "@mui/material/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faCircle,
+  faCircleCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
-import Idea from "../idea/Idea";
 
 const SearchPage = ({ customHooks }) => {
   const dbIdeas = customHooks.dbIdeas;
   const setNavValue = customHooks.setNavValue;
   const tagList = customHooks.tagList;
   const sourceList = customHooks.sourceList;
+  const selectedIdeas = customHooks.selectedIdeas;
+  const setSelectedIdeas = customHooks.setSelectedIdeas;
 
   const userList = dbIdeas.filter(
     (idea, index, callback) =>
@@ -51,10 +60,6 @@ const SearchPage = ({ customHooks }) => {
       );
     }
   }, [listSearchCriteriaSource, listSearchCriteriaTag, listSearchCriteriaUser]);
-
-  const onCriteriaClick = (index) => {
-    setSelectedCriteria(index);
-  };
 
   const onSourceCriteriaClick = (source) => {
     if (listSearchCriteriaSource.includes(source)) {
@@ -102,6 +107,14 @@ const SearchPage = ({ customHooks }) => {
     }
   };
 
+  const onIdeaClick = (idea) => {
+    if (selectedIdeas.includes(idea)) {
+      setSelectedIdeas(selectedIdeas.filter((_idea) => _idea !== idea));
+    } else {
+      setSelectedIdeas([...selectedIdeas, idea]);
+    }
+  };
+
   return (
     <div className="min-h-screen flex-col bg-white">
       <SearchPageTopBar
@@ -110,116 +123,111 @@ const SearchPage = ({ customHooks }) => {
         setSearchTerm={setSearchTerm}
       />
 
-      <div className="mx-5 pt-20 pb-5 flex gap-4 text-base">
-        {searchCriteria.map((criteria, index) => (
-          <button
-            key={index}
-            className={`${
-              index === selectedCriteria ? "underline" : "text-stone-400"
-            } font-black duration-100`}
-            onClick={() => onCriteriaClick(index)}
-          >
-            {criteria}
-          </button>
-        ))}
-      </div>
+      <SearchCriteria
+        searchCriteria={searchCriteria}
+        selectedCriteria={selectedCriteria}
+        setSelectedCriteria={setSelectedCriteria}
+        setListSearchCriteriaSource={setListSearchCriteriaSource}
+        setListSearchCriteriaTag={setListSearchCriteriaTag}
+        setListSearchCriteriaUser={setListSearchCriteriaUser}
+        setListAllCriteria={setListAllCriteria}
+      />
 
       {selectedCriteria === 1 && (
-        <div className="mx-4 mb-2 flex flex-nowrap overflow-x-scroll">
-          {sourceList
-            .filter((source) => source.includes(searchTerm))
-            .map((source, index) => (
-              <button
-                key={index}
-                className={`mr-1 mb-1 px-3 py-1 flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2  break-words text-xs shadow-sm duration-500 ${
-                  listSearchCriteriaSource.includes(source) &&
-                  "bg-green-400 text-white"
-                }`}
-                style={{ flexBasis: "auto" }}
-                onClick={() => onSourceCriteriaClick(source)}
-              >
-                {source}
-              </button>
-            ))}
-        </div>
+        <CriteriaSource
+          sourceList={sourceList}
+          searchTerm={searchTerm}
+          listSearchCriteriaSource={listSearchCriteriaSource}
+          onSourceCriteriaClick={onSourceCriteriaClick}
+        />
       )}
 
       {selectedCriteria === 2 && (
-        <div className="mx-4 mb-2 flex flex-nowrap overflow-x-scroll">
-          {tagList
-            .filter((tag) => tag.includes(searchTerm))
-            .map((tag, index) => (
-              <button
-                key={index}
-                className={`mr-1 mb-1 px-3 py-1 flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2  break-words text-xs shadow-sm duration-500 ${
-                  listSearchCriteriaTag.includes(tag) &&
-                  "bg-green-400 text-white"
-                }`}
-                style={{ flexBasis: "auto" }}
-                onClick={() => onTagCriteriaClick(tag)}
-              >
-                {tag}
-              </button>
-            ))}
-        </div>
+        <CriteriaTag
+          tagList={tagList}
+          searchTerm={searchTerm}
+          listSearchCriteriaTag={listSearchCriteriaTag}
+          onTagCriteriaClick={onTagCriteriaClick}
+        />
       )}
 
       {selectedCriteria === 3 && (
-        <div className="mx-4 mb-2 flex flex-nowrap overflow-x-scroll">
-          {userList
-            .filter((user) => user.userName.includes(searchTerm))
-            .map((user, index) => (
-              <button
-                key={index}
-                className={`mr-1 mb-1 flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2  break-words  shadow-sm duration-500 ${
-                  listSearchCriteriaUser.includes(user.userName) &&
-                  "bg-green-400 text-white"
-                }`}
-                onClick={() => onUserCriteriaClick(user.userName)}
-              >
-                <div className="flex items-center gap-1">
-                  <div className="flex">
-                    <Avatar
-                      alt="avatar"
-                      src={user.userPhotoURL}
-                      sx={{
-                        display: "flex",
-                        width: "30px",
-                        height: "30px",
-                      }}
-                    />
-                  </div>
-                  <h2 className="mr-1 font-light text-xs">
-                    <b>{user.userName}</b>
-                  </h2>
-                </div>
-              </button>
-            ))}
-        </div>
+        <CriteriaUser
+          userList={userList}
+          searchTerm={searchTerm}
+          listSearchCriteriaUser={listSearchCriteriaUser}
+          onUserCriteriaClick={onUserCriteriaClick}
+        />
       )}
       <div className="w-full h-2 bg-stone-100"></div>
 
-      <div className="m-4 mb-2 flex flex-nowrap overflow-x-scroll">
-        {listAllCriteria.map((all, index) => (
-          <span
-            key={index}
-            className={`mr-1 mb-1 px-2 py-1 flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2  break-words bg-green-400 text-white text-xs shadow-sm duration-500`}
-            style={{ flexBasis: "auto" }}
-          >
-            {all}
-            <button className="px-1" onClick={() => onXmarkClick(all)}>
-              <FontAwesomeIcon icon={faCircleXmark} />
-            </button>
-          </span>
-        ))}
-      </div>
+      <CriteriaAll
+        listAllCriteria={listAllCriteria}
+        onXmarkClick={onXmarkClick}
+      />
 
       {showingSearchIdeas
-        .filter((idea) => idea.text.includes(searchTerm))
+        .filter(
+          (idea) =>
+            idea.title.includes(searchTerm) || idea.text.includes(searchTerm)
+        )
         .map((idea) => (
-          <div key={idea.id} className="bg-stone-50 ">
-            {idea.text}
-          </div>
+          <>
+            <div key={idea.id} className="m-2">
+              <div className="py-2 flex-col">
+                <div className="font-black pb-1">{idea.title}</div>
+                <div className="py-1">
+                  {idea.text.length > 200 ? (
+                    <>
+                      {idea.text.substr(0, 200)}
+                      ...
+                    </>
+                  ) : (
+                    idea.text
+                  )}
+                </div>
+                <div className="flex items-start">
+                  <div className="w-11/12 flex flex-wrap items-center gap-2 text-xs text-stone-400">
+                    <span>{idea.userName}</span>|<span>{idea.source}</span>|
+                    {idea.tags
+                      .filter((tag, index) => index < 2)
+                      .map((tag, index) => (
+                        <span
+                          key={index}
+                          className="flex-shrink-0 flex-grow-0 bg-stone-200 rounded-lg p-1"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    {idea.tags.length > 1 && (
+                      <span className="flex-shrink-0 flex-grow-0 bg-stone-200 rounded-lg p-1">
+                        ...
+                      </span>
+                    )}
+                  </div>
+                  <div className="w-1/12 flex items-center">
+                    <button
+                      className={`box-border opacity rounded-full ${
+                        selectedIdeas.includes(idea)
+                          ? "bg-red-400 text-white"
+                          : "border-2 border-stone-400"
+                      } w-6 h-6`}
+                      onClick={() => {
+                        onIdeaClick(idea);
+                      }}
+                    >
+                      {selectedIdeas.includes(idea) ? (
+                        <FontAwesomeIcon icon={faCheck} />
+                      ) : (
+                        <></>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+          </>
         ))}
     </div>
   );
