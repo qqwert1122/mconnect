@@ -39,7 +39,7 @@ const InputSourceTab = ({
               <button
                 key={index}
                 className={`flex-shrink-0 flex-grow-0 rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 ${
-                  source === formSource ? "bg-stone-600 text-white" : "bg-white"
+                  source === formSource ? "bg-green-400 text-white" : "bg-white"
                 }`}
                 style={{ flexBasis: "auto" }}
                 onClick={(e) => onSourceClick(e, source)}

@@ -70,7 +70,7 @@ const InputTagTab = ({
             {formTags.map((tag, index) => (
               <button
                 key={index}
-                className="flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words bg-stone-600 text-white"
+                className="flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words bg-green-400 text-white"
                 style={{ flexBasis: "auto" }}
                 onClick={(e) => onTagClick(e, tag)}
               >

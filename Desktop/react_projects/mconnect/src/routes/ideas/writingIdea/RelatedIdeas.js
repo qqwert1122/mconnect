@@ -107,8 +107,8 @@ const RelatedIdeas = ({
                         <FontAwesomeIcon icon={faXmark} />
                       </button>
                       <div
-                        onClick={() => {
-                          onIdeaClick(idea);
+                        onClick={(e) => {
+                          onIdeaClick(e, idea);
                         }}
                       >
                         {idea.title === "" ? (

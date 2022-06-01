@@ -124,7 +124,7 @@ const WritingIdea = ({ customHooks }) => {
             console.error("Error adding document: ", event);
           }
           setSelectedIdeas([]);
-          navigate("/ideas", { replace: true });
+          setNavValue("/ideas");
           break;
         case 1:
         case 2:
@@ -143,6 +143,7 @@ const WritingIdea = ({ customHooks }) => {
           } catch (event) {
             console.error("Error editing document: ", event);
           }
+          setNavValue("/ideas");
       }
     }
   };

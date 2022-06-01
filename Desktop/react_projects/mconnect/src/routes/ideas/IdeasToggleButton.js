@@ -78,7 +78,7 @@ const IdeasToggleButton = ({
   }, [filterPrmtr, dbIdeas]);
 
   const onCategoryPrmtrClick = (item) => {
-    if (categoryPrmtr === item) {
+    if (categoryPrmtr != null && categoryPrmtr.value === item.value) {
       setCategoryPrmtr(null);
     } else {
       setCategoryPrmtr(item);
@@ -86,7 +86,7 @@ const IdeasToggleButton = ({
   };
 
   const onFilterPrmtrClick = (item) => {
-    if (filterPrmtr === item) {
+    if (filterPrmtr != null && filterPrmtr.value === item.value) {
       setFilterPrmtr(null);
     } else {
       setFilterPrmtr(item);
@@ -107,7 +107,9 @@ const IdeasToggleButton = ({
           <button
             key={index}
             className={`border-box rounded-3xl ${
-              item === categoryPrmtr && item.bgColor
+              categoryPrmtr != null &&
+              item.value === categoryPrmtr.value &&
+              item.bgColor
             } ${item.color} ${
               item.borderColor
             } border-2 px-3 py-1 text-sm font-black shadow-md duration-500`}
@@ -123,7 +125,9 @@ const IdeasToggleButton = ({
           <button
             key={index}
             className={`border-box rounded-3xl ${
-              item === filterPrmtr && item.bgColor
+              filterPrmtr != null &&
+              item.value === filterPrmtr.value &&
+              item.bgColor
             } ${item.color} ${
               item.borderColor
             } border-2 px-3 py-1 text-sm font-black shadow-md duration-500`}

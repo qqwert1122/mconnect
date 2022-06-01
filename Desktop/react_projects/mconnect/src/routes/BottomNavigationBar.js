@@ -25,7 +25,7 @@ const BottomNavigationBar = ({ customHooks }) => {
           >
             <BottomNavigationAction
               label="Ideas"
-              value="/"
+              value="/ideas"
               icon={<NotesRoundedIcon />}
             />
             <BottomNavigationAction
