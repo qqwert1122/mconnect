@@ -1,0 +1,46 @@
+.opacity {
+  animation-name: opacity__ani;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes opacity__ani {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.heightStrech {
+  animation-name: heightStrech__ani;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes heightStrech__ani {
+  0% {
+    height: 0px;
+  }
+  30% {
+    height: 20px;
+  }
+  50% {
+    height: 70px;
+  }
+  70% {
+    height: 45px;
+  }
+  80% {
+    height: 58px;
+  }
+  90% {
+    height: 52px;
+  }
+  100% {
+    height: 56px;
+  }
+}

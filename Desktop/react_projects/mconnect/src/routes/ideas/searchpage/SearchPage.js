@@ -1,3 +1,4 @@
+import "css/Animation.css";
 import SearchPageTopBar from "./SearchPageTopBar";
 import SearchCriteria from "./SearchCriteria";
 import CriteriaSource from "./CriteriaSource";
@@ -5,17 +6,13 @@ import CriteriaTag from "./CriteriaTag";
 import CriteriaUser from "./CriteriaUser";
 import CriteriaAll from "./CriteriaAll";
 import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faCircle,
-  faCircleCheck,
-} from "@fortawesome/free-solid-svg-icons";
-import {} from "@fortawesome/free-regular-svg-icons";
+import ShowingSearchIdeas from "./ShowingSearchIdeas";
 
 const SearchPage = ({ customHooks }) => {
   const dbIdeas = customHooks.dbIdeas;
   const setNavValue = customHooks.setNavValue;
+  const setViewIdea = customHooks.setViewIdea;
+  const setUserContext = customHooks.setUserContext;
   const tagList = customHooks.tagList;
   const sourceList = customHooks.sourceList;
   const selectedIdeas = customHooks.selectedIdeas;
@@ -107,14 +104,6 @@ const SearchPage = ({ customHooks }) => {
     }
   };
 
-  const onIdeaClick = (idea) => {
-    if (selectedIdeas.includes(idea)) {
-      setSelectedIdeas(selectedIdeas.filter((_idea) => _idea !== idea));
-    } else {
-      setSelectedIdeas([...selectedIdeas, idea]);
-    }
-  };
-
   return (
     <div className="min-h-screen flex-col bg-white">
       <SearchPageTopBar
@@ -166,69 +155,21 @@ const SearchPage = ({ customHooks }) => {
         onXmarkClick={onXmarkClick}
       />
 
-      {showingSearchIdeas
-        .filter(
-          (idea) =>
-            idea.title.includes(searchTerm) || idea.text.includes(searchTerm)
-        )
-        .map((idea) => (
-          <>
-            <div key={idea.id} className="m-2">
-              <div className="py-2 flex-col">
-                <div className="font-black pb-1">{idea.title}</div>
-                <div className="py-1">
-                  {idea.text.length > 200 ? (
-                    <>
-                      {idea.text.substr(0, 200)}
-                      ...
-                    </>
-                  ) : (
-                    idea.text
-                  )}
-                </div>
-                <div className="flex items-start">
-                  <div className="w-11/12 flex flex-wrap items-center gap-2 text-xs text-stone-400">
-                    <span>{idea.userName}</span>|<span>{idea.source}</span>|
-                    {idea.tags
-                      .filter((tag, index) => index < 2)
-                      .map((tag, index) => (
-                        <span
-                          key={index}
-                          className="flex-shrink-0 flex-grow-0 bg-stone-200 rounded-lg p-1"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    {idea.tags.length > 1 && (
-                      <span className="flex-shrink-0 flex-grow-0 bg-stone-200 rounded-lg p-1">
-                        ...
-                      </span>
-                    )}
-                  </div>
-                  <div className="w-1/12 flex items-center">
-                    <button
-                      className={`box-border opacity rounded-full ${
-                        selectedIdeas.includes(idea)
-                          ? "bg-red-400 text-white"
-                          : "border-2 border-stone-400"
-                      } w-6 h-6`}
-                      onClick={() => {
-                        onIdeaClick(idea);
-                      }}
-                    >
-                      {selectedIdeas.includes(idea) ? (
-                        <FontAwesomeIcon icon={faCheck} />
-                      ) : (
-                        <></>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </>
-        ))}
+      <ShowingSearchIdeas
+        setNavValue={setNavValue}
+        setViewIdea={setViewIdea}
+        setUserContext={setUserContext}
+        showingSearchIdeas={showingSearchIdeas}
+        searchTerm={searchTerm}
+        selectedIdeas={selectedIdeas}
+        setSelectedIdeas={setSelectedIdeas}
+      />
+
+      {selectedIdeas.length > 0 && (
+        <div className="heightStrech w-full p-4 fixed bottom-0 shadow-inner bg-red-400 text-white font-black text-center text-base ">
+          {selectedIdeas.length}개 선택됨
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import "css/Idea.css";
+import "css/Animation.css";
 import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {} from "@fortawesome/free-solid-svg-icons";

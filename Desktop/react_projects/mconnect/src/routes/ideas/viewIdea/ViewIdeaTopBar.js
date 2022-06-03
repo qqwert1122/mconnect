@@ -1,3 +1,4 @@
+import DeleteDialog from "../idea/DeleteDialog";
 import { useState } from "react";
 import { dbService } from "fbase";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
@@ -14,7 +15,6 @@ import {
   faTrashCan,
   faCopy,
 } from "@fortawesome/free-regular-svg-icons";
-import DeleteDialog from "../idea/DeleteDialog";
 
 const ViewIdeaTopBar = ({
   viewIdea,
@@ -27,7 +27,14 @@ const ViewIdeaTopBar = ({
   const open = Boolean(anchorEl);
 
   const onBackClick = () => {
-    setNavValue("/ideas");
+    switch (userContext) {
+      case 3:
+        setNavValue("/ideas/searchpage");
+        break;
+      default:
+        setNavValue("/ideas");
+        break;
+    }
   };
 
   const onEditClick = () => {

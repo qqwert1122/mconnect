@@ -64,7 +64,7 @@ const InputTagTab = ({
 
   return (
     <>
-      <div className="opacity overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
+      <div className="overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
         {formTags.length > 0 && (
           <div className="p-4 flex flex-nowrap overflow-x-scroll">
             {formTags.map((tag, index) => (

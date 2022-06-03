@@ -1,5 +1,5 @@
 import HomeForm from "./HomeForm";
-import "css/Idea.css";
+import "css/Animation.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService, dbService } from "fbase";

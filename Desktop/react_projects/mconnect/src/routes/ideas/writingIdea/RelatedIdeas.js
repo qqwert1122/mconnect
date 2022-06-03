@@ -1,3 +1,4 @@
+import "css/Animation.css";
 import ColoredIdeaList from "./ColoredIdeaList";
 import SuggestedIdeas from "routes/ideas/SuggestedIdeas";
 import { useState } from "react";
@@ -87,10 +88,10 @@ const RelatedIdeas = ({
       )}
       <ColoredIdeaList ideas={formConnectedIdeas} colorList={colorList} />
 
-      <div className="opacity bg-stone-50 shadow-inner">
+      <div className=" bg-stone-50 shadow-inner">
         {tabs === 0 && (
           <>
-            <div className="relative pt-5 mb-2 text-center text-base font-black z-10">
+            <div className=" relative pt-5 mb-2 text-center text-base font-black z-10">
               {formConnectedIdeas.length}개 선택됨
             </div>
             <div className="relative pb-10 ">

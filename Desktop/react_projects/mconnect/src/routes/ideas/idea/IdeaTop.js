@@ -49,7 +49,7 @@ const IdeaTop = ({
       <div className="flex items-center gap-2">
         {isSelectMode && (
           <button
-            className={`opacity rounded-full ${
+            className={`rounded-full ${
               selectedIdeas.includes(dbIdea)
                 ? "bg-red-400 text-white"
                 : "border-2 border-stone-400"

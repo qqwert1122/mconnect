@@ -25,7 +25,7 @@ const InputSourceTab = ({
   };
 
   return (
-    <div className="opacity overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
+    <div className="overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
       <div className="pt-4 px-4 text-stone-400">
         검색 <FontAwesomeIcon icon={faMagnifyingGlass} />
       </div>

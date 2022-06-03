@@ -1,4 +1,4 @@
-import "css/Idea.css";
+import "css/Animation.css";
 import IdeaTop from "./IdeaTop";
 import IdeaMiddle from "./IdeaMiddle";
 import IdeaBottom from "./IdeaBottom";
@@ -28,6 +28,7 @@ const Idea = ({
       const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
       await updateDoc(ideaRef, { isClicked: true });
     }
+    setUserContext(0);
     setViewIdea(dbIdea);
     setNavValue("/ideas/viewidea");
   };

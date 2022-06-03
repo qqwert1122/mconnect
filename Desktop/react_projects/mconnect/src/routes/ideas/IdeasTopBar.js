@@ -50,7 +50,7 @@ const IdeasTopBar = ({
           </button>
         </div>
       </div>
-      {isSelectMode && (
+      {isSelectMode && selectedIdeas.length > 0 && (
         <SelectedIdeasSlide
           setNavValue={setNavValue}
           selectedIdeas={selectedIdeas}

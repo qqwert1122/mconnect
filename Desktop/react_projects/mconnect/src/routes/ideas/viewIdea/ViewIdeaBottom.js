@@ -55,7 +55,7 @@ const ViewIdeaBottom = ({
         />
       )}
       {itemChangeProps === 1 && (
-        <div className="opacity bg-stone-50 shadow-inner">
+        <div className="bg-stone-50 shadow-inner">
           <SuggestedIdeas
             dbIdeas={dbIdeas}
             ideaPrmtr={viewIdea}

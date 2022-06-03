@@ -1,12 +1,23 @@
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useLongPress } from "use-long-press";
+import Dialog from "@mui/material/Dialog";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
-  // toast message when long pressed
+  const [isTagsDialogOpen, setIsTagsDialogOpen] = useState(false);
+  const [DialogTags, setDialogTags] = useState([]);
 
+  const onTagsDialogClick = (idea) => {
+    setIsTagsDialogOpen((prev) => !prev);
+    setDialogTags(idea.tags);
+  };
+
+  // toast message when long pressed
   const callback = useCallback((event) => {
     onSelectIdea(dbIdea);
   }, []);
@@ -20,13 +31,7 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
   });
 
   return (
-    <div
-      className="box-border mx-4 mt-4 mb-4 duration-200"
-      onClick={() => {
-        onViewIdeaClick(dbIdea);
-      }}
-      {...bind()}
-    >
+    <div className="box-border mx-4 mt-4 mb-4 duration-200" {...bind()}>
       {/* title */}
       {dbIdea.title !== "" && (
         <div className="flex items-center pb-2 w-full font-black">
@@ -34,7 +39,12 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
         </div>
       )}
       {/* text */}
-      <div className="w-full pb-5 flex items-center break-all whitespace-pre-line">
+      <div
+        className="w-full pb-5 flex items-center break-all whitespace-pre-line"
+        onClick={() => {
+          onViewIdeaClick(dbIdea);
+        }}
+      >
         {dbIdea.text.length > 200 ? (
           <>
             {dbIdea.text.substr(0, 200)}
@@ -61,16 +71,14 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
             {dbIdea.tags
               .filter((tag, index) => index < 4)
               .map((tag, index) => (
-                <span
+                <button
                   key={index}
                   className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500"
+                  onClick={() => index === 3 && onTagsDialogClick(dbIdea)}
                 >
-                  {tag}
-                </span>
+                  {index === 3 ? `+ ${dbIdea.tags.length - 3}` : tag}
+                </button>
               ))}
-            <span className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500">
-              ...
-            </span>
           </>
         ) : (
           <>
@@ -85,6 +93,23 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
           </>
         )}
       </span>
+      <Dialog
+        open={isTagsDialogOpen}
+        onClose={() => {
+          setIsTagsDialogOpen(false);
+        }}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx={{}}
+      >
+        <List sx={{ pt: 0 }}>
+          {DialogTags.map((tag, index) => (
+            <ListItem button key={index}>
+              <ListItemText primary={tag} />
+            </ListItem>
+          ))}
+        </List>
+      </Dialog>
     </div>
   );
 };
