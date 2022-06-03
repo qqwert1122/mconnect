@@ -160,6 +160,7 @@ const Ideas = ({ customHooks }) => {
         />
         <IdeasToggleButton
           dbIdeas={dbIdeas}
+          selectedIdeas={selectedIdeas}
           setShowingIdeas={setShowingIdeas}
           categories={categories}
           categoryPrmtr={categoryPrmtr}

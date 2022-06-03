@@ -1,5 +1,4 @@
 import React from "react";
-import Paper from "@mui/material/Paper";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import NotesRoundedIcon from "@mui/icons-material/NotesRounded";
@@ -14,27 +13,27 @@ const BottomNavigationBar = ({ customHooks }) => {
 
   return (
     <>
-      <div className="w-screen fixed bottom-0 z-20">
+      <div className="w-screen fixed bottom-0 shadow-inner z-20">
         <ThemeProvider theme={theme}>
           <BottomNavigation
-            showLabels={false}
+            // showLabels={true}
             value={navValue}
             onChange={(event, newValue) => {
               setNavValue(newValue);
             }}
           >
             <BottomNavigationAction
-              label="Ideas"
+              // label="아이디어"
               value="/ideas"
               icon={<NotesRoundedIcon />}
             />
             <BottomNavigationAction
-              label="Storming"
+              // label="번쩍"
               value="/storming"
               icon={<BoltRoundedIcon />}
             />
             <BottomNavigationAction
-              label="MyPage"
+              // label="프로필"
               value="/setting"
               icon={<PersonRoundedIcon />}
             />

@@ -1,7 +1,9 @@
 import { useEffect } from "react";
+import SelectedIdeasSlide from "./SelectedIdeasSlide";
 
 const IdeasToggleButton = ({
   dbIdeas,
+  selectedIdeas,
   setShowingIdeas,
   categories,
   categoryPrmtr,
@@ -97,7 +99,7 @@ const IdeasToggleButton = ({
     <div className="bg-white px-5 pb-10 mb-2 ">
       <div
         className={`font-black duration-100 pb-5 ${
-          isSelectMode ? "pt-44" : "pt-24"
+          isSelectMode && selectedIdeas.length ? "pt-44" : "pt-24"
         }`}
       >
         카테고리
