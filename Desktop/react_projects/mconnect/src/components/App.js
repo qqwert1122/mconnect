@@ -1,10 +1,18 @@
 import AppRouter from "components/Router";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RecoilRoot, atom, useRecoilState } from "recoil";
+import { recoilPersist } from "recoil-persist";
 import { createTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { authService, dbService } from "fbase";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+} from "firebase/firestore";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,7 +23,15 @@ import {
   faMinus,
 } from "@fortawesome/free-solid-svg-icons";
 
+const { persistAtom } = recoilPersist();
+const scrollAtom = atom({
+  key: "scrollAtom",
+  default: 0,
+  effects_UNSTABLE: [persistAtom],
+});
+
 const useCustomHooks = () => {
+  const currentUser = authService.currentUser;
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
   const [navValue, setNavValue] = useState("/");
@@ -30,21 +46,10 @@ const useCustomHooks = () => {
   const [sourceList, setSourceList] = useState([]);
   const [viewIdea, setViewIdea] = useState();
 
-  let navigate = useNavigate();
+  // scroll
+  const [scrollY, setScrollY] = useRecoilState(scrollAtom);
 
-  useEffect(() => {
-    const q = query(
-      collection(dbService, "ideas"),
-      orderBy("createdAt", "desc")
-    );
-    onSnapshot(q, (snapshot) => {
-      const ideas = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setdbIdeas(ideas);
-    });
-  }, []);
+  let navigate = useNavigate();
 
   useEffect(() => {
     navigate(`${navValue}`, { replace: true });
@@ -54,6 +59,19 @@ const useCustomHooks = () => {
     authService.onAuthStateChanged(async (user) => {
       if (user) {
         setIsLoggedIn(true);
+        console.log(user);
+        const q = query(
+          collection(dbService, "ideas"),
+          where("userId", "==", user.uid),
+          orderBy("createdAt", "desc")
+        );
+        onSnapshot(q, (snapshot) => {
+          const ideas = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setdbIdeas(ideas);
+        });
       } else {
         setIsLoggedIn(false);
       }
@@ -128,7 +146,7 @@ const useCustomHooks = () => {
     init,
     setInit,
     isLoggedIn,
-    setIsLoggedIn,
+    currentUser,
     navValue,
     setNavValue,
     dbIdeas,
@@ -147,6 +165,8 @@ const useCustomHooks = () => {
     colorList,
     theme,
     timeDisplay,
+    scrollY,
+    setScrollY,
   };
 };
 

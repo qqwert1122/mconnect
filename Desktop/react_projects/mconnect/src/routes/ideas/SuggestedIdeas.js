@@ -19,7 +19,9 @@ const SuggestedIdeas = ({
   setSelectedIdeas,
   thumbsUp,
 }) => {
-  const [tagChangeProps, setTagChangeProps] = useState(tagsPrmtr[0]);
+  const [tagChangeProps, setTagChangeProps] = useState(
+    tagsPrmtr.length > 0 && tagsPrmtr[0]
+  );
 
   const onSuggestedTagClick = (e, tag) => {
     e.preventDefault();

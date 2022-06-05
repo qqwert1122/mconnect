@@ -3,6 +3,7 @@ import IdeasTopBar from "./IdeasTopBar";
 import BottomNavigationBar from "routes/BottomNavigationBar";
 import IdeasToggleButton from "routes/ideas/IdeasToggleButton";
 import FloatingActionButton from "./FloatingActionButton";
+import FloatingUpButton from "./FloatingUpButton";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { authService } from "fbase";
@@ -16,6 +17,7 @@ import {
   faCompass as fasCompass,
   faHeart as fasHeart,
   faBookmark as fasBookmark,
+  faAngleUp,
 } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
@@ -23,6 +25,8 @@ const Ideas = ({ customHooks }) => {
   const user = authService.currentUser;
   const setNavValue = customHooks.setNavValue;
   const dbIdeas = customHooks.dbIdeas;
+  const scrollY = customHooks.scrollY;
+  const setScrollY = customHooks.setScrollY;
   const [showingIdeas, setShowingIdeas] = useState([]);
 
   //filter
@@ -41,6 +45,12 @@ const Ideas = ({ customHooks }) => {
   const [isSelectMode, setIsSelectMode] = useState(false);
 
   // dbIdeas 변경 시마다 showingIdeas, tagList, sourceList를 변경함.
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo(0, scrollY);
+    }, 100);
+  }, []);
+
   useEffect(() => {
     setShowingIdeas(dbIdeas);
 
@@ -153,6 +163,7 @@ const Ideas = ({ customHooks }) => {
         <IdeasTopBar
           setViewIdea={setViewIdea}
           setNavValue={setNavValue}
+          setScrollY={setScrollY}
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
           isSelectMode={isSelectMode}
@@ -211,6 +222,8 @@ const Ideas = ({ customHooks }) => {
           setNavValue={setNavValue}
           selectedIdeas={selectedIdeas}
         />
+
+        <FloatingUpButton scrollY={scrollY} setScrollY={setScrollY} />
       </div>
       <ToastContainer
         className="black-background"

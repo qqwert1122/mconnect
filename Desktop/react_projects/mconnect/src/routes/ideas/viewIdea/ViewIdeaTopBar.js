@@ -27,6 +27,7 @@ const ViewIdeaTopBar = ({
   const open = Boolean(anchorEl);
 
   const onBackClick = () => {
+    setUserContext(0);
     switch (userContext) {
       case 3:
         setNavValue("/ideas/searchpage");

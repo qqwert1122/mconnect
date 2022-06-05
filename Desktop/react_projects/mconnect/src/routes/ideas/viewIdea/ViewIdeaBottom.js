@@ -1,8 +1,11 @@
 import SuggestedIdeas from "../SuggestedIdeas";
 import ViewIdeaBottomBar from "./ViewIdeaBottomBar";
+import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 import ConnectedIdeas from "./ConnectedIdeas";
 import { useState } from "react";
-import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import {} from "@fortawesome/free-regular-svg-icons";
 
 const ViewIdeaBottom = ({
   dbIdeas,
@@ -49,10 +52,17 @@ const ViewIdeaBottom = ({
   return (
     <div className="w-screen fixed bottom-0 z-30">
       {itemChangeProps === 0 && (
-        <ColoredIdeaList
-          ideas={viewIdea.connectedIdeas}
-          colorList={colorList}
-        />
+        <>
+          <div className="flex justify-end px-3">
+            <button className="p-2 px-3 shadow-2xl rounded-full text-sm font-black border-4 border-stone-300 bg-stone-500 text-white">
+              <FontAwesomeIcon icon={faAngleUp} />
+            </button>
+          </div>
+          <ColoredIdeaList
+            ideas={viewIdea.connectedIdeas}
+            colorList={colorList}
+          />
+        </>
       )}
       {itemChangeProps === 1 && (
         <div className="bg-stone-50 shadow-inner">

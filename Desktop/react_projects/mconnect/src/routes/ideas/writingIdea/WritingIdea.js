@@ -1,4 +1,5 @@
 import "css/Writing.css";
+import "css/Animation.css";
 import WritingTopBar from "./WritingTopBar";
 import WritingBottom from "./WritingBottom";
 import React, { useEffect, useState } from "react";
@@ -143,13 +144,14 @@ const WritingIdea = ({ customHooks }) => {
           } catch (event) {
             console.error("Error editing document: ", event);
           }
+          setUserContext(0);
           setNavValue("/ideas");
       }
     }
   };
 
   return (
-    <div className="opening flex-col text-sm">
+    <div className="flex-col text-sm">
       <form onSubmit={onSubmit}>
         <WritingTopBar
           userContext={userContext}

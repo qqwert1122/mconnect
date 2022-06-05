@@ -10,56 +10,50 @@ import Auth from "routes/Auth";
 
 const AppRouter = ({ customHooks }) => {
   return (
-    <>
-      <Routes>
-        {customHooks.isLoggedIn ? (
-          <>
-            <Route
-              exact
-              path="/home"
-              element={<Home customHooks={customHooks} />}
-            />
-            <Route
-              exact
-              path="/ideas"
-              element={<Ideas customHooks={customHooks} />}
-            />
-            <Route
-              exact
-              path="/ideas/searchpage"
-              element={<SearchPage customHooks={customHooks} />}
-            />
-            <Route
-              exact
-              path="/writingidea"
-              element={<WritingIdea customHooks={customHooks} />}
-            />
-            <Route
-              exact
-              path="/ideas/viewidea"
-              element={<ViewIdea customHooks={customHooks} />}
-            />
-            <Route
-              exact
-              path="/storming"
-              element={<Storming customHooks={customHooks} />}
-            />
-            <Route
-              exact
-              path="/setting"
-              element={<Setting customHooks={customHooks} />}
-            />
-            <Route
-              exact
-              path="*"
-              element={<Ideas customHooks={customHooks} />}
-            />
-          </>
-        ) : (
-          <Route exact path="/" element={<Auth customHooks={customHooks} />} />
-        )}
-      </Routes>
-    </>
+    <Routes>
+      {customHooks.isLoggedIn ? (
+        <>
+          <Route
+            exact
+            path="/home"
+            element={<Home customHooks={customHooks} />}
+          />
+          <Route
+            exact
+            path="/ideas"
+            element={<Ideas customHooks={customHooks} />}
+          />
+          <Route
+            exact
+            path="/ideas/searchpage"
+            element={<SearchPage customHooks={customHooks} />}
+          />
+          <Route
+            exact
+            path="/writingidea"
+            element={<WritingIdea customHooks={customHooks} />}
+          />
+          <Route
+            exact
+            path="/ideas/viewidea"
+            element={<ViewIdea customHooks={customHooks} />}
+          />
+          <Route
+            exact
+            path="/storming"
+            element={<Storming customHooks={customHooks} />}
+          />
+          <Route
+            exact
+            path="/setting"
+            element={<Setting customHooks={customHooks} />}
+          />
+          <Route exact path="*" element={<Ideas customHooks={customHooks} />} />
+        </>
+      ) : (
+        <Route exact path="/" element={<Auth customHooks={customHooks} />} />
+      )}
+    </Routes>
   );
 };
 

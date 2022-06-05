@@ -1,32 +1,37 @@
 import BottomNavigationBar from "routes/BottomNavigationBar";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { authService, signOut } from "fbase";
+import React, { useState } from "react";
+import { authService } from "fbase";
 import Avatar from "@mui/material/Avatar";
-
 import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faSearch,
-  faCircleCheck as fasCircleCheck,
   faPen,
+  faRectangleAd,
+  faCommentDollar,
+  faEnvelope,
+  faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faBell,
-  faCircleCheck as farCircleCheck,
-  faImage,
-} from "@fortawesome/free-regular-svg-icons";
+import { faImage } from "@fortawesome/free-regular-svg-icons";
 
 const Setting = ({ customHooks }) => {
-  let navigate = useNavigate();
+  const setNavValue = customHooks.setNavValue;
   const user = authService.currentUser;
 
-  const onSignOutClick = () => {
-    authService.signOut();
-    navigate("/", { replace: true });
+  const [detailMode, setDetailMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+
+  const onDetailModeChange = () => {
+    setDetailMode((prev) => !prev);
+  };
+  const onDarkModeChange = (e) => {
+    console.log(e.target.checked);
+    setDarkMode(e.target.checked);
+  };
+  const onSignOutClick = async () => {
+    await authService.signOut();
+    setNavValue("/");
   };
 
   const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -123,7 +128,21 @@ const Setting = ({ customHooks }) => {
           <div className="flex gap-2"></div>
         </div>
       </div>
-      <div className="mt-24 mb-16">
+      <div className="mt-20 mb-16">
+        <div className="flex justify-between">
+          <div className="w-1/2 h-24 relative m-5 p-5 rounded-xl shadow-lg bg-gradient-to-br from-red-500  via-orange-400 to-yellow-500 text-white font-black text-lg">
+            <span className="absolute top-2 left-2">
+              <FontAwesomeIcon icon={faCommentDollar} size="xl" />
+            </span>
+            <span className="absolute bottom-2 right-2">개발자 후원</span>
+          </div>
+          <div className="w-1/2 h-24 relative m-5 p-5 rounded-xl shadow-lg bg-gradient-to-br from-yellow-300 via-orange-300 to-rose-400 text-white font-black text-lg">
+            <span className="absolute top-2 left-2">
+              <FontAwesomeIcon icon={faRectangleAd} size="xl" />
+            </span>
+            <span className="absolute bottom-2 right-2">광고 제거</span>
+          </div>
+        </div>
         <div className="relative m-5 p-5 rounded-xl shadow-lg bg-stone-100">
           <div className="flex gap-5">
             <div className="relative">
@@ -141,25 +160,27 @@ const Setting = ({ customHooks }) => {
               </button>
             </div>
 
-            <div className="flex-col ">
-              <div className="text-sm">반갑습니다</div>
-              <div className="relative text-lg underline font-black">
-                {user.displayName}
-
-                <FontAwesomeIcon icon={faPen} />
+            <div className="w-full flex items-center text-lg">
+              <div className="flex-col">
+                <div className="font-black">{user.displayName}</div>
+                <div className="pb-2 text-xs">{user.email}</div>
+                <div className="flex gap-2 text-sm text-white">
+                  <button className="p-1 rounded-lg bg-stone-400 font-black ">
+                    프로필 수정
+                  </button>
+                  <button
+                    className="p-1 rounded-lg bg-stone-400 font-black"
+                    onClick={onSignOutClick}
+                  >
+                    로그아웃
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-
-          <button
-            className="absolute -bottom-0 right-0 p-1 rounded-xl bg-green-600 font-black text-white"
-            onClick={onSignOutClick}
-          >
-            로그아웃
-          </button>
         </div>
         <div className="relative m-5 p-5 rounded-xl shadow-lg bg-stone-100">
-          <div className="flex flex-wrap gap-1 mx-4 pb-8">
+          <div className="flex flex-wrap gap-1">
             {achievementItems.map((item, index) => (
               <div
                 key={index}
@@ -171,21 +192,46 @@ const Setting = ({ customHooks }) => {
           </div>
         </div>
         <div className="flex justify-between">
-          <div className="w-1/2 relative m-5 p-5 rounded-xl shadow-lg bg-stone-100">
-            <FormControlLabel
-              control={<Switch defaultChecked />}
-              label="Label"
-            />
+          <div className="w-1/2 h-24 relative m-5 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-lg">
+            <span className="absolute top-2 left-2">상세 모드</span>
+            <span className="absolute bottom-2 right-2">
+              <FormControlLabel
+                control={
+                  <Switch onChange={onDetailModeChange} color="warning" />
+                }
+              />
+            </span>
           </div>
-          <div className="w-1/2 relative m-5 p-5 rounded-xl shadow-lg bg-stone-100">
-            <FormControlLabel
-              control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
-            />
+          <div
+            className={`w-1/2 h-24 relative m-5 p-5 rounded-xl duration-1000 shadow-lg ${
+              darkMode ? "bg-stone-600 text-white" : "bg-stone-100"
+            } font-black text-lg`}
+          >
+            <span className="absolute top-2 left-2">다크 모드</span>
+            <span className="absolute bottom-2 right-2 ">
+              <FormControlLabel
+                checked={darkMode}
+                onChange={onDarkModeChange}
+                control={<MaterialUISwitch />}
+              />
+            </span>
           </div>
         </div>
 
-        <div className="bg-red-400 m-5">컨택</div>
-        <div className="bg-red-400 m-5">고지</div>
+        <div className="flex justify-between">
+          <div className="w-1/2 h-24 relative m-5 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-lg">
+            <span className="absolute top-2 left-2">
+              <FontAwesomeIcon icon={faEnvelope} size="xl" />
+            </span>
+            <span className="absolute bottom-2 right-2">제안</span>
+          </div>
+          <div className="w-1/2 h-24 relative m-5 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-lg">
+            <span className="absolute top-2 left-2">
+              <FontAwesomeIcon icon={faCircleInfo} size="xl" />
+            </span>
+            <span className="absolute bottom-2 right-2">오픈소스</span>
+          </div>
+        </div>
       </div>
       <BottomNavigationBar customHooks={customHooks} />
     </>

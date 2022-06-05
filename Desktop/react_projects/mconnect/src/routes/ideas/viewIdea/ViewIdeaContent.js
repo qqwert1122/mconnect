@@ -46,7 +46,7 @@ const ViewIdeaContent = ({ viewIdea }) => {
         <div className="flex p-5 text-base whitespace-pre-line">
           <span>{viewIdea.text}</span>
         </div>
-        {viewIdea.source && (
+        {viewIdea.source.length != 0 && (
           <div className="flex items-center p-5 py-2 gap-2">
             <FontAwesomeIcon icon={faQuoteLeft} />
             <span>{viewIdea.source}</span>

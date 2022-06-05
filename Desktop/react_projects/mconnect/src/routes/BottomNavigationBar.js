@@ -19,7 +19,11 @@ const BottomNavigationBar = ({ customHooks }) => {
             // showLabels={true}
             value={navValue}
             onChange={(event, newValue) => {
-              setNavValue(newValue);
+              if (navValue === newValue) {
+                window.scrollTo(0, 0);
+              } else {
+                setNavValue(newValue);
+              }
             }}
           >
             <BottomNavigationAction

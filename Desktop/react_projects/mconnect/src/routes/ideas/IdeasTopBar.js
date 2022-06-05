@@ -8,11 +8,11 @@ import {
   faBell,
   faCircleCheck as farCircleCheck,
 } from "@fortawesome/free-regular-svg-icons";
-import { useEffect } from "react";
 
 const IdeasTopBar = ({
   setViewIdea,
   setNavValue,
+  setScrollY,
   selectedIdeas,
   setSelectedIdeas,
   isSelectMode,

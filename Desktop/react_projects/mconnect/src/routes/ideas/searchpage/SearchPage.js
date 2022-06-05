@@ -7,6 +7,7 @@ import CriteriaUser from "./CriteriaUser";
 import CriteriaAll from "./CriteriaAll";
 import { useEffect, useState } from "react";
 import ShowingSearchIdeas from "./ShowingSearchIdeas";
+import FloatingUpButton from "../FloatingUpButton";
 
 const SearchPage = ({ customHooks }) => {
   const dbIdeas = customHooks.dbIdeas;
@@ -17,6 +18,8 @@ const SearchPage = ({ customHooks }) => {
   const sourceList = customHooks.sourceList;
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
+  const scrollY = customHooks.scrollY;
+  const setScrollY = customHooks.setScrollY;
 
   const userList = dbIdeas.filter(
     (idea, index, callback) =>
@@ -35,6 +38,12 @@ const SearchPage = ({ customHooks }) => {
 
   useEffect(() => {
     setShowingSearchIdeas(dbIdeas);
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo(0, scrollY);
+    }, 100);
   }, []);
 
   useEffect(() => {
@@ -164,6 +173,7 @@ const SearchPage = ({ customHooks }) => {
         selectedIdeas={selectedIdeas}
         setSelectedIdeas={setSelectedIdeas}
       />
+      <FloatingUpButton scrollY={scrollY} setScrollY={setScrollY} />
 
       {selectedIdeas.length > 0 && (
         <div className="heightStrech w-full p-4 fixed bottom-0 shadow-inner bg-red-400 text-white font-black text-center text-base ">

@@ -1,3 +1,4 @@
+import "css/Animation.css";
 import ViewIdeaTopBar from "./ViewIdeaTopBar";
 import ViewIdeaContent from "./ViewIdeaContent";
 import ViewIdeaBottom from "./ViewIdeaBottom";
@@ -17,10 +18,10 @@ const ViewIdea = ({ customHooks }) => {
 
   return (
     <div
-      className="text-sm min-h-screen bg-stone-100"
+      className="moveRightToLeft text-sm min-h-screen bg-stone-100"
       style={{ paddingBottom: "52px" }}
     >
-      <div className="flex-col  bg-white shadow">
+      <div className="flex-col bg-white shadow">
         <ViewIdeaTopBar
           viewIdea={viewIdea}
           userContext={userContext}
