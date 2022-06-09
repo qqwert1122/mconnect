@@ -130,13 +130,13 @@ const Setting = ({ customHooks }) => {
       </div>
       <div className="mt-20 mb-16">
         <div className="flex justify-between">
-          <div className="w-1/2 h-24 relative m-5 p-5 rounded-xl shadow-lg bg-gradient-to-br from-red-500  via-orange-400 to-yellow-500 text-white font-black text-lg">
+          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-gradient-to-br from-red-500  via-orange-400 to-yellow-500 text-white font-black text-lg">
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faCommentDollar} size="xl" />
             </span>
             <span className="absolute bottom-2 right-2">개발자 후원</span>
           </div>
-          <div className="w-1/2 h-24 relative m-5 p-5 rounded-xl shadow-lg bg-gradient-to-br from-yellow-300 via-orange-300 to-rose-400 text-white font-black text-lg">
+          <div className="w-1/2 h-24 relative mr-5 ml-2  p-5 rounded-xl shadow-lg bg-gradient-to-br from-yellow-300 via-orange-300 to-rose-400 text-white font-black text-lg">
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faRectangleAd} size="xl" />
             </span>
@@ -180,6 +180,7 @@ const Setting = ({ customHooks }) => {
           </div>
         </div>
         <div className="relative m-5 p-5 rounded-xl shadow-lg bg-stone-100">
+          <div className="text-lg font-black pb-5">업적</div>
           <div className="flex flex-wrap gap-1">
             {achievementItems.map((item, index) => (
               <div
@@ -192,7 +193,7 @@ const Setting = ({ customHooks }) => {
           </div>
         </div>
         <div className="flex justify-between">
-          <div className="w-1/2 h-24 relative m-5 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-lg">
+          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-lg">
             <span className="absolute top-2 left-2">상세 모드</span>
             <span className="absolute bottom-2 right-2">
               <FormControlLabel
@@ -203,7 +204,7 @@ const Setting = ({ customHooks }) => {
             </span>
           </div>
           <div
-            className={`w-1/2 h-24 relative m-5 p-5 rounded-xl duration-1000 shadow-lg ${
+            className={`w-1/2 h-24 relative mr-5 ml-2 p-5 rounded-xl duration-1000 shadow-lg ${
               darkMode ? "bg-stone-600 text-white" : "bg-stone-100"
             } font-black text-lg`}
           >
@@ -219,13 +220,13 @@ const Setting = ({ customHooks }) => {
         </div>
 
         <div className="flex justify-between">
-          <div className="w-1/2 h-24 relative m-5 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-lg">
+          <div className="w-1/2 h-24 relative my-5 ml-5 mr-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-lg">
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faEnvelope} size="xl" />
             </span>
             <span className="absolute bottom-2 right-2">제안</span>
           </div>
-          <div className="w-1/2 h-24 relative m-5 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-lg">
+          <div className="w-1/2 h-24 relative my-5 mr-5 ml-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-lg">
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faCircleInfo} size="xl" />
             </span>

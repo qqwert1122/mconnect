@@ -18,7 +18,6 @@ const IdeaBottom = ({ dbIdea, user }) => {
   const onLikeClick = async () => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
     await updateDoc(ideaRef, {
-      like: !dbIdea.like,
       likeUsers: [...dbIdea.likeUsers, user.displayName],
     });
   };

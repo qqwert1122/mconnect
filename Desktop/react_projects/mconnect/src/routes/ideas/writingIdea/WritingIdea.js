@@ -23,7 +23,7 @@ dayjs.locale("ko");
 
 const WritingIdea = ({ customHooks }) => {
   const dbIdeas = customHooks.dbIdeas;
-  const user = authService.currentUser;
+  const loggedInUser = customHooks.loggedInUser;
   const userContext = customHooks.userContext;
   const setUserContext = customHooks.setUserContext;
   const setNavValue = customHooks.setNavValue;
@@ -109,17 +109,16 @@ const WritingIdea = ({ customHooks }) => {
               text: formText,
               source: formSource,
               tags: formTags,
-              like: false,
-              bookmark: false,
               public: formPublic,
-              connectedIdeas: formConnectedIdeas,
               likeUsers: [],
+              bookmarkUsers: [],
+              connectedIdeas: formConnectedIdeas,
               isClicked: false,
               createdAt: dayjs().format("YYYY. MM. DD. HH:mm"),
-              userId: user.uid,
-              userEmail: user.email,
-              userName: user.displayName,
-              userPhotoURL: user.photoURL,
+              userId: loggedInUser.userId,
+              userEmail: loggedInUser.userEmail,
+              userName: loggedInUser.userName,
+              userPhotoURL: loggedInUser.userPhotoURL,
             });
           } catch (event) {
             console.error("Error adding document: ", event);

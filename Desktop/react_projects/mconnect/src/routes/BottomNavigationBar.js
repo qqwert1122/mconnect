@@ -4,6 +4,7 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import NotesRoundedIcon from "@mui/icons-material/NotesRounded";
 import BoltRoundedIcon from "@mui/icons-material/BoltRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
 import { ThemeProvider } from "@mui/material/styles";
 
 const BottomNavigationBar = ({ customHooks }) => {
@@ -36,6 +37,11 @@ const BottomNavigationBar = ({ customHooks }) => {
               value="/storming"
               icon={<BoltRoundedIcon />}
             />
+            {/* <BottomNavigationAction
+              // label="탐색"
+              value="/explore"
+              icon={<ExploreRoundedIcon />}
+            /> */}
             <BottomNavigationAction
               // label="프로필"
               value="/setting"

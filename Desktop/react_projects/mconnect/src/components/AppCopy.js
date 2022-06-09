@@ -12,11 +12,7 @@ import {
   query,
   orderBy,
   where,
-  addDoc,
-  doc,
-  getDoc,
   documentId,
-  setDoc,
 } from "firebase/firestore";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
@@ -36,18 +32,12 @@ const scrollAtom = atom({
 });
 
 const useCustomHooks = () => {
-  //auth
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const [registerMode, setRegisterMode] = useState(false);
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
-
   const [navValue, setNavValue] = useState("/");
   const [userContext, setUserContext] = useState(0);
 
   // db props
-  const [tempIdeas1, setTempIdeas1] = useState([]);
-  const [tempIdeas2, setTempIdeas2] = useState([]);
   const [dbIdeas, setdbIdeas] = useState([]);
 
   // Ideas props
@@ -68,70 +58,30 @@ const useCustomHooks = () => {
   useEffect(() => {
     authService.onAuthStateChanged(async (user) => {
       if (user) {
-        const registeredUser = (
-          await getDoc(doc(dbService, "users", user.uid))
-        ).data();
-        setLoggedInUser(registeredUser);
-        if (registeredUser === undefined) {
-          setRegisterMode(true);
-          setInit(true);
-        } else {
-          setIsLoggedIn(true);
-          setInit(true);
-        }
-        // setIsLoggedIn(true);
-        // const queryUsers = query(
-        //   collection(dbService, "users"),
-        //   where(documentId(), "==", user.uid)
-        // );
-        // onSnapshot(queryUsers, (snapshot) => {
-        //   const currentUser = snapshot.docs.map((doc) => ({
-        //     uid: doc.id,
-        //     ...doc.data(),
-        //   }));
-        //   if (currentUser === null) {
-        //     setFirstRun(true);
-        //   }
-        // });
+        setIsLoggedIn(true);
+
+        const q1 = query(
+          collection(dbService, "ideas"),
+          where("userId", "==", user.uid),
+          // where(documentId(), "==", "05LMBwt2uYdqcKXtd1A1")
+          orderBy("createdAt", "desc")
+        );
+        onSnapshot(q1, (snapshot) => {
+          const ideas = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setdbIdeas(ideas);
+        });
+        // const q2 = query(collection(dbService, "ideas"));
+        // q1 , q2 를 각 query로 가져온 다음 이를 각 state에 저장한 뒤 concat으로 합쳐
+        // or을 구현할 수 있다.
       } else {
         setIsLoggedIn(false);
       }
+      setInit(true);
     });
   }, []);
-
-  useEffect(() => {
-    const ideas = tempIdeas1.concat(tempIdeas2);
-    setdbIdeas(ideas);
-  }, [tempIdeas2]);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      const q1 = query(
-        collection(dbService, "ideas"),
-        where("userId", "==", loggedInUser.userId),
-        orderBy("createdAt", "desc")
-      );
-      onSnapshot(q1, (snapshot) => {
-        const ideas = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        // setTempIdeas1(ideas);
-        setdbIdeas(ideas);
-      });
-      // const q2 = query(
-      //   collection(dbService, "ideas"),
-      //   where("bookmarkUsers", "array-contains", loggedInUser.uid)
-      // );
-      // onSnapshot(q2, (snapshot) => {
-      //   const ideas = snapshot.docs.map((doc) => ({
-      //     id: doc.id,
-      //     ...doc.data(),
-      //   }));
-      //   setTempIdeas2(ideas);
-      // });
-    }
-  }, [isLoggedIn]);
 
   const timeDisplay = (createdAt) => {
     if (dayjs().diff(dayjs(createdAt), "day") >= 31) {
@@ -197,13 +147,9 @@ const useCustomHooks = () => {
   };
 
   return {
-    loggedInUser,
-    registerMode,
-    setRegisterMode,
     init,
     setInit,
     isLoggedIn,
-    setIsLoggedIn,
     navValue,
     setNavValue,
     dbIdeas,
@@ -248,4 +194,4 @@ const App = () => {
   );
 };
 
-export default App;
+// export default App;
