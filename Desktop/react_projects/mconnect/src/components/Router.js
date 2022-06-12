@@ -6,7 +6,7 @@ import ViewIdea from "routes/ideas/viewIdea/ViewIdea";
 import WritingIdea from "routes/ideas/writingIdea/WritingIdea";
 import Storming from "routes/Storming";
 import Setting from "routes/Setting";
-import Auth from "routes/Auth";
+import Auth from "routes/auth/Auth";
 
 const AppRouter = ({ customHooks }) => {
   return (

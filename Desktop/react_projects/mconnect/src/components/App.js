@@ -38,10 +38,11 @@ const scrollAtom = atom({
 const useCustomHooks = () => {
   //auth
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [registerMode, setRegisterMode] = useState(false);
   const [init, setInit] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [registerMode, setRegisterMode] = useState(false);
 
+  // context
   const [navValue, setNavValue] = useState("/");
   const [userContext, setUserContext] = useState(0);
 
@@ -71,13 +72,12 @@ const useCustomHooks = () => {
         const registeredUser = (
           await getDoc(doc(dbService, "users", user.uid))
         ).data();
-        setLoggedInUser(registeredUser);
+        setInit(true);
         if (registeredUser === undefined) {
           setRegisterMode(true);
-          setInit(true);
         } else {
+          setLoggedInUser(registeredUser);
           setIsLoggedIn(true);
-          setInit(true);
         }
         // setIsLoggedIn(true);
         // const queryUsers = query(
@@ -198,6 +198,7 @@ const useCustomHooks = () => {
 
   return {
     loggedInUser,
+    setLoggedInUser,
     registerMode,
     setRegisterMode,
     init,

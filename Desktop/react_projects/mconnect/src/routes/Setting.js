@@ -17,7 +17,7 @@ import { faImage } from "@fortawesome/free-regular-svg-icons";
 
 const Setting = ({ customHooks }) => {
   const setNavValue = customHooks.setNavValue;
-  const user = authService.currentUser;
+  const loggedInUser = customHooks.loggedInUser;
 
   const [detailMode, setDetailMode] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
@@ -26,7 +26,6 @@ const Setting = ({ customHooks }) => {
     setDetailMode((prev) => !prev);
   };
   const onDarkModeChange = (e) => {
-    console.log(e.target.checked);
     setDarkMode(e.target.checked);
   };
   const onSignOutClick = async () => {
@@ -148,7 +147,7 @@ const Setting = ({ customHooks }) => {
             <div className="relative">
               <Avatar
                 alt="avatar"
-                src={user.photoURL}
+                src={loggedInUser.userPhotoURL}
                 sx={{
                   display: "flex",
                   width: "80px",
@@ -162,8 +161,8 @@ const Setting = ({ customHooks }) => {
 
             <div className="w-full flex items-center text-lg">
               <div className="flex-col">
-                <div className="font-black">{user.displayName}</div>
-                <div className="pb-2 text-xs">{user.email}</div>
+                <div className="font-black">{loggedInUser.userName}</div>
+                <div className="pb-2 text-xs">{loggedInUser.userEmail}</div>
                 <div className="flex gap-2 text-sm text-white">
                   <button className="p-1 rounded-lg bg-stone-400 font-black ">
                     프로필 수정

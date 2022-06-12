@@ -27,13 +27,16 @@ const Auth = ({ customHooks }) => {
   const registerMode = customHooks.registerMode;
   const setRegisterMode = customHooks.setRegisterMode;
   const loggedInUser = customHooks.loggedInUser;
+  const setLoggedInUser = customHooks.setLoggedInUser;
   const setIsLoggedIn = customHooks.setIsLoggedIn;
   const setInit = customHooks.setInit;
 
   const userNameRef = useRef();
 
   const [userName, setUserName] = useState("");
-  const [userPhotoURL, setUserPhotoURL] = useState(loggedInUser.photoURL);
+  const [userPhotoURL, setUserPhotoURL] = useState(
+    authService.currentUser.photoURL
+  );
   const [tabValue, setTabValue] = useState(0);
 
   const [isDuplicated, setIsDuplicated] = useState(false);
@@ -55,8 +58,14 @@ const Auth = ({ customHooks }) => {
     setUserName(e.target.value);
   };
 
+  const onSpaceKeyDown = (e) => {
+    if (e.key === " ") {
+      e.preventDefault();
+    }
+  };
+
   const onXmarkClick = () => {
-    setUserPhotoURL(loggedInUser.photoURL);
+    setUserPhotoURL(authService.currentUser.photoURL);
   };
 
   const onUserPhotoURLChange = (e) => {
@@ -73,40 +82,55 @@ const Auth = ({ customHooks }) => {
   };
 
   const onNextClick = async () => {
-    if (tabValue === 0) {
-      const q = query(
-        collection(dbService, "users"),
-        where(
-          "userName",
-          "==",
-          userName === "" ? loggedInUser.displayName : userName
-        )
-      );
-      const nickNameCheck = await getDocs(q);
-      if (nickNameCheck.docs.length == 0) {
-        setIsDuplicated(false);
-        setTabValue(1);
-      } else {
-        userNameRef.current.focus();
-        setIsDuplicated(true);
-        return;
-      }
-    } else {
-      const fileRef = ref(storageService, `${loggedInUser.uid}/${v4()}`);
-      const response = await uploadString(fileRef, userPhotoURL, "data_url");
-      const attachmentUrl = await getDownloadURL(response.ref);
-      await setDoc(doc(dbService, "users", loggedInUser.uid), {
-        userId: loggedInUser.uid,
-        userEmail: loggedInUser.email,
-        userName: userName === "" ? loggedInUser.displayName : userName,
-        userPhotoURL:
-          userPhotoURL === "" ? loggedInUser.photoURL : attachmentUrl,
-        isAdRemoved: false,
-        isAuthority: false,
-      });
-      setRegisterMode(false);
-      setIsLoggedIn(true);
-      setInit(true);
+    switch (tabValue) {
+      case 0:
+        const q = query(
+          collection(dbService, "users"),
+          where(
+            "userName",
+            "==",
+            userName === "" ? authService.currentUser.displayName : userName
+          )
+        );
+        const nickNameCheck = await getDocs(q);
+        if (nickNameCheck.docs.length == 0) {
+          setIsDuplicated(false);
+          setTabValue(1);
+        } else {
+          userNameRef.current.focus();
+          setIsDuplicated(true);
+          return;
+        }
+        break;
+      case 1:
+        let attachmentUrl = authService.currentUser.photoURL;
+        if (userPhotoURL !== authService.currentUser.photoURL) {
+          const fileRef = ref(
+            storageService,
+            `${authService.currentUser.uid}/${v4()}`
+          );
+          const response = await uploadString(
+            fileRef,
+            userPhotoURL,
+            "data_url"
+          );
+          attachmentUrl = await getDownloadURL(response.ref);
+        }
+        await setDoc(doc(dbService, "users", authService.currentUser.uid), {
+          userId: authService.currentUser.uid,
+          userEmail: authService.currentUser.email,
+          userName:
+            userName === "" ? authService.currentUser.displayName : userName,
+          userPhotoURL: attachmentUrl,
+          isAdRemoved: false,
+          isAuthority: false,
+        });
+        const registeredUser = (
+          await getDoc(doc(dbService, "users", authService.currentUser.uid))
+        ).data();
+        setLoggedInUser(registeredUser);
+        setRegisterMode(false);
+        setIsLoggedIn(true);
     }
   };
 
@@ -126,24 +150,38 @@ const Auth = ({ customHooks }) => {
       {registerMode ? (
         <div className="w-screen h-screen flex justify-center items-center">
           <div className="flex-col">
+            <div className="fixed top-0 left-0 p-10 font-black text-4xl text-green-600 opacity-20">
+              {tabValue === 0 && "Name"}
+              {tabValue === 1 && "Photo"}
+            </div>
             {tabValue === 0 && (
               <>
-                <div className="font-black text-xl mb-10">
-                  닉네임을 입력하세요
+                <div
+                  className={`font-black text-xl mb-10 ${
+                    userName.length > 20 && "text-red-400"
+                  }`}
+                >
+                  이름을 입력하세요(
+                  {userName.length === 0
+                    ? authService.currentUser.displayName.length
+                    : userName.length}
+                  /20)
                 </div>
                 <input
                   ref={userNameRef}
                   type="text"
                   name="inputUserName"
                   className={`border-b-2 text-xl mb-2`}
-                  placeholder={loggedInUser.displayName}
+                  placeholder={authService.currentUser.displayName}
                   value={userName}
                   onChange={onUserNameChange}
+                  onKeyDown={onSpaceKeyDown}
+                  maxLength="20"
                   autoComplete="off"
                 />
                 {isDuplicated && (
                   <div className="text-red-400 font-black">
-                    중복된 닉네임이 있습니다
+                    중복된 이름이 있습니다
                   </div>
                 )}
               </>
@@ -164,7 +202,7 @@ const Auth = ({ customHooks }) => {
                       height: "150px",
                     }}
                   />
-                  {loggedInUser.photoURL != userPhotoURL && (
+                  {authService.currentUser.photoURL != userPhotoURL && (
                     <button
                       className="absolute top-2 right-2 bg-white rounded-full text-stone-600"
                       onClick={onXmarkClick}

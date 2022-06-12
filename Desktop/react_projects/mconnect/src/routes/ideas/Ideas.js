@@ -22,7 +22,7 @@ import {
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const Ideas = ({ customHooks }) => {
-  const user = authService.currentUser;
+  const user = customHooks.loggedInUser;
   const setNavValue = customHooks.setNavValue;
   const dbIdeas = customHooks.dbIdeas;
   const scrollY = customHooks.scrollY;

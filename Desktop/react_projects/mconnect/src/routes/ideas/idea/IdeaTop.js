@@ -117,7 +117,7 @@ const IdeaTop = ({
           horizontal: "left",
         }}
       >
-        {user.uid === dbIdea.userId && (
+        {user.userId === dbIdea.userId && (
           <MenuItem onClick={onEditClick}>
             <FontAwesomeIcon icon={faPenToSquare} />
             &nbsp; 수정
