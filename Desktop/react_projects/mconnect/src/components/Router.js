@@ -7,6 +7,7 @@ import WritingIdea from "routes/ideas/writingIdea/WritingIdea";
 import Storming from "routes/Storming";
 import Setting from "routes/Setting";
 import Auth from "routes/auth/Auth";
+import SignUp from "routes/auth/SignUp";
 
 const AppRouter = ({ customHooks }) => {
   return (
@@ -51,7 +52,14 @@ const AppRouter = ({ customHooks }) => {
           <Route exact path="*" element={<Ideas customHooks={customHooks} />} />
         </>
       ) : (
-        <Route exact path="/" element={<Auth customHooks={customHooks} />} />
+        <>
+          <Route
+            exact
+            path="/signup"
+            element={<SignUp customHooks={customHooks} />}
+          />
+          <Route exact path="/" element={<Auth customHooks={customHooks} />} />
+        </>
       )}
     </Routes>
   );

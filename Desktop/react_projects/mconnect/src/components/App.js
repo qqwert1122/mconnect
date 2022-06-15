@@ -40,7 +40,6 @@ const useCustomHooks = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [registerMode, setRegisterMode] = useState(false);
 
   // context
   const [navValue, setNavValue] = useState("/");
@@ -67,32 +66,18 @@ const useCustomHooks = () => {
   }, [navValue]);
 
   useEffect(() => {
+    setInit(true);
     authService.onAuthStateChanged(async (user) => {
       if (user) {
         const registeredUser = (
           await getDoc(doc(dbService, "users", user.uid))
         ).data();
-        setInit(true);
         if (registeredUser === undefined) {
-          setRegisterMode(true);
+          setNavValue("/signup");
         } else {
           setLoggedInUser(registeredUser);
           setIsLoggedIn(true);
         }
-        // setIsLoggedIn(true);
-        // const queryUsers = query(
-        //   collection(dbService, "users"),
-        //   where(documentId(), "==", user.uid)
-        // );
-        // onSnapshot(queryUsers, (snapshot) => {
-        //   const currentUser = snapshot.docs.map((doc) => ({
-        //     uid: doc.id,
-        //     ...doc.data(),
-        //   }));
-        //   if (currentUser === null) {
-        //     setFirstRun(true);
-        //   }
-        // });
       } else {
         setIsLoggedIn(false);
       }
@@ -199,8 +184,6 @@ const useCustomHooks = () => {
   return {
     loggedInUser,
     setLoggedInUser,
-    registerMode,
-    setRegisterMode,
     init,
     setInit,
     isLoggedIn,
