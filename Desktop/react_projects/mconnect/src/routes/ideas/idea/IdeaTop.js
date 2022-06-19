@@ -1,3 +1,4 @@
+import "css/Animation.css";
 import dayjs from "dayjs";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -59,13 +60,14 @@ const IdeaTop = ({
             }}
           >
             {selectedIdeas.includes(dbIdea) ? (
-              <FontAwesomeIcon icon={faCheck} />
+              <FontAwesomeIcon className="strech" icon={faCheck} />
             ) : (
               <></>
             )}
           </button>
         )}
         <Avatar
+          className="border-2"
           alt="avatar"
           src={dbIdea.userPhotoURL}
           sx={{

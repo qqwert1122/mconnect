@@ -18,25 +18,13 @@ import {
 
 const ViewIdeaTopBar = ({
   viewIdea,
-  userContext,
+  onBackClick,
   setUserContext,
   setNavValue,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const open = Boolean(anchorEl);
-
-  const onBackClick = () => {
-    setUserContext(0);
-    switch (userContext) {
-      case 3:
-        setNavValue("/ideas/searchpage");
-        break;
-      default:
-        setNavValue("/ideas");
-        break;
-    }
-  };
 
   const onEditClick = () => {
     setAnchorEl(null);

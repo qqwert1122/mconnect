@@ -1,4 +1,5 @@
 import "css/Animation.css";
+import "css/App.css";
 import IdeaTop from "./IdeaTop";
 import IdeaMiddle from "./IdeaMiddle";
 import IdeaBottom from "./IdeaBottom";
@@ -6,6 +7,7 @@ import DeleteDialog from "./DeleteDialog";
 import React, { useState } from "react";
 import { dbService } from "fbase";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import Button from "@mui/material/Button";
 
 const Idea = ({
   customHooks,
@@ -28,9 +30,11 @@ const Idea = ({
       const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
       await updateDoc(ideaRef, { isClicked: true });
     }
-    setUserContext(0);
-    setViewIdea(dbIdea);
-    setNavValue("/ideas/viewidea");
+    setTimeout(() => {
+      setUserContext(0);
+      setViewIdea(dbIdea);
+      setNavValue("/ideas/viewidea");
+    }, 100);
   };
 
   // 삭제 대화상자
@@ -44,7 +48,7 @@ const Idea = ({
   return (
     <div className="duration-500 bg-white">
       <hr />
-      <div className="mt-4 opacity text-sm">
+      <div className="mt-4 opacity text-sm ">
         <IdeaTop
           user={user}
           dbIdea={dbIdea}
@@ -65,7 +69,7 @@ const Idea = ({
           onViewIdeaClick={onViewIdeaClick}
           getCategory={getCategory}
         />
-        <hr />
+
         <IdeaBottom dbIdea={dbIdea} user={user} />
       </div>
       <hr />

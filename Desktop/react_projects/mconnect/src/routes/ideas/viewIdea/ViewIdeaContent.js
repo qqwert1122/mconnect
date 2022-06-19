@@ -28,6 +28,7 @@ const ViewIdeaContent = ({ viewIdea }) => {
           } flex items-center gap-2`}
         >
           <Avatar
+            className="border-2"
             alt="avatar"
             src={viewIdea.userPhotoURL}
             sx={{

@@ -16,6 +16,18 @@ const ViewIdea = ({ customHooks }) => {
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
 
+  const onBackClick = () => {
+    setUserContext(0);
+    switch (userContext) {
+      case 3:
+        setNavValue("/ideas/searchpage");
+        break;
+      default:
+        setNavValue("/ideas");
+        break;
+    }
+  };
+
   return (
     <div
       className="moveRightToLeft text-sm min-h-screen bg-stone-100"
@@ -27,6 +39,7 @@ const ViewIdea = ({ customHooks }) => {
           userContext={userContext}
           setUserContext={setUserContext}
           setNavValue={setNavValue}
+          onBackClick={onBackClick}
         />
         {/*제목, 아바타, 시간 */}
         <ViewIdeaContent viewIdea={viewIdea} />
@@ -35,6 +48,7 @@ const ViewIdea = ({ customHooks }) => {
         dbIdeas={dbIdeas}
         setNavValue={setNavValue}
         viewIdea={viewIdea}
+        onBackClick={onBackClick}
         setViewIdea={setViewIdea}
         getCategory={getCategory}
         colorList={colorList}

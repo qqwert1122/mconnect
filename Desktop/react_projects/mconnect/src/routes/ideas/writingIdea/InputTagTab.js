@@ -1,3 +1,4 @@
+import "css/Animation.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleUp,
@@ -63,7 +64,7 @@ const InputTagTab = ({
   ];
 
   return (
-    <>
+    <div className="moveRightToLeft">
       <div className="overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
         {formTags.length > 0 && (
           <div className="p-4 flex flex-nowrap overflow-x-scroll">
@@ -142,7 +143,7 @@ const InputTagTab = ({
       <div className="absolute -top-2 left-2 text-stone-400">
         <FontAwesomeIcon icon={faHashtag} /> 태그
       </div>
-    </>
+    </div>
   );
 };
 

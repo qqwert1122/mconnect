@@ -121,7 +121,7 @@ const SignUp = ({ customHooks }) => {
         }}
       ></div>
       <img className="z-20 fixed -top-8 -left-20 w-72" src="img/line_1.png" />
-      <img className="fixed -bottom-8 -right-16 w-96" src="img/line_2.png" />
+      <img className="fixed -bottom-8 -right-16 w-72" src="img/line_2.png" />
       <div className="z-10 relative w-4/5 h-3/4 py-24 px-5 flex justify-center items-center rounded-3xl shadow-xl bg-white">
         <div className="absolute top-8 right-8 english__font text-4xl text-stone-400">
           Sign Up

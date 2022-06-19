@@ -1,3 +1,4 @@
+import "css/Animation.css";
 import { useState, useCallback } from "react";
 import { useLongPress } from "use-long-press";
 import Dialog from "@mui/material/Dialog";
@@ -31,7 +32,10 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
   });
 
   return (
-    <div className="box-border mx-4 mt-4 mb-4 duration-200" {...bind()}>
+    <div
+      className="btn w-full box-border px-4 mt-4 mb-4 duration-200"
+      {...bind()}
+    >
       {/* title */}
       {dbIdea.title !== "" && (
         <div className="flex items-center pb-2 w-full font-black">

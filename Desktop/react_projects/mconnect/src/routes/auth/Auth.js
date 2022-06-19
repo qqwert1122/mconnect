@@ -1,6 +1,11 @@
 import "css/App.css";
 import React from "react";
 import { authService, provider, signInWithPopup } from "fbase";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 
 const Auth = ({ customHooks }) => {
   const onGoogleClick = async (event) => {
@@ -16,6 +21,26 @@ const Auth = ({ customHooks }) => {
     }
   };
 
+  const onTestClick = async () => {
+    const auth = getAuth();
+    const data = await signInWithEmailAndPassword(
+      auth,
+      "qqwert11223344@naver.com",
+      "yjh3706!@"
+    );
+    const testUser = {
+      userId: "CobI9ZV3EGTO2FPqhoRoDdzrGti1",
+      userName: "test account",
+      userEmail: "qqwert11223344@naver.com",
+      userPhotoURL: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
+      isAdRemoved: false,
+      isAuthority: false,
+    };
+    customHooks.setsetLoggedInUser(testUser);
+    customHooks.setIsLoggedIn(true);
+    customHooks.setInit(true);
+  };
+
   return (
     <div className="w-screen h-screen flex items-center justify-center">
       <div
@@ -25,7 +50,7 @@ const Auth = ({ customHooks }) => {
         }}
       ></div>
       <img className="z-20 fixed -top-8 -left-20 w-72" src="img/line_1.png" />
-      <img className="fixed -bottom-8 -right-16 w-96" src="img/line_2.png" />
+      <img className="fixed -bottom-8 -right-16 w-72" src="img/line_2.png" />
       <div className="z-10 relative py-24 px-5 rounded-3xl shadow-xl bg-white">
         <div className="font-black mx-auto mb-24 text-center">
           <p className="english__font text-4xl">Welcome,</p>
@@ -36,10 +61,20 @@ const Auth = ({ customHooks }) => {
         </div>
         <div className="mb-3 text-lg text-center font-black">간편 로그인</div>
         <img
+          className="mb-3"
           width={250}
           onClick={onGoogleClick}
-          src="img/btn_google_signin_light_normal_web.png"
+          src="./img/btn_google.png"
         />
+        <button
+          className="relative w-full h-12 mb-3 p-2 font-black rounded bg-black text-white shadow"
+          onClick={onTestClick}
+        >
+          <div className="absolute bg-white h-10 w-12 m-auto left-1 top-1 text-black text-2xl">
+            t
+          </div>
+          Test mode
+        </button>
         <div className="absolute bottom-2 text-sm text-stone-400">
           © 2022 Connects, All rights reserved
         </div>

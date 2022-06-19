@@ -1,3 +1,4 @@
+import "css/Animation.css";
 import Slider from "react-slick";
 
 const ConnectedIdeas = ({ viewIdea, onIdeaClick }) => {
@@ -13,7 +14,7 @@ const ConnectedIdeas = ({ viewIdea, onIdeaClick }) => {
   };
 
   return (
-    <div className="bg-stone-50 shadow-inner">
+    <div className="moveRightToLeft bg-stone-50 shadow-inner">
       <div className="mx-16 pt-5 mb-2 text-center text-base font-black z-10">
         {viewIdea.connectedIdeas.length}개 연결됨
       </div>

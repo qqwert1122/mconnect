@@ -1,10 +1,11 @@
+import "css/Animation.css";
 import SuggestedIdeas from "../SuggestedIdeas";
 import ViewIdeaBottomBar from "./ViewIdeaBottomBar";
 import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 import ConnectedIdeas from "./ConnectedIdeas";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const ViewIdeaBottom = ({
@@ -12,6 +13,7 @@ const ViewIdeaBottom = ({
   viewIdea,
   setViewIdea,
   getCategory,
+  onBackClick,
   setNavValue,
   selectedIdeas,
   setSelectedIdeas,
@@ -54,8 +56,11 @@ const ViewIdeaBottom = ({
       {itemChangeProps === 0 && (
         <>
           <div className="flex justify-end px-3">
-            <button className="p-2 px-3 shadow-2xl rounded-full text-sm font-black border-4 border-stone-300 bg-stone-500 text-white">
-              <FontAwesomeIcon icon={faAngleUp} />
+            <button
+              className="p-2 px-3 shadow-2xl rounded-full text-sm font-black border-4 border-stone-300 bg-stone-500 text-white rotate-90"
+              onClick={onBackClick}
+            >
+              <FontAwesomeIcon icon={faAngleDown} />
             </button>
           </div>
           <ColoredIdeaList
@@ -65,7 +70,7 @@ const ViewIdeaBottom = ({
         </>
       )}
       {itemChangeProps === 1 && (
-        <div className="bg-stone-50 shadow-inner">
+        <div className="moveRightToLeft bg-stone-50 shadow-inner">
           <SuggestedIdeas
             dbIdeas={dbIdeas}
             ideaPrmtr={viewIdea}

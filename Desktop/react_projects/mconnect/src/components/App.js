@@ -66,7 +66,6 @@ const useCustomHooks = () => {
   }, [navValue]);
 
   useEffect(() => {
-    setInit(true);
     authService.onAuthStateChanged(async (user) => {
       if (user) {
         const registeredUser = (
@@ -81,6 +80,7 @@ const useCustomHooks = () => {
       } else {
         setIsLoggedIn(false);
       }
+      setInit(true);
     });
   }, []);
 

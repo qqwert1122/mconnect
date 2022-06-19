@@ -66,7 +66,7 @@ const RelatedIdeas = ({
   };
 
   return (
-    <div className="relative">
+    <div className="moveRightToLeft relative">
       {tabs === 0 && (
         <button
           className="absolute left-2 top-0 p-1 px-2 bg-green-600 text-white font-black rounded-xl z-10"
