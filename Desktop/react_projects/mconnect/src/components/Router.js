@@ -4,7 +4,7 @@ import Ideas from "routes/ideas/Ideas";
 import SearchPage from "routes/ideas/searchpage/SearchPage";
 import ViewIdea from "routes/ideas/viewIdea/ViewIdea";
 import WritingIdea from "routes/ideas/writingIdea/WritingIdea";
-import Storming from "routes/Storming";
+import Storming from "routes/storming/Storming";
 import Setting from "routes/Setting";
 import Auth from "routes/auth/Auth";
 import SignUp from "routes/auth/SignUp";

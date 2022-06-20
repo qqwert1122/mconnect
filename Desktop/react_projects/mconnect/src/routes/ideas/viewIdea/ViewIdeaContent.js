@@ -42,7 +42,6 @@ const ViewIdeaContent = ({ viewIdea }) => {
             <span className="flex">{viewIdea.createdAt}</span>
           </div>
         </div>
-        <hr />
 
         <div className="flex p-5 text-base whitespace-pre-line">
           <span>{viewIdea.text}</span>

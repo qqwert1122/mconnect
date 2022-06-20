@@ -67,9 +67,9 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
       )}
       {/* category, tags */}
       <span className="flex flex-wrap text-xs">
-        <span className="border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 shadow-sm duration-500">
+        {/* <span className="border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 shadow-sm duration-500">
           {getCategory(dbIdea).icon}&nbsp;{getCategory(dbIdea).label}
-        </span>
+        </span> */}
         {dbIdea.tags.length > 4 ? (
           <>
             {dbIdea.tags
@@ -77,7 +77,7 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
               .map((tag, index) => (
                 <button
                   key={index}
-                  className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500"
+                  className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500 text-stone-500"
                   onClick={() => index === 3 && onTagsDialogClick(dbIdea)}
                 >
                   {index === 3 ? `+ ${dbIdea.tags.length - 3}` : tag}
@@ -89,7 +89,7 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
             {dbIdea.tags.map((tag, index) => (
               <span
                 key={index}
-                className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500"
+                className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500 text-stone-500"
               >
                 {tag}
               </span>

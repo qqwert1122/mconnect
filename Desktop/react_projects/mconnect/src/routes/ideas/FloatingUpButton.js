@@ -28,7 +28,7 @@ const FloatingUpButton = ({ scrollY, setScrollY }) => {
       {scrollY > 300 && (
         <div className="opacity fixed bottom-28 right-3 z-10">
           <button
-            className="shadow-2xl rounded-full p-2 px-3 text-sm font-black border-4 border-stone-300 bg-stone-500 text-white"
+            className="shadow-2xl rounded-full w-11 h-11 p-2 px-3 text-sm font-black border-4 border-stone-300 bg-stone-500 text-white"
             onClick={onScrollTopClick}
           >
             <FontAwesomeIcon icon={faAngleUp} />

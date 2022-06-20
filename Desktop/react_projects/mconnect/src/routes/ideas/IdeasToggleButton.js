@@ -96,7 +96,7 @@ const IdeasToggleButton = ({
   };
 
   return (
-    <div className="bg-white px-5 pb-10 mb-2 ">
+    <div className="bg-white px-5 pb-10 mb-2">
       <div
         className={`font-black duration-100 pb-5 ${
           isSelectMode && selectedIdeas.length ? "pt-44" : "pt-24"

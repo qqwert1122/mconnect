@@ -7,14 +7,16 @@ import {
   faCompass as fasCompass,
   faHeart as fasHeart,
   faBookmark as fasBookmark,
+  faAngleDown,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faCompass as farCompass,
   faHeart as farHeart,
   faBookmark as farBookmark,
 } from "@fortawesome/free-regular-svg-icons";
+import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 
-const IdeaBottom = ({ dbIdea, user }) => {
+const IdeaBottom = ({ dbIdea, user, viewDetail, setViewDetail, colorList }) => {
   const onLikeClick = async () => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
     if (dbIdea.likeUsers.includes(user.userId)) {
@@ -40,9 +42,13 @@ const IdeaBottom = ({ dbIdea, user }) => {
     }
   };
 
+  const onDetailClick = () => {
+    setViewDetail((prev) => !prev);
+  };
+
   return (
     <>
-      <div className="flex px-5 pb-5 gap-5 text-stone-500">
+      <div className="flex items-center px-5 pb-5 gap-5 text-stone-500">
         <button
           className={`${
             dbIdea.likeUsers.includes(user.userId) && "text-red-400"
@@ -72,41 +78,34 @@ const IdeaBottom = ({ dbIdea, user }) => {
             size="xl"
           />
         </button>
+        {/* <div className="w-full border-b-2 border-stone-200"></div> */}
+
+        {dbIdea.connectedIdeas.length > 0 && (
+          <div className="w-full flex justify-end gap-2">
+            {/* <img
+              className={`w-full h-4 ${
+                viewDetail ? "opacity-0" : "opacity-30"
+              } duration-500`}
+              src="./img/line_3.png"
+            /> */}
+
+            <ColoredIdeaList
+              ideas={dbIdea.connectedIdeas}
+              colorList={colorList}
+              small={true}
+            />
+
+            <div
+              className={`flex items-center text-stone-500 ${
+                viewDetail && "rotate-180"
+              } duration-500`}
+              onClick={onDetailClick}
+            >
+              <FontAwesomeIcon icon={faAngleDown} size="xl" />
+            </div>
+          </div>
+        )}
       </div>
-      {/* <Stack
-        direction="row"
-        divider={<Divider orientation="vertical" flexItem />}
-        spacing={2}
-        className="flex justify-around items-center py-2"
-      >
-        <button
-          className="relative w-full text-red-500 text-center "
-          onClick={onLikeClick}
-        >
-          <FontAwesomeIcon icon={dbIdea.like ? fasHeart : farHeart} size="xl" />
-          <span className="absolute right-6 bottom-0 text-xs">
-            {dbIdea.likeUsers.length != 0 && dbIdea.likeUsers.length}
-          </span>
-        </button>
-        <button
-          className=" text-orange-400 text-center w-full"
-          onClick={onBookmarkClick}
-        >
-          <FontAwesomeIcon
-            icon={dbIdea.bookmark ? fasBookmark : farBookmark}
-            size="xl"
-          />
-        </button>
-        <button
-          className="text-sky-400 text-center w-full"
-          onClick={onPublicClick}
-        >
-          <FontAwesomeIcon
-            icon={dbIdea.public ? fasCompass : farCompass}
-            size="xl"
-          />
-        </button>
-      </Stack> */}
     </>
   );
 };

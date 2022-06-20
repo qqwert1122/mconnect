@@ -75,7 +75,7 @@ const SuggestedIdeas = ({
           <button
             key={index}
             className={`flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words ${
-              tag === tagChangeProps ? "bg-green-400 text-white" : "bg-white"
+              tag === tagChangeProps ? "bg-stone-600 text-white" : "bg-white"
             }`}
             style={{ flexBasis: "auto" }}
             onClick={(e) => onSuggestedTagClick(e, tag)}

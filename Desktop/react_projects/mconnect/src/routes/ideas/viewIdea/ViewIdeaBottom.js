@@ -5,7 +5,7 @@ import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 import ConnectedIdeas from "./ConnectedIdeas";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const ViewIdeaBottom = ({
@@ -57,10 +57,10 @@ const ViewIdeaBottom = ({
         <>
           <div className="flex justify-end px-3">
             <button
-              className="p-2 px-3 shadow-2xl rounded-full text-sm font-black border-4 border-stone-300 bg-stone-500 text-white rotate-90"
+              className="p-2 px-3 w-11 h-11 shadow-2xl rounded-full text-sm font-black border-4 border-stone-300 bg-stone-500 text-white"
               onClick={onBackClick}
             >
-              <FontAwesomeIcon icon={faAngleDown} />
+              <FontAwesomeIcon icon={faAngleLeft} />
             </button>
           </div>
           <ColoredIdeaList

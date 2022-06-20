@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { dbService } from "fbase";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import Button from "@mui/material/Button";
+import IdeaConnectedIdeas from "./IdeaConnectedIdeas";
 
 const Idea = ({
   customHooks,
@@ -22,8 +23,11 @@ const Idea = ({
   const timeDisplay = customHooks.timeDisplay;
   const setNavValue = customHooks.setNavValue;
   const setUserContext = customHooks.setUserContext;
+  const colorList = customHooks.colorList;
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const [viewDetail, setViewDetail] = useState(false);
 
   const onViewIdeaClick = async (dbIdea) => {
     if (dbIdea.isClicked == false) {
@@ -70,7 +74,14 @@ const Idea = ({
           getCategory={getCategory}
         />
 
-        <IdeaBottom dbIdea={dbIdea} user={user} />
+        <IdeaBottom
+          dbIdea={dbIdea}
+          user={user}
+          viewDetail={viewDetail}
+          setViewDetail={setViewDetail}
+          colorList={colorList}
+        />
+        <IdeaConnectedIdeas viewDetail={viewDetail} dbIdea={dbIdea} />
       </div>
       <hr />
       <DeleteDialog
