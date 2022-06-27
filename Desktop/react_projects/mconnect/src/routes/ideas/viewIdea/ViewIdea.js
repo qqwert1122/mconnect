@@ -2,9 +2,11 @@ import "css/Animation.css";
 import ViewIdeaTopBar from "./ViewIdeaTopBar";
 import ViewIdeaContent from "./ViewIdeaContent";
 import ViewIdeaBottom from "./ViewIdeaBottom";
+import {} from "react-router-dom";
 
 const ViewIdea = ({ customHooks }) => {
   const dbIdeas = customHooks.dbIdeas;
+  const user = customHooks.loggedInUser;
   const userContext = customHooks.userContext;
   const setUserContext = customHooks.setUserContext;
   const colorList = customHooks.colorList;
@@ -30,10 +32,10 @@ const ViewIdea = ({ customHooks }) => {
 
   return (
     <div
-      className="moveRightToLeft text-sm min-h-screen bg-stone-100"
+      className=" text-sm min-h-screen bg-stone-100"
       style={{ paddingBottom: "52px" }}
     >
-      <div className="flex-col bg-white shadow">
+      <div className="moveRightToLeft flex-col bg-white shadow">
         <ViewIdeaTopBar
           viewIdea={viewIdea}
           userContext={userContext}
@@ -42,7 +44,7 @@ const ViewIdea = ({ customHooks }) => {
           onBackClick={onBackClick}
         />
         {/*제목, 아바타, 시간 */}
-        <ViewIdeaContent viewIdea={viewIdea} />
+        <ViewIdeaContent viewIdea={viewIdea} user={user} />
       </div>
       <ViewIdeaBottom
         dbIdeas={dbIdeas}

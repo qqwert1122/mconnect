@@ -5,7 +5,8 @@ import SearchPage from "routes/ideas/searchpage/SearchPage";
 import ViewIdea from "routes/ideas/viewIdea/ViewIdea";
 import WritingIdea from "routes/ideas/writingIdea/WritingIdea";
 import Storming from "routes/storming/Storming";
-import Setting from "routes/Setting";
+import Setting from "routes/setting/Setting";
+import OpenSource from "routes/setting/OpenSource";
 import Auth from "routes/auth/Auth";
 import SignUp from "routes/auth/SignUp";
 
@@ -48,6 +49,11 @@ const AppRouter = ({ customHooks }) => {
             exact
             path="/setting"
             element={<Setting customHooks={customHooks} />}
+          />
+          <Route
+            exact
+            path="/setting/opensource"
+            element={<OpenSource customHooks={customHooks} />}
           />
           <Route exact path="*" element={<Ideas customHooks={customHooks} />} />
         </>

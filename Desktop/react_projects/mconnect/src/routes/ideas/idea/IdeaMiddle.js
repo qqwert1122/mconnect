@@ -1,22 +1,15 @@
 import "css/Animation.css";
 import { useState, useCallback } from "react";
 import { useLongPress } from "use-long-press";
-import Dialog from "@mui/material/Dialog";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
-  const [isTagsDialogOpen, setIsTagsDialogOpen] = useState(false);
   const [DialogTags, setDialogTags] = useState([]);
-
-  const onTagsDialogClick = (idea) => {
-    setIsTagsDialogOpen((prev) => !prev);
-    setDialogTags(idea.tags);
-  };
+  const [anchorEl, setAnchorEl] = useState(false);
 
   // toast message when long pressed
   const callback = useCallback((event) => {
@@ -31,11 +24,18 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
     detect: "both",
   });
 
+  // tag ellipsis menu
+  const open = Boolean(anchorEl);
+  const handleEllipsisClick = (event, idea) => {
+    setDialogTags(idea.tags);
+    setAnchorEl(event.currentTarget);
+  };
+  const handleEllipsisClose = () => {
+    setAnchorEl(false);
+  };
+
   return (
-    <div
-      className="btn w-full box-border px-4 mt-4 mb-4 duration-200"
-      {...bind()}
-    >
+    <div className="w-full box-border px-4 mt-4 mb-4 duration-200" {...bind()}>
       {/* title */}
       {dbIdea.title !== "" && (
         <div className="flex items-center pb-2 w-full font-black">
@@ -77,8 +77,15 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
               .map((tag, index) => (
                 <button
                   key={index}
+                  id="demo-positioned-button"
+                  aria-controls={open ? "demo-positioned-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  onClick={(e) => index === 3 && handleEllipsisClick(e, dbIdea)}
                   className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500 text-stone-500"
-                  onClick={() => index === 3 && onTagsDialogClick(dbIdea)}
+                  sx={{
+                    color: "inherit",
+                  }}
                 >
                   {index === 3 ? `+ ${dbIdea.tags.length - 3}` : tag}
                 </button>
@@ -97,23 +104,27 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
           </>
         )}
       </span>
-      <Dialog
-        open={isTagsDialogOpen}
-        onClose={() => {
-          setIsTagsDialogOpen(false);
+      <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleEllipsisClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
         }}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        sx={{}}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
       >
-        <List sx={{ pt: 0 }}>
-          {DialogTags.map((tag, index) => (
-            <ListItem button key={index}>
-              <ListItemText primary={tag} />
-            </ListItem>
-          ))}
-        </List>
-      </Dialog>
+        {DialogTags.filter((tag, index) => index > 2).map((tag, index) => (
+          <MenuItem key={index}>
+            <div className="text-xs">{tag}</div>
+          </MenuItem>
+        ))}
+      </Menu>
     </div>
   );
 };

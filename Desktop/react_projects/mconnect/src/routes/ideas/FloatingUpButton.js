@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
-const FloatingUpButton = ({ scrollY, setScrollY }) => {
+const FloatingUpButton = ({ floating, scrollY, setScrollY }) => {
   const handleFollow = () => {
     setScrollY(window.pageYOffset); // window 스크롤 값을 ScrollY에 저장
   };
@@ -26,7 +26,11 @@ const FloatingUpButton = ({ scrollY, setScrollY }) => {
   return (
     <>
       {scrollY > 300 && (
-        <div className="opacity fixed bottom-28 right-3 z-10">
+        <div
+          className={`opacity fixed ${
+            floating ? "bottom-10" : "bottom-28"
+          }  right-3 z-10`}
+        >
           <button
             className="shadow-2xl rounded-full w-11 h-11 p-2 px-3 text-sm font-black border-4 border-stone-300 bg-stone-500 text-white"
             onClick={onScrollTopClick}

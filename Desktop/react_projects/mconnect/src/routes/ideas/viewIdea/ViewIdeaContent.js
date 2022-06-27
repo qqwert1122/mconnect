@@ -13,7 +13,7 @@ import {
   faBookmark as farBookmark,
 } from "@fortawesome/free-regular-svg-icons";
 
-const ViewIdeaContent = ({ viewIdea }) => {
+const ViewIdeaContent = ({ viewIdea, user }) => {
   return (
     <>
       <div>
@@ -69,29 +69,36 @@ const ViewIdeaContent = ({ viewIdea }) => {
             </span>
           </div>
         )}
+        {viewIdea.likeUsers.length != 0 && (
+          <div className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs">
+            <span>
+              좋아요&nbsp;
+              {viewIdea.likeUsers.length}
+            </span>
+          </div>
+        )}
       </div>
 
       <hr />
       <div className="flex items-center px-5 py-4 gap-4">
-        <button className="text-red-500 px-2">
+        <button className="text-red-400 px-2">
           <FontAwesomeIcon
-            icon={viewIdea.like ? fasHeart : farHeart}
-            size="lg"
+            icon={
+              viewIdea.likeUsers.includes(user.userId) ? fasHeart : farHeart
+            }
+            size="xl"
           />
-          <span className="absolute left-5 bottom-0 text-xs">
-            {viewIdea.likeUsers.length != 0 && viewIdea.likeUsers.length}
-          </span>
         </button>
         <button className="text-orange-400 px-2">
           <FontAwesomeIcon
             icon={viewIdea.bookmark ? fasBookmark : farBookmark}
-            size="lg"
+            size="xl"
           />
         </button>
         <button className="text-sky-400 px-2">
           <FontAwesomeIcon
             icon={viewIdea.public ? fasCompass : farCompass}
-            size="lg"
+            size="xl"
           />
         </button>
       </div>

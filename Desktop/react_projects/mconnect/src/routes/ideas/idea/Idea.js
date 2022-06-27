@@ -50,30 +50,31 @@ const Idea = ({
   };
 
   return (
-    <div className="duration-500 bg-white">
+    <div className="duration-500 bg-white text-sm">
       <hr />
-      <div className="mt-4 opacity text-sm ">
-        <IdeaTop
-          user={user}
-          dbIdea={dbIdea}
-          setNavValue={setNavValue}
-          setUserContext={setUserContext}
-          setViewIdea={setViewIdea}
-          isSelectMode={isSelectMode}
-          selectedIdeas={selectedIdeas}
-          anchorEl={anchorEl}
-          setAnchorEl={setAnchorEl}
-          onSelectIdea={onSelectIdea}
-          timeDisplay={timeDisplay}
-          setDeleteDialogOpen={setDeleteDialogOpen}
-        />
-        <IdeaMiddle
-          dbIdea={dbIdea}
-          onSelectIdea={onSelectIdea}
-          onViewIdeaClick={onViewIdeaClick}
-          getCategory={getCategory}
-        />
-
+      <div>
+        <div className="btn pt-4 ">
+          <IdeaTop
+            user={user}
+            dbIdea={dbIdea}
+            setNavValue={setNavValue}
+            setUserContext={setUserContext}
+            setViewIdea={setViewIdea}
+            isSelectMode={isSelectMode}
+            selectedIdeas={selectedIdeas}
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+            onSelectIdea={onSelectIdea}
+            timeDisplay={timeDisplay}
+            setDeleteDialogOpen={setDeleteDialogOpen}
+          />
+          <IdeaMiddle
+            dbIdea={dbIdea}
+            onSelectIdea={onSelectIdea}
+            onViewIdeaClick={onViewIdeaClick}
+            getCategory={getCategory}
+          />
+        </div>
         <IdeaBottom
           dbIdea={dbIdea}
           user={user}

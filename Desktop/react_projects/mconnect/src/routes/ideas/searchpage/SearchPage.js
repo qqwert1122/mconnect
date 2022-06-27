@@ -8,6 +8,8 @@ import CriteriaAll from "./CriteriaAll";
 import { useEffect, useState } from "react";
 import ShowingSearchIdeas from "./ShowingSearchIdeas";
 import FloatingUpButton from "../FloatingUpButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 
 const SearchPage = ({ customHooks }) => {
   const dbIdeas = customHooks.dbIdeas;
@@ -114,66 +116,74 @@ const SearchPage = ({ customHooks }) => {
   };
 
   return (
-    <div className="min-h-screen flex-col bg-white">
-      <SearchPageTopBar
-        setNavValue={setNavValue}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-      />
-
-      <SearchCriteria
-        searchCriteria={searchCriteria}
-        selectedCriteria={selectedCriteria}
-        setSelectedCriteria={setSelectedCriteria}
-        setListSearchCriteriaSource={setListSearchCriteriaSource}
-        setListSearchCriteriaTag={setListSearchCriteriaTag}
-        setListSearchCriteriaUser={setListSearchCriteriaUser}
-        setListAllCriteria={setListAllCriteria}
-      />
-
-      {selectedCriteria === 1 && (
-        <CriteriaSource
-          sourceList={sourceList}
+    <div className="min-h-screen flex-col bg-stone-100">
+      <div className="moveRightToLeft">
+        <SearchPageTopBar
+          setNavValue={setNavValue}
           searchTerm={searchTerm}
-          listSearchCriteriaSource={listSearchCriteriaSource}
-          onSourceCriteriaClick={onSourceCriteriaClick}
+          setSearchTerm={setSearchTerm}
         />
-      )}
+        <div className="shadow">
+          <SearchCriteria
+            searchCriteria={searchCriteria}
+            selectedCriteria={selectedCriteria}
+            setSelectedCriteria={setSelectedCriteria}
+            setListSearchCriteriaSource={setListSearchCriteriaSource}
+            setListSearchCriteriaTag={setListSearchCriteriaTag}
+            setListSearchCriteriaUser={setListSearchCriteriaUser}
+            setListAllCriteria={setListAllCriteria}
+          />
 
-      {selectedCriteria === 2 && (
-        <CriteriaTag
-          tagList={tagList}
+          {selectedCriteria === 1 && (
+            <CriteriaSource
+              sourceList={sourceList}
+              searchTerm={searchTerm}
+              listSearchCriteriaSource={listSearchCriteriaSource}
+              onSourceCriteriaClick={onSourceCriteriaClick}
+            />
+          )}
+
+          {selectedCriteria === 2 && (
+            <CriteriaTag
+              tagList={tagList}
+              searchTerm={searchTerm}
+              listSearchCriteriaTag={listSearchCriteriaTag}
+              onTagCriteriaClick={onTagCriteriaClick}
+            />
+          )}
+
+          {selectedCriteria === 3 && (
+            <CriteriaUser
+              userList={userList}
+              searchTerm={searchTerm}
+              listSearchCriteriaUser={listSearchCriteriaUser}
+              onUserCriteriaClick={onUserCriteriaClick}
+            />
+          )}
+
+          {listAllCriteria.length > 0 && (
+            <CriteriaAll
+              listAllCriteria={listAllCriteria}
+              onXmarkClick={onXmarkClick}
+            />
+          )}
+        </div>
+        <ShowingSearchIdeas
+          setNavValue={setNavValue}
+          setViewIdea={setViewIdea}
+          setUserContext={setUserContext}
+          showingSearchIdeas={showingSearchIdeas}
           searchTerm={searchTerm}
-          listSearchCriteriaTag={listSearchCriteriaTag}
-          onTagCriteriaClick={onTagCriteriaClick}
+          selectedIdeas={selectedIdeas}
+          setSelectedIdeas={setSelectedIdeas}
+          listAllCriteria={listAllCriteria}
         />
-      )}
-
-      {selectedCriteria === 3 && (
-        <CriteriaUser
-          userList={userList}
-          searchTerm={searchTerm}
-          listSearchCriteriaUser={listSearchCriteriaUser}
-          onUserCriteriaClick={onUserCriteriaClick}
-        />
-      )}
-      <div className="w-full h-2 bg-stone-100"></div>
-
-      <CriteriaAll
-        listAllCriteria={listAllCriteria}
-        onXmarkClick={onXmarkClick}
+      </div>
+      <FloatingUpButton
+        floating={selectedIdeas.length == 0}
+        scrollY={scrollY}
+        setScrollY={setScrollY}
       />
-
-      <ShowingSearchIdeas
-        setNavValue={setNavValue}
-        setViewIdea={setViewIdea}
-        setUserContext={setUserContext}
-        showingSearchIdeas={showingSearchIdeas}
-        searchTerm={searchTerm}
-        selectedIdeas={selectedIdeas}
-        setSelectedIdeas={setSelectedIdeas}
-      />
-      <FloatingUpButton scrollY={scrollY} setScrollY={setScrollY} />
 
       {selectedIdeas.length > 0 && (
         <div className="heightStrech w-full p-4 fixed bottom-0 shadow-inner bg-red-400 text-white font-black text-center text-base ">

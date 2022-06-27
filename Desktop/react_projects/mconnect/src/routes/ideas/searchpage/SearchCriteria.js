@@ -17,7 +17,7 @@ const SearchCriteria = ({
     }
   };
   return (
-    <div className="mx-5 pt-20 pb-5 flex gap-4 text-base">
+    <div className="px-5 pt-20 pb-5 flex gap-4 text-base bg-white ">
       {searchCriteria.map((criteria, index) => (
         <button
           key={index}
