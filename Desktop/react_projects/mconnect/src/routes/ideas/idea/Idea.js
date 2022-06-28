@@ -30,10 +30,8 @@ const Idea = ({
   const [viewDetail, setViewDetail] = useState(false);
 
   const onViewIdeaClick = async (dbIdea) => {
-    if (dbIdea.isClicked == false) {
-      const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
-      await updateDoc(ideaRef, { isClicked: true });
-    }
+    const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
+    await updateDoc(ideaRef, { viewCount: ++dbIdea.viewCount });
     setTimeout(() => {
       setUserContext(0);
       setViewIdea(dbIdea);

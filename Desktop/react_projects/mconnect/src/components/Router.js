@@ -1,4 +1,3 @@
-import { Route, Routes } from "react-router-dom";
 import Home from "routes/home/Home";
 import Ideas from "routes/ideas/Ideas";
 import SearchPage from "routes/ideas/searchpage/SearchPage";
@@ -9,6 +8,7 @@ import Setting from "routes/setting/Setting";
 import OpenSource from "routes/setting/OpenSource";
 import Auth from "routes/auth/Auth";
 import SignUp from "routes/auth/SignUp";
+import { Route, Routes } from "react-router-dom";
 
 const AppRouter = ({ customHooks }) => {
   return (
@@ -24,7 +24,7 @@ const AppRouter = ({ customHooks }) => {
             exact
             path="/ideas"
             element={<Ideas customHooks={customHooks} />}
-          />
+          ></Route>
           <Route
             exact
             path="/ideas/searchpage"

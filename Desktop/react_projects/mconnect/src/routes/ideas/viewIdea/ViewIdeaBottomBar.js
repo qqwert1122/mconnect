@@ -9,17 +9,13 @@ const ViewIdeaBottomBar = ({
   itemChangeProps,
 }) => {
   return (
-    <div className="flex justify-between items-center p-2 shadow-inner bg-white">
+    <div className="flex justify-between items-center p-2 py-4 shadow-inner bg-white">
       <div className="flex gap-2 text-lg">
-        <span className="border-box rounded-3xl border-2 mb-1 px-3 py-1 font-black text-sm shadow-sm duration-500">
-          {getCategory(viewIdea.category).icon}&nbsp;
-          {getCategory(viewIdea.category).label}
-        </span>
         <button
           className="px-2 text-base font-black"
           onClick={(e) => itemChange(1)}
         >
-          추천 <FontAwesomeIcon icon={faThumbsUp} />
+          관련 <FontAwesomeIcon icon={faThumbsUp} />
         </button>
       </div>
 

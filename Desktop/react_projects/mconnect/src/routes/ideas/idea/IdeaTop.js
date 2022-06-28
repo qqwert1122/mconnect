@@ -82,7 +82,7 @@ const IdeaTop = ({
           </div>
           <div className="flex items-center gap-2">
             {timeDisplay(dbIdea.createdAt)}
-            {dbIdea.isClicked ||
+            {dbIdea.viewCount > 0 ||
             dayjs().diff(dayjs(dbIdea.createdAt), "day") > 3 ? (
               <></>
             ) : (

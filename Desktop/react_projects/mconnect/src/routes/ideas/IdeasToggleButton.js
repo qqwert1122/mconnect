@@ -1,13 +1,28 @@
-import { useEffect } from "react";
+import "css/Animation.css";
 import SelectedIdeasSlide from "./SelectedIdeasSlide";
+import { useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCompass as fasCompass,
+  faHeart as fasHeart,
+  faBookmark as fasBookmark,
+  faCircleNodes,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  faCompass as farCompass,
+  faHeart as farHeart,
+  faBookmark as farBookmark,
+} from "@fortawesome/free-regular-svg-icons";
 
 const IdeasToggleButton = ({
+  user,
   dbIdeas,
   selectedIdeas,
   setShowingIdeas,
   categories,
   categoryPrmtr,
   setCategoryPrmtr,
+  scrollY,
   filters,
   filterPrmtr,
   setFilterPrmtr,
@@ -26,66 +41,29 @@ const IdeasToggleButton = ({
   }, [categoryPrmtr, dbIdeas]);
 
   useEffect(() => {
-    if (categoryPrmtr === null) {
-      if (filterPrmtr === null) {
-        setShowingIdeas(dbIdeas);
-        return;
-      } else {
-        switch (filterPrmtr.value) {
-          case "like":
-            setShowingIdeas(dbIdeas.filter((idea) => idea.like === true));
-            break;
-          case "bookmark":
-            setShowingIdeas(dbIdeas.filter((idea) => idea.bookmark === true));
-            break;
-          case "public":
-            setShowingIdeas(dbIdeas.filter((idea) => idea.public === true));
-            break;
-        }
-        return;
-      }
+    if (filterPrmtr === null) {
+      setShowingIdeas(dbIdeas);
     } else {
-      if (filterPrmtr === null) {
-        setShowingIdeas(
-          dbIdeas.filter((idea) => idea.category === categoryPrmtr.value)
-        );
-        return;
-      } else {
-        switch (filterPrmtr.value) {
-          case "like":
-            setShowingIdeas(
-              dbIdeas
-                .filter((idea) => idea.category === categoryPrmtr.value)
-                .filter((idea) => idea.like === true)
-            );
-            break;
-          case "bookmark":
-            setShowingIdeas(
-              dbIdeas
-                .filter((idea) => idea.category === categoryPrmtr.value)
-                .filter((idea) => idea.bookmark === true)
-            );
-            break;
-          case "public":
-            setShowingIdeas(
-              dbIdeas
-                .filter((idea) => idea.category === categoryPrmtr.value)
-                .filter((idea) => idea.public === true)
-            );
-            break;
-        }
-        return;
+      switch (filterPrmtr.value) {
+        case "connect":
+          setShowingIdeas(
+            dbIdeas.filter((idea) => idea.connectedIdeas.length > 0)
+          );
+          break;
+        case "like":
+          setShowingIdeas(
+            dbIdeas.filter((idea) => idea.likeUsers.includes(user.userId))
+          );
+          break;
+        case "bookmark":
+          setShowingIdeas(dbIdeas.filter((idea) => idea.bookmark));
+          break;
+        case "public":
+          setShowingIdeas(dbIdeas.filter((idea) => idea.public));
+          break;
       }
     }
   }, [filterPrmtr, dbIdeas]);
-
-  const onCategoryPrmtrClick = (item) => {
-    if (categoryPrmtr != null && categoryPrmtr.value === item.value) {
-      setCategoryPrmtr(null);
-    } else {
-      setCategoryPrmtr(item);
-    }
-  };
 
   const onFilterPrmtrClick = (item) => {
     if (filterPrmtr != null && filterPrmtr.value === item.value) {
@@ -96,7 +74,7 @@ const IdeasToggleButton = ({
   };
 
   return (
-    <div className="bg-white px-5 pb-10 mb-2">
+    <div className="bg-white px-5 pb-5 mb-2">
       <div
         className={`font-black duration-100 pb-5 ${
           isSelectMode && selectedIdeas.length ? "pt-44" : "pt-24"
@@ -104,44 +82,48 @@ const IdeasToggleButton = ({
       >
         카테고리
       </div>
-      <div className="flex flex-wrap justify-start gap-2">
-        {categories.map((item, index) => (
-          <button
-            key={index}
-            className={`border-box rounded-3xl ${
-              categoryPrmtr != null &&
-              item.value === categoryPrmtr.value &&
-              item.bgColor
-            } ${item.color} ${
-              item.borderColor
-            } border-2 px-3 py-1 text-sm font-black shadow-md duration-500`}
-            onClick={() => {
-              onCategoryPrmtrClick(item);
-            }}
-          >
-            <span className="text-sm">{item.icon}</span>
-            &nbsp;{item.label}
-          </button>
-        ))}
+      <div className="p-1 flex flex-nowrap overflow-x-scroll gap-2">
         {filters.map((item, index) => (
           <button
             key={index}
-            className={`border-box rounded-3xl ${
+            className={`flex-grow-0 flex-shrink-0 border-box rounded-3xl ${
               filterPrmtr != null &&
               item.value === filterPrmtr.value &&
               item.bgColor
             } ${item.color} ${
               item.borderColor
-            } border-2 px-3 py-1 text-sm font-black shadow-md duration-500`}
+            } border-2 px-2 py-1 text-sm font-black shadow-md duration-500`}
             onClick={() => {
               onFilterPrmtrClick(item);
             }}
           >
-            <span className="text-base">{item.icon}</span>
-            &nbsp;{item.label}
+            {item.icon}&nbsp;{item.label}
           </button>
         ))}
       </div>
+      {scrollY > 160 && (
+        <div
+          className={`moveRightToLeft p-1 z-10 fixed ${
+            isSelectMode && selectedIdeas.length > 0 ? "top-40" : "top-20"
+          } right-3 flex gap-2 bg-white bg-opacity-70`}
+        >
+          {filters.map((item, index) => (
+            <button
+              key={index}
+              className={`w-10 h-10 shadow-lg rounded-full border-2 ${
+                filterPrmtr != null && item.value === filterPrmtr.value
+                  ? item.bgColor
+                  : "bg-white"
+              } ${item.color} ${item.borderColor} duration-500`}
+              onClick={() => {
+                onFilterPrmtrClick(item);
+              }}
+            >
+              {item.icon}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

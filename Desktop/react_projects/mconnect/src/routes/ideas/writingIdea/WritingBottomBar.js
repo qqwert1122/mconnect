@@ -50,12 +50,8 @@ const WritingBottomBar = ({
   };
 
   return (
-    <div className="flex justify-between items-center p-2 shadow-inner">
+    <div className="flex justify-between items-center p-2 py-4 shadow-inner">
       <div className="flex gap-2 text-lg">
-        <span className="border-box rounded-3xl border-2 mb-1 px-3 py-1 font-black text-sm shadow-sm duration-500">
-          {getCategory(formCategory).icon}&nbsp;
-          {getCategory(formCategory).label}
-        </span>
         <button
           className={`${formSource.length === 0 && "text-stone-400"} px-2`}
           onClick={(e) => bottomItemChange(e, 1)}

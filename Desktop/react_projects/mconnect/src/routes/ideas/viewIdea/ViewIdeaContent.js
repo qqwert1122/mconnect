@@ -1,4 +1,20 @@
+import { useState } from "react";
+import { authService, dbService } from "fbase";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+  addDoc,
+  doc,
+  getDoc,
+  documentId,
+  setDoc,
+} from "firebase/firestore";
 import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHashtag,
@@ -14,6 +30,15 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 
 const ViewIdeaContent = ({ viewIdea, user }) => {
+  const [anchorEl, setAnchorEl] = useState(false);
+
+  const open = Boolean(anchorEl);
+  const handleEllipsisClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleEllipsisClose = () => {
+    setAnchorEl(false);
+  };
   return (
     <>
       <div>
@@ -47,13 +72,13 @@ const ViewIdeaContent = ({ viewIdea, user }) => {
           <span>{viewIdea.text}</span>
         </div>
         {viewIdea.source.length != 0 && (
-          <div className="flex items-center p-5 py-2 gap-2">
+          <div className="flex items-center p-5 py-2 gap-2 text-stone-500">
             <FontAwesomeIcon icon={faQuoteLeft} />
             <span>{viewIdea.source}</span>
           </div>
         )}
         {viewIdea.tags.length != 0 && (
-          <div className="flex items-start p-5 pt-1 pb-4 gap-2">
+          <div className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-500">
             <span className="pt-1">
               <FontAwesomeIcon icon={faHashtag} />
             </span>
@@ -69,14 +94,24 @@ const ViewIdeaContent = ({ viewIdea, user }) => {
             </span>
           </div>
         )}
-        {viewIdea.likeUsers.length != 0 && (
-          <div className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs">
-            <span>
+
+        <div className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs">
+          <span>
+            조회&nbsp;
+            {viewIdea.viewCount}
+          </span>
+          {viewIdea.likeUsers.length != 0 && (
+            <button
+              aria-controls={open ? "demo-positioned-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleEllipsisClick}
+            >
               좋아요&nbsp;
               {viewIdea.likeUsers.length}
-            </span>
-          </div>
-        )}
+            </button>
+          )}
+        </div>
       </div>
 
       <hr />
@@ -102,6 +137,27 @@ const ViewIdeaContent = ({ viewIdea, user }) => {
           />
         </button>
       </div>
+      <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleEllipsisClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        {viewIdea.likeUsers.map((user, index) => (
+          <MenuItem key={index}>
+            <div className="text-xs">{user}</div>
+          </MenuItem>
+        ))}
+      </Menu>
     </>
   );
 };

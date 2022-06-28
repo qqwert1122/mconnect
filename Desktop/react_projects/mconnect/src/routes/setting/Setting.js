@@ -228,7 +228,7 @@ const Setting = ({ customHooks }) => {
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faEnvelope} size="xl" />
             </span>
-            <span className="absolute bottom-2 right-2">제안</span>
+            <span className="absolute bottom-2 right-2">제안/제보</span>
           </div>
           <button
             className="btn w-1/2 h-24 relative my-5 mr-5 ml-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-base"

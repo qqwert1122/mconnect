@@ -12,7 +12,6 @@ import {
 const IdeasTopBar = ({
   setViewIdea,
   setNavValue,
-  setScrollY,
   selectedIdeas,
   setSelectedIdeas,
   isSelectMode,

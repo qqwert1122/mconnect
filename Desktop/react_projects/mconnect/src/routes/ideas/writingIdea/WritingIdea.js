@@ -113,7 +113,7 @@ const WritingIdea = ({ customHooks }) => {
               likeUsers: [],
               bookmarkUsers: [],
               connectedIdeas: formConnectedIdeas,
-              isClicked: false,
+              viewCount: 0,
               createdAt: dayjs().format("YYYY. MM. DD. HH:mm"),
               userId: loggedInUser.userId,
               userEmail: loggedInUser.userEmail,

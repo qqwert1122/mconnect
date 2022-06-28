@@ -17,8 +17,14 @@ import {
   faCompass as fasCompass,
   faHeart as fasHeart,
   faBookmark as fasBookmark,
+  faHeart,
+  faCircleNodes,
 } from "@fortawesome/free-solid-svg-icons";
-import {} from "@fortawesome/free-regular-svg-icons";
+import {
+  faCompass as farCompass,
+  faHeart as farHeart,
+  faBookmark as farBookmark,
+} from "@fortawesome/free-regular-svg-icons";
 
 const Ideas = ({ customHooks }) => {
   const user = customHooks.loggedInUser;
@@ -35,6 +41,7 @@ const Ideas = ({ customHooks }) => {
   // idea
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
+  const viewIdea = customHooks.viewIdea;
   const setViewIdea = customHooks.setViewIdea;
   const setTagList = customHooks.setTagList;
   const setSourceList = customHooks.setSourceList;
@@ -130,6 +137,14 @@ const Ideas = ({ customHooks }) => {
 
   const filters = [
     {
+      icon: <FontAwesomeIcon icon={faCircleNodes} />,
+      label: "연결됨",
+      bgColor: "bg-green-200",
+      color: "text-green-500",
+      borderColor: "border-green-200",
+      value: "connect",
+    },
+    {
       icon: <FontAwesomeIcon icon={fasHeart} />,
       label: "좋아요",
       bgColor: "bg-red-200",
@@ -158,28 +173,30 @@ const Ideas = ({ customHooks }) => {
   return (
     <>
       <BottomNavigationBar customHooks={customHooks} />
-      <div className="bg-stone-100">
+      <div className="relative bg-stone-100">
         <IdeasTopBar
           setViewIdea={setViewIdea}
           setNavValue={setNavValue}
-          setScrollY={setScrollY}
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
           isSelectMode={isSelectMode}
           setIsSelectMode={setIsSelectMode}
         />
         <IdeasToggleButton
+          user={user}
           dbIdeas={dbIdeas}
           selectedIdeas={selectedIdeas}
           setShowingIdeas={setShowingIdeas}
           categories={categories}
           categoryPrmtr={categoryPrmtr}
           setCategoryPrmtr={setCategoryPrmtr}
+          scrollY={scrollY}
           filters={filters}
           filterPrmtr={filterPrmtr}
           setFilterPrmtr={setFilterPrmtr}
           isSelectMode={isSelectMode}
         />
+
         {/* 아이디어 */}
         <div className="min-h-screen py-2 pb-14 bg-white">
           <div className="flex font-black px-5 py-4 gap-2">
@@ -203,6 +220,7 @@ const Ideas = ({ customHooks }) => {
                 dbIdea={dbIdea}
                 key={dbIdea.id}
                 getCategory={getCategory}
+                viewIdea={viewIdea}
                 setViewIdea={setViewIdea}
                 isSelectMode={isSelectMode}
                 selectedIdeas={selectedIdeas}

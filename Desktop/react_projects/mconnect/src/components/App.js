@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RecoilRoot, atom, useRecoilState } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { createBrowserHistory } from "history";
 import { createTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { authService, dbService } from "fbase";
@@ -61,30 +60,10 @@ const useCustomHooks = () => {
   const [scrollY, setScrollY] = useRecoilState(scrollAtom);
 
   let navigate = useNavigate();
-  const history = createBrowserHistory();
 
   useEffect(() => {
     navigate(`${navValue}`, { replace: true });
   }, [navValue]);
-
-  useEffect(
-    () => {
-      const listenBackEvent = () => {
-        setNavValue(-1);
-      };
-
-      const unlistenHistoryEvent = history.listen(({ action }) => {
-        if (action === "POP") {
-          listenBackEvent();
-        }
-      });
-
-      return unlistenHistoryEvent;
-    },
-    [
-      // effect에서 사용하는 state를 추가
-    ]
-  );
 
   useEffect(() => {
     authService.onAuthStateChanged(async (user) => {
