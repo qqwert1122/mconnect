@@ -50,6 +50,8 @@ const Ideas = ({ customHooks }) => {
   // setting
   const [isSelectMode, setIsSelectMode] = useState(false);
 
+  const [isViewDetailsClicked, setIsViewDetailsClicked] = useState(false);
+
   // dbIdeas 변경 시마다 showingIdeas, tagList, sourceList를 변경함.
   useEffect(() => {
     setTimeout(() => {
@@ -181,6 +183,8 @@ const Ideas = ({ customHooks }) => {
           setSelectedIdeas={setSelectedIdeas}
           isSelectMode={isSelectMode}
           setIsSelectMode={setIsSelectMode}
+          isViewDetailsClicked={isViewDetailsClicked}
+          setIsViewDetailsClicked={setIsViewDetailsClicked}
         />
         <IdeasToggleButton
           user={user}
@@ -195,6 +199,7 @@ const Ideas = ({ customHooks }) => {
           filterPrmtr={filterPrmtr}
           setFilterPrmtr={setFilterPrmtr}
           isSelectMode={isSelectMode}
+          isViewDetailsClicked={isViewDetailsClicked}
         />
 
         {/* 아이디어 */}

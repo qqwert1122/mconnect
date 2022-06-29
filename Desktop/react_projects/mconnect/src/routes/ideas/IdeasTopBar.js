@@ -16,6 +16,8 @@ const IdeasTopBar = ({
   setSelectedIdeas,
   isSelectMode,
   setIsSelectMode,
+  isViewDetailsClicked,
+  setIsViewDetailsClicked,
 }) => {
   const onSelectModeClick = () => {
     setIsSelectMode((prev) => !prev);
@@ -55,6 +57,8 @@ const IdeasTopBar = ({
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
           setViewIdea={setViewIdea}
+          isViewDetailsClicked={isViewDetailsClicked}
+          setIsViewDetailsClicked={setIsViewDetailsClicked}
         />
       )}
     </div>

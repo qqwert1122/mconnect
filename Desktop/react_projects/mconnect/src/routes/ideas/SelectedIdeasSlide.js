@@ -8,9 +8,10 @@ const SelectedIdeasSlide = ({
   selectedIdeas,
   setSelectedIdeas,
   setViewIdea,
+  isViewDetailsClicked,
+  setIsViewDetailsClicked,
 }) => {
   // event handler
-  const [isViewDetailsClicked, setisViewDetailsClicked] = useState(false);
 
   const onIdeaClick = (idea) => {
     setViewIdea(idea);
@@ -19,7 +20,7 @@ const SelectedIdeasSlide = ({
 
   const onViewDetailsClick = (e) => {
     e.preventDefault();
-    setisViewDetailsClicked((prev) => !prev);
+    setIsViewDetailsClicked((prev) => !prev);
   };
 
   const onXmarkClick = (e, index) => {
@@ -60,7 +61,7 @@ const SelectedIdeasSlide = ({
               <Slider {...settings}>
                 {selectedIdeas.map((idea, index) => (
                   <div key={index}>
-                    <div className="relative h-60 p-5 m-1 bg-stone-100 shadow-sm rounded-3xl break-all text-sm">
+                    <div className="relative h-60 p-5 m-1 mx-2 bg-stone-100 shadow-md rounded-3xl break-all text-sm">
                       <button
                         className="absolute w-6 h-6 rounded-full border-2 border-stone-200 bg-white shadow right-0 top-0"
                         onClick={(e) => {
@@ -78,7 +79,7 @@ const SelectedIdeasSlide = ({
                           )
                         ) : (
                           <>
-                            <div className="mb-2 font-black text-base">
+                            <div className="mb-2 font-black text-sm">
                               {idea.title}
                             </div>
                             {idea.text.length < 140 ? (

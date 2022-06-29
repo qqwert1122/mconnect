@@ -32,11 +32,9 @@ const Idea = ({
   const onViewIdeaClick = async (dbIdea) => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
     await updateDoc(ideaRef, { viewCount: ++dbIdea.viewCount });
-    setTimeout(() => {
-      setUserContext(0);
-      setViewIdea(dbIdea);
-      setNavValue("/ideas/viewidea");
-    }, 100);
+    setUserContext(0);
+    setViewIdea(dbIdea);
+    setNavValue("/ideas/viewidea");
   };
 
   // 삭제 대화상자
@@ -80,7 +78,11 @@ const Idea = ({
           setViewDetail={setViewDetail}
           colorList={colorList}
         />
-        <IdeaConnectedIdeas viewDetail={viewDetail} dbIdea={dbIdea} />
+        <IdeaConnectedIdeas
+          viewDetail={viewDetail}
+          dbIdea={dbIdea}
+          colorList={colorList}
+        />
       </div>
       <hr />
       <DeleteDialog
