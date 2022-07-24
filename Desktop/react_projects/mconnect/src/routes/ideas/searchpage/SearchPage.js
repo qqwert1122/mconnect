@@ -13,7 +13,7 @@ import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 
 const SearchPage = ({ customHooks }) => {
   const dbIdeas = customHooks.dbIdeas;
-  const setNavValue = customHooks.setNavValue;
+  const navigate = customHooks.navigate;
   const setViewIdea = customHooks.setViewIdea;
   const setUserContext = customHooks.setUserContext;
   const tagList = customHooks.tagList;
@@ -119,7 +119,7 @@ const SearchPage = ({ customHooks }) => {
     <div className="min-h-screen flex-col bg-stone-100">
       <div className="moveRightToLeft">
         <SearchPageTopBar
-          setNavValue={setNavValue}
+          navigate={navigate}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
         />
@@ -169,7 +169,7 @@ const SearchPage = ({ customHooks }) => {
           )}
         </div>
         <ShowingSearchIdeas
-          setNavValue={setNavValue}
+          navigate={navigate}
           setViewIdea={setViewIdea}
           setUserContext={setUserContext}
           showingSearchIdeas={showingSearchIdeas}

@@ -9,7 +9,6 @@ import { faCompass as farCompass } from "@fortawesome/free-regular-svg-icons";
 const WritingBottomBar = ({
   bottomItemChangeProps,
   setBottomItemChangeProps,
-  getCategory,
   formCategory,
   formSource,
   formTags,

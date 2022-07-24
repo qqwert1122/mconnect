@@ -18,10 +18,9 @@ import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 
 const SignUp = ({ customHooks }) => {
-  const setNavValue = customHooks.setNavValue;
   const setLoggedInUser = customHooks.setLoggedInUser;
   const setIsLoggedIn = customHooks.setIsLoggedIn;
-
+  const navigate = customHooks.navigate;
   const userNameRef = useRef();
 
   const [userName, setUserName] = useState("");
@@ -107,7 +106,7 @@ const SignUp = ({ customHooks }) => {
           await getDoc(doc(dbService, "users", authService.currentUser.uid))
         ).data();
         setLoggedInUser(registeredUser);
-        setNavValue("/");
+        navigate("/");
         setIsLoggedIn(true);
     }
   };

@@ -5,11 +5,11 @@ import MenuItem from "@mui/material/MenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const ShowingSearchIdeas = ({
-  setNavValue,
+  navigate,
   setViewIdea,
-  setUserContext,
   showingSearchIdeas,
   searchTerm,
   selectedIdeas,
@@ -20,9 +20,8 @@ const ShowingSearchIdeas = ({
   const [anchorEl, setAnchorEl] = useState(false);
 
   const onViewIdeaClick = (idea) => {
-    setUserContext(3);
     setViewIdea(idea);
-    setNavValue("/ideas/viewidea");
+    navigate("/viewidea");
   };
 
   const onIdeaClick = (idea) => {

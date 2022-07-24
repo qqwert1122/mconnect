@@ -13,14 +13,13 @@ const WritingBottom = ({
   dbIdeas,
   userContext,
   setViewIdea,
-  setNavValue,
+  navigate,
   formSource,
   setFormSource,
   formTag,
   setFormTag,
   formTags,
   setFormTags,
-  getCategory,
   formCategory,
   selectedIdeas,
   setSelectedIdeas,
@@ -91,7 +90,7 @@ const WritingBottom = ({
       {bottomItemChangeProps === 3 && (
         <RelatedIdeas
           dbIdeas={dbIdeas}
-          setNavValue={setNavValue}
+          navigate={navigate}
           userContext={userContext}
           formConnectedIdeas={formConnectedIdeas}
           setFormConnectedIdeas={setFormConnectedIdeas}
@@ -106,7 +105,6 @@ const WritingBottom = ({
       <WritingBottomBar
         bottomItemChangeProps={bottomItemChangeProps}
         setBottomItemChangeProps={setBottomItemChangeProps}
-        getCategory={getCategory}
         formCategory={formCategory}
         formSource={formSource}
         formTags={formTags}

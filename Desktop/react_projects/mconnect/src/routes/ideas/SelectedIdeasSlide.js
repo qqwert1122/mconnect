@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const SelectedIdeasSlide = ({
-  setNavValue,
+  navigate,
   selectedIdeas,
   setSelectedIdeas,
   setViewIdea,
@@ -15,7 +15,7 @@ const SelectedIdeasSlide = ({
 
   const onIdeaClick = (idea) => {
     setViewIdea(idea);
-    setNavValue("/ideas/viewidea");
+    navigate("/viewidea");
   };
 
   const onViewDetailsClick = (e) => {

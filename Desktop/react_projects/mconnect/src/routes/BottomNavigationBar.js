@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import NotesRoundedIcon from "@mui/icons-material/NotesRounded";
@@ -9,6 +9,7 @@ import { ThemeProvider } from "@mui/material/styles";
 
 const BottomNavigationBar = ({ customHooks }) => {
   const theme = customHooks.theme;
+  const navigate = customHooks.navigate;
   const navValue = customHooks.navValue;
   const setNavValue = customHooks.setNavValue;
 

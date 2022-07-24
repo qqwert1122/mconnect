@@ -8,9 +8,9 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const OpenSource = ({ customHooks }) => {
-  const setNavValue = customHooks.setNavValue;
+  const navigate = customHooks.navigate;
   const onBackClick = () => {
-    setNavValue("/setting");
+    navigate(-1);
   };
 
   return (

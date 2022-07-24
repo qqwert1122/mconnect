@@ -4,26 +4,32 @@ import IdeaTop from "./IdeaTop";
 import IdeaMiddle from "./IdeaMiddle";
 import IdeaBottom from "./IdeaBottom";
 import DeleteDialog from "./DeleteDialog";
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { dbService } from "fbase";
-import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc, increment } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import IdeaConnectedIdeas from "./IdeaConnectedIdeas";
+import { useNavigate } from "react-router-dom";
 
 const Idea = ({
+  setHeight,
   customHooks,
+  navigate,
   user,
   dbIdea,
-  getCategory,
   setViewIdea,
   isSelectMode,
   selectedIdeas,
   onSelectIdea,
 }) => {
   const timeDisplay = customHooks.timeDisplay;
-  const setNavValue = customHooks.setNavValue;
   const setUserContext = customHooks.setUserContext;
   const colorList = customHooks.colorList;
+  const heightRef = useRef();
+  useEffect(() => {
+    setHeight(heightRef.current.clientHeight);
+  }, [heightRef]);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -31,10 +37,14 @@ const Idea = ({
 
   const onViewIdeaClick = async (dbIdea) => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
-    await updateDoc(ideaRef, { viewCount: ++dbIdea.viewCount });
-    setUserContext(0);
+    if (dbIdea.view_users.hasOwnProperty(user.userId) === false) {
+      await updateDoc(ideaRef, {
+        viewCount: increment(1),
+        view_users: { ...dbIdea.view_users, [user.userId]: true },
+      });
+    }
     setViewIdea(dbIdea);
-    setNavValue("/ideas/viewidea");
+    navigate("/viewidea");
   };
 
   // 삭제 대화상자
@@ -46,14 +56,14 @@ const Idea = ({
   };
 
   return (
-    <div className="duration-500 bg-white text-sm">
+    <div ref={heightRef} className="duration-500 bg-white text-sm">
       <hr />
       <div>
         <div className="btn pt-4 ">
           <IdeaTop
             user={user}
             dbIdea={dbIdea}
-            setNavValue={setNavValue}
+            navigate={navigate}
             setUserContext={setUserContext}
             setViewIdea={setViewIdea}
             isSelectMode={isSelectMode}
@@ -68,7 +78,6 @@ const Idea = ({
             dbIdea={dbIdea}
             onSelectIdea={onSelectIdea}
             onViewIdeaClick={onViewIdeaClick}
-            getCategory={getCategory}
           />
         </div>
         <IdeaBottom

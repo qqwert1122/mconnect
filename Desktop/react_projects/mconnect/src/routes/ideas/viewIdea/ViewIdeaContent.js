@@ -84,12 +84,12 @@ const ViewIdeaContent = ({ viewIdea, user }) => {
             </span>
             <span className="flex flex-wrap">
               {viewIdea.tags.map((tag, index) => (
-                <button
+                <span
                   key={index}
                   className="border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words bg-white"
                 >
                   {tag}
-                </button>
+                </span>
               ))}
             </span>
           </div>
@@ -100,7 +100,7 @@ const ViewIdeaContent = ({ viewIdea, user }) => {
             조회&nbsp;
             {viewIdea.viewCount}
           </span>
-          {viewIdea.likeUsers.length != 0 && (
+          {viewIdea.like_count != 0 && (
             <button
               aria-controls={open ? "demo-positioned-menu" : undefined}
               aria-haspopup="true"
@@ -108,7 +108,7 @@ const ViewIdeaContent = ({ viewIdea, user }) => {
               onClick={handleEllipsisClick}
             >
               좋아요&nbsp;
-              {viewIdea.likeUsers.length}
+              {viewIdea.like_count}
             </button>
           )}
         </div>
@@ -119,14 +119,20 @@ const ViewIdeaContent = ({ viewIdea, user }) => {
         <button className="text-red-400 px-2">
           <FontAwesomeIcon
             icon={
-              viewIdea.likeUsers.includes(user.userId) ? fasHeart : farHeart
+              viewIdea.like_users.hasOwnProperty(user.userId)
+                ? fasHeart
+                : farHeart
             }
             size="xl"
           />
         </button>
         <button className="text-orange-400 px-2">
           <FontAwesomeIcon
-            icon={viewIdea.bookmark ? fasBookmark : farBookmark}
+            icon={
+              viewIdea.bookmark_users.hasOwnProperty(user.userId)
+                ? fasBookmark
+                : farBookmark
+            }
             size="xl"
           />
         </button>
@@ -152,7 +158,7 @@ const ViewIdeaContent = ({ viewIdea, user }) => {
           horizontal: "left",
         }}
       >
-        {viewIdea.likeUsers.map((user, index) => (
+        {Object.keys(viewIdea.like_users).map((user, index) => (
           <MenuItem key={index}>
             <div className="text-xs">{user}</div>
           </MenuItem>

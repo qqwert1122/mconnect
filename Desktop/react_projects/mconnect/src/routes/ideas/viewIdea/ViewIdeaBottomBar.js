@@ -2,12 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
-const ViewIdeaBottomBar = ({
-  viewIdea,
-  getCategory,
-  itemChange,
-  itemChangeProps,
-}) => {
+const ViewIdeaBottomBar = ({ viewIdea, itemChange, itemChangeProps }) => {
   return (
     <div className="flex justify-between items-center p-2 py-4 shadow-inner bg-white">
       <div className="flex gap-2 text-lg">

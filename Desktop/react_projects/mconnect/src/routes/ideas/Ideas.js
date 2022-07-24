@@ -4,7 +4,10 @@ import BottomNavigationBar from "routes/BottomNavigationBar";
 import IdeasToggleButton from "routes/ideas/IdeasToggleButton";
 import FloatingActionButton from "./FloatingActionButton";
 import FloatingUpButton from "./FloatingUpButton";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useBottomScrollListener } from "react-bottom-scroll-listener";
+import { VariableSizeList as List } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
 import { ToastContainer, toast } from "react-toastify";
 import { authService } from "fbase";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,12 +30,15 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 
 const Ideas = ({ customHooks }) => {
+  const getNextPosts = customHooks.getNextPosts;
   const user = customHooks.loggedInUser;
-  const setNavValue = customHooks.setNavValue;
   const dbIdeas = customHooks.dbIdeas;
   const scrollY = customHooks.scrollY;
   const setScrollY = customHooks.setScrollY;
+  const navigate = customHooks.navigate;
   const [showingIdeas, setShowingIdeas] = useState([]);
+
+  const [elimentHeight, setHeight] = useState();
 
   //filter
   const [categoryPrmtr, setCategoryPrmtr] = useState(null);
@@ -45,14 +51,16 @@ const Ideas = ({ customHooks }) => {
   const setViewIdea = customHooks.setViewIdea;
   const setTagList = customHooks.setTagList;
   const setSourceList = customHooks.setSourceList;
-  const getCategory = customHooks.getCategory;
 
   // setting
   const [isSelectMode, setIsSelectMode] = useState(false);
 
   const [isViewDetailsClicked, setIsViewDetailsClicked] = useState(false);
 
-  // dbIdeas 변경 시마다 showingIdeas, tagList, sourceList를 변경함.
+  // useBottomScrollListener(getNextPosts, {
+  //   triggerOnNoScroll: true,
+  // });
+
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo(0, scrollY);
@@ -102,41 +110,6 @@ const Ideas = ({ customHooks }) => {
     }
   };
 
-  const categories = [
-    {
-      icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
-      label: "점",
-      bgColor: "bg-stone-400",
-      color: "",
-      borderColor: "border-stone-200",
-      value: 0,
-    },
-    {
-      icon: <FontAwesomeIcon icon={faMinus} />,
-      label: "선",
-      bgColor: "bg-stone-400",
-      color: "",
-      borderColor: "border-stone-200",
-      value: 1,
-    },
-    {
-      icon: <FontAwesomeIcon icon={faSquare} size="xs" />,
-      label: "면",
-      bgColor: "bg-stone-400",
-      color: "",
-      borderColor: "border-stone-200",
-      value: 2,
-    },
-    {
-      icon: <FontAwesomeIcon icon={faDiceD6} />,
-      label: "상자",
-      bgColor: "bg-stone-400",
-      color: "",
-      borderColor: "border-stone-200",
-      value: 3,
-    },
-  ];
-
   const filters = [
     {
       icon: <FontAwesomeIcon icon={faCircleNodes} />,
@@ -172,13 +145,21 @@ const Ideas = ({ customHooks }) => {
     },
   ];
 
+  const getItemSize = () => {
+    if (elimentHeight === undefined) {
+      return 200;
+    } else {
+      return elimentHeight;
+    }
+  };
+
   return (
     <>
       <BottomNavigationBar customHooks={customHooks} />
       <div className="relative bg-stone-100">
         <IdeasTopBar
+          navigate={navigate}
           setViewIdea={setViewIdea}
-          setNavValue={setNavValue}
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
           isSelectMode={isSelectMode}
@@ -191,9 +172,6 @@ const Ideas = ({ customHooks }) => {
           dbIdeas={dbIdeas}
           selectedIdeas={selectedIdeas}
           setShowingIdeas={setShowingIdeas}
-          categories={categories}
-          categoryPrmtr={categoryPrmtr}
-          setCategoryPrmtr={setCategoryPrmtr}
           scrollY={scrollY}
           filters={filters}
           filterPrmtr={filterPrmtr}
@@ -203,7 +181,7 @@ const Ideas = ({ customHooks }) => {
         />
 
         {/* 아이디어 */}
-        <div className="min-h-screen py-2 pb-14 bg-white">
+        <div className="pb-14 bg-white">
           <div className="flex font-black px-5 py-4 gap-2">
             <span>아이디어</span>
             {categoryPrmtr != null && (
@@ -218,20 +196,30 @@ const Ideas = ({ customHooks }) => {
             </span>
           </div>
           {showingIdeas.length > 0 ? (
-            showingIdeas.map((dbIdea) => (
-              <Idea
-                customHooks={customHooks}
-                user={user}
-                dbIdea={dbIdea}
-                key={dbIdea.id}
-                getCategory={getCategory}
-                viewIdea={viewIdea}
-                setViewIdea={setViewIdea}
-                isSelectMode={isSelectMode}
-                selectedIdeas={selectedIdeas}
-                onSelectIdea={onSelectIdea}
-              />
-            ))
+            <>
+              {/* <List
+              height={1000}
+              width={"100%"}
+              itemCount={showingIdeas.length}
+              itemSize={getItemSize}
+            > */}
+              {showingIdeas.map((dbIdea) => (
+                <Idea
+                  key={dbIdea.id}
+                  setHeight={setHeight}
+                  customHooks={customHooks}
+                  navigate={navigate}
+                  user={user}
+                  dbIdea={dbIdea}
+                  viewIdea={viewIdea}
+                  setViewIdea={setViewIdea}
+                  isSelectMode={isSelectMode}
+                  selectedIdeas={selectedIdeas}
+                  onSelectIdea={onSelectIdea}
+                />
+              ))}
+              {/* </List> */}
+            </>
           ) : (
             <div className="py-10 flex justify-center text-xl font-black text-gray-400 ">
               새 아이디어를 입력해주세요 ✏️
@@ -239,9 +227,8 @@ const Ideas = ({ customHooks }) => {
           )}
         </div>
 
-        {/* Floating Action Button, FAB */}
         <FloatingActionButton
-          setNavValue={setNavValue}
+          navigate={navigate}
           selectedIdeas={selectedIdeas}
         />
 

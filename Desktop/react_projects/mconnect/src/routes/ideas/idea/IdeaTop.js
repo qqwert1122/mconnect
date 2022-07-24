@@ -15,7 +15,7 @@ import {
 const IdeaTop = ({
   user,
   dbIdea,
-  setNavValue,
+  navigate,
   setUserContext,
   setViewIdea,
   isSelectMode,
@@ -39,9 +39,8 @@ const IdeaTop = ({
 
   const onEditClick = () => {
     setAnchorEl(null);
-    setUserContext(1);
     setViewIdea(dbIdea);
-    setNavValue("/writingidea");
+    navigate("/writingidea");
   };
 
   return (

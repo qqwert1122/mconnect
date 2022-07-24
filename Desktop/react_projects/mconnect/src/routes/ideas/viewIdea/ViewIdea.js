@@ -2,16 +2,15 @@ import "css/Animation.css";
 import ViewIdeaTopBar from "./ViewIdeaTopBar";
 import ViewIdeaContent from "./ViewIdeaContent";
 import ViewIdeaBottom from "./ViewIdeaBottom";
-import {} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ViewIdea = ({ customHooks }) => {
   const dbIdeas = customHooks.dbIdeas;
   const user = customHooks.loggedInUser;
+  const navigate = customHooks.navigate;
   const userContext = customHooks.userContext;
   const setUserContext = customHooks.setUserContext;
   const colorList = customHooks.colorList;
-  const setNavValue = customHooks.setNavValue;
-  const getCategory = customHooks.getCategory;
   const viewIdea = customHooks.viewIdea;
   const setViewIdea = customHooks.setViewIdea;
 
@@ -19,15 +18,8 @@ const ViewIdea = ({ customHooks }) => {
   const setSelectedIdeas = customHooks.setSelectedIdeas;
 
   const onBackClick = () => {
-    setUserContext(0);
-    switch (userContext) {
-      case 3:
-        setNavValue("/ideas/searchpage");
-        break;
-      default:
-        setNavValue("/ideas");
-        break;
-    }
+    // setViewIdea(null);
+    navigate(-1);
   };
 
   return (
@@ -38,9 +30,10 @@ const ViewIdea = ({ customHooks }) => {
       <div className="moveRightToLeft flex-col bg-white shadow">
         <ViewIdeaTopBar
           viewIdea={viewIdea}
+          setViewIdea={setViewIdea}
           userContext={userContext}
           setUserContext={setUserContext}
-          setNavValue={setNavValue}
+          navigate={navigate}
           onBackClick={onBackClick}
         />
         {/*제목, 아바타, 시간 */}
@@ -48,11 +41,10 @@ const ViewIdea = ({ customHooks }) => {
       </div>
       <ViewIdeaBottom
         dbIdeas={dbIdeas}
-        setNavValue={setNavValue}
+        navigate={navigate}
         viewIdea={viewIdea}
         onBackClick={onBackClick}
         setViewIdea={setViewIdea}
-        getCategory={getCategory}
         colorList={colorList}
         selectedIdeas={selectedIdeas}
         setSelectedIdeas={setSelectedIdeas}

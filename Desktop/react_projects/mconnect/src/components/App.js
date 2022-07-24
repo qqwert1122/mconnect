@@ -15,6 +15,9 @@ import {
   addDoc,
   doc,
   getDoc,
+  getDocs,
+  limit,
+  startAfter,
   documentId,
   setDoc,
 } from "firebase/firestore";
@@ -42,7 +45,6 @@ const useCustomHooks = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // context
-  const [navValue, setNavValue] = useState("/");
   const [userContext, setUserContext] = useState(0);
 
   // db props
@@ -61,6 +63,8 @@ const useCustomHooks = () => {
 
   let navigate = useNavigate();
 
+  const [navValue, setNavValue] = useState("/");
+
   useEffect(() => {
     navigate(`${navValue}`, { replace: true });
   }, [navValue]);
@@ -72,7 +76,7 @@ const useCustomHooks = () => {
           await getDoc(doc(dbService, "users", user.uid))
         ).data();
         if (registeredUser === undefined) {
-          setNavValue("/signup");
+          navigate("/signup");
         } else {
           setLoggedInUser(registeredUser);
           setIsLoggedIn(true);
@@ -84,37 +88,75 @@ const useCustomHooks = () => {
     });
   }, []);
 
-  useEffect(() => {
-    const ideas = tempIdeas1.concat(tempIdeas2);
-    setdbIdeas(ideas);
-  }, [tempIdeas2]);
+  // infinite scroll
+  // const [lastVisible, setLastVisible] = useState();
+
+  // const getNextPosts = async () => {
+  //   let q;
+
+  //   if (lastVisible === -1) {
+  //     return;
+  //   } else if (lastVisible) {
+  //     q = query(
+  //       collection(dbService, "ideas"),
+  //       where("userId", "==", loggedInUser.userId),
+  //       orderBy("createdAt", "desc"),
+  //       limit(5),
+  //       startAfter(lastVisible)
+  //     );
+  //   } else {
+  //     q = query(
+  //       collection(dbService, "ideas"),
+  //       where("userId", "==", loggedInUser.userId),
+  //       orderBy("createdAt", "desc"),
+  //       limit(5)
+  //     );
+  //   }
+
+  //   getDocs(q).then((snapshot) => {
+  //     setdbIdeas((dbIdeas) => {
+  //       const arr = [...dbIdeas];
+
+  //       snapshot.forEach((doc) => {
+  //         arr.push(doc.data());
+  //       });
+  //       console.log(arr);
+  //       return arr;
+  //     });
+
+  //     if (snapshot.docs.length === 0) {
+  //       setLastVisible(-1);
+  //     } else {
+  //       setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+  //     }
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   getNextPosts();
+  // }, []);
 
   useEffect(() => {
     if (isLoggedIn) {
+      // const q1 = query(
+      //   collection(dbService, "ideas"),
+      //   where("userId", "==", loggedInUser.userId),
+      //   orderBy("createdAt", "desc")
+      // );
+
       const q1 = query(
         collection(dbService, "ideas"),
-        where("userId", "==", loggedInUser.userId),
+        where("id", "in", loggedInUser.users_ideas),
         orderBy("createdAt", "desc")
       );
       onSnapshot(q1, (snapshot) => {
         const ideas = snapshot.docs.map((doc) => ({
-          id: doc.id,
           ...doc.data(),
         }));
-        // setTempIdeas1(ideas);
         setdbIdeas(ideas);
+        console.log(dbIdeas);
       });
-      // const q2 = query(
-      //   collection(dbService, "ideas"),
-      //   where("bookmarkUsers", "array-contains", loggedInUser.uid)
-      // );
-      // onSnapshot(q2, (snapshot) => {
-      //   const ideas = snapshot.docs.map((doc) => ({
-      //     id: doc.id,
-      //     ...doc.data(),
-      //   }));
-      //   setTempIdeas2(ideas);
-      // });
+      console.log("end snapshot");
     }
   }, [isLoggedIn]);
 
@@ -161,35 +203,17 @@ const useCustomHooks = () => {
     "bg-rose-400",
   ];
 
-  const getCategory = (formCategory) => {
-    switch (formCategory) {
-      case 3:
-        return { icon: <FontAwesomeIcon icon={faDiceD6} />, label: "상자" };
-      case 2:
-        return {
-          icon: <FontAwesomeIcon icon={faSquare} size="sm" />,
-          label: "면",
-        };
-      case 1:
-        return { icon: <FontAwesomeIcon icon={faMinus} />, label: "선" };
-      case 0:
-      default:
-        return {
-          icon: <FontAwesomeIcon icon={faCircle} size="xs" />,
-          label: "점",
-        };
-    }
-  };
-
   return {
+    // getNextPosts,
     loggedInUser,
     setLoggedInUser,
     init,
     setInit,
     isLoggedIn,
     setIsLoggedIn,
-    navValue,
+    navigate,
     setNavValue,
+    navValue,
     dbIdeas,
     setdbIdeas,
     userContext,
@@ -202,7 +226,6 @@ const useCustomHooks = () => {
     setTagList,
     sourceList,
     setSourceList,
-    getCategory,
     colorList,
     theme,
     timeDisplay,

@@ -17,7 +17,7 @@ import {
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 
 const Setting = ({ customHooks }) => {
-  const setNavValue = customHooks.setNavValue;
+  const navigate = customHooks.navigate;
   const loggedInUser = customHooks.loggedInUser;
 
   const [detailMode, setDetailMode] = useState(true);
@@ -31,11 +31,11 @@ const Setting = ({ customHooks }) => {
   };
   const onSignOutClick = async () => {
     await authService.signOut();
-    setNavValue("/");
+    navigate("/");
   };
 
   const onOpenSourceClick = () => {
-    setNavValue("/setting/opensource");
+    navigate("/setting/opensource");
   };
 
   const MaterialUISwitch = styled(Switch)(({ theme }) => ({

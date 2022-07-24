@@ -19,9 +19,6 @@ const IdeasToggleButton = ({
   dbIdeas,
   selectedIdeas,
   setShowingIdeas,
-  categories,
-  categoryPrmtr,
-  setCategoryPrmtr,
   scrollY,
   filters,
   filterPrmtr,
@@ -29,18 +26,6 @@ const IdeasToggleButton = ({
   isSelectMode,
   isViewDetailsClicked,
 }) => {
-  useEffect(() => {
-    if (categoryPrmtr === null) {
-      setFilterPrmtr(null);
-      setShowingIdeas(dbIdeas);
-    } else {
-      setFilterPrmtr(null);
-      setShowingIdeas(
-        dbIdeas.filter((idea) => idea.category === categoryPrmtr.value)
-      );
-    }
-  }, [categoryPrmtr, dbIdeas]);
-
   useEffect(() => {
     if (filterPrmtr === null) {
       setShowingIdeas(dbIdeas);

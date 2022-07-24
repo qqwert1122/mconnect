@@ -27,7 +27,7 @@ const AppRouter = ({ customHooks }) => {
           ></Route>
           <Route
             exact
-            path="/ideas/searchpage"
+            path="/searchpage"
             element={<SearchPage customHooks={customHooks} />}
           />
           <Route
@@ -37,7 +37,7 @@ const AppRouter = ({ customHooks }) => {
           />
           <Route
             exact
-            path="/ideas/viewidea"
+            path="/viewidea"
             element={<ViewIdea customHooks={customHooks} />}
           />
           <Route

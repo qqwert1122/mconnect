@@ -12,9 +12,8 @@ const ViewIdeaBottom = ({
   dbIdeas,
   viewIdea,
   setViewIdea,
-  getCategory,
   onBackClick,
-  setNavValue,
+  navigate,
   selectedIdeas,
   setSelectedIdeas,
   colorList,
@@ -48,7 +47,7 @@ const ViewIdeaBottom = ({
 
   const onIdeaClick = (idea) => {
     setViewIdea(idea);
-    setNavValue("/ideas/viewidea");
+    navigate("/viewidea");
   };
 
   return (
@@ -91,7 +90,6 @@ const ViewIdeaBottom = ({
       {/* bottomBar */}
       <ViewIdeaBottomBar
         viewIdea={viewIdea}
-        getCategory={getCategory}
         itemChange={itemChange}
         itemChangeProps={itemChangeProps}
       />

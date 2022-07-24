@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
-const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
+const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea }) => {
   const [DialogTags, setDialogTags] = useState([]);
   const [anchorEl, setAnchorEl] = useState(false);
 
@@ -67,9 +67,6 @@ const IdeaMiddle = ({ dbIdea, onViewIdeaClick, onSelectIdea, getCategory }) => {
       )}
       {/* category, tags */}
       <span className="flex flex-wrap text-xs">
-        {/* <span className="border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 shadow-sm duration-500">
-          {getCategory(dbIdea).icon}&nbsp;{getCategory(dbIdea).label}
-        </span> */}
         {dbIdea.tags.length > 4 ? (
           <>
             {dbIdea.tags

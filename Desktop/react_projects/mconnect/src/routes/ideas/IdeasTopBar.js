@@ -8,10 +8,11 @@ import {
   faBell,
   faCircleCheck as farCircleCheck,
 } from "@fortawesome/free-regular-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const IdeasTopBar = ({
+  navigate,
   setViewIdea,
-  setNavValue,
   selectedIdeas,
   setSelectedIdeas,
   isSelectMode,
@@ -25,9 +26,8 @@ const IdeasTopBar = ({
       setSelectedIdeas([]);
     }
   };
-
   const onSearchClick = () => {
-    setNavValue("/ideas/searchpage");
+    navigate("/searchpage");
   };
 
   return (
@@ -53,7 +53,7 @@ const IdeasTopBar = ({
       </div>
       {isSelectMode && selectedIdeas.length > 0 && (
         <SelectedIdeasSlide
-          setNavValue={setNavValue}
+          navigate={navigate}
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
           setViewIdea={setViewIdea}

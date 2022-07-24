@@ -5,12 +5,14 @@ import React, { useEffect, useState } from "react";
 import { dbService } from "fbase";
 import {
   doc,
+  increment,
   updateDoc,
   collection,
   onSnapshot,
   query,
   orderBy,
   where,
+  arrayUnion,
 } from "firebase/firestore";
 import dayjs from "dayjs";
 import Avatar from "@mui/material/Avatar";
@@ -44,8 +46,7 @@ import StormingTagBar from "./StormingTagBar";
 
 const Storming = ({ customHooks }) => {
   const timeDisplay = customHooks.timeDisplay;
-  const getCategory = customHooks.getCategory;
-  const loggedInUser = customHooks.loggedInUser;
+  const user = customHooks.loggedInUser;
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [ideasPublic, setIdeasPublic] = useState([]);
@@ -67,7 +68,7 @@ const Storming = ({ customHooks }) => {
       );
       onSnapshot(q1, (snapshot) => {
         const ideas = snapshot.docs.map((doc) => ({
-          id: doc.id,
+          // id: doc.id,
           ...doc.data(),
         }));
         setIdeasPublic(ideas);
@@ -88,22 +89,38 @@ const Storming = ({ customHooks }) => {
 
   const onLikeClick = async (idea) => {
     const ideaRef = doc(dbService, "ideas", `${idea.id}`);
-    if (idea.likeUsers.includes(loggedInUser.userId)) {
+    if (idea.like_users.hasOwnProperty(user.userId)) {
+      delete idea.like_users[user.userId];
       await updateDoc(ideaRef, {
-        likeUsers: idea.likeUsers.filter(
-          (fUser) => fUser != loggedInUser.userId
-        ),
+        like_count: increment(-1),
+        like_users: idea.like_users,
       });
     } else {
       await updateDoc(ideaRef, {
-        likeUsers: [...idea.likeUsers, loggedInUser.userId],
+        like_count: increment(1),
+        like_users: { ...idea.like_users, [user.userId]: true },
       });
     }
   };
 
   const onBookmarkClick = async (idea) => {
-    const ideaRef = doc(dbService, "ideas", `${idea.id}`);
-    await updateDoc(ideaRef, { bookmark: !idea.bookmark });
+    const ideaRef = doc(dbService, "ideas", idea.id);
+    const userRef = doc(dbService, "users", user.userId);
+    if (idea.bookmark_users.hasOwnProperty(user.userId)) {
+      delete idea.bookmark_users[user.userId];
+      await updateDoc(ideaRef, {
+        bookmark_count: increment(-1),
+        bookmark_users: idea.bookmark_users,
+      });
+    } else {
+      await updateDoc(ideaRef, {
+        bookmark_count: increment(1),
+        bookmark_users: { ...idea.bookmark_users, [user.userId]: true },
+      });
+      await updateDoc(userRef, {
+        users_ideas: arrayUnion(idea.id),
+      });
+    }
   };
 
   return (
@@ -203,9 +220,6 @@ const Storming = ({ customHooks }) => {
                 )}
                 {/* category, tags */}
                 <span className="flex flex-wrap text-xs">
-                  <span className="border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 shadow-sm duration-500">
-                    {getCategory(idea).icon}&nbsp;{getCategory(idea).label}
-                  </span>
                   {idea.tags.length > 4 ? (
                     <>
                       {idea.tags
@@ -256,14 +270,14 @@ const Storming = ({ customHooks }) => {
               <div className="flex px-5 pb-5 gap-5 text-stone-500">
                 <button
                   className={`${
-                    idea.likeUsers.includes(loggedInUser.userId) &&
+                    idea.like_users.hasOwnProperty(user.userId) &&
                     "text-red-400"
                   }`}
                   onClick={() => onLikeClick(idea)}
                 >
                   <FontAwesomeIcon
                     icon={
-                      idea.likeUsers.includes(loggedInUser.userId)
+                      idea.like_users.hasOwnProperty(user.userId)
                         ? fasHeart
                         : farHeart
                     }
@@ -271,11 +285,18 @@ const Storming = ({ customHooks }) => {
                   />
                 </button>
                 <button
-                  className={`${idea.bookmark && "text-orange-400"}`}
+                  className={`${
+                    idea.bookmark_users.hasOwnProperty(user.userId) &&
+                    "text-orange-400"
+                  }`}
                   onClick={() => onBookmarkClick(idea)}
                 >
                   <FontAwesomeIcon
-                    icon={idea.bookmark ? fasBookmark : farBookmark}
+                    icon={
+                      idea.bookmark_users.hasOwnProperty(user.userId)
+                        ? fasBookmark
+                        : farBookmark
+                    }
                     size="lg"
                   />
                 </button>

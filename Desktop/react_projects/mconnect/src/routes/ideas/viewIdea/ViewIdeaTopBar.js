@@ -18,9 +18,10 @@ import {
 
 const ViewIdeaTopBar = ({
   viewIdea,
+  setViewIdea,
   onBackClick,
   setUserContext,
-  setNavValue,
+  navigate,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -28,8 +29,7 @@ const ViewIdeaTopBar = ({
 
   const onEditClick = () => {
     setAnchorEl(null);
-    setUserContext(2);
-    setNavValue("/writingidea");
+    navigate("/writingidea");
   };
 
   const onDeleteMenuItemClick = () => {
@@ -42,7 +42,7 @@ const ViewIdeaTopBar = ({
     setAnchorEl(null);
     const ideaRef = doc(dbService, "ideas", `${viewIdea.id}`);
     await deleteDoc(ideaRef);
-    setNavValue("/ideas");
+    navigate("/ideas");
   };
 
   const handleEllipsisClick = (event) => {

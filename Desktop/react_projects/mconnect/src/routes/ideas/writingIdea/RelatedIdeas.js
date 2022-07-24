@@ -9,7 +9,7 @@ import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
 const RelatedIdeas = ({
   dbIdeas,
-  setNavValue,
+  navigate,
   userContext,
   formConnectedIdeas,
   setFormConnectedIdeas,
@@ -35,7 +35,7 @@ const RelatedIdeas = ({
   const onIdeaClick = (e, idea) => {
     e.preventDefault();
     setViewIdea(idea);
-    setNavValue("/ideas/viewidea");
+    navigate("/viewidea");
   };
 
   const onXmarkClick = (e, index) => {

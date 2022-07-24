@@ -1,5 +1,5 @@
 import { dbService } from "fbase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, increment, updateDoc } from "firebase/firestore";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,20 +19,34 @@ import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 const IdeaBottom = ({ dbIdea, user, viewDetail, setViewDetail, colorList }) => {
   const onLikeClick = async () => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
-    if (dbIdea.likeUsers.includes(user.userId)) {
+    if (dbIdea.like_users.hasOwnProperty(user.userId)) {
+      delete dbIdea.like_users[user.userId];
       await updateDoc(ideaRef, {
-        likeUsers: dbIdea.likeUsers.filter((fUser) => fUser != user.userId),
+        like_count: increment(-1),
+        like_users: dbIdea.like_users,
       });
     } else {
       await updateDoc(ideaRef, {
-        likeUsers: [...dbIdea.likeUsers, user.userId],
+        like_count: increment(1),
+        like_users: { ...dbIdea.like_users, [user.userId]: true },
       });
     }
   };
 
   const onBookmarkClick = async () => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
-    await updateDoc(ideaRef, { bookmark: !dbIdea.bookmark });
+    if (dbIdea.bookmark_users.hasOwnProperty(user.userId)) {
+      delete dbIdea.bookmark_users[user.userId];
+      await updateDoc(ideaRef, {
+        bookmark_count: increment(-1),
+        bookmark_users: dbIdea.bookmark_users,
+      });
+    } else {
+      await updateDoc(ideaRef, {
+        bookmark_count: increment(1),
+        bookmark_users: { ...dbIdea.bookmark_users, [user.userId]: true },
+      });
+    }
   };
 
   const onPublicClick = async () => {
@@ -51,21 +65,32 @@ const IdeaBottom = ({ dbIdea, user, viewDetail, setViewDetail, colorList }) => {
       <div className="flex items-center px-5 pb-5 gap-5 text-stone-500">
         <button
           className={`${
-            dbIdea.likeUsers.includes(user.userId) && "text-red-400"
+            dbIdea.like_users.hasOwnProperty(user.userId) && "text-red-400"
           }`}
           onClick={onLikeClick}
         >
           <FontAwesomeIcon
-            icon={dbIdea.likeUsers.includes(user.userId) ? fasHeart : farHeart}
+            icon={
+              dbIdea.like_users.hasOwnProperty(user.userId)
+                ? fasHeart
+                : farHeart
+            }
             size="xl"
           />
         </button>
         <button
-          className={`${dbIdea.bookmark && "text-orange-400"}`}
+          className={`${
+            dbIdea.bookmark_users.hasOwnProperty(user.userId) &&
+            "text-orange-400"
+          }`}
           onClick={onBookmarkClick}
         >
           <FontAwesomeIcon
-            icon={dbIdea.bookmark ? fasBookmark : farBookmark}
+            icon={
+              dbIdea.bookmark_users.hasOwnProperty(user.userId)
+                ? fasBookmark
+                : farBookmark
+            }
             size="xl"
           />
         </button>
@@ -82,13 +107,6 @@ const IdeaBottom = ({ dbIdea, user, viewDetail, setViewDetail, colorList }) => {
 
         {dbIdea.connectedIdeas.length > 0 && (
           <div className="w-full flex justify-end gap-2">
-            {/* <img
-              className={`w-full h-4 ${
-                viewDetail ? "opacity-0" : "opacity-30"
-              } duration-500`}
-              src="./img/line_3.png"
-            /> */}
-
             <ColoredIdeaList
               ideas={dbIdea.connectedIdeas}
               colorList={colorList}

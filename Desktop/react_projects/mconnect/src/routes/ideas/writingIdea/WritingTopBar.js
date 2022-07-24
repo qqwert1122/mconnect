@@ -5,7 +5,7 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 const WritingTopBar = ({
   userContext,
   setUserContext,
-  setNavValue,
+  navigate,
   setViewIdea,
   formCategory,
   formTitle,
@@ -13,19 +13,8 @@ const WritingTopBar = ({
 }) => {
   const onBackClick = (e) => {
     e.preventDefault();
-    setUserContext(0);
-    switch (userContext) {
-      case 0:
-      case 1:
-        setViewIdea();
-        setNavValue("/ideas");
-        break;
-      case 2:
-        setNavValue("/ideas/viewidea");
-        break;
-      default:
-        break;
-    }
+    setViewIdea(null);
+    navigate(-1);
   };
 
   const onTitleChange = (e) => {

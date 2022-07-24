@@ -5,7 +5,16 @@ import WritingBottom from "./WritingBottom";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService, dbService } from "fbase";
-import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  setDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
+import { v4 } from "uuid";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import "slick-carousel/slick/slick.css";
@@ -23,19 +32,17 @@ dayjs.locale("ko");
 
 const WritingIdea = ({ customHooks }) => {
   const dbIdeas = customHooks.dbIdeas;
-  const loggedInUser = customHooks.loggedInUser;
+  const user = customHooks.loggedInUser;
   const userContext = customHooks.userContext;
   const setUserContext = customHooks.setUserContext;
-  const setNavValue = customHooks.setNavValue;
+  const navigate = customHooks.navigate;
   const viewIdea = customHooks.viewIdea;
   const setViewIdea = customHooks.setViewIdea;
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
   const tagList = customHooks.tagList;
   const sourceList = customHooks.sourceList;
-  const getCategory = customHooks.getCategory;
   const colorList = customHooks.colorList;
-  let navigate = useNavigate();
 
   // form
   const [formTitle, setFormTitle] = useState("");
@@ -48,38 +55,13 @@ const WritingIdea = ({ customHooks }) => {
   const [formPublic, setFormPublic] = useState(false);
 
   useEffect(() => {
-    switch (userContext) {
-      case 0:
-        if (selectedIdeas.length === 0) {
-          setFormConnectedIdeas([]);
-          setFormCategory(0);
-        } else {
-          setFormConnectedIdeas(selectedIdeas);
-          const newCategory = selectedIdeas
-            .map((idea) => idea.category)
-            .sort(function (a, b) {
-              return b - a;
-            })[0];
-          switch (newCategory) {
-            case 3:
-              setFormCategory(3);
-              break;
-            default:
-              setFormCategory(newCategory + 1);
-              break;
-          }
-        }
-        break;
-      case 1:
-      case 2:
-        setFormCategory(viewIdea.category);
-        setFormTitle(viewIdea.title);
-        setFormText(viewIdea.text);
-        setFormSource(viewIdea.source);
-        setFormTags(viewIdea.tags);
-        setFormConnectedIdeas(viewIdea.connectedIdeas);
-        setFormPublic(viewIdea.public);
-        break;
+    if (viewIdea != null) {
+      setFormTitle(viewIdea.title);
+      setFormText(viewIdea.text);
+      setFormSource(viewIdea.source);
+      setFormTags(viewIdea.tags);
+      setFormConnectedIdeas(viewIdea.connectedIdeas);
+      setFormPublic(viewIdea.public);
     }
   }, [selectedIdeas]);
 
@@ -94,58 +76,65 @@ const WritingIdea = ({ customHooks }) => {
     event.preventDefault();
     const form = event.target;
 
-    if (formCategory > 0 && formConnectedIdeas.length < 2) {
-      toast.error("아이디어 2개 이상을 선택하세요", {
-        theme: "colored",
-      });
-      return;
-    } else {
-      switch (userContext) {
-        case 0:
-          try {
-            await addDoc(collection(dbService, "ideas"), {
-              category: formCategory,
-              title: formTitle,
-              text: formText,
-              source: formSource,
-              tags: formTags,
-              public: formPublic,
-              likeUsers: [],
-              bookmarkUsers: [],
-              connectedIdeas: formConnectedIdeas,
-              viewCount: 0,
-              createdAt: dayjs().format("YYYY. MM. DD. HH:mm"),
-              userId: loggedInUser.userId,
-              userEmail: loggedInUser.userEmail,
-              userName: loggedInUser.userName,
-              userPhotoURL: loggedInUser.userPhotoURL,
-            });
-          } catch (event) {
-            console.error("Error adding document: ", event);
-          }
-          setSelectedIdeas([]);
-          setNavValue("/ideas");
-          break;
-        case 1:
-        case 2:
-          try {
-            const ideaRef = doc(dbService, "ideas", `${viewIdea.id}`);
-            await updateDoc(ideaRef, {
-              ...viewIdea,
-              category: formCategory,
-              title: formTitle,
-              text: formText,
-              source: formSource,
-              tags: formTags,
-              public: formPublic,
-              connectedIdeas: formConnectedIdeas,
-            });
-          } catch (event) {
-            console.error("Error editing document: ", event);
-          }
-          setUserContext(0);
-          setNavValue("/ideas");
+    if (viewIdea != null) {
+      try {
+        if (
+          viewIdea.connectedIdeas.length >= 2 &&
+          formConnectedIdeas.length < 2
+        ) {
+          toast.error("아이디어 2개 이상을 선택하세요", {
+            theme: "colored",
+          });
+          return;
+        }
+        const ideaRef = doc(dbService, "ideas", `${viewIdea.id}`);
+        await updateDoc(ideaRef, {
+          ...viewIdea,
+          title: formTitle,
+          text: formText,
+          source: formSource,
+          tags: formTags,
+          public: formPublic,
+          connectedIdeas: formConnectedIdeas,
+        });
+      } catch (event) {
+        console.error("Error editing document: ", event);
       }
+      setViewIdea(null);
+      navigate("/ideas");
+    } else {
+      try {
+        const newIdeaId = v4();
+        const newIdeaRef = doc(dbService, "ideas", newIdeaId);
+        await setDoc(newIdeaRef, {
+          id: newIdeaId,
+          title: formTitle,
+          text: formText,
+          source: formSource,
+          tags: formTags,
+          like_count: 0,
+          like_users: {},
+          bookmark_count: 0,
+          bookmark_users: {},
+          public: formPublic,
+          viewCount: 0,
+          view_users: {},
+          connectedIdeas: formConnectedIdeas,
+          createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+          userId: user.userId,
+          userEmail: user.userEmail,
+          userName: user.userName,
+          userPhotoURL: user.userPhotoURL,
+        });
+        const userRef = doc(dbService, "users", `${user.userId}`);
+        await updateDoc(userRef, {
+          users_ideas: arrayUnion(newIdeaId),
+        });
+      } catch (event) {
+        console.error("Error adding document: ", event);
+      }
+      setSelectedIdeas([]);
+      navigate("/ideas");
     }
   };
 
@@ -155,7 +144,7 @@ const WritingIdea = ({ customHooks }) => {
         <WritingTopBar
           userContext={userContext}
           setUserContext={setUserContext}
-          setNavValue={setNavValue}
+          navigate={navigate}
           setViewIdea={setViewIdea}
           formCategory={formCategory}
           formTitle={formTitle}
@@ -176,14 +165,13 @@ const WritingIdea = ({ customHooks }) => {
           dbIdeas={dbIdeas}
           userContext={userContext}
           setViewIdea={setViewIdea}
-          setNavValue={setNavValue}
+          navigate={navigate}
           formSource={formSource}
           setFormSource={setFormSource}
           formTag={formTag}
           setFormTag={setFormTag}
           formTags={formTags}
           setFormTags={setFormTags}
-          getCategory={getCategory}
           formCategory={formCategory}
           formConnectedIdeas={formConnectedIdeas}
           setFormConnectedIdeas={setFormConnectedIdeas}

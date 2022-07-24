@@ -3,14 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleNodes, faPlus } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
-const FloatingActionButton = ({ setNavValue, selectedIdeas }) => {
+const FloatingActionButton = ({ navigate, selectedIdeas }) => {
   const onWritingClick = () => {
     if (selectedIdeas.length === 1) {
       toast.error("2개 이상을 선택하세요", {
         theme: "colored",
       });
     } else {
-      setNavValue("/writingidea");
+      navigate("/writingidea");
     }
   };
 
@@ -18,7 +18,7 @@ const FloatingActionButton = ({ setNavValue, selectedIdeas }) => {
     <div className="fixed bottom-16 right-3 z-10">
       {selectedIdeas.length > 0 ? (
         <button
-          className={`shadow-2xl  rounded-full px-4 p-2 text-sm duration-200 border-4  text-white ${
+          className={`shadow-2xl rounded-full px-4 p-2 text-sm duration-200 border-4  text-white ${
             selectedIdeas.length === 1
               ? "border-stone-200 bg-stone-600"
               : "border-green-200 bg-green-600"
