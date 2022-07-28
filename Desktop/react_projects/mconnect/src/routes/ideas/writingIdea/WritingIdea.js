@@ -87,15 +87,22 @@ const WritingIdea = ({ customHooks }) => {
           });
           return;
         }
-        const ideaRef = doc(dbService, "ideas", `${viewIdea.id}`);
+        const ideaRef = doc(
+          dbService,
+          "users",
+          user.userId,
+          "userIdeas",
+          `${viewIdea.id}`
+        );
         await updateDoc(ideaRef, {
           ...viewIdea,
           title: formTitle,
           text: formText,
           source: formSource,
           tags: formTags,
-          public: formPublic,
+          isPublic: formPublic,
           connectedIdeas: formConnectedIdeas,
+          updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
         });
       } catch (event) {
         console.error("Error editing document: ", event);
@@ -105,30 +112,32 @@ const WritingIdea = ({ customHooks }) => {
     } else {
       try {
         const newIdeaId = v4();
-        const newIdeaRef = doc(dbService, "ideas", newIdeaId);
-        await setDoc(newIdeaRef, {
-          id: newIdeaId,
+        const newUserIdeaRef = doc(
+          dbService,
+          "users",
+          user.userId,
+          "userIdeas",
+          newIdeaId
+        );
+        await setDoc(newUserIdeaRef, {
+          userId: user.userId,
           title: formTitle,
           text: formText,
           source: formSource,
           tags: formTags,
+          connectedIdeas: formConnectedIdeas,
+          createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+          updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+          isPublic: false,
+        });
+        const newCountRef = doc(dbService, "counts", newIdeaId);
+        await setDoc(newCountRef, {
           like_count: 0,
           like_users: {},
           bookmark_count: 0,
           bookmark_users: {},
-          public: formPublic,
-          viewCount: 0,
+          view_count: 0,
           view_users: {},
-          connectedIdeas: formConnectedIdeas,
-          createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-          userId: user.userId,
-          userEmail: user.userEmail,
-          userName: user.userName,
-          userPhotoURL: user.userPhotoURL,
-        });
-        const userRef = doc(dbService, "users", `${user.userId}`);
-        await updateDoc(userRef, {
-          users_ideas: arrayUnion(newIdeaId),
         });
       } catch (event) {
         console.error("Error adding document: ", event);

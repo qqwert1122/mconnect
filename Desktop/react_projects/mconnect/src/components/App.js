@@ -48,8 +48,6 @@ const useCustomHooks = () => {
   const [userContext, setUserContext] = useState(0);
 
   // db props
-  const [tempIdeas1, setTempIdeas1] = useState([]);
-  const [tempIdeas2, setTempIdeas2] = useState([]);
   const [dbIdeas, setdbIdeas] = useState([]);
 
   // Ideas props
@@ -72,15 +70,17 @@ const useCustomHooks = () => {
   useEffect(() => {
     authService.onAuthStateChanged(async (user) => {
       if (user) {
-        const registeredUser = (
-          await getDoc(doc(dbService, "users", user.uid))
-        ).data();
-        if (registeredUser === undefined) {
-          navigate("/signup");
-        } else {
-          setLoggedInUser(registeredUser);
-          setIsLoggedIn(true);
-        }
+        onSnapshot(doc(dbService, "users", user.uid), (doc) => {
+          if (doc.data() === undefined) {
+            navigate("/signup");
+          } else {
+            setLoggedInUser(doc.data());
+            setIsLoggedIn(true);
+          }
+        });
+        // const registeredUser = (
+        //   await getDoc(doc(dbService, "users", user.uid))
+        // ).data();
       } else {
         setIsLoggedIn(false);
       }
@@ -144,19 +144,24 @@ const useCustomHooks = () => {
       //   orderBy("createdAt", "desc")
       // );
 
+      // const q1 = query(
+      //   collection(dbService, "ideas"),
+      //   where("id", "in", loggedInUser.users_ideas),
+      //   orderBy("createdAt", "desc")
+      // );
+
       const q1 = query(
-        collection(dbService, "ideas"),
-        where("id", "in", loggedInUser.users_ideas),
+        collection(dbService, "users", loggedInUser.userId, "userIdeas"),
         orderBy("createdAt", "desc")
       );
+
       onSnapshot(q1, (snapshot) => {
         const ideas = snapshot.docs.map((doc) => ({
+          id: doc.id,
           ...doc.data(),
         }));
         setdbIdeas(ideas);
-        console.log(dbIdeas);
       });
-      console.log("end snapshot");
     }
   }, [isLoggedIn]);
 

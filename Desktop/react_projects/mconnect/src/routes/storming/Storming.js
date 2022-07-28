@@ -1,6 +1,8 @@
 import BottomNavigationBar from "routes/BottomNavigationBar";
 import StormingTopBar from "./StormingTopBar";
 import StormingToggleButton from "./StormingToggleButton";
+import StormingTagBar from "./StormingTagBar";
+import StormingIdea from "./StormingIdea";
 import React, { useEffect, useState } from "react";
 import { dbService } from "fbase";
 import {
@@ -13,6 +15,8 @@ import {
   orderBy,
   where,
   arrayUnion,
+  collectionGroup,
+  getDocs,
 } from "firebase/firestore";
 import dayjs from "dayjs";
 import Avatar from "@mui/material/Avatar";
@@ -42,86 +46,32 @@ import {
   faHeart as fasHeart,
   faBookmark as fasBookmark,
 } from "@fortawesome/free-solid-svg-icons";
-import StormingTagBar from "./StormingTagBar";
 
 const Storming = ({ customHooks }) => {
   const timeDisplay = customHooks.timeDisplay;
   const user = customHooks.loggedInUser;
 
-  const [anchorEl, setAnchorEl] = useState(null);
   const [ideasPublic, setIdeasPublic] = useState([]);
 
-  const [isTagsDialogOpen, setIsTagsDialogOpen] = useState(false);
-  const [DialogTags, setDialogTags] = useState([]);
-
-  const onTagsDialogClick = (idea) => {
-    setIsTagsDialogOpen((prev) => !prev);
-    setDialogTags(idea.tags);
+  const getDocuments = async (query) => {
+    const stormingRef = await getDocs(query);
+    const newData = stormingRef.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setIdeasPublic(newData);
   };
 
   useEffect(() => {
     if (customHooks.isLoggedIn) {
       const q1 = query(
-        collection(dbService, "ideas"),
-        where("public", "==", true),
+        collectionGroup(dbService, "userIdeas"),
+        where("isPublic", "==", true),
         orderBy("createdAt", "desc")
       );
-      onSnapshot(q1, (snapshot) => {
-        const ideas = snapshot.docs.map((doc) => ({
-          // id: doc.id,
-          ...doc.data(),
-        }));
-        setIdeasPublic(ideas);
-      });
+      getDocuments(q1);
     }
   }, []);
-
-  const open = Boolean(anchorEl);
-
-  // handle ellipsis menu
-  const handleEllipsisClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleEllipsisClose = () => {
-    setAnchorEl(null);
-  };
-
-  const onLikeClick = async (idea) => {
-    const ideaRef = doc(dbService, "ideas", `${idea.id}`);
-    if (idea.like_users.hasOwnProperty(user.userId)) {
-      delete idea.like_users[user.userId];
-      await updateDoc(ideaRef, {
-        like_count: increment(-1),
-        like_users: idea.like_users,
-      });
-    } else {
-      await updateDoc(ideaRef, {
-        like_count: increment(1),
-        like_users: { ...idea.like_users, [user.userId]: true },
-      });
-    }
-  };
-
-  const onBookmarkClick = async (idea) => {
-    const ideaRef = doc(dbService, "ideas", idea.id);
-    const userRef = doc(dbService, "users", user.userId);
-    if (idea.bookmark_users.hasOwnProperty(user.userId)) {
-      delete idea.bookmark_users[user.userId];
-      await updateDoc(ideaRef, {
-        bookmark_count: increment(-1),
-        bookmark_users: idea.bookmark_users,
-      });
-    } else {
-      await updateDoc(ideaRef, {
-        bookmark_count: increment(1),
-        bookmark_users: { ...idea.bookmark_users, [user.userId]: true },
-      });
-      await updateDoc(userRef, {
-        users_ideas: arrayUnion(idea.id),
-      });
-    }
-  };
 
   return (
     <>
@@ -134,174 +84,7 @@ const Storming = ({ customHooks }) => {
         <div className="pt-2 min-h-screen bg-white">
           {ideasPublic.map((idea, index) => (
             <div key={index} className="bg-white">
-              <div className="flex justify-between items-center pt-2 ml-4">
-                {/* avatar, name, time */}
-                <div className="flex items-center gap-2">
-                  <Avatar
-                    className="border-2"
-                    alt="avatar"
-                    src={idea.userPhotoURL}
-                    sx={{
-                      display: "flex",
-                      width: "30px",
-                      height: "30px",
-                    }}
-                  />
-                  <div className="flex-col text-xs">
-                    <div className="flex gap-1">
-                      <b>{idea.userName}</b>
-                    </div>
-                    {timeDisplay(idea.createdAt)}
-                  </div>
-                </div>
-                {/* ellipsis */}
-                <Button
-                  id="demo-positioned-button"
-                  aria-controls={open ? "demo-positioned-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={handleEllipsisClick}
-                  sx={{
-                    color: "inherit",
-                  }}
-                >
-                  <FontAwesomeIcon icon={faEllipsis} size="lg" />
-                </Button>
-                <Menu
-                  id="demo-positioned-menu"
-                  aria-labelledby="demo-positioned-button"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleEllipsisClose}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={handleEllipsisClose}>
-                    <FontAwesomeIcon icon={faCopy} />
-                    &nbsp; 복사
-                  </MenuItem>
-                </Menu>
-              </div>
-              <div className="w-full box-border px-4 mt-4 mb-4 duration-200">
-                {/* title */}
-                {idea.title !== "" && (
-                  <div className="flex items-center pb-2 w-full font-black">
-                    {idea.title}
-                  </div>
-                )}
-                {/* text */}
-                <div
-                  className="w-full pb-5 flex items-center break-all whitespace-pre-line"
-                  // onClick={() => {
-                  //   onViewIdeaClick(dbIdea);
-                  // }}
-                >
-                  {idea.text.length > 200 ? (
-                    <>
-                      {idea.text.substr(0, 200)}
-                      ...
-                    </>
-                  ) : (
-                    idea.text
-                  )}
-                </div>
-                {/* source */}
-                {idea.source !== "" && (
-                  <div className="flex items-center ml-2 pb-2 text-xs text-stone-500">
-                    <FontAwesomeIcon icon={faQuoteLeft} />
-                    <div className="mx-2 w-full">{idea.source}</div>
-                  </div>
-                )}
-                {/* category, tags */}
-                <span className="flex flex-wrap text-xs">
-                  {idea.tags.length > 4 ? (
-                    <>
-                      {idea.tags
-                        .filter((tag, index) => index < 4)
-                        .map((tag, index) => (
-                          <button
-                            key={index}
-                            className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500"
-                            onClick={() =>
-                              index === 3 && onTagsDialogClick(idea)
-                            }
-                          >
-                            {index === 3 ? `+ ${idea.tags.length - 3}` : tag}
-                          </button>
-                        ))}
-                    </>
-                  ) : (
-                    <>
-                      {idea.tags.map((tag, index) => (
-                        <span
-                          key={index}
-                          className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </>
-                  )}
-                </span>
-                <Dialog
-                  open={isTagsDialogOpen}
-                  onClose={() => {
-                    setIsTagsDialogOpen(false);
-                  }}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                  sx={{}}
-                >
-                  <List sx={{ pt: 0 }}>
-                    {DialogTags.map((tag, index) => (
-                      <ListItem button key={index}>
-                        <ListItemText primary={tag} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Dialog>
-              </div>
-              <div className="flex px-5 pb-5 gap-5 text-stone-500">
-                <button
-                  className={`${
-                    idea.like_users.hasOwnProperty(user.userId) &&
-                    "text-red-400"
-                  }`}
-                  onClick={() => onLikeClick(idea)}
-                >
-                  <FontAwesomeIcon
-                    icon={
-                      idea.like_users.hasOwnProperty(user.userId)
-                        ? fasHeart
-                        : farHeart
-                    }
-                    size="lg"
-                  />
-                </button>
-                <button
-                  className={`${
-                    idea.bookmark_users.hasOwnProperty(user.userId) &&
-                    "text-orange-400"
-                  }`}
-                  onClick={() => onBookmarkClick(idea)}
-                >
-                  <FontAwesomeIcon
-                    icon={
-                      idea.bookmark_users.hasOwnProperty(user.userId)
-                        ? fasBookmark
-                        : farBookmark
-                    }
-                    size="lg"
-                  />
-                </button>
-              </div>
-              <hr />
+              <StormingIdea user={user} idea={idea} timeDisplay={timeDisplay} />
             </div>
           ))}
         </div>

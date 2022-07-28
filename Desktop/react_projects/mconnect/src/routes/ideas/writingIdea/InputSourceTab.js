@@ -32,7 +32,7 @@ const InputSourceTab = ({
           검색 <FontAwesomeIcon icon={faMagnifyingGlass} />
         </div>
         {sourceList.length === 0 ? (
-          <div className="p-4 pt-2 text-sm">기존 태그가 없습니다</div>
+          <div className="p-4 pt-2 text-sm">기존 출처가 없습니다</div>
         ) : (
           <div className="p-4 pt-2 flex flex-nowrap overflow-x-auto">
             {sourceList

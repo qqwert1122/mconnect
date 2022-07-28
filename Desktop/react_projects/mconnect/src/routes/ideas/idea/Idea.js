@@ -6,7 +6,16 @@ import IdeaBottom from "./IdeaBottom";
 import DeleteDialog from "./DeleteDialog";
 import React, { useEffect, useState, useRef } from "react";
 import { dbService } from "fbase";
-import { doc, deleteDoc, updateDoc, increment } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  deleteDoc,
+  updateDoc,
+  increment,
+  query,
+  onSnapshot,
+  collection,
+} from "firebase/firestore";
 import Button from "@mui/material/Button";
 import IdeaConnectedIdeas from "./IdeaConnectedIdeas";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +34,9 @@ const Idea = ({
   const timeDisplay = customHooks.timeDisplay;
   const setUserContext = customHooks.setUserContext;
   const colorList = customHooks.colorList;
+
   const heightRef = useRef();
+
   useEffect(() => {
     setHeight(heightRef.current.clientHeight);
   }, [heightRef]);
@@ -37,10 +48,10 @@ const Idea = ({
 
   const onViewIdeaClick = async (dbIdea) => {
     const ideaRef = doc(dbService, "ideas", `${dbIdea.id}`);
-    if (dbIdea.view_users.hasOwnProperty(user.userId) === false) {
+    if (ideaInfo.view_users.hasOwnProperty(user.userId) === false) {
       await updateDoc(ideaRef, {
         viewCount: increment(1),
-        view_users: { ...dbIdea.view_users, [user.userId]: true },
+        view_users: { ...ideaInfo.view_users, [user.userId]: true },
       });
     }
     setViewIdea(dbIdea);
@@ -55,6 +66,37 @@ const Idea = ({
     await deleteDoc(ideaRef);
   };
 
+  const [userInfo, setUserInfo] = useState();
+  const [ideaInfo, setIdeaInfo] = useState();
+
+  const getUserInfo = async () => {
+    const userDoc = (
+      await getDoc(doc(dbService, "users", dbIdea.userId))
+    ).data();
+    setUserInfo(userDoc);
+  };
+
+  const getCountInfo = async () => {
+    const countDoc = (await getDoc(doc(dbService, "counts", dbIdea.id))).data();
+    setIdeaInfo(countDoc);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      // const q1 = query(doc(dbService, "counts", dbIdea.id));
+      // onSnapshot(q1, (snapshot) => {
+      //   const countDoc = snapshot.data();
+      //   setIdeaInfo(countDoc);
+      // });
+      getCountInfo();
+      if (user.userId === dbIdea.userId) {
+        setUserInfo(user);
+      } else {
+        getUserInfo();
+      }
+    }, 1000);
+  }, []);
+
   return (
     <div ref={heightRef} className="duration-500 bg-white text-sm">
       <hr />
@@ -62,6 +104,7 @@ const Idea = ({
         <div className="btn pt-4 ">
           <IdeaTop
             user={user}
+            userInfo={userInfo}
             dbIdea={dbIdea}
             navigate={navigate}
             setUserContext={setUserContext}
@@ -75,6 +118,7 @@ const Idea = ({
             setDeleteDialogOpen={setDeleteDialogOpen}
           />
           <IdeaMiddle
+            userInfo={userInfo}
             dbIdea={dbIdea}
             onSelectIdea={onSelectIdea}
             onViewIdeaClick={onViewIdeaClick}
@@ -82,6 +126,7 @@ const Idea = ({
         </div>
         <IdeaBottom
           dbIdea={dbIdea}
+          ideaInfo={ideaInfo}
           user={user}
           viewDetail={viewDetail}
           setViewDetail={setViewDetail}
