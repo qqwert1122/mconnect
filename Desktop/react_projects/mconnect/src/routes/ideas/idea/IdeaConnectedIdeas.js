@@ -1,4 +1,4 @@
-const IdeaConnectedIdeas = ({ dbIdea, viewDetail, colorList }) => {
+const IdeaConnectedIdeas = ({ userIdea, viewDetail, colorList }) => {
   return (
     <div
       className={`z-0 relative p-2 w-full bg-stone-50 shadow-inner duration-500 ${
@@ -6,7 +6,7 @@ const IdeaConnectedIdeas = ({ dbIdea, viewDetail, colorList }) => {
       }`}
     >
       <div className="z-0 absolute top-0 left-6 h-full border-r-4 border-stone-200"></div>
-      {dbIdea.connectedIdeas.map((idea, index) => (
+      {userIdea.connectedIdeas.map((idea, index) => (
         <div className="relative" key={index}>
           <div
             className={`w-5 h-5 border-2 border-stone-200 ${colorList[index]} rounded-full shadow-md absolute top-6 left-2`}

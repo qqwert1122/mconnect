@@ -16,7 +16,7 @@ import {
 
 const IdeasToggleButton = ({
   user,
-  dbIdeas,
+  userIdeas,
   selectedIdeas,
   setShowingIdeas,
   scrollY,
@@ -28,28 +28,28 @@ const IdeasToggleButton = ({
 }) => {
   useEffect(() => {
     if (filterPrmtr === null) {
-      setShowingIdeas(dbIdeas);
+      setShowingIdeas(userIdeas);
     } else {
       switch (filterPrmtr.value) {
         case "connect":
           setShowingIdeas(
-            dbIdeas.filter((idea) => idea.connectedIdeas.length > 0)
+            userIdeas.filter((idea) => idea.connectedIdeas.length > 0)
           );
           break;
         case "like":
           setShowingIdeas(
-            dbIdeas.filter((idea) => idea.likeUsers.includes(user.userId))
+            userIdeas.filter((idea) => idea.likeUsers.includes(user.userId))
           );
           break;
         case "bookmark":
-          setShowingIdeas(dbIdeas.filter((idea) => idea.bookmark));
+          setShowingIdeas(userIdeas.filter((idea) => idea.bookmark));
           break;
         case "public":
-          setShowingIdeas(dbIdeas.filter((idea) => idea.public));
+          setShowingIdeas(userIdeas.filter((idea) => idea.public));
           break;
       }
     }
-  }, [filterPrmtr, dbIdeas]);
+  }, [filterPrmtr, userIdeas]);
 
   const onFilterPrmtrClick = (item) => {
     if (filterPrmtr != null && filterPrmtr.value === item.value) {

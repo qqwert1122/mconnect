@@ -4,17 +4,23 @@ import { useLongPress } from "use-long-press";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
+import { faHashtag, faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
-import { Skeleton } from "@mui/material";
 
-const IdeaMiddle = ({ userInfo, dbIdea, onViewIdeaClick, onSelectIdea }) => {
-  const [DialogTags, setDialogTags] = useState([]);
+const IdeaMiddle = ({
+  user,
+  isOwner,
+  userIdea,
+  onViewIdeaClick,
+  onSelectIdea,
+  timeDisplay,
+}) => {
+  const [dialogTags, setDialogTags] = useState([]);
   const [anchorEl, setAnchorEl] = useState(false);
 
   // toast message when long pressed
   const callback = useCallback((event) => {
-    onSelectIdea(dbIdea);
+    onSelectIdea(userIdea);
   }, []);
 
   const bind = useLongPress(callback, {
@@ -36,107 +42,118 @@ const IdeaMiddle = ({ userInfo, dbIdea, onViewIdeaClick, onSelectIdea }) => {
   };
 
   return (
-    <>
-      {userInfo ? (
-        <div
-          className="w-full box-border px-4 mt-4 mb-4 duration-200"
-          {...bind()}
-        >
-          {/* title */}
-          {dbIdea.title !== "" && (
-            <div className="flex items-center pb-2 w-full font-black">
-              {dbIdea.title}
-            </div>
-          )}
-          {/* text */}
-          <div
-            className="w-full pb-5 flex items-center break-all whitespace-pre-line"
-            onClick={() => {
-              onViewIdeaClick(dbIdea);
-            }}
-          >
-            {dbIdea.text.length > 200 ? (
-              <>
-                {dbIdea.text.substr(0, 200)}
-                ...
-              </>
-            ) : (
-              dbIdea.text
-            )}
-          </div>
-          {/* source */}
-          {dbIdea.source !== "" && (
-            <div className="flex items-center ml-2 pb-2 text-xs text-stone-500">
-              <FontAwesomeIcon icon={faQuoteLeft} />
-              <div className="mx-2 w-full">{dbIdea.source}</div>
-            </div>
-          )}
-          {/* category, tags */}
-          <span className="flex flex-wrap text-xs">
-            {dbIdea.tags.length > 4 ? (
-              <>
-                {dbIdea.tags
-                  .filter((tag, index) => index < 4)
-                  .map((tag, index) => (
-                    <button
-                      key={index}
-                      id="demo-positioned-button"
-                      aria-controls={open ? "demo-positioned-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                      onClick={(e) =>
-                        index === 3 && handleEllipsisClick(e, dbIdea)
-                      }
-                      className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500 text-stone-500"
-                      sx={{
-                        color: "inherit",
-                      }}
-                    >
-                      {index === 3 ? `+ ${dbIdea.tags.length - 3}` : tag}
-                    </button>
-                  ))}
-              </>
-            ) : (
-              <>
-                {dbIdea.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500 text-stone-500"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </>
-            )}
-          </span>
-          <Menu
-            id="demo-positioned-menu"
-            aria-labelledby="demo-positioned-button"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleEllipsisClose}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-          >
-            {DialogTags.filter((tag, index) => index > 2).map((tag, index) => (
-              <MenuItem key={index}>
-                <div className="text-xs">{tag}</div>
-              </MenuItem>
-            ))}
-          </Menu>
-        </div>
-      ) : (
-        <div className="flex justify-center">
-          <Skeleton variant="text" width={320} height={160} />
+    <div className="w-full box-border px-4 mt-4 mb-4 " {...bind()}>
+      {/* title */}
+      {userIdea.title !== "" && (
+        <div className="flex items-center pb-2 w-full font-black">
+          {userIdea.title}
         </div>
       )}
-    </>
+      {/* text */}
+      <div
+        className="w-full pb-5 flex items-center break-all whitespace-pre-line"
+        onClick={() => {
+          onViewIdeaClick(userIdea);
+        }}
+      >
+        {userIdea.text.length > 200 ? (
+          <>
+            {userIdea.text.substr(0, 200)}
+            ...
+          </>
+        ) : (
+          userIdea.text
+        )}
+      </div>
+      {/* source */}
+      {userIdea.source !== "" && (
+        <div className="flex items-center ml-2 pb-2 gap-2 text-xs">
+          <span className="text-stone-300">
+            <FontAwesomeIcon icon={faQuoteLeft} />
+          </span>
+          <div className="w-full text-stone-400">
+            {userIdea.source.length > 20
+              ? `${userIdea.source.substr(0, 20)}...`
+              : userIdea.source}
+          </div>
+        </div>
+      )}
+      {/* category, tags */}
+      {userIdea.tags.length > 0 && (
+        <span className="flex flex-wrap ml-2 pb-2 gap-2 text-xs">
+          <span className="text-stone-300">
+            <FontAwesomeIcon icon={faHashtag} />
+          </span>
+          {userIdea.tags.length > 4 ? (
+            <>
+              {userIdea.tags
+                .filter((tag, index) => index < 4)
+                .map((tag, index) => (
+                  <button
+                    key={index}
+                    id="demo-positioned-button"
+                    aria-controls={open ? "demo-positioned-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={(e) =>
+                      index === 3 && handleEllipsisClick(e, userIdea)
+                    }
+                    className="border-box text-stone-400"
+                    sx={{
+                      color: "inherit",
+                    }}
+                  >
+                    {index === 3 ? `+ ${userIdea.tags.length - 3}` : `${tag},`}
+                  </button>
+                ))}
+            </>
+          ) : (
+            <>
+              {userIdea.tags.map((tag, index) => (
+                <span key={index} className="border-box text-stone-400">
+                  {index === userIdea.tags.length - 1 ? tag : `${tag},`}
+                </span>
+                //   <span
+                //   key={index}
+                //   className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500 text-stone-500"
+                // >
+                //   {tag}
+                // </span>
+              ))}
+            </>
+          )}
+        </span>
+      )}
+      {isOwner === false && (
+        <span className="flex items-center pt-5 pb-2 text-xs text-stone-400">
+          {timeDisplay(userIdea.updatedAt)}에 저장됨
+        </span>
+      )}
+
+      <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleEllipsisClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        {dialogTags
+          .filter((tag, index) => index > 2)
+          .map((tag, index) => (
+            <MenuItem key={index}>
+              <div className="text-xs">{tag}</div>
+            </MenuItem>
+          ))}
+      </Menu>
+    </div>
   );
 };
 

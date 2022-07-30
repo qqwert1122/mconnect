@@ -11,6 +11,8 @@ import SignUp from "routes/auth/SignUp";
 import { Route, Routes } from "react-router-dom";
 
 const AppRouter = ({ customHooks }) => {
+  const whatView = customHooks.whatView;
+
   return (
     <Routes>
       {customHooks.isLoggedIn ? (
@@ -24,7 +26,7 @@ const AppRouter = ({ customHooks }) => {
             exact
             path="/ideas"
             element={<Ideas customHooks={customHooks} />}
-          ></Route>
+          />
           <Route
             exact
             path="/searchpage"
@@ -37,7 +39,7 @@ const AppRouter = ({ customHooks }) => {
           />
           <Route
             exact
-            path="/viewidea"
+            path={`/${whatView && whatView.id}`}
             element={<ViewIdea customHooks={customHooks} />}
           />
           <Route

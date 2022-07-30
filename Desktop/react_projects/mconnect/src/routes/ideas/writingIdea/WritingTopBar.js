@@ -3,17 +3,15 @@ import {} from "@fortawesome/free-regular-svg-icons";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 const WritingTopBar = ({
-  userContext,
-  setUserContext,
   navigate,
-  setViewIdea,
+  setWhatView,
   formCategory,
   formTitle,
   setFormTitle,
 }) => {
   const onBackClick = (e) => {
     e.preventDefault();
-    setViewIdea(null);
+    setWhatView(null);
     navigate(-1);
   };
 

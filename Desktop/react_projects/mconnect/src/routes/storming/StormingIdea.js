@@ -14,6 +14,7 @@ import {
   getDocs,
   getDoc,
   setDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import dayjs from "dayjs";
 import Avatar from "@mui/material/Avatar";
@@ -73,15 +74,22 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
     setUserInfo(userDoc);
   };
 
+  const getCountInfo = async () => {
+    const countDoc = (await getDoc(doc(dbService, "counts", idea.id))).data();
+    setIdeaInfo(countDoc);
+  };
+
+  const [isOwner, setIsOwner] = useState(user.userId === idea.userId);
+
   useEffect(() => {
     setTimeout(() => {
-      const countDoc = doc(dbService, "counts", idea.id);
-      onSnapshot(countDoc, (snapshot) => {
-        const data = snapshot.data();
-        setIdeaInfo(data);
-      });
-
-      if (user.userId === idea.userId) {
+      // const countDoc = doc(dbService, "counts", idea.id);
+      // onSnapshot(countDoc, (snapshot) => {
+      //   const data = snapshot.data();
+      //   setIdeaInfo(data);
+      // });
+      getCountInfo();
+      if (isOwner) {
         setUserInfo(user);
       } else {
         getUserInfo();
@@ -91,17 +99,39 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
 
   const onLikeClick = async (idea) => {
     const countRef = doc(dbService, "counts", `${idea.id}`);
+    const userIdeaRef = doc(
+      dbService,
+      "users",
+      user.userId,
+      "userIdeas",
+      idea.id
+    );
     if (ideaInfo.like_users.hasOwnProperty(user.userId)) {
-      delete ideaInfo.like_users[user.userId];
+      const newIdeaInfo = { ...ideaInfo };
+      delete newIdeaInfo.like_users[user.userId];
+      setIdeaInfo(newIdeaInfo);
       await updateDoc(countRef, {
         like_count: increment(-1),
         like_users: ideaInfo.like_users,
       });
+      if ((await getDoc(userIdeaRef)).data()) {
+        await updateDoc(userIdeaRef, {
+          isLiked: false,
+        });
+      }
     } else {
       await updateDoc(countRef, {
         like_count: increment(1),
-        like_users: { ...ideaInfo.like_users, [user.userId]: true },
+        like_users: { ...ideaInfo.like_users, [user.userId]: user.userName },
       });
+      if ((await getDoc(userIdeaRef)).data()) {
+        await updateDoc(userIdeaRef, {
+          isLiked: true,
+        });
+      }
+      const newIdeaInfo = { ...ideaInfo };
+      newIdeaInfo.like_users[user.userId] = true;
+      setIdeaInfo(newIdeaInfo);
     }
   };
 
@@ -109,19 +139,32 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
     const countRef = doc(dbService, "counts", idea.id);
     const ideaRef = doc(dbService, "users", user.userId, "userIdeas", idea.id);
     if (ideaInfo.bookmark_users.hasOwnProperty(user.userId)) {
-      delete ideaInfo.bookmark_users[user.userId];
+      const newIdeaInfo = { ...ideaInfo };
+      delete newIdeaInfo.bookmark_users[user.userId];
+      setIdeaInfo(newIdeaInfo);
       await updateDoc(countRef, {
         bookmark_count: increment(-1),
         bookmark_users: ideaInfo.bookmark_users,
       });
+      if (isOwner === false) {
+        deleteDoc(ideaRef);
+      }
     } else {
       await updateDoc(countRef, {
         bookmark_count: increment(1),
-        bookmark_users: { ...ideaInfo.bookmark_users, [user.userId]: true },
+        bookmark_users: {
+          ...ideaInfo.bookmark_users,
+          [user.userId]: user.userName,
+        },
       });
-      if (user.userId !== idea.userId) {
+      const newIdeaInfo = { ...ideaInfo };
+      newIdeaInfo.bookmark_users[user.userId] = user.userName;
+      setIdeaInfo(newIdeaInfo);
+      if (isOwner === false) {
         await setDoc(ideaRef, {
           userId: idea.userId,
+          userName: userInfo.userName,
+          userPhotoURL: userInfo.userPhotoURL,
           title: idea.title,
           text: idea.text,
           source: idea.source,
@@ -130,6 +173,9 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
           createdAt: idea.createdAt,
           updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
           isPublic: false,
+          isLiked: ideaInfo.like_users.hasOwnProperty(user.userId),
+          isBookmarked: true,
+          isViewed: false,
         });
       }
     }

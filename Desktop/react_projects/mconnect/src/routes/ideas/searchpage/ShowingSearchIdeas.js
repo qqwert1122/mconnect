@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const ShowingSearchIdeas = ({
   navigate,
-  setViewIdea,
+  setWhatView,
   showingSearchIdeas,
   searchTerm,
   selectedIdeas,
@@ -20,8 +20,8 @@ const ShowingSearchIdeas = ({
   const [anchorEl, setAnchorEl] = useState(false);
 
   const onViewIdeaClick = (idea) => {
-    setViewIdea(idea);
-    navigate("/viewidea");
+    setWhatView(idea);
+    navigate(`/${idea.id}`);
   };
 
   const onIdeaClick = (idea) => {

@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const IdeasTopBar = ({
   navigate,
-  setViewIdea,
+  setWhatView,
   selectedIdeas,
   setSelectedIdeas,
   isSelectMode,
@@ -56,7 +56,7 @@ const IdeasTopBar = ({
           navigate={navigate}
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
-          setViewIdea={setViewIdea}
+          setWhatView={setWhatView}
           isViewDetailsClicked={isViewDetailsClicked}
           setIsViewDetailsClicked={setIsViewDetailsClicked}
         />

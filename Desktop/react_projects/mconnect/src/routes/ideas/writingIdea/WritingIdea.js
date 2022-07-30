@@ -31,13 +31,11 @@ dayjs.extend(customParseFormat);
 dayjs.locale("ko");
 
 const WritingIdea = ({ customHooks }) => {
-  const dbIdeas = customHooks.dbIdeas;
+  const userIdeas = customHooks.userIdeas;
   const user = customHooks.loggedInUser;
-  const userContext = customHooks.userContext;
-  const setUserContext = customHooks.setUserContext;
   const navigate = customHooks.navigate;
-  const viewIdea = customHooks.viewIdea;
-  const setViewIdea = customHooks.setViewIdea;
+  const whatView = customHooks.whatView;
+  const setWhatView = customHooks.setWhatView;
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
   const tagList = customHooks.tagList;
@@ -55,13 +53,13 @@ const WritingIdea = ({ customHooks }) => {
   const [formPublic, setFormPublic] = useState(false);
 
   useEffect(() => {
-    if (viewIdea != null) {
-      setFormTitle(viewIdea.title);
-      setFormText(viewIdea.text);
-      setFormSource(viewIdea.source);
-      setFormTags(viewIdea.tags);
-      setFormConnectedIdeas(viewIdea.connectedIdeas);
-      setFormPublic(viewIdea.public);
+    if (whatView != null) {
+      setFormTitle(whatView.title);
+      setFormText(whatView.text);
+      setFormSource(whatView.source);
+      setFormTags(whatView.tags);
+      setFormConnectedIdeas(whatView.connectedIdeas);
+      setFormPublic(whatView.public);
     }
   }, [selectedIdeas]);
 
@@ -76,10 +74,10 @@ const WritingIdea = ({ customHooks }) => {
     event.preventDefault();
     const form = event.target;
 
-    if (viewIdea != null) {
+    if (whatView != null) {
       try {
         if (
-          viewIdea.connectedIdeas.length >= 2 &&
+          whatView.connectedIdeas.length >= 2 &&
           formConnectedIdeas.length < 2
         ) {
           toast.error("아이디어 2개 이상을 선택하세요", {
@@ -92,10 +90,10 @@ const WritingIdea = ({ customHooks }) => {
           "users",
           user.userId,
           "userIdeas",
-          `${viewIdea.id}`
+          `${whatView.id}`
         );
         await updateDoc(ideaRef, {
-          ...viewIdea,
+          ...whatView,
           title: formTitle,
           text: formText,
           source: formSource,
@@ -107,7 +105,7 @@ const WritingIdea = ({ customHooks }) => {
       } catch (event) {
         console.error("Error editing document: ", event);
       }
-      setViewIdea(null);
+      setWhatView(null);
       navigate("/ideas");
     } else {
       try {
@@ -121,6 +119,8 @@ const WritingIdea = ({ customHooks }) => {
         );
         await setDoc(newUserIdeaRef, {
           userId: user.userId,
+          userName: user.userName,
+          userPhotoURL: user.userPhotoURL,
           title: formTitle,
           text: formText,
           source: formSource,
@@ -128,7 +128,10 @@ const WritingIdea = ({ customHooks }) => {
           connectedIdeas: formConnectedIdeas,
           createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
           updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-          isPublic: false,
+          isPublic: formPublic,
+          isLiked: false,
+          isBookmarked: false,
+          isViewed: false,
         });
         const newCountRef = doc(dbService, "counts", newIdeaId);
         await setDoc(newCountRef, {
@@ -151,10 +154,8 @@ const WritingIdea = ({ customHooks }) => {
     <div className="flex-col text-sm">
       <form onSubmit={onSubmit}>
         <WritingTopBar
-          userContext={userContext}
-          setUserContext={setUserContext}
           navigate={navigate}
-          setViewIdea={setViewIdea}
+          setWhatView={setWhatView}
           formCategory={formCategory}
           formTitle={formTitle}
           setFormTitle={setFormTitle}
@@ -171,9 +172,8 @@ const WritingIdea = ({ customHooks }) => {
           required
         />
         <WritingBottom
-          dbIdeas={dbIdeas}
-          userContext={userContext}
-          setViewIdea={setViewIdea}
+          userIdeas={userIdeas}
+          setWhatView={setWhatView}
           navigate={navigate}
           formSource={formSource}
           setFormSource={setFormSource}

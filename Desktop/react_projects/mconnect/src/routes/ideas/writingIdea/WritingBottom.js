@@ -10,9 +10,8 @@ import WritingBottomBar from "./WritingBottomBar";
 import RelatedIdeas from "./RelatedIdeas";
 
 const WritingBottom = ({
-  dbIdeas,
-  userContext,
-  setViewIdea,
+  userIdeas,
+  setWhatView,
   navigate,
   formSource,
   setFormSource,
@@ -89,16 +88,15 @@ const WritingBottom = ({
 
       {bottomItemChangeProps === 3 && (
         <RelatedIdeas
-          dbIdeas={dbIdeas}
+          userIdeas={userIdeas}
           navigate={navigate}
-          userContext={userContext}
           formConnectedIdeas={formConnectedIdeas}
           setFormConnectedIdeas={setFormConnectedIdeas}
           formTags={formTags}
           colorList={colorList}
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
-          setViewIdea={setViewIdea}
+          setWhatView={setWhatView}
         />
       )}
 

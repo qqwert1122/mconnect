@@ -12,10 +12,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 
 const SearchPage = ({ customHooks }) => {
-  const dbIdeas = customHooks.dbIdeas;
+  const userIdeas = customHooks.userIdeas;
   const navigate = customHooks.navigate;
-  const setViewIdea = customHooks.setViewIdea;
-  const setUserContext = customHooks.setUserContext;
+  const setWhatView = customHooks.setWhatView;
   const tagList = customHooks.tagList;
   const sourceList = customHooks.sourceList;
   const selectedIdeas = customHooks.selectedIdeas;
@@ -23,7 +22,7 @@ const SearchPage = ({ customHooks }) => {
   const scrollY = customHooks.scrollY;
   const setScrollY = customHooks.setScrollY;
 
-  const userList = dbIdeas.filter(
+  const userList = userIdeas.filter(
     (idea, index, callback) =>
       index === callback.findIndex((t) => t.userId === idea.userId)
   );
@@ -39,7 +38,7 @@ const SearchPage = ({ customHooks }) => {
   const searchCriteria = ["전체", "출처", "태그", "유저"];
 
   useEffect(() => {
-    setShowingSearchIdeas(dbIdeas);
+    setShowingSearchIdeas(userIdeas);
   }, []);
 
   useEffect(() => {
@@ -50,19 +49,19 @@ const SearchPage = ({ customHooks }) => {
 
   useEffect(() => {
     if (listAllCriteria.length === 0) {
-      setShowingSearchIdeas(dbIdeas);
+      setShowingSearchIdeas(userIdeas);
     } else {
       setShowingSearchIdeas(
-        dbIdeas.filter(
+        userIdeas.filter(
           (idea, index) =>
             listSearchCriteriaSource.some((x) =>
-              dbIdeas[index].source.includes(x)
+              userIdeas[index].source.includes(x)
             ) ||
             listSearchCriteriaTag.some((x) =>
-              dbIdeas[index].tags.includes(x)
+              userIdeas[index].tags.includes(x)
             ) ||
             listSearchCriteriaUser.some((x) =>
-              dbIdeas[index].userName.includes(x)
+              userIdeas[index].userName.includes(x)
             )
         )
       );
@@ -170,8 +169,7 @@ const SearchPage = ({ customHooks }) => {
         </div>
         <ShowingSearchIdeas
           navigate={navigate}
-          setViewIdea={setViewIdea}
-          setUserContext={setUserContext}
+          setWhatView={setWhatView}
           showingSearchIdeas={showingSearchIdeas}
           searchTerm={searchTerm}
           selectedIdeas={selectedIdeas}

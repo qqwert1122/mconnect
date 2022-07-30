@@ -9,9 +9,9 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const ViewIdeaBottom = ({
-  dbIdeas,
-  viewIdea,
-  setViewIdea,
+  userIdeas,
+  whatView,
+  setWhatView,
   onBackClick,
   navigate,
   selectedIdeas,
@@ -46,8 +46,8 @@ const ViewIdeaBottom = ({
   };
 
   const onIdeaClick = (idea) => {
-    setViewIdea(idea);
-    navigate("/viewidea");
+    setWhatView(idea);
+    navigate(`/${idea.id}`);
   };
 
   return (
@@ -63,7 +63,7 @@ const ViewIdeaBottom = ({
             </button>
           </div>
           <ColoredIdeaList
-            ideas={viewIdea.connectedIdeas}
+            ideas={whatView.connectedIdeas}
             colorList={colorList}
           />
         </>
@@ -71,9 +71,9 @@ const ViewIdeaBottom = ({
       {itemChangeProps === 1 && (
         <div className="moveRightToLeft bg-stone-50 shadow-inner">
           <SuggestedIdeas
-            dbIdeas={dbIdeas}
-            ideaPrmtr={viewIdea}
-            tagsPrmtr={viewIdea.tags}
+            userIdeas={userIdeas}
+            ideaPrmtr={whatView}
+            tagsPrmtr={whatView.tags}
             itemChange={itemChange}
             onIdeaClick={onIdeaClick}
             selectedIdeas={selectedIdeas}
@@ -83,13 +83,13 @@ const ViewIdeaBottom = ({
         </div>
       )}
 
-      {itemChangeProps === 2 && viewIdea.connectedIdeas.length > 0 && (
-        <ConnectedIdeas viewIdea={viewIdea} onIdeaClick={onIdeaClick} />
+      {itemChangeProps === 2 && whatView.connectedIdeas.length > 0 && (
+        <ConnectedIdeas whatView={whatView} onIdeaClick={onIdeaClick} />
       )}
 
       {/* bottomBar */}
       <ViewIdeaBottomBar
-        viewIdea={viewIdea}
+        whatView={whatView}
         itemChange={itemChange}
         itemChangeProps={itemChangeProps}
       />

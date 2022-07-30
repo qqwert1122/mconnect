@@ -1,5 +1,11 @@
 import { dbService } from "fbase";
-import { doc, increment, updateDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  increment,
+  updateDoc,
+} from "firebase/firestore";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,57 +21,126 @@ import {
   faBookmark as farBookmark,
 } from "@fortawesome/free-regular-svg-icons";
 import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
+import { useEffect, useState } from "react";
 
 const IdeaBottom = ({
-  dbIdea,
-  ideaInfo,
   user,
+  isOwner,
+  userIdea,
   viewDetail,
   setViewDetail,
   colorList,
 }) => {
-  const onLikeClick = async () => {
-    const countRef = doc(dbService, "counts", `${dbIdea.id}`);
-    if (ideaInfo.like_users.hasOwnProperty(user.userId)) {
-      delete ideaInfo.like_users[user.userId];
-      await updateDoc(countRef, {
-        like_count: increment(-1),
-        like_users: ideaInfo.like_users,
-      });
+  const countRef = doc(dbService, "counts", userIdea.id);
+  const userIdeaRef = doc(
+    dbService,
+    "users",
+    user.userId,
+    "userIdeas",
+    userIdea.id
+  );
+
+  const [countInfo, setCountInfo] = useState();
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  const getCountInfo = async () => {
+    const countDoc = (
+      await getDoc(doc(dbService, "counts", userIdea.id))
+    ).data();
+    if (countDoc === undefined) {
+      setCountInfo("delete");
+      setIsDeleted(true);
     } else {
-      await updateDoc(countRef, {
-        like_count: increment(1),
-        like_users: { ...ideaInfo.like_users, [user.userId]: true },
-      });
+      setCountInfo(countDoc);
+    }
+  };
+
+  useEffect(() => {
+    getCountInfo();
+  }, []);
+
+  const onLikeClick = async () => {
+    if (userIdea.isLiked) {
+      if (isDeleted) {
+        await updateDoc(userIdeaRef, {
+          isLiked: false,
+        });
+      } else {
+        delete countInfo.like_users[user.userId];
+        await updateDoc(countRef, {
+          like_count: increment(-1),
+          like_users: countInfo.like_users,
+        });
+        await updateDoc(userIdeaRef, {
+          isLiked: false,
+        });
+      }
+    } else {
+      if (isDeleted) {
+        await updateDoc(userIdeaRef, {
+          isLiked: true,
+        });
+      } else {
+        await updateDoc(countRef, {
+          like_count: increment(1),
+          like_users: { ...countInfo.like_users, [user.userId]: user.userName },
+        });
+        await updateDoc(userIdeaRef, {
+          isLiked: true,
+        });
+      }
     }
   };
 
   const onBookmarkClick = async () => {
-    const countRef = doc(dbService, "counts", `${dbIdea.id}`);
-    if (ideaInfo.bookmark_users.hasOwnProperty(user.userId)) {
-      delete ideaInfo.bookmark_users[user.userId];
-      await updateDoc(countRef, {
-        bookmark_count: increment(-1),
-        bookmark_users: ideaInfo.bookmark_users,
-      });
+    if (userIdea.isBookmarked) {
+      if (isDeleted) {
+        await updateDoc(userIdeaRef, {
+          isBookmarked: false,
+        });
+      } else {
+        delete countInfo.bookmark_users[user.userId];
+        await updateDoc(countRef, {
+          bookmark_count: increment(-1),
+          bookmark_users: countInfo.bookmark_users,
+        });
+        await updateDoc(userIdeaRef, {
+          isBookmarked: false,
+        });
+      }
+      if (isOwner === false) {
+        deleteDoc(userIdeaRef);
+      }
     } else {
-      await updateDoc(countRef, {
-        bookmark_count: increment(1),
-        bookmark_users: { ...ideaInfo.bookmark_users, [user.userId]: true },
-      });
+      if (isDeleted) {
+        await updateDoc(userIdeaRef, {
+          isBookmarked: true,
+        });
+      } else {
+        await updateDoc(countRef, {
+          bookmark_count: increment(1),
+          bookmark_users: {
+            ...countInfo.bookmark_users,
+            [user.userId]: user.userName,
+          },
+        });
+        await updateDoc(userIdeaRef, {
+          isBookmarked: true,
+        });
+      }
     }
   };
 
   const onPublicClick = async () => {
-    if (dbIdea.userId === user.userId) {
+    if (isOwner) {
       const ideaRef = doc(
         dbService,
         "users",
         user.userId,
         "userIdeas",
-        dbIdea.id
+        userIdea.id
       );
-      await updateDoc(ideaRef, { isPublic: !dbIdea.isPublic });
+      await updateDoc(ideaRef, { isPublic: !userIdea.isPublic });
     }
   };
 
@@ -76,62 +151,43 @@ const IdeaBottom = ({
   return (
     <>
       <div className="flex items-center px-5 pb-5 gap-5 text-stone-500">
-        {ideaInfo && (
-          <>
-            <button
-              className={`${
-                ideaInfo.like_users.hasOwnProperty(user.userId) &&
-                "text-red-400"
-              }`}
-              onClick={onLikeClick}
-            >
-              <FontAwesomeIcon
-                icon={
-                  ideaInfo.like_users.hasOwnProperty(user.userId)
-                    ? fasHeart
-                    : farHeart
-                }
-                size="xl"
-              />
-            </button>
-            <button
-              className={`${
-                ideaInfo.bookmark_users.hasOwnProperty(user.userId) &&
-                "text-orange-400"
-              }`}
-              onClick={onBookmarkClick}
-            >
-              <FontAwesomeIcon
-                icon={
-                  ideaInfo.bookmark_users.hasOwnProperty(user.userId)
-                    ? fasBookmark
-                    : farBookmark
-                }
-                size="xl"
-              />
-            </button>
-            {user.userId == dbIdea.userId && (
-              <button
-                className={`${dbIdea.isPublic && "text-sky-400"}`}
-                onClick={onPublicClick}
-              >
-                <FontAwesomeIcon
-                  icon={dbIdea.isPublic ? fasCompass : farCompass}
-                  size="xl"
-                />
-              </button>
-            )}
-          </>
+        <button
+          className={`${userIdea.isLiked && "text-red-400"}`}
+          onClick={onLikeClick}
+        >
+          <FontAwesomeIcon
+            icon={userIdea.isLiked ? fasHeart : farHeart}
+            size="lg"
+          />
+        </button>
+        <button
+          className={`${userIdea.isBookmarked && "text-orange-400"}`}
+          onClick={onBookmarkClick}
+        >
+          <FontAwesomeIcon
+            icon={userIdea.isBookmarked ? fasBookmark : farBookmark}
+            size="lg"
+          />
+        </button>
+        {isOwner && (
+          <button
+            className={`${userIdea.isPublic && "text-sky-400"}`}
+            onClick={onPublicClick}
+          >
+            <FontAwesomeIcon
+              icon={userIdea.isPublic ? fasCompass : farCompass}
+              size="lg"
+            />
+          </button>
         )}
 
-        {dbIdea.connectedIdeas.length > 0 && (
+        {userIdea.connectedIdeas.length > 0 && (
           <div className="w-full flex justify-end gap-2">
             <ColoredIdeaList
-              ideas={dbIdea.connectedIdeas}
+              ideas={userIdea.connectedIdeas}
               colorList={colorList}
               small={true}
             />
-
             <div
               className={`flex items-center text-stone-500 ${
                 viewDetail && "rotate-180"

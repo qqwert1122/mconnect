@@ -32,7 +32,9 @@ import {
 const Ideas = ({ customHooks }) => {
   const getNextPosts = customHooks.getNextPosts;
   const user = customHooks.loggedInUser;
-  const dbIdeas = customHooks.dbIdeas;
+  const userIdeas = customHooks.userIdeas;
+  const setUserIdeas = customHooks.setUserIdeas;
+
   const scrollY = customHooks.scrollY;
   const setScrollY = customHooks.setScrollY;
   const navigate = customHooks.navigate;
@@ -47,8 +49,8 @@ const Ideas = ({ customHooks }) => {
   // idea
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
-  const viewIdea = customHooks.viewIdea;
-  const setViewIdea = customHooks.setViewIdea;
+  const whatView = customHooks.whatView;
+  const setWhatView = customHooks.setWhatView;
   const setTagList = customHooks.setTagList;
   const setSourceList = customHooks.setSourceList;
 
@@ -68,31 +70,31 @@ const Ideas = ({ customHooks }) => {
   }, []);
 
   useEffect(() => {
-    setShowingIdeas(dbIdeas);
+    setShowingIdeas(userIdeas);
 
     const tempoTagList = [];
-    for (let a in dbIdeas) {
-      for (let b in dbIdeas[a].tags) {
-        if (tempoTagList.includes(dbIdeas[a].tags[b])) {
+    for (let a in userIdeas) {
+      for (let b in userIdeas[a].tags) {
+        if (tempoTagList.includes(userIdeas[a].tags[b])) {
         } else {
-          tempoTagList.push(dbIdeas[a].tags[b]);
+          tempoTagList.push(userIdeas[a].tags[b]);
         }
       }
     }
     setTagList(tempoTagList);
 
     const tempoSourceList = [];
-    for (let a in dbIdeas) {
+    for (let a in userIdeas) {
       if (
-        tempoSourceList.includes(dbIdeas[a].source) ||
-        dbIdeas[a].source === ""
+        tempoSourceList.includes(userIdeas[a].source) ||
+        userIdeas[a].source === ""
       ) {
       } else {
-        tempoSourceList.push(dbIdeas[a].source);
+        tempoSourceList.push(userIdeas[a].source);
       }
     }
     setSourceList(tempoSourceList);
-  }, [dbIdeas]);
+  }, [userIdeas]);
 
   useEffect(() => {
     if (selectedIdeas.length > 0) {
@@ -102,11 +104,11 @@ const Ideas = ({ customHooks }) => {
     }
   }, [selectedIdeas.length]);
 
-  const onSelectIdea = (dbIdea) => {
-    if (selectedIdeas.includes(dbIdea)) {
-      setSelectedIdeas(selectedIdeas.filter((idea) => idea != dbIdea));
+  const onSelectIdea = (idea) => {
+    if (selectedIdeas.includes(idea)) {
+      setSelectedIdeas(selectedIdeas.filter((_idea) => _idea != idea));
     } else {
-      setSelectedIdeas([dbIdea, ...selectedIdeas]);
+      setSelectedIdeas([idea, ...selectedIdeas]);
     }
   };
 
@@ -159,7 +161,7 @@ const Ideas = ({ customHooks }) => {
       <div className="relative bg-stone-100">
         <IdeasTopBar
           navigate={navigate}
-          setViewIdea={setViewIdea}
+          setWhatView={setWhatView}
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
           isSelectMode={isSelectMode}
@@ -169,7 +171,7 @@ const Ideas = ({ customHooks }) => {
         />
         <IdeasToggleButton
           user={user}
-          dbIdeas={dbIdeas}
+          userIdeas={userIdeas}
           selectedIdeas={selectedIdeas}
           setShowingIdeas={setShowingIdeas}
           scrollY={scrollY}
@@ -203,16 +205,16 @@ const Ideas = ({ customHooks }) => {
               itemCount={showingIdeas.length}
               itemSize={getItemSize}
             > */}
-              {showingIdeas.map((dbIdea) => (
+              {showingIdeas.map((userIdea) => (
                 <Idea
-                  key={dbIdea.id}
+                  key={userIdea.id}
                   setHeight={setHeight}
                   customHooks={customHooks}
                   navigate={navigate}
                   user={user}
-                  dbIdea={dbIdea}
-                  viewIdea={viewIdea}
-                  setViewIdea={setViewIdea}
+                  userIdea={userIdea}
+                  whatView={whatView}
+                  setWhatView={setWhatView}
                   isSelectMode={isSelectMode}
                   selectedIdeas={selectedIdeas}
                   onSelectIdea={onSelectIdea}

@@ -44,17 +44,15 @@ const useCustomHooks = () => {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // context
-  const [userContext, setUserContext] = useState(0);
-
   // db props
-  const [dbIdeas, setdbIdeas] = useState([]);
+  const [userIdeas, setUserIdeas] = useState([]);
 
   // Ideas props
   const [selectedIdeas, setSelectedIdeas] = useState([]);
   const [tagList, setTagList] = useState([]);
   const [sourceList, setSourceList] = useState([]);
-  const [viewIdea, setViewIdea] = useState();
+
+  const [whatView, setWhatView] = useState();
 
   // scroll
   const [scrollY, setScrollY] = useRecoilState(scrollAtom);
@@ -152,7 +150,7 @@ const useCustomHooks = () => {
 
       const q1 = query(
         collection(dbService, "users", loggedInUser.userId, "userIdeas"),
-        orderBy("createdAt", "desc")
+        orderBy("updatedAt", "desc")
       );
 
       onSnapshot(q1, (snapshot) => {
@@ -160,7 +158,7 @@ const useCustomHooks = () => {
           id: doc.id,
           ...doc.data(),
         }));
-        setdbIdeas(ideas);
+        setUserIdeas(ideas);
       });
     }
   }, [isLoggedIn]);
@@ -219,12 +217,10 @@ const useCustomHooks = () => {
     navigate,
     setNavValue,
     navValue,
-    dbIdeas,
-    setdbIdeas,
-    userContext,
-    setUserContext,
-    viewIdea,
-    setViewIdea,
+    userIdeas,
+    setUserIdeas,
+    whatView,
+    setWhatView,
     selectedIdeas,
     setSelectedIdeas,
     tagList,

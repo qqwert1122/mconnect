@@ -1,7 +1,13 @@
 import DeleteDialog from "../idea/DeleteDialog";
 import { useState } from "react";
 import { dbService } from "fbase";
-import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  deleteDoc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
@@ -16,13 +22,7 @@ import {
   faCopy,
 } from "@fortawesome/free-regular-svg-icons";
 
-const ViewIdeaTopBar = ({
-  viewIdea,
-  setViewIdea,
-  onBackClick,
-  setUserContext,
-  navigate,
-}) => {
+const ViewIdeaTopBar = ({ user, isOwner, whatView, onBackClick, navigate }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const open = Boolean(anchorEl);
@@ -40,8 +40,25 @@ const ViewIdeaTopBar = ({
   const onDeleteClick = async () => {
     setDeleteDialogOpen(false);
     setAnchorEl(null);
-    const ideaRef = doc(dbService, "ideas", `${viewIdea.id}`);
-    await deleteDoc(ideaRef);
+    const userIdeaRef = doc(
+      dbService,
+      "users",
+      user.userId,
+      "userIdeas",
+      whatView.id
+    );
+    await deleteDoc(userIdeaRef);
+    const countRef = doc(dbService, "counts", whatView.id);
+    const countData = (await getDoc(countRef)).data();
+    if (isOwner === false) {
+      delete countData.bookmark_users[user.userId];
+      await updateDoc(countRef, {
+        bookmark_count: increment(-1),
+        bookmark_users: countData.bookmark_users,
+      });
+    } else {
+      await deleteDoc(countRef);
+    }
     navigate("/ideas");
   };
 
@@ -86,10 +103,12 @@ const ViewIdeaTopBar = ({
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={onEditClick}>
-          <FontAwesomeIcon icon={faPenToSquare} />
-          &nbsp; 수정
-        </MenuItem>
+        {isOwner && (
+          <MenuItem onClick={onEditClick}>
+            <FontAwesomeIcon icon={faPenToSquare} />
+            &nbsp; 수정
+          </MenuItem>
+        )}
         <MenuItem onClick={onDeleteMenuItemClick}>
           <FontAwesomeIcon icon={faTrashCan} />
           &nbsp; 삭제

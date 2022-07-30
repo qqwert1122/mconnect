@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 
 const Auth = ({ customHooks }) => {
+  const setNavValue = customHooks.setNavValue;
   const onGoogleClick = async (event) => {
     event.preventDefault();
     try {
@@ -19,6 +20,7 @@ const Auth = ({ customHooks }) => {
     } catch (error) {
       console.log(error);
     }
+    setNavValue("/ideas");
   };
 
   const onTestClick = async () => {
@@ -36,9 +38,10 @@ const Auth = ({ customHooks }) => {
       isAdRemoved: false,
       isAuthority: false,
     };
-    customHooks.setsetLoggedInUser(testUser);
+    customHooks.setLoggedInUser(testUser);
     customHooks.setIsLoggedIn(true);
     customHooks.setInit(true);
+    setNavValue("/ideas");
   };
 
   return (

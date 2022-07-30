@@ -10,7 +10,7 @@ import {
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
 const SuggestedIdeas = ({
-  dbIdeas,
+  userIdeas,
   ideaPrmtr,
   tagsPrmtr,
   itemChange,
@@ -28,16 +28,16 @@ const SuggestedIdeas = ({
     setTagChangeProps(tag);
   };
 
-  const onIdeaSelect = (e, dbIdea) => {
+  const onIdeaSelect = (e, idea) => {
     e.preventDefault();
-    if (selectedIdeas.includes(dbIdea)) {
-      setSelectedIdeas(selectedIdeas.filter((idea) => idea != dbIdea));
+    if (selectedIdeas.includes(idea)) {
+      setSelectedIdeas(selectedIdeas.filter((idea) => idea != idea));
     } else {
-      setSelectedIdeas([dbIdea, ...selectedIdeas]);
+      setSelectedIdeas([idea, ...selectedIdeas]);
     }
   };
 
-  const filteredIdeas = dbIdeas.filter(
+  const filteredIdeas = userIdeas.filter(
     (idea) => idea.tags.includes(tagChangeProps) && idea.text !== ideaPrmtr.text
   );
 

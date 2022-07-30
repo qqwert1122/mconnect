@@ -1,7 +1,7 @@
 import "css/Animation.css";
 import Slider from "react-slick";
 
-const ConnectedIdeas = ({ viewIdea, onIdeaClick }) => {
+const ConnectedIdeas = ({ whatView, onIdeaClick }) => {
   const settings = {
     dots: true,
     arrows: false,
@@ -16,11 +16,11 @@ const ConnectedIdeas = ({ viewIdea, onIdeaClick }) => {
   return (
     <div className="moveRightToLeft bg-stone-50 shadow-inner">
       <div className="mx-16 pt-5 mb-2 text-center text-base font-black z-10">
-        {viewIdea.connectedIdeas.length}개 연결됨
+        {whatView.connectedIdeas.length}개 연결됨
       </div>
       <div className="relative pb-10 ">
         <Slider {...settings}>
-          {viewIdea.connectedIdeas.map((idea, index) => (
+          {whatView.connectedIdeas.map((idea, index) => (
             <div key={index}>
               <div className="h-60 p-5 m-1 bg-white shadow rounded-3xl break-all">
                 <div

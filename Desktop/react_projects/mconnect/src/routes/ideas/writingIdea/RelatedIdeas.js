@@ -8,16 +8,15 @@ import { faRightToBracket, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
 const RelatedIdeas = ({
-  dbIdeas,
+  userIdeas,
   navigate,
-  userContext,
   formConnectedIdeas,
   setFormConnectedIdeas,
   formTags,
   colorList,
   selectedIdeas,
   setSelectedIdeas,
-  setViewIdea,
+  setWhatView,
 }) => {
   const [tabs, setTabs] = useState(0);
 
@@ -34,24 +33,25 @@ const RelatedIdeas = ({
 
   const onIdeaClick = (e, idea) => {
     e.preventDefault();
-    setViewIdea(idea);
-    navigate("/viewidea");
+    setWhatView(idea);
+    navigate(`/${idea.id}`);
   };
 
   const onXmarkClick = (e, index) => {
     e.preventDefault();
-    switch (userContext) {
-      case 0:
-        setSelectedIdeas(
-          selectedIdeas.filter((fIdea, fIndex) => fIndex != index)
-        );
-        break;
-      case 1:
-      case 2:
-        setFormConnectedIdeas(
-          formConnectedIdeas.filter((fIdea, fIndex) => fIndex != index)
-        );
-    }
+
+    // switch (userContext) {
+    //   case 0:
+    //     setSelectedIdeas(
+    //       selectedIdeas.filter((fIdea, fIndex) => fIndex != index)
+    //     );
+    //     break;
+    //   case 1:
+    //   case 2:
+    //     setFormConnectedIdeas(
+    //       formConnectedIdeas.filter((fIdea, fIndex) => fIndex != index)
+    //     );
+    // }
   };
 
   const settings = {
@@ -141,7 +141,7 @@ const RelatedIdeas = ({
         {tabs === 1 && (
           <>
             <SuggestedIdeas
-              dbIdeas={dbIdeas}
+              userIdeas={userIdeas}
               ideaPrmtr={formConnectedIdeas}
               tagsPrmtr={formTags}
               itemChange=""

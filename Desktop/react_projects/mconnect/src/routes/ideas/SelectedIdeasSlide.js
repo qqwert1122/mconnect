@@ -7,15 +7,15 @@ const SelectedIdeasSlide = ({
   navigate,
   selectedIdeas,
   setSelectedIdeas,
-  setViewIdea,
+  setWhatView,
   isViewDetailsClicked,
   setIsViewDetailsClicked,
 }) => {
   // event handler
 
   const onIdeaClick = (idea) => {
-    setViewIdea(idea);
-    navigate("/viewidea");
+    setWhatView(idea);
+    navigate(`/${idea.id}`);
   };
 
   const onViewDetailsClick = (e) => {
