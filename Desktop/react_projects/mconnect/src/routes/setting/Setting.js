@@ -134,13 +134,13 @@ const Setting = ({ customHooks }) => {
       </div>
       <div className="mt-20 mb-16">
         <div className="flex justify-between">
-          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-gradient-to-br from-red-500  via-orange-400 to-yellow-500 text-white font-black text-base">
+          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-gradient-to-br from-red-500  via-orange-400 to-yellow-500 text-white font-black text-sm">
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faCommentDollar} size="xl" />
             </span>
             <span className="absolute bottom-2 right-2">개발자 후원</span>
           </div>
-          <div className="w-1/2 h-24 relative mr-5 ml-2  p-5 rounded-xl shadow-lg bg-gradient-to-br from-yellow-300 via-orange-300 to-rose-400 text-white font-black text-base">
+          <div className="w-1/2 h-24 relative mr-5 ml-2  p-5 rounded-xl shadow-lg bg-gradient-to-br from-yellow-300 via-orange-300 to-rose-400 text-white font-black text-sm">
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faRectangleAd} size="xl" />
             </span>
@@ -164,9 +164,11 @@ const Setting = ({ customHooks }) => {
               </button>
             </div>
 
-            <div className="w-full flex items-center text-lg">
+            <div className="w-full flex items-center">
               <div className="flex-col">
-                <div className="font-black">{loggedInUser.userName}</div>
+                <div className="font-black text-base">
+                  {loggedInUser.userName}
+                </div>
                 <div className="pb-2 text-xs">{loggedInUser.userEmail}</div>
                 <div className="flex gap-2 text-sm text-white">
                   <button className="p-1 rounded-lg bg-stone-400 font-black ">
@@ -184,12 +186,12 @@ const Setting = ({ customHooks }) => {
           </div>
         </div>
         <div className="relative m-5 p-5 rounded-xl shadow-lg bg-stone-100">
-          <div className="text-base font-black pb-5">업적</div>
+          <div className="text-sm font-black pb-5">업적</div>
           <div className="flex flex-wrap gap-1">
             {achievementItems.map((item, index) => (
               <div
                 key={index}
-                className={`flex justify-center items-center p-1 rounded-3xl text-sm  font-black ${item.bgColor} ${item.color} shadow-xl border-2 border-white`}
+                className={`flex justify-center items-center p-1 rounded-3xl text-xs  font-black ${item.bgColor} ${item.color} shadow-xl border-2 border-white`}
               >
                 {item.label}
               </div>
@@ -197,7 +199,7 @@ const Setting = ({ customHooks }) => {
           </div>
         </div>
         <div className="flex justify-between">
-          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-base">
+          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-sm">
             <span className="absolute top-2 left-2">상세 모드</span>
             <span className="absolute bottom-2 right-2">
               <FormControlLabel
@@ -210,7 +212,7 @@ const Setting = ({ customHooks }) => {
           <div
             className={`w-1/2 h-24 relative mr-5 ml-2 p-5 rounded-xl duration-1000 shadow-lg ${
               darkMode ? "bg-stone-600 text-white" : "bg-stone-100"
-            } font-black text-base`}
+            } font-black text-sm`}
           >
             <span className="absolute top-2 left-2">다크 모드</span>
             <span className="absolute bottom-2 right-2 ">
@@ -224,14 +226,14 @@ const Setting = ({ customHooks }) => {
         </div>
 
         <div className="flex justify-between">
-          <div className="w-1/2 h-24 relative my-5 ml-5 mr-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-base">
+          <div className="w-1/2 h-24 relative my-5 ml-5 mr-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-sm">
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faEnvelope} size="xl" />
             </span>
             <span className="absolute bottom-2 right-2">제안/제보</span>
           </div>
           <button
-            className="btn w-1/2 h-24 relative my-5 mr-5 ml-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-base"
+            className="btn w-1/2 h-24 relative my-5 mr-5 ml-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-sm"
             onClick={onOpenSourceClick}
           >
             <span className="absolute top-2 left-2">

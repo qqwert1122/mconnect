@@ -22,13 +22,21 @@ import {
   faCopy,
 } from "@fortawesome/free-regular-svg-icons";
 
-const ViewIdeaTopBar = ({ user, isOwner, whatView, onBackClick, navigate }) => {
+const ViewIdeaTopBar = ({
+  user,
+  isOwner,
+  whatView,
+  setWhatEdit,
+  onBackClick,
+  navigate,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const open = Boolean(anchorEl);
 
   const onEditClick = () => {
     setAnchorEl(null);
+    setWhatEdit(whatView);
     navigate("/writingidea");
   };
 

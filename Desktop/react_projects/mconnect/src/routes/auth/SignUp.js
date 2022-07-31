@@ -101,6 +101,12 @@ const SignUp = ({ customHooks }) => {
           userPhotoURL: attachmentUrl,
           isAdRemoved: false,
           isAuthority: false,
+          isOfficial: false,
+          setting: {
+            isSimpleMode: false,
+            isDarkMode: false,
+          },
+          achievement: {},
         });
         const registeredUser = (
           await getDoc(doc(dbService, "users", authService.currentUser.uid))

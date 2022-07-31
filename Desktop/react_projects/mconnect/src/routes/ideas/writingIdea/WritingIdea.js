@@ -36,6 +36,8 @@ const WritingIdea = ({ customHooks }) => {
   const navigate = customHooks.navigate;
   const whatView = customHooks.whatView;
   const setWhatView = customHooks.setWhatView;
+  const whatEdit = customHooks.whatEdit;
+  const setWhatEdit = customHooks.setWhatEdit;
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
   const tagList = customHooks.tagList;
@@ -53,13 +55,27 @@ const WritingIdea = ({ customHooks }) => {
   const [formPublic, setFormPublic] = useState(false);
 
   useEffect(() => {
-    if (whatView != null) {
-      setFormTitle(whatView.title);
-      setFormText(whatView.text);
-      setFormSource(whatView.source);
-      setFormTags(whatView.tags);
-      setFormConnectedIdeas(whatView.connectedIdeas);
-      setFormPublic(whatView.public);
+    if (whatEdit === undefined) {
+      if (selectedIdeas.length > 1) {
+        const tempoinputTagList = [];
+        for (var a in selectedIdeas) {
+          for (var b in selectedIdeas[a].tags) {
+            if (tempoinputTagList.includes(selectedIdeas[a].tags[b])) {
+            } else {
+              tempoinputTagList.push(selectedIdeas[a].tags[b]);
+            }
+          }
+        }
+        setFormTags(tempoinputTagList);
+        setFormConnectedIdeas(selectedIdeas);
+      }
+    } else {
+      setFormTitle(whatEdit.title);
+      setFormText(whatEdit.text);
+      setFormSource(whatEdit.source);
+      setFormTags(whatEdit.tags);
+      setFormConnectedIdeas(whatEdit.connectedIdeas);
+      setFormPublic(whatEdit.isPublic);
     }
   }, [selectedIdeas]);
 
@@ -70,44 +86,12 @@ const WritingIdea = ({ customHooks }) => {
       setFormText(e.target.value);
     }
   };
+
   const onSubmit = async (event) => {
     event.preventDefault();
     const form = event.target;
 
-    if (whatView != null) {
-      try {
-        if (
-          whatView.connectedIdeas.length >= 2 &&
-          formConnectedIdeas.length < 2
-        ) {
-          toast.error("아이디어 2개 이상을 선택하세요", {
-            theme: "colored",
-          });
-          return;
-        }
-        const ideaRef = doc(
-          dbService,
-          "users",
-          user.userId,
-          "userIdeas",
-          `${whatView.id}`
-        );
-        await updateDoc(ideaRef, {
-          ...whatView,
-          title: formTitle,
-          text: formText,
-          source: formSource,
-          tags: formTags,
-          isPublic: formPublic,
-          connectedIdeas: formConnectedIdeas,
-          updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-        });
-      } catch (event) {
-        console.error("Error editing document: ", event);
-      }
-      setWhatView(null);
-      navigate("/ideas");
-    } else {
+    if (whatEdit === undefined) {
       try {
         const newIdeaId = v4();
         const newUserIdeaRef = doc(
@@ -146,7 +130,40 @@ const WritingIdea = ({ customHooks }) => {
         console.error("Error adding document: ", event);
       }
       setSelectedIdeas([]);
-      navigate("/ideas");
+      navigate(-1);
+    } else {
+      try {
+        if (
+          whatEdit.connectedIdeas.length >= 2 &&
+          formConnectedIdeas.length < 2
+        ) {
+          toast.error("아이디어 2개 이상을 선택하세요", {
+            theme: "colored",
+          });
+          return;
+        }
+        const ideaRef = doc(
+          dbService,
+          "users",
+          user.userId,
+          "userIdeas",
+          `${whatEdit.id}`
+        );
+        await updateDoc(ideaRef, {
+          ...whatEdit,
+          title: formTitle,
+          text: formText,
+          source: formSource,
+          tags: formTags,
+          isPublic: formPublic,
+          connectedIdeas: formConnectedIdeas,
+          updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+        });
+      } catch (event) {
+        console.error("Error editing document: ", event);
+      }
+      setWhatEdit();
+      navigate(-1);
     }
   };
 
@@ -155,7 +172,7 @@ const WritingIdea = ({ customHooks }) => {
       <form onSubmit={onSubmit}>
         <WritingTopBar
           navigate={navigate}
-          setWhatView={setWhatView}
+          setWhatEdit={setWhatEdit}
           formCategory={formCategory}
           formTitle={formTitle}
           setFormTitle={setFormTitle}
@@ -174,6 +191,7 @@ const WritingIdea = ({ customHooks }) => {
         <WritingBottom
           userIdeas={userIdeas}
           setWhatView={setWhatView}
+          whatEdit={whatEdit}
           navigate={navigate}
           formSource={formSource}
           setFormSource={setFormSource}

@@ -12,6 +12,7 @@ import RelatedIdeas from "./RelatedIdeas";
 const WritingBottom = ({
   userIdeas,
   setWhatView,
+  whatEdit,
   navigate,
   formSource,
   setFormSource,
@@ -45,21 +46,6 @@ const WritingBottom = ({
     }
   }, [bottomItemChangeProps]);
 
-  useEffect(() => {
-    const tempoinputTagList = [];
-
-    for (var a in selectedIdeas) {
-      for (var b in selectedIdeas[a].tags) {
-        if (tempoinputTagList.includes(selectedIdeas[a].tags[b])) {
-        } else {
-          tempoinputTagList.push(selectedIdeas[a].tags[b]);
-        }
-      }
-    }
-
-    setFormTags(tempoinputTagList);
-  }, []);
-
   return (
     <div className="w-screen fixed bottom-0 z-30">
       {bottomItemChangeProps === 0 && (
@@ -88,6 +74,7 @@ const WritingBottom = ({
 
       {bottomItemChangeProps === 3 && (
         <RelatedIdeas
+          whatEdit={whatEdit}
           userIdeas={userIdeas}
           navigate={navigate}
           formConnectedIdeas={formConnectedIdeas}

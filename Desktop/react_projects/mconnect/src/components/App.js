@@ -53,6 +53,7 @@ const useCustomHooks = () => {
   const [sourceList, setSourceList] = useState([]);
 
   const [whatView, setWhatView] = useState();
+  const [whatEdit, setWhatEdit] = useState();
 
   // scroll
   const [scrollY, setScrollY] = useRecoilState(scrollAtom);
@@ -187,14 +188,14 @@ const useCustomHooks = () => {
   });
 
   const colorList = [
-    "bg-red-400",
-    "bg-orange-400",
-    "bg-amber-400",
-    "bg-yellow-400",
-    "bg-lime-400",
-    "bg-green-400",
-    "bg-emerald-400",
-    "bg-teal-400",
+    "bg-red-300",
+    "bg-orange-300",
+    "bg-amber-300",
+    "bg-yellow-300",
+    "bg-lime-300",
+    "bg-green-300",
+    "bg-emerald-300",
+    "bg-teal-300",
     "bg-cyan-400",
     "bg-sky-400",
     "bg-blue-400",
@@ -221,6 +222,8 @@ const useCustomHooks = () => {
     setUserIdeas,
     whatView,
     setWhatView,
+    whatEdit,
+    setWhatEdit,
     selectedIdeas,
     setSelectedIdeas,
     tagList,

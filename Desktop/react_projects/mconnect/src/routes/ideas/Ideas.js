@@ -34,26 +34,22 @@ const Ideas = ({ customHooks }) => {
   const user = customHooks.loggedInUser;
   const userIdeas = customHooks.userIdeas;
   const setUserIdeas = customHooks.setUserIdeas;
-
   const scrollY = customHooks.scrollY;
   const setScrollY = customHooks.setScrollY;
   const navigate = customHooks.navigate;
   const [showingIdeas, setShowingIdeas] = useState([]);
-
   const [elimentHeight, setHeight] = useState();
-
   //filter
   const [categoryPrmtr, setCategoryPrmtr] = useState(null);
   const [filterPrmtr, setFilterPrmtr] = useState(null);
-
   // idea
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
   const whatView = customHooks.whatView;
   const setWhatView = customHooks.setWhatView;
+  const setWhatEdit = customHooks.setWhatEdit;
   const setTagList = customHooks.setTagList;
   const setSourceList = customHooks.setSourceList;
-
   // setting
   const [isSelectMode, setIsSelectMode] = useState(false);
 
@@ -215,6 +211,7 @@ const Ideas = ({ customHooks }) => {
                   userIdea={userIdea}
                   whatView={whatView}
                   setWhatView={setWhatView}
+                  setWhatEdit={setWhatEdit}
                   isSelectMode={isSelectMode}
                   selectedIdeas={selectedIdeas}
                   onSelectIdea={onSelectIdea}
@@ -223,7 +220,7 @@ const Ideas = ({ customHooks }) => {
               {/* </List> */}
             </>
           ) : (
-            <div className="py-10 flex justify-center text-xl font-black text-gray-400 ">
+            <div className="py-10 flex justify-center text-base font-black text-gray-400 ">
               새 아이디어를 입력해주세요 ✏️
             </div>
           )}

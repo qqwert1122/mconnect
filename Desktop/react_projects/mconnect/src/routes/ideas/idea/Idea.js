@@ -28,6 +28,7 @@ const Idea = ({
   user,
   userIdea,
   setWhatView,
+  setWhatEdit,
   isSelectMode,
   selectedIdeas,
   onSelectIdea,
@@ -56,7 +57,7 @@ const Idea = ({
       "userIdeas",
       userIdea.id
     );
-    if (countData && userIdea.isViewed === false) {
+    if (countData.view_users.hasOwnProperty(user.userId) === false) {
       await updateDoc(countRef, {
         view_count: increment(1),
         view_users: { ...countData.view_users, [user.userId]: user.userName },
@@ -108,7 +109,7 @@ const Idea = ({
                 isOwner={isOwner}
                 userIdea={userIdea}
                 navigate={navigate}
-                setWhatView={setWhatView}
+                setWhatEdit={setWhatEdit}
                 isSelectMode={isSelectMode}
                 selectedIdeas={selectedIdeas}
                 anchorEl={anchorEl}

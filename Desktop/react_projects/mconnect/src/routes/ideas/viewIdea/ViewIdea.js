@@ -25,6 +25,7 @@ const ViewIdea = ({ customHooks }) => {
   const colorList = customHooks.colorList;
   const whatView = customHooks.whatView;
   const setWhatView = customHooks.setWhatView;
+  const setWhatEdit = customHooks.setWhatEdit;
 
   const selectedIdeas = customHooks.selectedIdeas;
   const setSelectedIdeas = customHooks.setSelectedIdeas;
@@ -67,7 +68,7 @@ const ViewIdea = ({ customHooks }) => {
             user={user}
             isOwner={isOwner}
             whatView={whatView}
-            setWhatView={setWhatView}
+            setWhatEdit={setWhatEdit}
             navigate={navigate}
             onBackClick={onBackClick}
           />
@@ -79,8 +80,11 @@ const ViewIdea = ({ customHooks }) => {
             isOwner={isOwner}
             isDeleted={isDeleted}
             countInfo={countInfo}
+            setCountInfo={setCountInfo}
             whatView={whatView}
+            setWhatView={setWhatView}
             timeDisplay={timeDisplay}
+            onBackClick={onBackClick}
           />
         ) : (
           <div className="p-4 flex-col">

@@ -9,6 +9,7 @@ import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
 const RelatedIdeas = ({
   userIdeas,
+  whatEdit,
   navigate,
   formConnectedIdeas,
   setFormConnectedIdeas,
@@ -39,19 +40,7 @@ const RelatedIdeas = ({
 
   const onXmarkClick = (e, index) => {
     e.preventDefault();
-
-    // switch (userContext) {
-    //   case 0:
-    //     setSelectedIdeas(
-    //       selectedIdeas.filter((fIdea, fIndex) => fIndex != index)
-    //     );
-    //     break;
-    //   case 1:
-    //   case 2:
-    //     setFormConnectedIdeas(
-    //       formConnectedIdeas.filter((fIdea, fIndex) => fIndex != index)
-    //     );
-    // }
+    setSelectedIdeas(selectedIdeas.filter((fIdea, fIndex) => fIndex != index));
   };
 
   const settings = {

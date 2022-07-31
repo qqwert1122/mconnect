@@ -4,14 +4,14 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 const WritingTopBar = ({
   navigate,
-  setWhatView,
+  setWhatEdit,
   formCategory,
   formTitle,
   setFormTitle,
 }) => {
   const onBackClick = (e) => {
     e.preventDefault();
-    setWhatView(null);
+    setWhatEdit();
     navigate(-1);
   };
 

@@ -1,17 +1,6 @@
 import { useState } from "react";
 import { authService, dbService } from "fbase";
-import {
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-  where,
-  addDoc,
-  doc,
-  getDoc,
-  documentId,
-  setDoc,
-} from "firebase/firestore";
+import { doc, updateDoc, deleteDoc, increment } from "firebase/firestore";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -35,11 +24,128 @@ const ViewIdeaContent = ({
   isOwner,
   isDeleted,
   whatView,
+  setWhatView,
   countInfo,
+  setCountInfo,
   timeDisplay,
+  onBackClick,
 }) => {
-  const [anchorEl, setAnchorEl] = useState(false);
+  const countRef = doc(dbService, "counts", whatView.id);
+  const userIdeaRef = doc(
+    dbService,
+    "users",
+    user.userId,
+    "userIdeas",
+    whatView.id
+  );
 
+  const onLikeClick = async () => {
+    if (whatView.isLiked) {
+      if (isDeleted) {
+        await updateDoc(userIdeaRef, {
+          isLiked: false,
+        });
+      } else {
+        const newCountInfo = {
+          ...countInfo,
+          like_count: countInfo.like_count - 1,
+        };
+        delete newCountInfo.like_users[user.userId];
+        setCountInfo(newCountInfo);
+        await updateDoc(countRef, {
+          like_count: increment(-1),
+          like_users: countInfo.like_users,
+        });
+        await updateDoc(userIdeaRef, {
+          isLiked: false,
+        });
+      }
+      setWhatView({ ...whatView, isLiked: false });
+    } else {
+      if (isDeleted) {
+        await updateDoc(userIdeaRef, {
+          isLiked: true,
+        });
+      } else {
+        await updateDoc(countRef, {
+          like_count: increment(1),
+          like_users: { ...countInfo.like_users, [user.userId]: user.userName },
+        });
+        await updateDoc(userIdeaRef, {
+          isLiked: true,
+        });
+        const newCountInfo = {
+          ...countInfo,
+          like_count: countInfo.like_count + 1,
+        };
+        setCountInfo(newCountInfo);
+      }
+      setWhatView({ ...whatView, isLiked: true });
+    }
+  };
+
+  const onBookmarkClick = async () => {
+    if (isOwner) {
+      if (whatView.isBookmarked) {
+        delete countInfo.bookmark_users[user.userId];
+        await updateDoc(countRef, {
+          bookmark_count: increment(-1),
+          bookmark_users: countInfo.bookmark_users,
+        });
+        await updateDoc(userIdeaRef, {
+          isBookmarked: false,
+        });
+        const newCountInfo = {
+          ...countInfo,
+          bookmark_count: countInfo.bookmark_count - 1,
+        };
+        setCountInfo(newCountInfo);
+        setWhatView({ ...whatView, isBookmarked: false });
+      } else {
+        await updateDoc(countRef, {
+          bookmark_count: increment(1),
+          bookmark_users: {
+            ...countInfo.bookmark_users,
+            [user.userId]: user.userName,
+          },
+        });
+        await updateDoc(userIdeaRef, {
+          isBookmarked: true,
+        });
+        const newCountInfo = {
+          ...countInfo,
+          bookmark_count: countInfo.bookmark_count + 1,
+        };
+        setCountInfo(newCountInfo);
+        setWhatView({ ...whatView, isBookmarked: true });
+      }
+    } else {
+      onBackClick();
+      delete countInfo.bookmark_users[user.userId];
+      await updateDoc(countRef, {
+        bookmark_count: increment(-1),
+        bookmark_users: countInfo.bookmark_users,
+      });
+      deleteDoc(userIdeaRef);
+    }
+  };
+
+  const onPublicClick = async () => {
+    if (isOwner) {
+      const ideaRef = doc(
+        dbService,
+        "users",
+        user.userId,
+        "userIdeas",
+        whatView.id
+      );
+      await updateDoc(ideaRef, { isPublic: !whatView.isPublic });
+      setWhatView({ ...whatView, isPublic: !whatView.isPublic });
+    }
+  };
+
+  // Ellipsis Menu
+  const [anchorEl, setAnchorEl] = useState(false);
   const open = Boolean(anchorEl);
   const handleEllipsisClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,6 +153,7 @@ const ViewIdeaContent = ({
   const handleEllipsisClose = () => {
     setAnchorEl(false);
   };
+
   return (
     <>
       <div>
@@ -138,20 +245,20 @@ const ViewIdeaContent = ({
 
       <hr />
       <div className="flex items-center px-5 py-4 gap-4">
-        <button className="text-red-400 px-2">
+        <button className="text-red-400 px-2" onClick={onLikeClick}>
           <FontAwesomeIcon
             icon={whatView.isLiked ? fasHeart : farHeart}
             size="lg"
           />
         </button>
-        <button className="text-orange-400 px-2">
+        <button className="text-orange-400 px-2" onClick={onBookmarkClick}>
           <FontAwesomeIcon
             icon={whatView.isBookmarked ? fasBookmark : farBookmark}
             size="lg"
           />
         </button>
         {isOwner && (
-          <button className="text-sky-400 px-2">
+          <button className="text-sky-400 px-2" onClick={onPublicClick}>
             <FontAwesomeIcon
               icon={whatView.isPublic ? fasCompass : farCompass}
               size="lg"

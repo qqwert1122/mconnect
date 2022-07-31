@@ -175,7 +175,7 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
           isPublic: false,
           isLiked: ideaInfo.like_users.hasOwnProperty(user.userId),
           isBookmarked: true,
-          isViewed: false,
+          isViewed: ideaInfo.view_users.hasOwnProperty(user.userId),
         });
       }
     }

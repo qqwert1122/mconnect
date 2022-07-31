@@ -18,7 +18,7 @@ const IdeaTop = ({
   isOwner,
   userIdea,
   navigate,
-  setWhatView,
+  setWhatEdit,
   isSelectMode,
   selectedIdeas,
   anchorEl,
@@ -40,7 +40,7 @@ const IdeaTop = ({
 
   const onEditClick = () => {
     setAnchorEl(null);
-    setWhatView(userIdea);
+    setWhatEdit(userIdea);
     navigate("/writingidea");
   };
 
@@ -53,15 +53,13 @@ const IdeaTop = ({
               selectedIdeas.includes(userIdea)
                 ? "bg-red-400 text-white"
                 : "border-2 border-stone-400"
-            } w-6 h-6`}
+            } w-5 h-5`}
             onClick={() => {
               onSelectIdea(userIdea);
             }}
           >
-            {selectedIdeas.includes(userIdea) ? (
+            {selectedIdeas.includes(userIdea) && (
               <FontAwesomeIcon className="strech" icon={faCheck} />
-            ) : (
-              <></>
             )}
           </button>
         )}

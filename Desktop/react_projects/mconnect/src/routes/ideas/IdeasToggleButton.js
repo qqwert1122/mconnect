@@ -62,7 +62,7 @@ const IdeasToggleButton = ({
   return (
     <div className="bg-white px-5 pb-5 mb-2">
       <div
-        className={`font-black duration-100 pb-5 ${
+        className={`font-black duration-100 pb-2 ${
           isSelectMode && selectedIdeas.length ? "pt-44" : "pt-24"
         }`}
       >
@@ -72,13 +72,13 @@ const IdeasToggleButton = ({
         {filters.map((item, index) => (
           <button
             key={index}
-            className={`flex-grow-0 flex-shrink-0 border-box rounded-3xl ${
+            className={`flex-grow-0 flex-shrink-0 border-box rounded-2xl ${
               filterPrmtr != null &&
               item.value === filterPrmtr.value &&
               item.bgColor
             } ${item.color} ${
               item.borderColor
-            } border-2 px-2 py-1 text-sm font-black shadow-md duration-500`}
+            } border-2 px-2 py-1 text-xs font-black shadow-md duration-500`}
             onClick={() => {
               onFilterPrmtrClick(item);
             }}
