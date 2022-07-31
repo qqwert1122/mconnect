@@ -14,6 +14,9 @@ const SuggestedIdeas = ({
   ideaPrmtr,
   tagsPrmtr,
   itemChange,
+  whatEdit,
+  formConnectedIdeas,
+  setFormConnectedIdeas,
   onIdeaClick,
   selectedIdeas,
   setSelectedIdeas,
@@ -30,10 +33,20 @@ const SuggestedIdeas = ({
 
   const onIdeaSelect = (e, idea) => {
     e.preventDefault();
-    if (selectedIdeas.includes(idea)) {
-      setSelectedIdeas(selectedIdeas.filter((idea) => idea != idea));
+    if (whatEdit === undefined) {
+      if (selectedIdeas.includes(idea)) {
+        setSelectedIdeas(selectedIdeas.filter((idea) => idea != idea));
+      } else {
+        setSelectedIdeas([idea, ...selectedIdeas]);
+      }
     } else {
-      setSelectedIdeas([idea, ...selectedIdeas]);
+      if (formConnectedIdeas.includes(idea)) {
+        setFormConnectedIdeas(
+          formConnectedIdeas.filter((_idea) => _idea != idea)
+        );
+      } else {
+        setFormConnectedIdeas([idea, ...formConnectedIdeas]);
+      }
     }
   };
 
@@ -102,7 +115,10 @@ const SuggestedIdeas = ({
                   <div className="relative h-60 p-5 m-1 bg-white shadow rounded-3xl break-all">
                     <button
                       className={`absolute top-0 right-0 rounded-full ${
-                        selectedIdeas.includes(idea)
+                        (whatEdit === undefined &&
+                          selectedIdeas.includes(idea)) ||
+                        (whatEdit !== undefined &&
+                          formConnectedIdeas.includes(idea))
                           ? "bg-red-400 text-white"
                           : "border-2 border-stone-400"
                       } w-6 h-6`}
@@ -110,11 +126,13 @@ const SuggestedIdeas = ({
                         onIdeaSelect(e, idea);
                       }}
                     >
-                      {selectedIdeas.includes(idea) ? (
-                        <FontAwesomeIcon icon={faCheck} />
-                      ) : (
-                        <></>
-                      )}
+                      {whatEdit === undefined
+                        ? selectedIdeas.includes(idea) && (
+                            <FontAwesomeIcon icon={faCheck} />
+                          )
+                        : formConnectedIdeas.includes(idea) && (
+                            <FontAwesomeIcon icon={faCheck} />
+                          )}
                     </button>
                     <div
                       onClick={(e) => {

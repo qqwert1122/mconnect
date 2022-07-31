@@ -90,27 +90,26 @@ const WritingBottomBar = ({
           )}
         </button>
       </div>
-      {formConnectedIdeas.length > 0 && (
-        <div
-          className={`flex justify-end items-center gap-2 ${
-            formConnectedIdeas.length < 2 && "text-red-400"
-          }`}
+
+      <div
+        className={`flex justify-end items-center gap-2 ${
+          formConnectedIdeas.length < 2 && "text-red-400"
+        }`}
+      >
+        <button
+          className="text-base font-black"
+          onClick={(e) => bottomItemChange(e, 3)}
         >
-          <button
-            className="text-base font-black"
-            onClick={(e) => bottomItemChange(e, 3)}
-          >
-            연결된 아이디어
-          </button>
-          <span
-            className={`${
-              bottomItemChangeProps === 3 && "rotate-180"
-            } duration-500`}
-          >
-            <FontAwesomeIcon icon={faAngleUp} />
-          </span>
-        </div>
-      )}
+          연결된 아이디어
+        </button>
+        <span
+          className={`${
+            bottomItemChangeProps === 3 && "rotate-180"
+          } duration-500`}
+        >
+          <FontAwesomeIcon icon={faAngleUp} />
+        </span>
+      </div>
     </div>
   );
 };

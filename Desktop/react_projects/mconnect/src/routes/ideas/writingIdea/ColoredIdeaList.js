@@ -1,6 +1,6 @@
 const ColoredIdeaList = ({ ideas, colorList, small = false }) => {
   return (
-    <div className="opacity flex justify-end gap-2 p-3 ">
+    <div className="opacity flex items-start justify-end gap-2 p-3 ">
       {ideas.map((idea, index) => (
         <div
           key={index}

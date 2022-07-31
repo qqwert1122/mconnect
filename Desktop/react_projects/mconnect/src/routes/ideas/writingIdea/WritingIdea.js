@@ -57,16 +57,16 @@ const WritingIdea = ({ customHooks }) => {
   useEffect(() => {
     if (whatEdit === undefined) {
       if (selectedIdeas.length > 1) {
-        const tempoinputTagList = [];
+        const tempoInputTagList = [];
         for (var a in selectedIdeas) {
           for (var b in selectedIdeas[a].tags) {
-            if (tempoinputTagList.includes(selectedIdeas[a].tags[b])) {
+            if (tempoInputTagList.includes(selectedIdeas[a].tags[b])) {
             } else {
-              tempoinputTagList.push(selectedIdeas[a].tags[b]);
+              tempoInputTagList.push(selectedIdeas[a].tags[b]);
             }
           }
         }
-        setFormTags(tempoinputTagList);
+        setFormTags(tempoInputTagList);
         setFormConnectedIdeas(selectedIdeas);
       }
     } else {
@@ -77,7 +77,7 @@ const WritingIdea = ({ customHooks }) => {
       setFormConnectedIdeas(whatEdit.connectedIdeas);
       setFormPublic(whatEdit.isPublic);
     }
-  }, [selectedIdeas]);
+  }, []);
 
   const onTextChange = (e) => {
     if (e.target.value === " ") {
