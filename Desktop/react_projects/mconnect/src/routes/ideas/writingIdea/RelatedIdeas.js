@@ -40,7 +40,6 @@ const RelatedIdeas = ({
 
   const onXmarkClick = (e, index) => {
     e.preventDefault();
-    setSelectedIdeas(selectedIdeas.filter((fIdea, fIndex) => fIndex != index));
     setFormConnectedIdeas(
       formConnectedIdeas.filter((fIdea, fIndex) => fIndex != index)
     );

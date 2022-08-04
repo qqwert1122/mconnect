@@ -37,7 +37,7 @@ const IdeasTopBar = ({
         <div className="flex gap-2">
           <button className="relative px-2">
             <FontAwesomeIcon icon={faBell} size="lg" />
-            <span className="absolute right-1 top-0 w-2 h-2 bg-red-400 text-white rounded-full" />
+            <span className="animate-ping absolute right-1 top-0 w-2 h-2 bg-red-400 text-white rounded-full" />
           </button>
           <button className="px-2" onClick={onSelectModeClick}>
             {isSelectMode ? (

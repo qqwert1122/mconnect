@@ -90,8 +90,12 @@ const IdeasToggleButton = ({
       {scrollY > 160 && (
         <div
           className={`moveRightToLeft p-1 z-10 fixed ${
-            isSelectMode && selectedIdeas.length > 0 ? "top-40" : "top-20"
-          } right-3 flex gap-2`}
+            isSelectMode && selectedIdeas.length > 0
+              ? isViewDetailsClicked
+                ? "invisible z-0"
+                : "top-40"
+              : "top-20"
+          } right-3 flex gap-2 duration-100`}
         >
           {filters.map((item, index) => (
             <button

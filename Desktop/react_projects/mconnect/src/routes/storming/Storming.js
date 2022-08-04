@@ -77,17 +77,27 @@ const Storming = ({ customHooks }) => {
     <>
       <BottomNavigationBar customHooks={customHooks} />
       <StormingTopBar />
-      <div className="bg-stone-100 pb-14 text-sm">
+      <div className="bg-white min-h-screen pb-14 text-sm">
         {/* <StormingToggleButton /> */}
-        <StormingTagBar />
+        <StormingTagBar setIdeasPublic={setIdeasPublic} />
 
-        <div className="pt-2 min-h-screen bg-white">
-          {ideasPublic.map((idea, index) => (
-            <div key={index} className="bg-white">
-              <StormingIdea user={user} idea={idea} timeDisplay={timeDisplay} />
-            </div>
-          ))}
-        </div>
+        {ideasPublic.length > 0 ? (
+          <div className="pt-2  ">
+            {ideasPublic.map((idea, index) => (
+              <div key={index} className="bg-white">
+                <StormingIdea
+                  user={user}
+                  idea={idea}
+                  timeDisplay={timeDisplay}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="py-10 flex justify-center text-base font-black text-gray-400 ">
+            새 아이디어를 입력해주세요 ✏️
+          </div>
+        )}
       </div>
     </>
   );

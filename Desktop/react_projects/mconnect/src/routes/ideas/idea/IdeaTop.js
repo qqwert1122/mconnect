@@ -4,8 +4,13 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faCheck } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEllipsis,
+  faCheck,
+  faCertificate,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   faTrashCan,
   faCopy,
@@ -47,7 +52,7 @@ const IdeaTop = ({
   return (
     <div className="flex justify-between items-center ml-4">
       <div className="flex items-center gap-2">
-        {isSelectMode && (
+        {/* {isSelectMode && (
           <button
             className={`rounded-full ${
               selectedIdeas.includes(userIdea)
@@ -62,7 +67,23 @@ const IdeaTop = ({
               <FontAwesomeIcon className="strech" icon={faCheck} />
             )}
           </button>
-        )}
+        )} */}
+        <button
+          className={`rounded-full ${
+            selectedIdeas.includes(userIdea)
+              ? "bg-red-400 text-white"
+              : "border-2 border-stone-400"
+          } ${
+            isSelectMode ? "visible w-5 h-5" : "invisible w-0 h-0"
+          } duration-100`}
+          onClick={() => {
+            onSelectIdea(userIdea);
+          }}
+        >
+          {selectedIdeas.includes(userIdea) && (
+            <FontAwesomeIcon className="strech" icon={faCheck} />
+          )}
+        </button>
         {/* avatar, name, time */}
         <Avatar
           className="border-2"
@@ -76,13 +97,18 @@ const IdeaTop = ({
         />
 
         <div className="flex-col text-xs">
-          <div className="flex gap-1">
+          <div className="flex items-center gap-1">
             <b>{isOwner ? user.userName : userIdea.userName}</b>
+            {userIdea.isOfficial && (
+              <span className="opacity-80">
+                <VerifiedRoundedIcon color="primary" sx={{ fontSize: 16 }} />
+              </span>
+            )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             {timeDisplay(userIdea.createdAt)}
             {userIdea.isViewed === false && (
-              <span className="w-2 h-2 bg-red-400 text-white rounded-full" />
+              <span className="animate-pulse w-2 h-2 bg-red-400 text-white rounded-full" />
             )}
           </div>
         </div>

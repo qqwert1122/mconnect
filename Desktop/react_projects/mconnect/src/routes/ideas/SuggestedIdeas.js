@@ -31,15 +31,27 @@ const SuggestedIdeas = ({
     setTagChangeProps(tag);
   };
 
+  const isChecked = (idea) => {
+    if (formConnectedIdeas === undefined) {
+      //viewIdea
+      return selectedIdeas.includes(idea);
+    } else {
+      // writingIdea
+      return formConnectedIdeas.includes(idea);
+    }
+  };
+
   const onIdeaSelect = (e, idea) => {
     e.preventDefault();
-    if (whatEdit === undefined) {
+    if (formConnectedIdeas === undefined) {
+      // viewIdea
       if (selectedIdeas.includes(idea)) {
         setSelectedIdeas(selectedIdeas.filter((idea) => idea != idea));
       } else {
         setSelectedIdeas([idea, ...selectedIdeas]);
       }
     } else {
+      //writingIdea
       if (formConnectedIdeas.includes(idea)) {
         setFormConnectedIdeas(
           formConnectedIdeas.filter((_idea) => _idea != idea)
@@ -87,7 +99,7 @@ const SuggestedIdeas = ({
         {tagsPrmtr.map((tag, index) => (
           <button
             key={index}
-            className={`flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words ${
+            className={`flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-lg duration-500 break-words ${
               tag === tagChangeProps ? "bg-stone-600 text-white" : "bg-white"
             }`}
             style={{ flexBasis: "auto" }}
@@ -115,24 +127,15 @@ const SuggestedIdeas = ({
                   <div className="relative h-60 p-5 m-1 bg-white shadow rounded-3xl break-all">
                     <button
                       className={`absolute top-0 right-0 rounded-full ${
-                        (whatEdit === undefined &&
-                          selectedIdeas.includes(idea)) ||
-                        (whatEdit !== undefined &&
-                          formConnectedIdeas.includes(idea))
+                        isChecked(idea)
                           ? "bg-red-400 text-white"
                           : "border-2 border-stone-400"
-                      } w-6 h-6`}
+                      } w-6 h-6 shadow-xl`}
                       onClick={(e) => {
                         onIdeaSelect(e, idea);
                       }}
                     >
-                      {whatEdit === undefined
-                        ? selectedIdeas.includes(idea) && (
-                            <FontAwesomeIcon icon={faCheck} />
-                          )
-                        : formConnectedIdeas.includes(idea) && (
-                            <FontAwesomeIcon icon={faCheck} />
-                          )}
+                      {isChecked(idea) && <FontAwesomeIcon icon={faCheck} />}
                     </button>
                     <div
                       onClick={(e) => {

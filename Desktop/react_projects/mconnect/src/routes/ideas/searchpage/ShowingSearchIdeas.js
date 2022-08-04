@@ -3,7 +3,11 @@ import Highlighter from "react-highlight-words";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faHashtag,
+  faQuoteLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 import { useNavigate } from "react-router-dom";
 
@@ -71,7 +75,13 @@ const ShowingSearchIdeas = ({
                 )}
               </button>
             </div>
-            <div className="w-full ml-3 mr-2 mt-4 mb-2 p-2 text-sm bg-white shadow rounded-xl">
+            <div
+              className={` ${
+                selectedIdeas.includes(idea)
+                  ? "shadow-lg shadow-red-200"
+                  : "shadow"
+              } w-full ml-3 mr-2 mt-4 mb-2 p-2 text-sm bg-white rounded-xl duration-200`}
+            >
               <div className="py-2 flex-col">
                 <div className="font-black pb-1">
                   <Highlighter
@@ -81,7 +91,10 @@ const ShowingSearchIdeas = ({
                     textToHighlight={idea.title}
                   />
                 </div>
-                <div className="py-1" onClick={() => onViewIdeaClick(idea)}>
+                <div
+                  className="pt-1 pb-3"
+                  onClick={() => onViewIdeaClick(idea)}
+                >
                   {idea.text.length > 200 ? (
                     <>
                       <Highlighter
@@ -103,46 +116,60 @@ const ShowingSearchIdeas = ({
                 </div>
                 <div className="w-full text-xs text-stone-400">
                   {idea.source && (
-                    <>
-                      <div className="pb-1">
-                        <Highlighter
-                          highlightClassName="YourHighlightClass"
-                          searchWords={[searchTerm]}
-                          autoEscape={true}
-                          textToHighlight={idea.source}
-                        />
-                      </div>
-                    </>
+                    <div className="ml-2 flex gap-1">
+                      <FontAwesomeIcon icon={faQuoteLeft} />
+                      {idea.source && (
+                        <>
+                          <div className="pb-1">
+                            <Highlighter
+                              highlightClassName="YourHighlightClass"
+                              searchWords={[searchTerm]}
+                              autoEscape={true}
+                              textToHighlight={idea.source}
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
                   )}
-                  {idea.tags
-                    .filter((tag, index) => index < 4)
-                    .map((tag, index) => (
-                      <button
-                        key={index}
-                        id="demo-positioned-button"
-                        aria-controls={
-                          open ? "demo-positioned-menu" : undefined
-                        }
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                        onClick={(e) =>
-                          index === 3 && handleEllipsisClick(e, idea)
-                        }
-                        className="mr-1 mb-1 px-1 flex-shrink-0 flex-grow-0 bg-stone-200 rounded text-center"
-                        sx={{
-                          color: "inherit",
-                        }}
-                      >
-                        <Highlighter
-                          highlightClassName="YourHighlightClass"
-                          searchWords={[searchTerm]}
-                          autoEscape={true}
-                          textToHighlight={
-                            index === 3 ? `+ ${idea.tags.length - 3}` : tag
-                          }
-                        />
-                      </button>
-                    ))}
+                  {idea.tags.length > 0 && (
+                    <div className="ml-2 flex gap-1">
+                      <FontAwesomeIcon icon={faHashtag} />
+                      {idea.tags
+                        .filter((tag, index) => index < 4)
+                        .map((tag, index) => (
+                          <button
+                            key={index}
+                            id="demo-positioned-button"
+                            aria-controls={
+                              open ? "demo-positioned-menu" : undefined
+                            }
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : undefined}
+                            onClick={(e) =>
+                              index === 3 && handleEllipsisClick(e, idea)
+                            }
+                            className="pr-1 pb-1 flex-shrink-0 flex-grow-0 rounded text-center"
+                            sx={{
+                              color: "inherit",
+                            }}
+                          >
+                            <Highlighter
+                              highlightClassName="YourHighlightClass"
+                              searchWords={[searchTerm]}
+                              autoEscape={true}
+                              textToHighlight={
+                                index === idea.tags.length - 1
+                                  ? tag
+                                  : index === 3
+                                  ? `+ ${idea.tags.length - 3}`
+                                  : `${tag},`
+                              }
+                            />
+                          </button>
+                        ))}
+                    </div>
+                  )}
                   <div className="w-full flex justify-between items-center">
                     <div className="flex">{idea.createdAt}</div>
                     <div className="flex">

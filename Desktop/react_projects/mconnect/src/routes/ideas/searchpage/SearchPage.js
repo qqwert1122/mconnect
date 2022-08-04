@@ -183,11 +183,13 @@ const SearchPage = ({ customHooks }) => {
         setScrollY={setScrollY}
       />
 
-      {selectedIdeas.length > 0 && (
-        <div className="heightStrech w-full p-4 fixed bottom-0 shadow-inner bg-red-400 text-white font-black text-center text-base ">
-          {selectedIdeas.length}개 선택됨
-        </div>
-      )}
+      <div
+        className={` ${
+          selectedIdeas.length > 0 ? "bottom-0" : "-bottom-16"
+        } w-full p-4 fixed  shadow-inner bg-red-400 text-white font-black text-center text-base duration-100`}
+      >
+        {selectedIdeas.length}개 선택됨
+      </div>
     </div>
   );
 };

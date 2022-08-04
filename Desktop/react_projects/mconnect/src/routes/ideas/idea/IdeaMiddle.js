@@ -21,7 +21,7 @@ const IdeaMiddle = ({
   // toast message when long pressed
   const callback = useCallback((event) => {
     onSelectIdea(userIdea);
-  }, []);
+  });
 
   const bind = useLongPress(callback, {
     filterEvents: (event) => true,

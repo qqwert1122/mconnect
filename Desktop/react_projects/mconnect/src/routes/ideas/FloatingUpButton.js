@@ -20,7 +20,7 @@ const FloatingUpButton = ({ floating, scrollY, setScrollY }) => {
   });
 
   const onScrollTopClick = () => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   };
 
   return (
@@ -28,7 +28,7 @@ const FloatingUpButton = ({ floating, scrollY, setScrollY }) => {
       {scrollY > 300 && (
         <div
           className={`opacity fixed ${
-            floating ? "bottom-10" : "bottom-28"
+            floating ? "bottom-10" : "bottom-36"
           }  right-3 z-10`}
         >
           <button

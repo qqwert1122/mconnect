@@ -96,6 +96,7 @@ const WritingBottom = ({
         formPublic={formPublic}
         setFormPublic={setFormPublic}
         formConnectedIdeas={formConnectedIdeas}
+        selectedIdeas={selectedIdeas}
       />
     </div>
   );

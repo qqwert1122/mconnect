@@ -264,40 +264,46 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
             </div>
             {/* source */}
             {idea.source !== "" && (
-              <div className="flex items-center ml-2 pb-2 text-xs text-stone-500">
-                <FontAwesomeIcon icon={faQuoteLeft} />
-                <div className="mx-2 w-full">{idea.source}</div>
+              <div className="flex items-center ml-2 pb-2 text-xs">
+                <span className="text-stone-300">
+                  <FontAwesomeIcon icon={faQuoteLeft} />
+                </span>
+                <div className="mx-2 w-full text-stone-400">{idea.source}</div>
               </div>
             )}
             {/* category, tags */}
-            <span className="flex flex-wrap text-xs">
-              {idea.tags.length > 4 ? (
-                <>
-                  {idea.tags
-                    .filter((tag, index) => index < 4)
-                    .map((tag, index) => (
-                      <button
-                        key={index}
-                        className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500"
-                        onClick={() => index === 3 && onTagsDialogClick(idea)}
-                      >
-                        {index === 3 ? `+ ${idea.tags.length - 3}` : tag}
-                      </button>
+            {idea.tags.length > 0 && (
+              <span className="flex flex-wrap ml-2 pb-2 gap-2 text-xs">
+                <span className="text-stone-300">
+                  <FontAwesomeIcon icon={faHashtag} />
+                </span>
+                {idea.tags.length > 4 ? (
+                  <>
+                    {idea.tags
+                      .filter((tag, index) => index < 4)
+                      .map((tag, index) => (
+                        <button
+                          key={index}
+                          className="border-box text-stone-400"
+                          onClick={() => index === 3 && onTagsDialogClick(idea)}
+                        >
+                          {index === 3
+                            ? `+ ${idea.tags.length - 3}`
+                            : `${tag},`}
+                        </button>
+                      ))}
+                  </>
+                ) : (
+                  <>
+                    {idea.tags.map((tag, index) => (
+                      <span key={index} className="border-box text-stone-400">
+                        {index === idea.tags.length - 1 ? tag : `${tag},`}
+                      </span>
                     ))}
-                </>
-              ) : (
-                <>
-                  {idea.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </>
-              )}
-            </span>
+                  </>
+                )}
+              </span>
+            )}
             <Dialog
               open={isTagsDialogOpen}
               onClose={() => {
