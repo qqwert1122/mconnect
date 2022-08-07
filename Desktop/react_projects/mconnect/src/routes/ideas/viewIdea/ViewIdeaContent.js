@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { authService, dbService } from "fbase";
-import { doc, updateDoc, deleteDoc, increment } from "firebase/firestore";
+import { doc, updateDoc, increment } from "firebase/firestore";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -38,6 +38,7 @@ const ViewIdeaContent = ({
     "userIdeas",
     whatView.id
   );
+  const userRef = doc(dbService, "users", user.userId);
 
   const onLikeClick = async () => {
     if (whatView.isLiked) {
@@ -126,7 +127,12 @@ const ViewIdeaContent = ({
         bookmark_count: increment(-1),
         bookmark_users: countInfo.bookmark_users,
       });
-      deleteDoc(userIdeaRef);
+      await updateDoc(userRef, {
+        idea_count: increment(-1),
+      });
+      await updateDoc(userIdeaRef, {
+        isDeleted: true,
+      });
     }
   };
 
@@ -158,7 +164,7 @@ const ViewIdeaContent = ({
     <>
       <div>
         {whatView.title !== "" && (
-          <div className="flex px-5 pt-5 font-black text-lg">
+          <div className="flex px-5 pt-5 font-black text-lg break-all">
             {whatView.title}
           </div>
         )}
@@ -185,7 +191,7 @@ const ViewIdeaContent = ({
           </div>
         </div>
 
-        <div className="flex p-5 text-base whitespace-pre-line">
+        <div className="flex p-5 text-base break-all whitespace-pre-line">
           <span>{whatView.text}</span>
         </div>
         {whatView.source.length != 0 && (
@@ -244,7 +250,7 @@ const ViewIdeaContent = ({
       </div>
 
       <hr />
-      <div className="flex items-center px-5 py-4 gap-4">
+      <div className="flex items-center px-5 py-4 mb-56 gap-4">
         <button className="text-red-400 px-2" onClick={onLikeClick}>
           <FontAwesomeIcon
             icon={whatView.isLiked ? fasHeart : farHeart}

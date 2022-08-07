@@ -14,7 +14,6 @@ import {
   getDocs,
   getDoc,
   setDoc,
-  deleteDoc,
 } from "firebase/firestore";
 import dayjs from "dayjs";
 import Avatar from "@mui/material/Avatar";
@@ -137,7 +136,14 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
 
   const onBookmarkClick = async (idea) => {
     const countRef = doc(dbService, "counts", idea.id);
-    const ideaRef = doc(dbService, "users", user.userId, "userIdeas", idea.id);
+    const userIdeaRef = doc(
+      dbService,
+      "users",
+      user.userId,
+      "userIdeas",
+      idea.id
+    );
+    const userRef = doc(dbService, "users", user.userId);
     if (ideaInfo.bookmark_users.hasOwnProperty(user.userId)) {
       const newIdeaInfo = { ...ideaInfo };
       delete newIdeaInfo.bookmark_users[user.userId];
@@ -147,7 +153,10 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
         bookmark_users: ideaInfo.bookmark_users,
       });
       if (isOwner === false) {
-        deleteDoc(ideaRef);
+        await updateDoc(userIdeaRef, { isDeleted: true });
+        await updateDoc(userRef, {
+          idea_count: increment(-1),
+        });
       }
     } else {
       await updateDoc(countRef, {
@@ -161,7 +170,7 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
       newIdeaInfo.bookmark_users[user.userId] = user.userName;
       setIdeaInfo(newIdeaInfo);
       if (isOwner === false) {
-        await setDoc(ideaRef, {
+        await setDoc(userIdeaRef, {
           userId: idea.userId,
           userName: userInfo.userName,
           userPhotoURL: userInfo.userPhotoURL,
@@ -176,8 +185,12 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
           isLiked: ideaInfo.like_users.hasOwnProperty(user.userId),
           isBookmarked: true,
           isViewed: ideaInfo.view_users.hasOwnProperty(user.userId),
+          isDeleted: false,
         });
       }
+      await updateDoc(userRef, {
+        idea_count: increment(1),
+      });
     }
   };
 

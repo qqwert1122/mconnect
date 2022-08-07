@@ -59,11 +59,11 @@ const Ideas = ({ customHooks }) => {
   //   triggerOnNoScroll: true,
   // });
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo(0, scrollY);
-    }, 100);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     window.scrollTo(0, scrollY);
+  //   }, 100);
+  // }, []);
 
   useEffect(() => {
     setShowingIdeas(userIdeas);
@@ -156,6 +156,7 @@ const Ideas = ({ customHooks }) => {
       <BottomNavigationBar customHooks={customHooks} />
       <div className="relative bg-stone-100">
         <IdeasTopBar
+          user={user}
           navigate={navigate}
           setWhatView={setWhatView}
           selectedIdeas={selectedIdeas}
@@ -165,7 +166,7 @@ const Ideas = ({ customHooks }) => {
           isViewDetailsClicked={isViewDetailsClicked}
           setIsViewDetailsClicked={setIsViewDetailsClicked}
         />
-        <IdeasToggleButton
+        {/* <IdeasToggleButton
           user={user}
           userIdeas={userIdeas}
           selectedIdeas={selectedIdeas}
@@ -176,11 +177,15 @@ const Ideas = ({ customHooks }) => {
           setFilterPrmtr={setFilterPrmtr}
           isSelectMode={isSelectMode}
           isViewDetailsClicked={isViewDetailsClicked}
-        />
+        /> */}
 
         {/* 아이디어 */}
-        <div className="pb-14 bg-white">
-          <div className="flex font-black px-5 py-4 gap-2">
+        <div
+          className={`${
+            isSelectMode && selectedIdeas.length ? "pt-36" : "pt-14"
+          } pb-14 bg-stone-100 min-h-screen`}
+        >
+          {/* <div className="flex font-black px-5 py-4 gap-2">
             <span>아이디어</span>
             {categoryPrmtr != null && (
               <span>{` > ${categoryPrmtr.label}`}</span>
@@ -192,7 +197,7 @@ const Ideas = ({ customHooks }) => {
             >
               {showingIdeas.length}
             </span>
-          </div>
+          </div> */}
           {showingIdeas.length > 0 ? (
             <>
               {/* <List

@@ -30,6 +30,7 @@ import {
   faSquare,
   faMinus,
 } from "@fortawesome/free-solid-svg-icons";
+import { queryByTestId } from "@testing-library/react";
 
 const { persistAtom } = recoilPersist();
 const scrollAtom = atom({
@@ -46,6 +47,7 @@ const useCustomHooks = () => {
 
   // db props
   const [userIdeas, setUserIdeas] = useState([]);
+  const [ideaCount, setIdeaCount] = useState(0);
 
   // Ideas props
   const [selectedIdeas, setSelectedIdeas] = useState([]);
@@ -151,9 +153,9 @@ const useCustomHooks = () => {
 
       const q1 = query(
         collection(dbService, "users", loggedInUser.userId, "userIdeas"),
+        where("isDeleted", "==", false),
         orderBy("updatedAt", "desc")
       );
-
       onSnapshot(q1, (snapshot) => {
         const ideas = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -188,14 +190,14 @@ const useCustomHooks = () => {
   });
 
   const colorList = [
-    "bg-red-300",
-    "bg-orange-300",
-    "bg-amber-300",
-    "bg-yellow-300",
-    "bg-lime-300",
-    "bg-green-300",
-    "bg-emerald-300",
-    "bg-teal-300",
+    "bg-red-400",
+    "bg-orange-400",
+    "bg-amber-400",
+    "bg-yellow-400",
+    "bg-lime-400",
+    "bg-green-400",
+    "bg-emerald-400",
+    "bg-teal-400",
     "bg-cyan-400",
     "bg-sky-400",
     "bg-blue-400",

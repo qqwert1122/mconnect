@@ -10,16 +10,19 @@ import { dbService } from "fbase";
 import {
   doc,
   getDoc,
-  deleteDoc,
   updateDoc,
   increment,
   query,
   onSnapshot,
   collection,
+  documentId,
+  getDocs,
+  where,
 } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
+import { getContainerUtilityClass } from "@mui/system";
 
 const Idea = ({
   setHeight,
@@ -35,17 +38,41 @@ const Idea = ({
 }) => {
   const timeDisplay = customHooks.timeDisplay;
   const colorList = customHooks.colorList;
-
-  const heightRef = useRef();
-
-  useEffect(() => {
-    setHeight(heightRef.current.clientHeight);
-  }, [heightRef]);
+  const isOwner = user.userId === userIdea.userId;
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const [viewDetail, setViewDetail] = useState(false);
+  const [connectedIdeas, setConnectedIdeas] = useState([]);
+
+  const getConncetedIdeas = async (ids) => {
+    const q1 = query(
+      collection(dbService, "users", user.userId, "userIdeas"),
+      where(documentId(), "in", ids)
+    );
+    const ideaRef = await getDocs(q1);
+    const newData = ideaRef.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setConnectedIdeas(newData);
+  };
+
+  // const q1 = query(
+  //   collection(dbService, "users", user.userId, "userIdeas"),
+  //   where("")
+  // )
+  // const ideaRef = await getDocs(query);
+  // const newData = ideaRef.docs.map((doc) => ({
+  //   id: doc.id,
+  //   ...doc.data(),
+  // }));
+  useEffect(() => {
+    if (userIdea.connectedIdeas.length > 0) {
+      getConncetedIdeas(userIdea.connectedIdeas);
+    }
+  }, []);
 
   const onViewIdeaClick = async () => {
     const countRef = doc(dbService, "counts", userIdea.id);
@@ -81,7 +108,9 @@ const Idea = ({
       "userIdeas",
       userIdea.id
     );
-    await deleteDoc(userIdeaRef);
+    await updateDoc(userIdeaRef, {
+      isDeleted: true,
+    });
     const countRef = doc(dbService, "counts", userIdea.id);
     const countData = (await getDoc(countRef)).data();
     if (user.userId != userIdea.userId) {
@@ -90,15 +119,15 @@ const Idea = ({
         bookmark_count: increment(-1),
         bookmark_users: countData.bookmark_users,
       });
-    } else {
-      await deleteDoc(countRef);
     }
+    const userRef = doc(dbService, "users", user.userId);
+    await updateDoc(userRef, {
+      idea_count: increment(-1),
+    });
   };
 
-  const [isOwner, setIsOwner] = useState(user.userId === userIdea.userId);
-
   return (
-    <div ref={heightRef} className="bg-white text-sm">
+    <div className="bg-white shadow-lg text-sm">
       {userIdea ? (
         <>
           <hr />
@@ -136,8 +165,8 @@ const Idea = ({
               colorList={colorList}
             />
             <IdeaConnectedIdeas
+              connectedIdeas={connectedIdeas}
               viewDetail={viewDetail}
-              userIdea={userIdea}
               colorList={colorList}
             />
           </div>

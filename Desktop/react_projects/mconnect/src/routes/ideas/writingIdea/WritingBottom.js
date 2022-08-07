@@ -20,7 +20,6 @@ const WritingBottom = ({
   setFormTag,
   formTags,
   setFormTags,
-  formCategory,
   selectedIdeas,
   setSelectedIdeas,
   tagList,
@@ -88,9 +87,9 @@ const WritingBottom = ({
       )}
 
       <WritingBottomBar
+        whatEdit={whatEdit}
         bottomItemChangeProps={bottomItemChangeProps}
         setBottomItemChangeProps={setBottomItemChangeProps}
-        formCategory={formCategory}
         formSource={formSource}
         formTags={formTags}
         formPublic={formPublic}

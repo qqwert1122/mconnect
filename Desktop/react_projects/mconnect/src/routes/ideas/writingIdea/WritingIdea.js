@@ -9,8 +9,13 @@ import {
   collection,
   addDoc,
   updateDoc,
+  query,
+  where,
   doc,
   setDoc,
+  getDocs,
+  documentId,
+  increment,
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
@@ -46,13 +51,25 @@ const WritingIdea = ({ customHooks }) => {
 
   // form
   const [formTitle, setFormTitle] = useState("");
-  const [formCategory, setFormCategory] = useState(0);
   const [formText, setFormText] = useState("");
   const [formSource, setFormSource] = useState("");
   const [formTag, setFormTag] = useState("");
   const [formTags, setFormTags] = useState([]);
   const [formConnectedIdeas, setFormConnectedIdeas] = useState([]);
   const [formPublic, setFormPublic] = useState(false);
+
+  const getConncetedIdeas = async (ids) => {
+    const q1 = query(
+      collection(dbService, "users", user.userId, "userIdeas"),
+      where(documentId(), "in", ids)
+    );
+    const ideaRef = await getDocs(q1);
+    const newData = ideaRef.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setFormConnectedIdeas(newData);
+  };
 
   useEffect(() => {
     if (whatEdit === undefined) {
@@ -70,11 +87,13 @@ const WritingIdea = ({ customHooks }) => {
         setFormConnectedIdeas(selectedIdeas);
       }
     } else {
+      if (whatEdit.connectedIdeas.length > 0) {
+        getConncetedIdeas(whatEdit.connectedIdeas);
+      }
       setFormTitle(whatEdit.title);
       setFormText(whatEdit.text);
       setFormSource(whatEdit.source);
       setFormTags(whatEdit.tags);
-      setFormConnectedIdeas(whatEdit.connectedIdeas);
       setFormPublic(whatEdit.isPublic);
     }
   }, []);
@@ -90,9 +109,15 @@ const WritingIdea = ({ customHooks }) => {
   const onSubmit = async (event) => {
     event.preventDefault();
     const form = event.target;
-
+    const connectedIdeasId = formConnectedIdeas.map((idea) => idea.id);
     if (whatEdit === undefined) {
       try {
+        if (selectedIdeas.length >= 2 && formConnectedIdeas.length < 2) {
+          toast.error("아이디어 2개 이상을 선택하세요", {
+            theme: "colored",
+          });
+          return;
+        }
         const newIdeaId = v4();
         const newUserIdeaRef = doc(
           dbService,
@@ -109,13 +134,14 @@ const WritingIdea = ({ customHooks }) => {
           text: formText,
           source: formSource,
           tags: formTags,
-          connectedIdeas: formConnectedIdeas,
+          connectedIdeas: connectedIdeasId,
           createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
           updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
           isPublic: formPublic,
           isLiked: false,
           isBookmarked: false,
           isViewed: false,
+          isDeleted: false,
         });
         const newCountRef = doc(dbService, "counts", newIdeaId);
         await setDoc(newCountRef, {
@@ -125,6 +151,10 @@ const WritingIdea = ({ customHooks }) => {
           bookmark_users: {},
           view_count: 0,
           view_users: {},
+        });
+        const userRef = doc(dbService, "users", user.userId);
+        await updateDoc(userRef, {
+          idea_count: increment(1),
         });
       } catch (event) {
         console.error("Error adding document: ", event);
@@ -156,7 +186,7 @@ const WritingIdea = ({ customHooks }) => {
           source: formSource,
           tags: formTags,
           isPublic: formPublic,
-          connectedIdeas: formConnectedIdeas,
+          connectedIdeas: connectedIdeasId,
           updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
         });
       } catch (event) {
@@ -172,10 +202,12 @@ const WritingIdea = ({ customHooks }) => {
       <form onSubmit={onSubmit}>
         <WritingTopBar
           navigate={navigate}
+          whatEdit={whatEdit}
           setWhatEdit={setWhatEdit}
-          formCategory={formCategory}
           formTitle={formTitle}
           setFormTitle={setFormTitle}
+          formConnectedIdeas={formConnectedIdeas}
+          selectedIdeas={selectedIdeas}
         />
         <textarea
           className="w-full p-4 text-base"
@@ -199,7 +231,6 @@ const WritingIdea = ({ customHooks }) => {
           setFormTag={setFormTag}
           formTags={formTags}
           setFormTags={setFormTags}
-          formCategory={formCategory}
           formConnectedIdeas={formConnectedIdeas}
           setFormConnectedIdeas={setFormConnectedIdeas}
           selectedIdeas={selectedIdeas}

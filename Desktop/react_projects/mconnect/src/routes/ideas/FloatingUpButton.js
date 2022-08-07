@@ -28,7 +28,7 @@ const FloatingUpButton = ({ floating, scrollY, setScrollY }) => {
       {scrollY > 300 && (
         <div
           className={`opacity fixed ${
-            floating ? "bottom-10" : "bottom-36"
+            floating ? "bottom-16" : "bottom-36"
           }  right-3 z-10`}
         >
           <button

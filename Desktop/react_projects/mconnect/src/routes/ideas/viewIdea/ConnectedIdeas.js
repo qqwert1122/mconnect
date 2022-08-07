@@ -1,7 +1,10 @@
 import "css/Animation.css";
 import Slider from "react-slick";
+import { Avatar } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 
-const ConnectedIdeas = ({ whatView, onIdeaClick }) => {
+const ConnectedIdeas = ({ connectedIdeas, whatView, onIdeaClick }) => {
   const settings = {
     dots: true,
     arrows: false,
@@ -18,42 +21,81 @@ const ConnectedIdeas = ({ whatView, onIdeaClick }) => {
       <div className="mx-16 pt-5 mb-2 text-center text-base font-black z-10">
         {whatView.connectedIdeas.length}개 연결됨
       </div>
-      <div className="relative pb-10 ">
+      <div className="relative pb-10 text-xs">
         <Slider {...settings}>
-          {whatView.connectedIdeas.map((idea, index) => (
+          {connectedIdeas.map((idea, index) => (
             <div key={index}>
-              <div className="h-60 p-5 m-1 bg-white shadow rounded-3xl break-all">
-                <div
-                  onClick={() => {
-                    onIdeaClick(idea);
-                  }}
-                >
-                  {idea.title === "" ? (
-                    idea.text.length < 180 ? (
-                      idea.text
+              <div
+                className="relative h-60 p-5 m-1 bg-white shadow rounded-3xl text-xs break-all"
+                onClick={() => onIdeaClick(idea)}
+              >
+                {idea.title === "" ? (
+                  <>
+                    {idea.text.length < (idea.source.length > 0 ? 140 : 180) ? (
+                      <div className="mb-3">{idea.text}</div>
                     ) : (
-                      <>
-                        {idea.text.substr(0, 180)}
+                      <div className="mb-3">
+                        {idea.text.substr(
+                          0,
+                          idea.source.length > 0 ? 140 : 180
+                        )}
                         <span>...</span>
                         <span className="font-black underline">더보기</span>
-                      </>
-                    )
-                  ) : (
-                    <>
-                      <div className="mb-2 font-black text-base">
+                      </div>
+                    )}
+                    {idea.source.length > 0 && (
+                      <div className="ml-2 mb-1 flex gap-1 text-stone-400">
+                        <FontAwesomeIcon icon={faQuoteLeft} />
+                        <span>{idea.source}</span>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {idea.title.length < (idea.source.length > 0 ? 15 : 30) ? (
+                      <div className="mb-2 font-black break-all text-sm">
                         {idea.title}
                       </div>
-                      {idea.text.length < 140 ? (
-                        idea.text
-                      ) : (
-                        <>
-                          {idea.text.substr(0, 140)}
-                          <span>...</span>
-                          <span className="font-black underline">더보기</span>
-                        </>
-                      )}
-                    </>
-                  )}
+                    ) : (
+                      <div className="mb-2 font-black text-sm">
+                        {idea.title.substr(0, idea.source.length > 0 ? 15 : 30)}
+                        <span>...</span>
+                      </div>
+                    )}
+                    {idea.text.length < 140 ? (
+                      <div className="mb-3">idea.text</div>
+                    ) : (
+                      <div className="mb-3">
+                        {idea.text.substr(0, 140)}
+                        <span>...</span>
+                        <span className="font-black underline">더보기</span>
+                      </div>
+                    )}
+                    {idea.source.length > 0 && (
+                      <div className="ml-2 mb-1 flex gap-1 text-stone-400">
+                        <FontAwesomeIcon icon={faQuoteLeft} />
+                        <span>{idea.source}</span>
+                      </div>
+                    )}
+                  </>
+                )}
+                <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
+                  <Avatar
+                    className="border-2"
+                    alt="avatar"
+                    src={idea.userPhotoURL}
+                    sx={{
+                      display: "flex",
+                      width: "25px",
+                      height: "25px",
+                    }}
+                  />
+                  <div className="flex-col">
+                    <span className="flex">{idea.userName}</span>
+                    <span className="flex text-stone-400">
+                      {idea.createdAt}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

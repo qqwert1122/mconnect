@@ -1,13 +1,7 @@
 import DeleteDialog from "../idea/DeleteDialog";
 import { useState } from "react";
 import { dbService } from "fbase";
-import {
-  doc,
-  getDoc,
-  deleteDoc,
-  updateDoc,
-  increment,
-} from "firebase/firestore";
+import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
@@ -55,7 +49,13 @@ const ViewIdeaTopBar = ({
       "userIdeas",
       whatView.id
     );
-    await deleteDoc(userIdeaRef);
+    await updateDoc(userIdeaRef, {
+      isDeleted: true,
+    });
+    const userRef = doc(dbService, "users", user.userId);
+    await updateDoc(userRef, {
+      idea_count: increment(-1),
+    });
     const countRef = doc(dbService, "counts", whatView.id);
     const countData = (await getDoc(countRef)).data();
     if (isOwner === false) {
@@ -64,8 +64,6 @@ const ViewIdeaTopBar = ({
         bookmark_count: increment(-1),
         bookmark_users: countData.bookmark_users,
       });
-    } else {
-      await deleteDoc(countRef);
     }
     navigate("/ideas");
   };
@@ -79,7 +77,7 @@ const ViewIdeaTopBar = ({
   };
 
   return (
-    <div className="p-3 flex justify-between items-center shadow">
+    <div className="fixed top-0 z-10 w-full p-3 flex justify-between items-center shadow bg-white">
       <button onClick={onBackClick}>
         <FontAwesomeIcon icon={faChevronLeft} size="lg" />
       </button>

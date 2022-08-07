@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import NotesRoundedIcon from "@mui/icons-material/NotesRounded";
-import BoltRoundedIcon from "@mui/icons-material/BoltRounded";
-import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import { ThemeProvider } from "@mui/material/styles";
 
 const BottomNavigationBar = ({ customHooks }) => {
@@ -36,7 +35,7 @@ const BottomNavigationBar = ({ customHooks }) => {
             <BottomNavigationAction
               // label="번쩍"
               value="/storming"
-              icon={<BoltRoundedIcon />}
+              icon={<ExploreRoundedIcon />}
             />
             {/* <BottomNavigationAction
               // label="탐색"

@@ -7,15 +7,16 @@ import {
 import { faCompass as farCompass } from "@fortawesome/free-regular-svg-icons";
 
 const WritingBottomBar = ({
+  whatEdit,
   bottomItemChangeProps,
   setBottomItemChangeProps,
-  formCategory,
   formSource,
   formTags,
   formPublic,
   setFormPublic,
   formConnectedIdeas,
   selectedIdeas,
+  connectedIdeas,
 }) => {
   const bottomItemChange = (e, props) => {
     e.preventDefault();
@@ -92,10 +93,11 @@ const WritingBottomBar = ({
         </button>
       </div>
 
-      {selectedIdeas.length > 1 && (
+      {((whatEdit === undefined && selectedIdeas.length > 1) ||
+        (whatEdit != undefined && whatEdit.connectedIdeas.length > 1)) && (
         <div
           className={`flex justify-end items-center gap-2 ${
-            formConnectedIdeas.length < 2 && "text-red-400"
+            formConnectedIdeas.length < 2 && "animate-pulse text-red-400"
           }`}
         >
           <button

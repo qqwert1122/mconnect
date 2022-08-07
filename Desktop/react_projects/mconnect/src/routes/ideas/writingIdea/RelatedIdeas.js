@@ -4,8 +4,13 @@ import SuggestedIdeas from "routes/ideas/SuggestedIdeas";
 import { useState } from "react";
 import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRightToBracket, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faQuoteLeft,
+  faRightToBracket,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import { Avatar } from "@mui/material";
 
 const RelatedIdeas = ({
   userIdeas,
@@ -66,7 +71,9 @@ const RelatedIdeas = ({
       >
         {tabs === 0 && (
           <button
-            className="p-1 px-2 bg-green-600 text-white font-black rounded-xl z-10"
+            className={` ${
+              formConnectedIdeas.length < 2 && "animate-bounce"
+            } m-2 p-1 px-2 bg-green-600 text-white font-black rounded-xl z-10`}
             onClick={ontabsClick}
           >
             추천 아이디어 &nbsp;
@@ -76,7 +83,7 @@ const RelatedIdeas = ({
 
         {tabs === 1 && (
           <button
-            className="p-1 px-2 bg-green-600 text-white font-black rounded-xl z-10"
+            className="m-2 p-1 px-2 bg-green-600 text-white font-black rounded-xl z-10"
             onClick={ontabsClick}
           >
             연결된 아이디어&nbsp;
@@ -97,7 +104,7 @@ const RelatedIdeas = ({
                 <Slider {...settings}>
                   {formConnectedIdeas.map((idea, index) => (
                     <div key={index}>
-                      <div className="relative h-60 p-5 m-1 bg-white shadow rounded-3xl break-all">
+                      <div className="relative h-60 p-5 m-1 bg-white shadow rounded-3xl text-xs break-all">
                         <button
                           className="absolute w-6 h-6 rounded-full border-2 border-stone-200 bg-white shadow right-0 top-0"
                           onClick={(e) => {
@@ -107,28 +114,88 @@ const RelatedIdeas = ({
                           <FontAwesomeIcon icon={faXmark} />
                         </button>
                         <div
+                          className="text-xs"
                           onClick={(e) => {
                             onIdeaClick(e, idea);
                           }}
                         >
                           {idea.title === "" ? (
-                            idea.text.length < 180 ? (
-                              idea.text
-                            ) : (
-                              <>{idea.text.substr(0, 180)}...</>
-                            )
+                            <>
+                              {idea.text.length <
+                              (idea.source.length > 0 ? 140 : 180) ? (
+                                <div className="mb-3">{idea.text}</div>
+                              ) : (
+                                <div className="mb-3">
+                                  {idea.text.substr(
+                                    0,
+                                    idea.source.length > 0 ? 140 : 180
+                                  )}
+                                  <span>...</span>
+                                  <span className="font-black underline">
+                                    더보기
+                                  </span>
+                                </div>
+                              )}
+                              {idea.source.length > 0 && (
+                                <div className="ml-2 mb-1 flex gap-1 text-stone-400">
+                                  <FontAwesomeIcon icon={faQuoteLeft} />
+                                  <span>{idea.source}</span>
+                                </div>
+                              )}
+                            </>
                           ) : (
                             <>
-                              <div className="mb-2 font-black text-base">
-                                {idea.title}
-                              </div>
-                              {idea.text.length < 140 ? (
-                                idea.text
+                              {idea.title.length <
+                              (idea.source.length > 0 ? 15 : 30) ? (
+                                <div className="mb-2 font-black break-all text-sm">
+                                  {idea.title}
+                                </div>
                               ) : (
-                                <>{idea.text.substr(0, 140)}...</>
+                                <div className="mb-2 font-black text-sm">
+                                  {idea.title.substr(
+                                    0,
+                                    idea.source.length > 0 ? 15 : 30
+                                  )}
+                                  <span>...</span>
+                                </div>
+                              )}
+                              {idea.text.length < 140 ? (
+                                <div className="mb-3">idea.text</div>
+                              ) : (
+                                <div className="mb-3">
+                                  {idea.text.substr(0, 140)}
+                                  <span>...</span>
+                                  <span className="font-black underline">
+                                    더보기
+                                  </span>
+                                </div>
+                              )}
+                              {idea.source.length > 0 && (
+                                <div className="ml-2 mb-1 flex gap-1 text-stone-400">
+                                  <FontAwesomeIcon icon={faQuoteLeft} />
+                                  <span>{idea.source}</span>
+                                </div>
                               )}
                             </>
                           )}
+                        </div>
+                        <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
+                          <Avatar
+                            className="border-2"
+                            alt="avatar"
+                            src={idea.userPhotoURL}
+                            sx={{
+                              display: "flex",
+                              width: "25px",
+                              height: "25px",
+                            }}
+                          />
+                          <div className="flex-col">
+                            <span className="flex">{idea.userName}</span>
+                            <span className="flex text-stone-400">
+                              {idea.createdAt}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>

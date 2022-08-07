@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const IdeasTopBar = ({
+  user,
   navigate,
   setWhatView,
   selectedIdeas,
@@ -33,7 +34,15 @@ const IdeasTopBar = ({
   return (
     <div className="fixed top-0 w-full z-10">
       <div className="flex justify-between items-center px-2 py-4 bg-white shadow">
-        <div className="px-2 text-lg font-black">아이디어</div>
+        <div className="flex items-center gap-2">
+          <span className="pl-2 text-lg font-black">아이디어</span>
+          <span
+            className="h-6 flex justify-center items-center text-xs text-stone-400 bg-stone-100 rounded-xl px-2"
+            style={{ minWidth: "24px", maxWidth: "128px" }}
+          >
+            {user.idea_count}
+          </span>
+        </div>
         <div className="flex gap-2">
           <button className="relative px-2">
             <FontAwesomeIcon icon={faBell} size="lg" />

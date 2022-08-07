@@ -45,7 +45,7 @@ const IdeaMiddle = ({
     <div className="w-full box-border px-4 mt-4 mb-4 " {...bind()}>
       {/* title */}
       {userIdea.title !== "" && (
-        <div className="flex items-center pb-2 w-full font-black">
+        <div className="flex items-center pb-2 w-full break-all font-black">
           {userIdea.title}
         </div>
       )}

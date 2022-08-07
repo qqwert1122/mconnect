@@ -1,11 +1,5 @@
 import { dbService } from "fbase";
-import {
-  deleteDoc,
-  doc,
-  getDoc,
-  increment,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -39,6 +33,7 @@ const IdeaBottom = ({
     "userIdeas",
     userIdea.id
   );
+  const userRef = doc(dbService, "users", user.userId);
 
   const [countInfo, setCountInfo] = useState();
   const [isDeleted, setIsDeleted] = useState(false);
@@ -109,7 +104,12 @@ const IdeaBottom = ({
         });
       }
       if (isOwner === false) {
-        deleteDoc(userIdeaRef);
+        await updateDoc(userIdeaRef, {
+          isDeleted: true,
+        });
+        await updateDoc(userRef, {
+          idea_count: increment(-1),
+        });
       }
     } else {
       if (isDeleted) {

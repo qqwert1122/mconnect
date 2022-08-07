@@ -8,12 +8,14 @@ import { dbService } from "fbase";
 import {
   doc,
   getDoc,
-  deleteDoc,
   updateDoc,
   increment,
   query,
   onSnapshot,
   collection,
+  where,
+  getDocs,
+  documentId,
 } from "firebase/firestore";
 import Skeleton from "@mui/material/Skeleton";
 
@@ -57,12 +59,33 @@ const ViewIdea = ({ customHooks }) => {
     }, 1000);
   }, []);
 
+  const [connectedIdeas, setConnectedIdeas] = useState([]);
+
+  const getConncetedIdeas = async (ids) => {
+    const q1 = query(
+      collection(dbService, "users", user.userId, "userIdeas"),
+      where(documentId(), "in", ids)
+    );
+    const ideaRef = await getDocs(q1);
+    const newData = ideaRef.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setConnectedIdeas(newData);
+  };
+
+  useEffect(() => {
+    if (whatView.connectedIdeas.length > 0) {
+      getConncetedIdeas(whatView.connectedIdeas);
+    }
+  }, [whatView]);
+
   return (
     <div
-      className=" text-sm min-h-screen bg-stone-100"
+      className="pt-12 text-sm min-h-screen bg-stone-100"
       style={{ paddingBottom: "52px" }}
     >
-      <div className="moveRightToLeft flex-col bg-white shadow">
+      <div className=" flex-col bg-white shadow">
         {whatView && (
           <ViewIdeaTopBar
             user={user}
@@ -104,6 +127,7 @@ const ViewIdea = ({ customHooks }) => {
           whatView={whatView}
           setWhatView={setWhatView}
           colorList={colorList}
+          connectedIdeas={connectedIdeas}
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
         />

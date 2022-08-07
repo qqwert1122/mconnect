@@ -3,11 +3,13 @@ import {} from "@fortawesome/free-regular-svg-icons";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 const WritingTopBar = ({
+  whatEdit,
   navigate,
   setWhatEdit,
-  formCategory,
   formTitle,
   setFormTitle,
+  selectedIdeas,
+  formConnectedIdeas,
 }) => {
   const onBackClick = (e) => {
     e.preventDefault();
@@ -30,7 +32,8 @@ const WritingTopBar = ({
           <FontAwesomeIcon icon={faAngleLeft} size="lg" />
         </button>
         {/* 제목 */}
-        {formCategory > 0 && (
+        {((whatEdit === undefined && selectedIdeas.length > 1) ||
+          (whatEdit != undefined && whatEdit.connectedIdeas.length > 1)) && (
           <input
             className="w-full px-2 text-lg font-black"
             type="text"

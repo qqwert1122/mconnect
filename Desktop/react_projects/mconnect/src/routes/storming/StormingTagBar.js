@@ -80,8 +80,8 @@ const StormingTagBar = ({ setIdeasPublic }) => {
   }, []);
 
   return (
-    <div className="relative pt-20 p-4 h-52 flex items-end shadow-inner bg-gradient-to-r from-blue-900 to-sky-800">
-      <div className="absolute top-20 left-4 flex items-center text-base text-blue-400 font-black gap-2">
+    <div className="relative p-4 h-52 flex items-end shadow-inner bg-gradient-to-r from-indigo-900 to-sky-800">
+      <div className="absolute top-20 left-4 flex items-center text-lg text-blue-400 font-black gap-2">
         Hot Topics
         <FontAwesomeIcon icon={faFireFlameCurved} />
       </div>

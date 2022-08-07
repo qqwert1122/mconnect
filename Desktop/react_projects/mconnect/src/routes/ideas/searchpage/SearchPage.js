@@ -178,7 +178,7 @@ const SearchPage = ({ customHooks }) => {
         />
       </div>
       <FloatingUpButton
-        floating={selectedIdeas.length == 0}
+        floating={true}
         scrollY={scrollY}
         setScrollY={setScrollY}
       />
