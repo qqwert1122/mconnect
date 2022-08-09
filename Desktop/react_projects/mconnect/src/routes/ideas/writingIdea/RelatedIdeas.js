@@ -37,8 +37,8 @@ const RelatedIdeas = ({
     }
   };
 
-  const onIdeaClick = (e, idea) => {
-    e.preventDefault();
+  const onIdeaClick = (event, idea) => {
+    event.preventDefault();
     setWhatView(idea);
     navigate(`/${idea.id}`);
   };
@@ -115,8 +115,8 @@ const RelatedIdeas = ({
                         </button>
                         <div
                           className="text-xs"
-                          onClick={(e) => {
-                            onIdeaClick(e, idea);
+                          onClick={(event) => {
+                            onIdeaClick(event, idea);
                           }}
                         >
                           {idea.title === "" ? (

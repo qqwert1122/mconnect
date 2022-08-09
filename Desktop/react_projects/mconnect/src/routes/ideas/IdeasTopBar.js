@@ -37,7 +37,7 @@ const IdeasTopBar = ({
         <div className="flex items-center gap-2">
           <span className="pl-2 text-lg font-black">아이디어</span>
           <span
-            className="h-6 flex justify-center items-center text-xs text-stone-400 bg-stone-100 rounded-xl px-2"
+            className="h-5 flex justify-center items-center text-xs text-stone-400 bg-stone-100 rounded-xl px-2"
             style={{ minWidth: "24px", maxWidth: "128px" }}
           >
             {user.idea_count}

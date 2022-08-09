@@ -8,7 +8,7 @@ const ViewIdeaBottomBar = ({ whatView, itemChange, itemChangeProps }) => {
       <div className="flex gap-2 text-lg">
         <button
           className="px-2 text-base font-black"
-          onClick={(e) => itemChange(1)}
+          onClick={() => itemChange(1)}
         >
           관련 <FontAwesomeIcon icon={faThumbsUp} />
         </button>

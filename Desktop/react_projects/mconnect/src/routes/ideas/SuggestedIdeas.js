@@ -22,15 +22,11 @@ import {
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
 const SuggestedIdeas = ({
-  userIdeas,
-  ideaPrmtr,
   tagsPrmtr,
   itemChange,
-  whatEdit,
   formConnectedIdeas,
   setFormConnectedIdeas,
   onIdeaClick,
-  connectedIdeas,
   selectedIdeas,
   setSelectedIdeas,
   thumbsUp,

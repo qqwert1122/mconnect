@@ -80,12 +80,14 @@ const ViewIdea = ({ customHooks }) => {
     }
   }, [whatView]);
 
+  const [itemChangeProps, setItemChangeProps] = useState(0);
+
   return (
     <div
       className="pt-12 text-sm min-h-screen bg-stone-100"
       style={{ paddingBottom: "52px" }}
     >
-      <div className=" flex-col bg-white shadow">
+      <div className="flex-col bg-white shadow">
         {whatView && (
           <ViewIdeaTopBar
             user={user}
@@ -99,6 +101,7 @@ const ViewIdea = ({ customHooks }) => {
         {/*제목, 아바타, 시간 */}
         {countInfo ? (
           <ViewIdeaContent
+            itemChangeProps={itemChangeProps}
             user={user}
             isOwner={isOwner}
             isDeleted={isDeleted}
@@ -121,7 +124,8 @@ const ViewIdea = ({ customHooks }) => {
       </div>
       {whatView && (
         <ViewIdeaBottom
-          userIdeas={userIdeas}
+          itemChangeProps={itemChangeProps}
+          setItemChangeProps={setItemChangeProps}
           navigate={navigate}
           onBackClick={onBackClick}
           whatView={whatView}

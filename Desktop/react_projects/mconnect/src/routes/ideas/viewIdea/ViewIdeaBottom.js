@@ -3,12 +3,14 @@ import SuggestedIdeas from "../SuggestedIdeas";
 import ViewIdeaBottomBar from "./ViewIdeaBottomBar";
 import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 import ConnectedIdeas from "./ConnectedIdeas";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const ViewIdeaBottom = ({
+  itemChangeProps,
+  setItemChangeProps,
   userIdeas,
   whatView,
   setWhatView,
@@ -18,7 +20,6 @@ const ViewIdeaBottom = ({
   colorList,
   connectedIdeas,
 }) => {
-  const [itemChangeProps, setItemChangeProps] = useState(0);
   const itemChange = (props) => {
     switch (props) {
       case 1:
@@ -47,11 +48,26 @@ const ViewIdeaBottom = ({
 
   const onIdeaClick = (idea) => {
     setWhatView(idea);
+    setItemChangeProps(0);
     navigate(`/${idea.id}`);
   };
 
+  const userMenu = useRef();
+
+  const modalCloseHandler = ({ target }) => {
+    if (itemChangeProps != 0 && !userMenu.current.contains(target))
+      setItemChangeProps(0);
+  };
+
+  useEffect(() => {
+    window.addEventListener("click", modalCloseHandler);
+    return () => {
+      window.removeEventListener("click", modalCloseHandler);
+    };
+  });
+
   return (
-    <div className="w-screen fixed bottom-0 z-30">
+    <div className="w-screen fixed bottom-0 z-30" ref={userMenu}>
       {itemChangeProps === 0 && (
         <ColoredIdeaList
           ideas={whatView.connectedIdeas}
