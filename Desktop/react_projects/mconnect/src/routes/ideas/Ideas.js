@@ -225,7 +225,7 @@ const Ideas = ({ customHooks }) => {
               {/* </List> */}
             </>
           ) : (
-            <div className="py-10 flex justify-center text-base font-black text-gray-400 ">
+            <div className="h-96 flex items-center justify-center text-base font-black text-gray-400 ">
               새 아이디어를 입력해주세요 ✏️
             </div>
           )}

@@ -1,4 +1,5 @@
 import "css/Animation.css";
+import "instantsearch.css/themes/satellite.css";
 import SearchPageTopBar from "./SearchPageTopBar";
 import SearchCriteria from "./SearchCriteria";
 import CriteriaSource from "./CriteriaSource";
@@ -6,21 +7,38 @@ import CriteriaTag from "./CriteriaTag";
 import CriteriaUser from "./CriteriaUser";
 import CriteriaAll from "./CriteriaAll";
 import { useEffect, useState } from "react";
+import algoliasearch from "algoliasearch/lite";
+import {
+  InstantSearch,
+  SearchBox,
+  Hits,
+  InfiniteHits,
+  Highlight,
+} from "react-instantsearch-hooks-web";
 import ShowingSearchIdeas from "./ShowingSearchIdeas";
 import FloatingUpButton from "../FloatingUpButton";
+import { Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBookmark,
+  faChevronLeft,
+  faHashtag,
+  faQuoteLeft,
+  faXmarkCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 const SearchPage = ({ customHooks }) => {
-  const userIdeas = customHooks.userIdeas;
-  const navigate = customHooks.navigate;
-  const setWhatView = customHooks.setWhatView;
-  const tagList = customHooks.tagList;
-  const sourceList = customHooks.sourceList;
-  const selectedIdeas = customHooks.selectedIdeas;
-  const setSelectedIdeas = customHooks.setSelectedIdeas;
-  const scrollY = customHooks.scrollY;
-  const setScrollY = customHooks.setScrollY;
+  const {
+    userIdeas,
+    navigate,
+    setWhatView,
+    tagList,
+    sourceList,
+    selectedIdeas,
+    setSelectedIdeas,
+    scrollY,
+    setScrollY,
+  } = customHooks;
 
   const userList = userIdeas.filter(
     (idea, index, callback) =>
@@ -46,6 +64,10 @@ const SearchPage = ({ customHooks }) => {
       window.scrollTo(0, scrollY);
     }, 100);
   }, []);
+
+  const onBackClick = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     if (listAllCriteria.length === 0) {
@@ -114,10 +136,104 @@ const SearchPage = ({ customHooks }) => {
     }
   };
 
+  const searchClient = algoliasearch(
+    process.env.REACT_APP_ALGOLIA_APP_ID,
+    process.env.REACT_APP_ALGOLIA_API_KEY
+  );
+
+  const onBookmarkClick = (hit) => {
+    console.log(hit.objectID);
+  };
+
+  const Hit = ({ hit }) => {
+    return (
+      <div key={hit.objectID} className="w-full break-all overflow-hidden">
+        {hit.title.length > 0 && (
+          <div className="mb-2 font-black text-base">
+            <Highlight className="truncate" attribute="title" hit={hit} />
+          </div>
+        )}
+        <div className="w-full mb-4">
+          <Highlight
+            attribute="text"
+            hit={hit}
+            classNames={{
+              root: "line-clamp-5",
+              highlighted: "font-black",
+            }}
+          />
+        </div>
+        <div className="mb-4 text-xs">
+          {hit.source.length > 0 && (
+            <div className="flex items-center gap-2 pl-2 text-stone-400 truncate">
+              <FontAwesomeIcon icon={faQuoteLeft} />
+              <Highlight attribute="source" hit={hit} />
+            </div>
+          )}
+          {hit.tags.length > 0 && (
+            <div className="flex items-center gap-2 pl-2 text-stone-400 truncate">
+              <FontAwesomeIcon icon={faHashtag} />
+              <Highlight attribute="tags" hit={hit} />
+            </div>
+          )}
+        </div>
+        <div className="flex justify-between items-center ">
+          <span className="flex gap-2 items-center text-xs">
+            <Avatar
+              className="border-2"
+              alt="avatar"
+              src={hit.userPhotoURL}
+              sx={{
+                display: "flex",
+                width: "25px",
+                height: "25px",
+              }}
+            />
+            <div className="flex-col">
+              <span className="flex">
+                <Highlight attribute="userName" hit={hit} />
+              </span>
+              <span className="flex">{hit.createdAt}</span>
+            </div>
+          </span>
+          <button
+            className="text-orange-400"
+            onClick={() => {
+              onBookmarkClick(hit);
+            }}
+          >
+            <FontAwesomeIcon icon={faBookmark} size="xl" />
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen flex-col bg-stone-100">
-      <div className="moveRightToLeft">
-        <SearchPageTopBar
+    <div className="min-h-screen flex-col">
+      <div className="relative">
+        <InstantSearch searchClient={searchClient} indexName="userIdeas">
+          <div className="fixed top-0 w-full p-3 flex gap-4 justify-between items-center bg-white shadow z-10">
+            <button onClick={onBackClick}>
+              <FontAwesomeIcon icon={faChevronLeft} size="lg" />
+            </button>
+            <SearchBox
+              className="w-full"
+              placeholder="검색어를 입력하세요..."
+              searchAsYouType={false}
+            />
+          </div>
+          <div className="mt-14">
+            <InfiniteHits
+              hitComponent={Hit}
+              translations={{
+                showMore: "Voir plus",
+              }}
+              showPrevious={false}
+            />
+          </div>
+        </InstantSearch>
+        {/* <SearchPageTopBar
           navigate={navigate}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -175,7 +291,7 @@ const SearchPage = ({ customHooks }) => {
           selectedIdeas={selectedIdeas}
           setSelectedIdeas={setSelectedIdeas}
           listAllCriteria={listAllCriteria}
-        />
+        /> */}
       </div>
       <FloatingUpButton
         floating={true}

@@ -163,7 +163,7 @@ const ViewIdeaContent = ({
 
   return (
     <>
-      <div className={`${itemChangeProps != 0 && "blur"} duration-100`}>
+      <div className={`${itemChangeProps != 0 && "blur-sm"} duration-100`}>
         {whatView.title !== "" && (
           <div className="flex px-5 pt-5 font-black text-lg break-all">
             {whatView.title}
@@ -253,7 +253,7 @@ const ViewIdeaContent = ({
       <hr />
       <div
         className={`flex items-center px-5 py-4 mb-56 gap-4 duration-100 ${
-          itemChangeProps != 0 && "blur"
+          itemChangeProps != 0 && "blur-sm"
         }`}
       >
         <button className="text-red-400 px-2" onClick={onLikeClick}>

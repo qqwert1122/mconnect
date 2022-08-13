@@ -119,64 +119,17 @@ const RelatedIdeas = ({
                             onIdeaClick(event, idea);
                           }}
                         >
-                          {idea.title === "" ? (
-                            <>
-                              {idea.text.length <
-                              (idea.source.length > 0 ? 140 : 180) ? (
-                                <div className="mb-3">{idea.text}</div>
-                              ) : (
-                                <div className="mb-3">
-                                  {idea.text.substr(
-                                    0,
-                                    idea.source.length > 0 ? 140 : 180
-                                  )}
-                                  <span>...</span>
-                                  <span className="font-black underline">
-                                    더보기
-                                  </span>
-                                </div>
-                              )}
-                              {idea.source.length > 0 && (
-                                <div className="ml-2 mb-1 flex gap-1 text-stone-400">
-                                  <FontAwesomeIcon icon={faQuoteLeft} />
-                                  <span>{idea.source}</span>
-                                </div>
-                              )}
-                            </>
-                          ) : (
-                            <>
-                              {idea.title.length <
-                              (idea.source.length > 0 ? 15 : 30) ? (
-                                <div className="mb-2 font-black break-all text-sm">
-                                  {idea.title}
-                                </div>
-                              ) : (
-                                <div className="mb-2 font-black text-sm">
-                                  {idea.title.substr(
-                                    0,
-                                    idea.source.length > 0 ? 15 : 30
-                                  )}
-                                  <span>...</span>
-                                </div>
-                              )}
-                              {idea.text.length < 140 ? (
-                                <div className="mb-3">idea.text</div>
-                              ) : (
-                                <div className="mb-3">
-                                  {idea.text.substr(0, 140)}
-                                  <span>...</span>
-                                  <span className="font-black underline">
-                                    더보기
-                                  </span>
-                                </div>
-                              )}
-                              {idea.source.length > 0 && (
-                                <div className="ml-2 mb-1 flex gap-1 text-stone-400">
-                                  <FontAwesomeIcon icon={faQuoteLeft} />
-                                  <span>{idea.source}</span>
-                                </div>
-                              )}
-                            </>
+                          {idea.title.length > 0 && (
+                            <div className="mb-2 truncate font-black text-sm">
+                              {idea.title}
+                            </div>
+                          )}
+                          <div className="mb-3 line-clamp-6">{idea.text}</div>
+                          {idea.source.length > 0 && (
+                            <div className="ml-2 mb-1 flex gap-1 text-stone-400">
+                              <FontAwesomeIcon icon={faQuoteLeft} />
+                              <span>{idea.source}</span>
+                            </div>
                           )}
                         </div>
                         <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">

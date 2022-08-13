@@ -52,22 +52,22 @@ const ViewIdeaBottom = ({
     navigate(`/${idea.id}`);
   };
 
-  const userMenu = useRef();
+  const tabRef = useRef();
 
-  const modalCloseHandler = ({ target }) => {
-    if (itemChangeProps != 0 && !userMenu.current.contains(target))
+  const tabCloseHandler = ({ target }) => {
+    if (itemChangeProps != 0 && !tabRef.current.contains(target))
       setItemChangeProps(0);
   };
 
   useEffect(() => {
-    window.addEventListener("click", modalCloseHandler);
+    window.addEventListener("click", tabCloseHandler);
     return () => {
-      window.removeEventListener("click", modalCloseHandler);
+      window.removeEventListener("click", tabCloseHandler);
     };
   });
 
   return (
-    <div className="w-screen fixed bottom-0 z-30" ref={userMenu}>
+    <div className="w-screen fixed bottom-0 z-30" ref={tabRef}>
       {itemChangeProps === 0 && (
         <ColoredIdeaList
           ideas={whatView.connectedIdeas}

@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -28,6 +29,7 @@ authService.useDeviceLanguage();
 const provider = new GoogleAuthProvider();
 const dbService = getFirestore(firebaseApp);
 const storageService = getStorage();
+const functions = getFunctions();
 
 export {
   authService,
@@ -36,4 +38,5 @@ export {
   signInWithPopup,
   provider,
   signOut,
+  functions,
 };

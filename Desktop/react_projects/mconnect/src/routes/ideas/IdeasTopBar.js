@@ -31,6 +31,10 @@ const IdeasTopBar = ({
     navigate("/searchpage");
   };
 
+  const onAlarmClick = () => {
+    navigate("/alarm");
+  };
+
   return (
     <div className="fixed top-0 w-full z-10">
       <div className="flex justify-between items-center px-2 py-4 bg-white shadow">
@@ -44,7 +48,7 @@ const IdeasTopBar = ({
           </span>
         </div>
         <div className="flex gap-2">
-          <button className="relative px-2">
+          <button className="relative px-2" onClick={onAlarmClick}>
             <FontAwesomeIcon icon={faBell} size="lg" />
             <span className="animate-ping absolute right-1 top-0 w-2 h-2 bg-red-400 text-white rounded-full" />
           </button>

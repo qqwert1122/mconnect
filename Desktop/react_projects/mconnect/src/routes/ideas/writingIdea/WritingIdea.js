@@ -197,6 +197,11 @@ const WritingIdea = ({ customHooks }) => {
     }
   };
 
+  const [bottomItemChangeProps, setBottomItemChangeProps] = useState(0);
+  const handleTabClose = () => {
+    setBottomItemChangeProps(0);
+  };
+
   return (
     <div className="flex-col text-sm">
       <form onSubmit={onSubmit}>
@@ -212,6 +217,7 @@ const WritingIdea = ({ customHooks }) => {
         <textarea
           className="w-full p-4 text-base"
           style={{ height: "calc(100vh - 104px)", marginTop: "52px" }}
+          onClick={handleTabClose}
           type="text"
           name="formText"
           placeholder="내용..."
@@ -221,6 +227,8 @@ const WritingIdea = ({ customHooks }) => {
           required
         />
         <WritingBottom
+          bottomItemChangeProps={bottomItemChangeProps}
+          setBottomItemChangeProps={setBottomItemChangeProps}
           userIdeas={userIdeas}
           setWhatView={setWhatView}
           whatEdit={whatEdit}

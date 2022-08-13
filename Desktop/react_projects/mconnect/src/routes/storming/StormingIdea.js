@@ -255,29 +255,22 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
           <div className="w-full box-border px-4 mt-4 mb-4 duration-200">
             {/* title */}
             {idea.title !== "" && (
-              <div className="flex items-center pb-2 w-full font-black">
+              <div className="flex items-center mb-2 w-full font-black truncate">
                 {idea.title}
               </div>
             )}
             {/* text */}
             <div
-              className="w-full pb-5 flex items-center break-all whitespace-pre-line"
+              className="w-full mb-5 flex items-center break-all whitespace-pre-line line-clamp-6"
               // onClick={() => {
               //   onViewIdeaClick(dbIdea);
               // }}
             >
-              {idea.text.length > 200 ? (
-                <>
-                  {idea.text.substr(0, 200)}
-                  ...
-                </>
-              ) : (
-                idea.text
-              )}
+              {idea.text}
             </div>
             {/* source */}
             {idea.source !== "" && (
-              <div className="flex items-center ml-2 pb-2 text-xs">
+              <div className="flex items-center ml-2 mb-2 text-xs">
                 <span className="text-stone-300">
                   <FontAwesomeIcon icon={faQuoteLeft} />
                 </span>

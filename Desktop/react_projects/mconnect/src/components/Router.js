@@ -9,6 +9,7 @@ import OpenSource from "routes/setting/OpenSource";
 import Auth from "routes/auth/Auth";
 import SignUp from "routes/auth/SignUp";
 import { Route, Routes } from "react-router-dom";
+import AlarmPage from "routes/ideas/alarm/AlarmPage";
 
 const AppRouter = ({ customHooks }) => {
   const whatView = customHooks.whatView;
@@ -41,6 +42,11 @@ const AppRouter = ({ customHooks }) => {
             exact
             path={`/${whatView && whatView.id}`}
             element={<ViewIdea customHooks={customHooks} />}
+          />
+          <Route
+            exact
+            path="/alarm"
+            element={<AlarmPage customHooks={customHooks} />}
           />
           <Route
             exact

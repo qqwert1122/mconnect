@@ -45,25 +45,18 @@ const IdeaMiddle = ({
     <div className="w-full box-border px-4 mt-4 mb-4 " {...bind()}>
       {/* title */}
       {userIdea.title !== "" && (
-        <div className="flex items-center pb-2 w-full break-all font-black">
+        <div className="flex items-center mb-2 w-full break-all font-black">
           {userIdea.title}
         </div>
       )}
       {/* text */}
       <div
-        className="w-full pb-5 flex items-center break-all whitespace-pre-line"
+        className="w-full mb-5 flex items-center break-all whitespace-pre-line line-clamp-6"
         onClick={() => {
           onViewIdeaClick(userIdea);
         }}
       >
-        {userIdea.text.length > 200 ? (
-          <>
-            {userIdea.text.substr(0, 200)}
-            ...
-          </>
-        ) : (
-          userIdea.text
-        )}
+        {userIdea.text}
       </div>
       {/* source */}
       {userIdea.source !== "" && (
@@ -71,10 +64,8 @@ const IdeaMiddle = ({
           <span className="text-stone-300">
             <FontAwesomeIcon icon={faQuoteLeft} />
           </span>
-          <div className="w-full text-stone-400">
-            {userIdea.source.length > 20
-              ? `${userIdea.source.substr(0, 20)}...`
-              : userIdea.source}
+          <div className="w-full truncate text-stone-400">
+            {userIdea.source}
           </div>
         </div>
       )}
@@ -113,12 +104,6 @@ const IdeaMiddle = ({
                 <span key={index} className="border-box text-stone-400">
                   {index === userIdea.tags.length - 1 ? tag : `${tag},`}
                 </span>
-                //   <span
-                //   key={index}
-                //   className="mr-1 mb-1 border-box rounded-3xl border-2 px-3 py-1 shadow-sm duration-500 text-stone-500"
-                // >
-                //   {tag}
-                // </span>
               ))}
             </>
           )}

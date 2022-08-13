@@ -10,6 +10,8 @@ import WritingBottomBar from "./WritingBottomBar";
 import RelatedIdeas from "./RelatedIdeas";
 
 const WritingBottom = ({
+  bottomItemChangeProps,
+  setBottomItemChangeProps,
   userIdeas,
   setWhatView,
   whatEdit,
@@ -30,7 +32,6 @@ const WritingBottom = ({
   formConnectedIdeas,
   setFormConnectedIdeas,
 }) => {
-  const [bottomItemChangeProps, setBottomItemChangeProps] = useState(0);
   const sourceInput = useRef();
   const tagInput = useRef();
 

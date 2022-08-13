@@ -28,22 +28,10 @@ const IdeaConnectedIdeas = ({ connectedIdeas, viewDetail, colorList }) => {
           ></div>
           <div className="z-10 relative box-border ml-10 my-4 p-2 bg-white shadow-lg break-all rounded-xl">
             <div className="mb-2">
-              {idea.title === "" ? (
-                idea.text.length < 180 ? (
-                  idea.text
-                ) : (
-                  <>{idea.text.substr(0, 180)}...</>
-                )
-              ) : (
-                <>
-                  <div className="mb-2 font-black text-sm">{idea.title}</div>
-                  {idea.text.length < 140 ? (
-                    idea.text
-                  ) : (
-                    <>{idea.text.substr(0, 140)}...</>
-                  )}
-                </>
-              )}
+              <span className="mb-2 font-black text-sm truncate">
+                {idea.title}
+              </span>
+              <span className="line-clamp-5">{idea.text}</span>
             </div>
             <div className="w-full text-xs flex justify-between text-stone-400">
               <div>{idea.createdAt}</div>
