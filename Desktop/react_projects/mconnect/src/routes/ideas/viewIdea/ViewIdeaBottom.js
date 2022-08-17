@@ -7,19 +7,17 @@ import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
+import { useRecoilState } from "recoil";
+import { whatViewState } from "atom";
 
 const ViewIdeaBottom = ({
   itemChangeProps,
   setItemChangeProps,
-  userIdeas,
-  whatView,
-  setWhatView,
   navigate,
-  selectedIdeas,
-  setSelectedIdeas,
-  colorList,
-  connectedIdeas,
+  getIdeasFromIDs,
 }) => {
+  const [whatView, setWhatView] = useRecoilState(whatViewState);
+
   const itemChange = (props) => {
     switch (props) {
       case 1:
@@ -52,6 +50,7 @@ const ViewIdeaBottom = ({
     navigate(`/${idea.id}`);
   };
 
+  // Ref
   const tabRef = useRef();
 
   const tabCloseHandler = ({ target }) => {
@@ -69,41 +68,25 @@ const ViewIdeaBottom = ({
   return (
     <div className="w-screen fixed bottom-0 z-30" ref={tabRef}>
       {itemChangeProps === 0 && (
-        <ColoredIdeaList
-          ideas={whatView.connectedIdeas}
-          colorList={colorList}
-        />
+        <ColoredIdeaList ideas={whatView.connectedIDs} />
       )}
       {itemChangeProps === 1 && (
         <div className="moveRightToLeft bg-stone-50 shadow-inner">
           <SuggestedIdeas
-            userIdeas={userIdeas}
-            ideaPrmtr={whatView}
+            Writing={false}
             tagsPrmtr={whatView.tags}
-            itemChange={itemChange}
-            whatEdit={undefined}
-            formConnectedIdeas={undefined}
-            setFormConnectedIdeas={undefined}
+            tabChange={itemChange}
             onIdeaClick={onIdeaClick}
-            selectedIdeas={selectedIdeas}
-            setSelectedIdeas={setSelectedIdeas}
-            connectedIdeas={connectedIdeas}
-            thumbsUp={false}
           />
         </div>
       )}
-
       {itemChangeProps === 2 && whatView.connectedIdeas.length > 0 && (
         <ConnectedIdeas
-          connectedIdeas={connectedIdeas}
-          whatView={whatView}
           onIdeaClick={onIdeaClick}
+          getIdeasFromIDs={getIdeasFromIDs}
         />
       )}
-
-      {/* bottomBar */}
       <ViewIdeaBottomBar
-        whatView={whatView}
         itemChange={itemChange}
         itemChangeProps={itemChangeProps}
       />

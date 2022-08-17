@@ -17,21 +17,27 @@ import {
   faPenToSquare,
 } from "@fortawesome/free-regular-svg-icons";
 import { dbService } from "fbase";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { userState } from "atom";
+import { selectedIdeasState } from "atom";
+import { isEditState } from "atom";
 
 const IdeaTop = ({
-  user,
   isOwner,
-  userIdea,
+  idea,
   navigate,
-  setWhatEdit,
   isSelectMode,
-  selectedIdeas,
   anchorEl,
   setAnchorEl,
   onSelectIdea,
   timeDisplay,
   setDeleteDialogOpen,
+  initEditor,
 }) => {
+  const loggedInUser = useRecoilValue(userState);
+  const selectedIdeas = useRecoilValue(selectedIdeasState);
+  const setIsEdit = useSetRecoilState(isEditState);
+
   const open = Boolean(anchorEl);
 
   // handle ellipsis menu
@@ -45,7 +51,8 @@ const IdeaTop = ({
 
   const onEditClick = () => {
     setAnchorEl(null);
-    setWhatEdit(userIdea);
+    setIsEdit(true);
+    initEditor(idea);
     navigate("/writingidea");
   };
 
@@ -54,17 +61,17 @@ const IdeaTop = ({
       <div className="flex items-center gap-2">
         <button
           className={`rounded-full ${
-            selectedIdeas.includes(userIdea)
+            selectedIdeas.includes(idea)
               ? "bg-red-400 text-white"
               : "border-2 border-stone-400"
           } ${
             isSelectMode ? "visible w-5 h-5" : "invisible w-0 h-0"
           } duration-100`}
           onClick={() => {
-            onSelectIdea(userIdea);
+            onSelectIdea(idea);
           }}
         >
-          {selectedIdeas.includes(userIdea) && (
+          {selectedIdeas.includes(idea) && (
             <FontAwesomeIcon className="strech" icon={faCheck} />
           )}
         </button>
@@ -72,7 +79,7 @@ const IdeaTop = ({
         <Avatar
           className="border-2"
           alt="avatar"
-          src={isOwner ? user.userPhotoURL : userIdea.userPhotoURL}
+          src={isOwner ? loggedInUser.userPhotoURL : idea.userPhotoURL}
           sx={{
             display: "flex",
             width: "30px",
@@ -82,16 +89,16 @@ const IdeaTop = ({
 
         <div className="flex-col text-xs">
           <div className="flex items-center gap-1">
-            <b>{isOwner ? user.userName : userIdea.userName}</b>
-            {userIdea.isOfficial && (
+            <b>{isOwner ? loggedInUser.userName : idea.userName}</b>
+            {idea.isOfficial && (
               <span className="opacity-80">
                 <VerifiedRoundedIcon color="primary" sx={{ fontSize: 16 }} />
               </span>
             )}
           </div>
           <div className="flex items-center gap-1">
-            {timeDisplay(userIdea.createdAt)}
-            {userIdea.isViewed === false && (
+            {timeDisplay(idea.createdAt)}
+            {idea.isViewed === false && (
               <span className="animate-pulse w-2 h-2 bg-red-400 text-white rounded-full" />
             )}
           </div>

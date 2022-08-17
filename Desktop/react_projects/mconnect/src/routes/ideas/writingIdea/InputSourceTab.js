@@ -5,13 +5,14 @@ import {
   faQuoteLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { formSourceState } from "atom";
+import { recentSourcesState } from "atom";
 
-const InputSourceTab = ({
-  sourceList,
-  formSource,
-  setFormSource,
-  sourceInput,
-}) => {
+const InputSourceTab = ({ sourceInput }) => {
+  const [formSource, setFormSource] = useRecoilState(formSourceState);
+  const recentSources = useRecoilValue(recentSourcesState);
+
   const onSourceChange = (e) => {
     if (e.target.value === " ") {
       setFormSource("");
@@ -31,11 +32,11 @@ const InputSourceTab = ({
         <div className="pt-4 px-4 text-stone-400">
           검색 <FontAwesomeIcon icon={faMagnifyingGlass} />
         </div>
-        {sourceList.length === 0 ? (
+        {recentSources.length === 0 ? (
           <div className="p-4 pt-2 text-sm">기존 출처가 없습니다</div>
         ) : (
           <div className="p-4 pt-2 flex flex-nowrap overflow-x-auto">
-            {sourceList
+            {recentSources
               .filter((source) => source.includes(formSource))
               .map((source, index) => (
                 <button

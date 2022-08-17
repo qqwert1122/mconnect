@@ -8,32 +8,33 @@ import InputSourceTab from "./InputSourceTab";
 import InputTagTab from "./InputTagTab";
 import WritingBottomBar from "./WritingBottomBar";
 import RelatedIdeas from "./RelatedIdeas";
+import { useRecoilValue } from "recoil";
+import { formCnctedIdeasState } from "atom";
 
 const WritingBottom = ({
+  navigate,
+  showTitleAndCnctn,
   bottomItemChangeProps,
   setBottomItemChangeProps,
-  userIdeas,
-  setWhatView,
-  whatEdit,
-  navigate,
-  formSource,
-  setFormSource,
-  formTag,
-  setFormTag,
-  formTags,
-  setFormTags,
-  selectedIdeas,
-  setSelectedIdeas,
-  tagList,
-  formPublic,
-  setFormPublic,
-  sourceList,
-  colorList,
-  formConnectedIdeas,
-  setFormConnectedIdeas,
 }) => {
   const sourceInput = useRef();
   const tagInput = useRef();
+
+  const formCnctedIdeas = useRecoilValue(formCnctedIdeasState);
+
+  // const tabRef = useRef();
+
+  // const tabCloseHandler = ({ target }) => {
+  //   if (bottomItemChangeProps != 0 && !tabRef.current.contains(target))
+  //     setBottomItemChangeProps(0);
+  // };
+
+  // useEffect(() => {
+  //   window.addEventListener("click", tabCloseHandler);
+  //   return () => {
+  //     window.removeEventListener("click", tabCloseHandler);
+  //   };
+  // });
 
   useEffect(() => {
     switch (bottomItemChangeProps) {
@@ -47,56 +48,26 @@ const WritingBottom = ({
   }, [bottomItemChangeProps]);
 
   return (
-    <div className="w-screen fixed bottom-0 z-30">
+    <div
+      className="w-screen fixed bottom-0 z-30"
+      // ref={tabRef}
+    >
       {bottomItemChangeProps === 0 && (
-        <ColoredIdeaList ideas={formConnectedIdeas} colorList={colorList} />
+        <ColoredIdeaList ideas={formCnctedIdeas} />
       )}
 
       {bottomItemChangeProps === 1 && (
-        <InputSourceTab
-          sourceList={sourceList}
-          formSource={formSource}
-          setFormSource={setFormSource}
-          sourceInput={sourceInput}
-        />
+        <InputSourceTab sourceInput={sourceInput} />
       )}
 
-      {bottomItemChangeProps === 2 && (
-        <InputTagTab
-          tagList={tagList}
-          tagInput={tagInput}
-          formTag={formTag}
-          setFormTag={setFormTag}
-          formTags={formTags}
-          setFormTags={setFormTags}
-        />
-      )}
+      {bottomItemChangeProps === 2 && <InputTagTab tagInput={tagInput} />}
 
-      {bottomItemChangeProps === 3 && (
-        <RelatedIdeas
-          whatEdit={whatEdit}
-          userIdeas={userIdeas}
-          navigate={navigate}
-          formConnectedIdeas={formConnectedIdeas}
-          setFormConnectedIdeas={setFormConnectedIdeas}
-          formTags={formTags}
-          colorList={colorList}
-          selectedIdeas={selectedIdeas}
-          setSelectedIdeas={setSelectedIdeas}
-          setWhatView={setWhatView}
-        />
-      )}
+      {bottomItemChangeProps === 3 && <RelatedIdeas navigate={navigate} />}
 
       <WritingBottomBar
-        whatEdit={whatEdit}
         bottomItemChangeProps={bottomItemChangeProps}
         setBottomItemChangeProps={setBottomItemChangeProps}
-        formSource={formSource}
-        formTags={formTags}
-        formPublic={formPublic}
-        setFormPublic={setFormPublic}
-        formConnectedIdeas={formConnectedIdeas}
-        selectedIdeas={selectedIdeas}
+        showTitleAndCnctn={showTitleAndCnctn}
       />
     </div>
   );

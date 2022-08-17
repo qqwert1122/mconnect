@@ -16,71 +16,59 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { userState } from "atom";
+import { countState } from "atom";
 
-const IdeaBottom = ({
-  user,
-  isOwner,
-  userIdea,
-  viewDetail,
-  setViewDetail,
-  colorList,
-}) => {
-  const countRef = doc(dbService, "counts", userIdea.id);
-  const userIdeaRef = doc(
-    dbService,
-    "users",
-    user.userId,
-    "userIdeas",
-    userIdea.id
-  );
-  const userRef = doc(dbService, "users", user.userId);
-
-  const [countInfo, setCountInfo] = useState();
-  const [isDeleted, setIsDeleted] = useState(false);
-
-  const getCountInfo = async () => {
-    const countDoc = (
-      await getDoc(doc(dbService, "counts", userIdea.id))
-    ).data();
-    if (countDoc === undefined) {
-      setCountInfo("delete");
-      setIsDeleted(true);
-    } else {
-      setCountInfo(countDoc);
-    }
-  };
+const IdeaBottom = ({ isOwner, idea, viewDetail, setViewDetail, getCount }) => {
+  const loggedInUser = useRecoilValue(userState);
+  const count = useRecoilValue(countState);
+  const isDeleted = count === undefined;
 
   useEffect(() => {
-    getCountInfo();
+    getCount(idea);
   }, []);
 
+  const countRef = doc(dbService, "counts", idea.id);
+  const ideaRef = doc(
+    dbService,
+    "users",
+    loggedInUser.userId,
+    "userIdeas",
+    idea.id
+  );
+  const userRef = doc(dbService, "users", loggedInUser.userId);
+
   const onLikeClick = async () => {
-    if (userIdea.isLiked) {
+    if (idea.isLiked) {
       if (isDeleted) {
-        await updateDoc(userIdeaRef, {
+        await updateDoc(ideaRef, {
           isLiked: false,
         });
       } else {
-        delete countInfo.like_users[user.userId];
+        delete count.like_users[loggedInUser.userId];
         await updateDoc(countRef, {
           like_count: increment(-1),
-          like_users: countInfo.like_users,
+          like_users: count.like_users,
         });
-        await updateDoc(userIdeaRef, {
+        await updateDoc(ideaRef, {
           isLiked: false,
         });
       }
     } else {
       if (isDeleted) {
-        await updateDoc(userIdeaRef, {
+        await updateDoc(ideaRef, {
           isLiked: true,
         });
       } else {
         await updateDoc(countRef, {
           like_count: increment(1),
-          like_users: { ...countInfo.like_users, [user.userId]: user.userName },
+          like_users: {
+            ...count.like_users,
+            [loggedInUser.userId]: loggedInUser.userName,
+          },
         });
-        await updateDoc(userIdeaRef, {
+        await updateDoc(ideaRef, {
           isLiked: true,
         });
       }
@@ -88,23 +76,23 @@ const IdeaBottom = ({
   };
 
   const onBookmarkClick = async () => {
-    if (userIdea.isBookmarked) {
+    if (idea.isBookmarked) {
       if (isDeleted) {
-        await updateDoc(userIdeaRef, {
+        await updateDoc(ideaRef, {
           isBookmarked: false,
         });
       } else {
-        delete countInfo.bookmark_users[user.userId];
+        delete count.bookmark_users[loggedInUser.userId];
         await updateDoc(countRef, {
           bookmark_count: increment(-1),
-          bookmark_users: countInfo.bookmark_users,
+          bookmark_users: count.bookmark_users,
         });
-        await updateDoc(userIdeaRef, {
+        await updateDoc(ideaRef, {
           isBookmarked: false,
         });
       }
       if (isOwner === false) {
-        await updateDoc(userIdeaRef, {
+        await updateDoc(ideaRef, {
           isDeleted: true,
         });
         await updateDoc(userRef, {
@@ -113,18 +101,18 @@ const IdeaBottom = ({
       }
     } else {
       if (isDeleted) {
-        await updateDoc(userIdeaRef, {
+        await updateDoc(ideaRef, {
           isBookmarked: true,
         });
       } else {
         await updateDoc(countRef, {
           bookmark_count: increment(1),
           bookmark_users: {
-            ...countInfo.bookmark_users,
-            [user.userId]: user.userName,
+            ...count.bookmark_users,
+            [loggedInUser.userId]: loggedInUser.userName,
           },
         });
-        await updateDoc(userIdeaRef, {
+        await updateDoc(ideaRef, {
           isBookmarked: true,
         });
       }
@@ -136,11 +124,11 @@ const IdeaBottom = ({
       const ideaRef = doc(
         dbService,
         "users",
-        user.userId,
+        loggedInUser.userId,
         "userIdeas",
-        userIdea.id
+        idea.id
       );
-      await updateDoc(ideaRef, { isPublic: !userIdea.isPublic });
+      await updateDoc(ideaRef, { isPublic: !idea.isPublic });
     }
   };
 
@@ -152,42 +140,38 @@ const IdeaBottom = ({
     <>
       <div className="flex items-center px-5 pb-5 gap-5 text-stone-500">
         <button
-          className={`${userIdea.isLiked && "text-red-400"}`}
+          className={`${idea.isLiked && "text-red-400"}`}
           onClick={onLikeClick}
         >
           <FontAwesomeIcon
-            icon={userIdea.isLiked ? fasHeart : farHeart}
+            icon={idea.isLiked ? fasHeart : farHeart}
             size="lg"
           />
         </button>
         <button
-          className={`${userIdea.isBookmarked && "text-orange-400"}`}
+          className={`${idea.isBookmarked && "text-orange-400"}`}
           onClick={onBookmarkClick}
         >
           <FontAwesomeIcon
-            icon={userIdea.isBookmarked ? fasBookmark : farBookmark}
+            icon={idea.isBookmarked ? fasBookmark : farBookmark}
             size="lg"
           />
         </button>
         {isOwner && (
           <button
-            className={`${userIdea.isPublic && "text-sky-400"}`}
+            className={`${idea.isPublic && "text-sky-400"}`}
             onClick={onPublicClick}
           >
             <FontAwesomeIcon
-              icon={userIdea.isPublic ? fasCompass : farCompass}
+              icon={idea.isPublic ? fasCompass : farCompass}
               size="lg"
             />
           </button>
         )}
 
-        {userIdea.connectedIdeas.length > 0 && (
+        {idea.connectedIDs.length > 0 && (
           <div className="w-full flex justify-end gap-2">
-            <ColoredIdeaList
-              ideas={userIdea.connectedIdeas}
-              colorList={colorList}
-              small={true}
-            />
+            <ColoredIdeaList ideas={idea.connectedIDs} small={true} />
             <div
               className={`flex items-center text-stone-500 ${
                 viewDetail && "rotate-180"

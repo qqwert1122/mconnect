@@ -14,6 +14,9 @@ import {
   Hits,
   InfiniteHits,
   Highlight,
+  RefinementList,
+  Index,
+  Configure,
 } from "react-instantsearch-hooks-web";
 import ShowingSearchIdeas from "./ShowingSearchIdeas";
 import FloatingUpButton from "../FloatingUpButton";
@@ -29,6 +32,7 @@ import {
 
 const SearchPage = ({ customHooks }) => {
   const {
+    loggedInUser,
     userIdeas,
     navigate,
     setWhatView,
@@ -36,8 +40,8 @@ const SearchPage = ({ customHooks }) => {
     sourceList,
     selectedIdeas,
     setSelectedIdeas,
-    scrollY,
-    setScrollY,
+    // scrollY,
+    // setScrollY,
   } = customHooks;
 
   const userList = userIdeas.filter(
@@ -55,40 +59,40 @@ const SearchPage = ({ customHooks }) => {
 
   const searchCriteria = ["전체", "출처", "태그", "유저"];
 
-  useEffect(() => {
-    setShowingSearchIdeas(userIdeas);
-  }, []);
+  // useEffect(() => {
+  //   setShowingSearchIdeas(userIdeas);
+  // }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo(0, scrollY);
-    }, 100);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     window.scrollTo(0, scrollY);
+  //   }, 100);
+  // }, []);
 
   const onBackClick = () => {
     navigate(-1);
   };
 
-  useEffect(() => {
-    if (listAllCriteria.length === 0) {
-      setShowingSearchIdeas(userIdeas);
-    } else {
-      setShowingSearchIdeas(
-        userIdeas.filter(
-          (idea, index) =>
-            listSearchCriteriaSource.some((x) =>
-              userIdeas[index].source.includes(x)
-            ) ||
-            listSearchCriteriaTag.some((x) =>
-              userIdeas[index].tags.includes(x)
-            ) ||
-            listSearchCriteriaUser.some((x) =>
-              userIdeas[index].userName.includes(x)
-            )
-        )
-      );
-    }
-  }, [listSearchCriteriaSource, listSearchCriteriaTag, listSearchCriteriaUser]);
+  // useEffect(() => {
+  //   if (listAllCriteria.length === 0) {
+  //     setShowingSearchIdeas(userIdeas);
+  //   } else {
+  //     setShowingSearchIdeas(
+  //       userIdeas.filter(
+  //         (idea, index) =>
+  //           listSearchCriteriaSource.some((x) =>
+  //             userIdeas[index].source.includes(x)
+  //           ) ||
+  //           listSearchCriteriaTag.some((x) =>
+  //             userIdeas[index].tags.includes(x)
+  //           ) ||
+  //           listSearchCriteriaUser.some((x) =>
+  //             userIdeas[index].userName.includes(x)
+  //           )
+  //       )
+  //     );
+  //   }
+  // }, [listSearchCriteriaSource, listSearchCriteriaTag, listSearchCriteriaUser]);
 
   const onSourceCriteriaClick = (source) => {
     if (listSearchCriteriaSource.includes(source)) {
@@ -209,10 +213,12 @@ const SearchPage = ({ customHooks }) => {
     );
   };
 
+  const myIdea = true;
+
   return (
     <div className="min-h-screen flex-col">
       <div className="relative">
-        <InstantSearch searchClient={searchClient} indexName="userIdeas">
+        {/* <InstantSearch searchClient={searchClient} indexName="userIdeas">
           <div className="fixed top-0 w-full p-3 flex gap-4 justify-between items-center bg-white shadow z-10">
             <button onClick={onBackClick}>
               <FontAwesomeIcon icon={faChevronLeft} size="lg" />
@@ -224,15 +230,15 @@ const SearchPage = ({ customHooks }) => {
             />
           </div>
           <div className="mt-14">
-            <InfiniteHits
-              hitComponent={Hit}
-              translations={{
-                showMore: "Voir plus",
-              }}
-              showPrevious={false}
+            <Configure
+              filters={
+                myIdea ? `userId:${loggedInUser.userId}` : "isPublic:true"
+              }
             />
+            <InfiniteHits hitComponent={Hit} showPrevious={false} />
           </div>
-        </InstantSearch>
+        </InstantSearch> */}
+
         {/* <SearchPageTopBar
           navigate={navigate}
           searchTerm={searchTerm}
@@ -293,11 +299,11 @@ const SearchPage = ({ customHooks }) => {
           listAllCriteria={listAllCriteria}
         /> */}
       </div>
-      <FloatingUpButton
+      {/* <FloatingUpButton
         floating={true}
         scrollY={scrollY}
         setScrollY={setScrollY}
-      />
+      /> */}
 
       <div
         className={` ${

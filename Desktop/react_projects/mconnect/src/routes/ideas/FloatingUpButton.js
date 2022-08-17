@@ -5,27 +5,27 @@ import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const FloatingUpButton = ({ floating, scrollY, setScrollY }) => {
-  const handleFollow = () => {
-    setScrollY(window.pageYOffset); // window 스크롤 값을 ScrollY에 저장
-  };
+  // const handleFollow = () => {
+  //   setScrollY(window.pageYOffset); // window 스크롤 값을 ScrollY에 저장
+  // };
 
-  useEffect(() => {
-    const watch = () => {
-      window.addEventListener("scroll", handleFollow);
-    };
-    watch(); // addEventListener 함수를 실행
-    return () => {
-      window.removeEventListener("scroll", handleFollow); // addEventListener 함수를 삭제
-    };
-  });
+  // useEffect(() => {
+  //   const watch = () => {
+  //     window.addEventListener("scroll", handleFollow);
+  //   };
+  //   watch(); // addEventListener 함수를 실행
+  //   return () => {
+  //     window.removeEventListener("scroll", handleFollow); // addEventListener 함수를 삭제
+  //   };
+  // });
 
-  const onScrollTopClick = () => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  };
+  // // const onScrollTopClick = () => {
+  // //   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  // // };
 
   return (
     <>
-      {scrollY > 300 && (
+      {/* {scrollY > 300 && (
         <div
           className={`opacity fixed ${
             floating ? "bottom-16" : "bottom-36"
@@ -38,7 +38,7 @@ const FloatingUpButton = ({ floating, scrollY, setScrollY }) => {
             <FontAwesomeIcon icon={faAngleUp} />
           </button>
         </div>
-      )}
+      )} */}
     </>
   );
 };

@@ -3,7 +3,6 @@ import ViewIdeaTopBar from "./ViewIdeaTopBar";
 import ViewIdeaContent from "./ViewIdeaContent";
 import ViewIdeaBottom from "./ViewIdeaBottom";
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { dbService } from "fbase";
 import {
   doc,
@@ -18,125 +17,62 @@ import {
   documentId,
 } from "firebase/firestore";
 import Skeleton from "@mui/material/Skeleton";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { userState, whatViewState } from "atom";
 
-const ViewIdea = ({ customHooks }) => {
-  const timeDisplay = customHooks.timeDisplay;
-  const userIdeas = customHooks.userIdeas;
-  const user = customHooks.loggedInUser;
-  const navigate = customHooks.navigate;
-  const colorList = customHooks.colorList;
-  const whatView = customHooks.whatView;
-  const setWhatView = customHooks.setWhatView;
-  const setWhatEdit = customHooks.setWhatEdit;
-
-  const selectedIdeas = customHooks.selectedIdeas;
-  const setSelectedIdeas = customHooks.setSelectedIdeas;
+const ViewIdea = ({ ...props }) => {
+  const { timeDisplay, navigate, isOwner, getIdeasFromIDs, initEditor } = props;
+  const loggedInUser = useRecoilValue(userState);
+  const [whatView, setWhatView] = useRecoilState(whatViewState);
 
   const onBackClick = () => {
     setWhatView(null);
     navigate(-1);
   };
 
-  const [countInfo, setCountInfo] = useState();
-  const [isOwner, setIsOwner] = useState(whatView.userId === user.userId);
-  const [isDeleted, setIsDeleted] = useState(false);
-
-  const getCountInfo = async () => {
-    const countDoc = (
-      await getDoc(doc(dbService, "counts", whatView.id))
-    ).data();
-    if (countDoc === undefined) {
-      setCountInfo("delete");
-      setIsDeleted(true);
-    } else {
-      setCountInfo(countDoc);
-    }
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      getCountInfo();
-    }, 1000);
-  }, []);
-
-  const [connectedIdeas, setConnectedIdeas] = useState([]);
-
-  const getConncetedIdeas = async (ids) => {
-    const q1 = query(
-      collection(dbService, "users", user.userId, "userIdeas"),
-      where(documentId(), "in", ids)
-    );
-    const ideaRef = await getDocs(q1);
-    const newData = ideaRef.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setConnectedIdeas(newData);
-  };
-
-  useEffect(() => {
-    if (whatView.connectedIdeas.length > 0) {
-      getConncetedIdeas(whatView.connectedIdeas);
-    }
-  }, [whatView]);
-
+  // tab state
   const [itemChangeProps, setItemChangeProps] = useState(0);
 
   return (
-    <div
-      className="pt-12 text-sm min-h-screen bg-stone-100"
-      style={{ paddingBottom: "52px" }}
-    >
-      <div className="flex-col bg-white shadow">
-        {whatView && (
-          <ViewIdeaTopBar
-            user={user}
-            isOwner={isOwner}
-            whatView={whatView}
-            setWhatEdit={setWhatEdit}
-            navigate={navigate}
-            onBackClick={onBackClick}
-          />
-        )}
-        {/*제목, 아바타, 시간 */}
-        {countInfo ? (
-          <ViewIdeaContent
-            itemChangeProps={itemChangeProps}
-            user={user}
-            isOwner={isOwner}
-            isDeleted={isDeleted}
-            countInfo={countInfo}
-            setCountInfo={setCountInfo}
-            whatView={whatView}
-            setWhatView={setWhatView}
-            timeDisplay={timeDisplay}
-            onBackClick={onBackClick}
-          />
-        ) : (
-          <div className="p-4 flex-col">
-            <div className="flex items-center gap-2">
-              <Skeleton variant="circular" width={30} height={30} />
-              <Skeleton variant="text" width={120} height={30} />
-            </div>
-            <Skeleton variant="text" width={320} height={160} />
+    <>
+      {whatView ? (
+        <div
+          className="pt-12 text-sm min-h-screen bg-stone-100"
+          style={{ paddingBottom: "52px" }}
+        >
+          <div className="flex-col bg-white shadow">
+            <ViewIdeaTopBar
+              user={loggedInUser}
+              isOwner={isOwner}
+              navigate={navigate}
+              initEditor={initEditor}
+              onBackClick={onBackClick}
+            />
+            <ViewIdeaContent
+              user={loggedInUser}
+              itemChangeProps={itemChangeProps}
+              isOwner={isOwner}
+              timeDisplay={timeDisplay}
+              onBackClick={onBackClick}
+            />
           </div>
-        )}
-      </div>
-      {whatView && (
-        <ViewIdeaBottom
-          itemChangeProps={itemChangeProps}
-          setItemChangeProps={setItemChangeProps}
-          navigate={navigate}
-          onBackClick={onBackClick}
-          whatView={whatView}
-          setWhatView={setWhatView}
-          colorList={colorList}
-          connectedIdeas={connectedIdeas}
-          selectedIdeas={selectedIdeas}
-          setSelectedIdeas={setSelectedIdeas}
-        />
+          <ViewIdeaBottom
+            itemChangeProps={itemChangeProps}
+            setItemChangeProps={setItemChangeProps}
+            navigate={navigate}
+            getIdeasFromIDs={getIdeasFromIDs}
+          />
+        </div>
+      ) : (
+        <div className="p-4 flex-col">
+          <div className="flex items-center gap-2">
+            <Skeleton variant="circular" width={30} height={30} />
+            <Skeleton variant="text" width={120} height={30} />
+          </div>
+          <Skeleton variant="text" width={320} height={160} />
+        </div>
       )}
-    </div>
+    </>
   );
 };
 

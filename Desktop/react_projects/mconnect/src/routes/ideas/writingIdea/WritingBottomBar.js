@@ -1,3 +1,10 @@
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  formPublicState,
+  formSourceState,
+  formTagsState,
+  formCnctedIdeasState,
+} from "atom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleUp,
@@ -7,17 +14,15 @@ import {
 import { faCompass as farCompass } from "@fortawesome/free-regular-svg-icons";
 
 const WritingBottomBar = ({
-  whatEdit,
   bottomItemChangeProps,
   setBottomItemChangeProps,
-  formSource,
-  formTags,
-  formPublic,
-  setFormPublic,
-  formConnectedIdeas,
-  selectedIdeas,
-  connectedIdeas,
+  showTitleAndCnctn,
 }) => {
+  const formSource = useRecoilValue(formSourceState);
+  const formTags = useRecoilValue(formTagsState);
+  const [formPublic, setFormPublic] = useRecoilState(formPublicState);
+  const formCnctedIdeas = useRecoilValue(formCnctedIdeasState);
+
   const bottomItemChange = (e, props) => {
     e.preventDefault();
     switch (props) {
@@ -93,11 +98,10 @@ const WritingBottomBar = ({
         </button>
       </div>
 
-      {((whatEdit === undefined && selectedIdeas.length > 1) ||
-        (whatEdit != undefined && whatEdit.connectedIdeas.length > 1)) && (
+      {showTitleAndCnctn && (
         <div
           className={`flex justify-end items-center gap-2 ${
-            formConnectedIdeas.length < 2 && "animate-pulse text-red-400"
+            formCnctedIdeas.length < 2 && "animate-pulse text-red-400"
           }`}
         >
           <button

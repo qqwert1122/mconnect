@@ -20,17 +20,25 @@ import {
   faBookmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import { toast } from "react-toastify";
+import { useRecoilState } from "recoil";
+import { selectedIdeasState, formCnctedIdeasState } from "atom";
 
-const SuggestedIdeas = ({
-  tagsPrmtr,
-  itemChange,
-  formConnectedIdeas,
-  setFormConnectedIdeas,
-  onIdeaClick,
-  selectedIdeas,
-  setSelectedIdeas,
-  thumbsUp,
-}) => {
+const SuggestedIdeas = ({ writing, tagsPrmtr, tabChange, onIdeaClick }) => {
+  // Writing
+  //  - is writing ? "from writing" : "from viewing"
+  // tagsPrmtr
+  //  - tagsPrmtr ? formTags : whatView.tags
+  // tabChange
+  //  - tab ? none : tabChange(=itemChange)
+  // onIdeaClick={onIdeaClick}
+  // - navigate view page by clicking idea
+
+  const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
+  const [formCnctedIdeas, setFormCnctedIdeas] =
+    useRecoilState(formCnctedIdeasState);
+
+  // select tagPrmtr
   const [tagChangeProps, setTagChangeProps] = useState(
     tagsPrmtr.length > 0 && tagsPrmtr[0]
   );
@@ -41,36 +49,37 @@ const SuggestedIdeas = ({
   };
 
   const isChecked = (idea) => {
-    if (formConnectedIdeas === undefined) {
-      //viewIdea
-      return selectedIdeas.includes(idea);
+    if (writing) {
+      return formCnctedIdeas.includes(idea);
     } else {
-      // writingIdea
-      return formConnectedIdeas.includes(idea);
+      return selectedIdeas.includes(idea);
     }
   };
 
   const onIdeaSelect = (e, idea) => {
     e.preventDefault();
-    if (formConnectedIdeas === undefined) {
-      // viewIdea
+    if (writing) {
+      if (formCnctedIdeas.length > 4) {
+        toast.error("최대 5개까지 연결 가능합니다.", {
+          theme: "colored",
+        });
+      } else {
+        if (formCnctedIdeas.includes(idea)) {
+          setFormCnctedIdeas(formCnctedIdeas.filter((_idea) => _idea != idea));
+        } else {
+          setFormCnctedIdeas([idea, ...formCnctedIdeas]);
+        }
+      }
+    } else {
       if (selectedIdeas.includes(idea)) {
         setSelectedIdeas(selectedIdeas.filter((idea) => idea != idea));
       } else {
         setSelectedIdeas([idea, ...selectedIdeas]);
       }
-    } else {
-      //writingIdea
-      if (formConnectedIdeas.includes(idea)) {
-        setFormConnectedIdeas(
-          formConnectedIdeas.filter((_idea) => _idea != idea)
-        );
-      } else {
-        setFormConnectedIdeas([idea, ...formConnectedIdeas]);
-      }
     }
   };
 
+  // get Ideas that matches the tagPrmtr.
   const [filteredIdeas, setFilteredIdeas] = useState([]);
 
   const getFilteredIdeas = async (query) => {
@@ -92,6 +101,7 @@ const SuggestedIdeas = ({
     getFilteredIdeas(q1);
   }, [tagChangeProps]);
 
+  // Slider configuration
   const sugtdSettings = {
     dots: false,
     arrows: false,
@@ -106,16 +116,13 @@ const SuggestedIdeas = ({
   return (
     <>
       <div className="flex justify-center pt-5 mb-2 z-10">
-        {thumbsUp ? (
+        {writing ? (
           <div className="text-base font-black">
             추천 &nbsp;
             <FontAwesomeIcon icon={faThumbsUp} />
           </div>
         ) : (
-          <button
-            className="text-base font-black"
-            onClick={() => itemChange(1)}
-          >
+          <button className="text-base font-black" onClick={() => tabChange(1)}>
             추천 아이디어 &nbsp;
             <FontAwesomeIcon icon={faAngleDown} />
           </button>

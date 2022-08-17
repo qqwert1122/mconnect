@@ -11,68 +11,38 @@ import SignUp from "routes/auth/SignUp";
 import { Route, Routes } from "react-router-dom";
 import AlarmPage from "routes/ideas/alarm/AlarmPage";
 
-const AppRouter = ({ customHooks }) => {
-  const whatView = customHooks.whatView;
-
+const AppRouter = ({ ...props }) => {
   return (
     <Routes>
-      {customHooks.isLoggedIn ? (
+      {props.isLoggedIn ? (
         <>
-          <Route
-            exact
-            path="/home"
-            element={<Home customHooks={customHooks} />}
-          />
-          <Route
-            exact
-            path="/ideas"
-            element={<Ideas customHooks={customHooks} />}
-          />
-          <Route
-            exact
-            path="/searchpage"
-            element={<SearchPage customHooks={customHooks} />}
-          />
+          {/* <Route exact path="/home" element={<Home props={props} />} /> */}
+          <Route exact path="/ideas" element={<Ideas {...props} />} />
+          <Route exact path="/searchpage" element={<SearchPage {...props} />} />
           <Route
             exact
             path="/writingidea"
-            element={<WritingIdea customHooks={customHooks} />}
+            element={<WritingIdea {...props} />}
           />
           <Route
             exact
-            path={`/${whatView && whatView.id}`}
-            element={<ViewIdea customHooks={customHooks} />}
+            path={`/${props.whatView && props.whatView.id}`}
+            element={<ViewIdea {...props} />}
           />
-          <Route
-            exact
-            path="/alarm"
-            element={<AlarmPage customHooks={customHooks} />}
-          />
-          <Route
-            exact
-            path="/storming"
-            element={<Storming customHooks={customHooks} />}
-          />
-          <Route
-            exact
-            path="/setting"
-            element={<Setting customHooks={customHooks} />}
-          />
+          <Route exact path="/alarm" element={<AlarmPage {...props} />} />
+          <Route exact path="/storming" element={<Storming {...props} />} />
+          <Route exact path="/setting" element={<Setting {...props} />} />
           <Route
             exact
             path="/setting/opensource"
-            element={<OpenSource customHooks={customHooks} />}
+            element={<OpenSource {...props} />}
           />
-          <Route exact path="*" element={<Ideas customHooks={customHooks} />} />
+          <Route exact path="*" element={<Ideas {...props} />} />
         </>
       ) : (
         <>
-          <Route
-            exact
-            path="/signup"
-            element={<SignUp customHooks={customHooks} />}
-          />
-          <Route exact path="/" element={<Auth customHooks={customHooks} />} />
+          <Route exact path="/signup" element={<SignUp {...props} />} />
+          <Route exact path="/" element={<Auth {...props} />} />
         </>
       )}
     </Routes>

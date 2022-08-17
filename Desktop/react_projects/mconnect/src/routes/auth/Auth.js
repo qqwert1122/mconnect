@@ -7,8 +7,8 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 
-const Auth = ({ customHooks }) => {
-  const setNavValue = customHooks.setNavValue;
+const Auth = ({ ...props }) => {
+  const { setLoggedInUser, setIsLoggedIn, setInit, setNavValue } = props;
   const onGoogleClick = async (event) => {
     event.preventDefault();
     try {
@@ -38,9 +38,9 @@ const Auth = ({ customHooks }) => {
       isAdRemoved: false,
       isAuthority: false,
     };
-    customHooks.setLoggedInUser(testUser);
-    customHooks.setIsLoggedIn(true);
-    customHooks.setInit(true);
+    setLoggedInUser(testUser);
+    setIsLoggedIn(true);
+    setInit(true);
     setNavValue("/ideas");
   };
 

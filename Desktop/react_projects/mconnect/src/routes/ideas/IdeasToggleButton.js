@@ -87,7 +87,7 @@ const IdeasToggleButton = ({
           </button>
         ))}
       </div>
-      {scrollY > 160 && (
+      {/* {scrollY > 160 && (
         <div
           className={`moveRightToLeft p-1 z-10 fixed ${
             isSelectMode && selectedIdeas.length > 0
@@ -113,7 +113,7 @@ const IdeasToggleButton = ({
             </button>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

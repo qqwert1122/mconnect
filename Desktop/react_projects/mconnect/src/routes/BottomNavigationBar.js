@@ -4,13 +4,23 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import NotesRoundedIcon from "@mui/icons-material/NotesRounded";
 import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
-import { ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-const BottomNavigationBar = ({ customHooks }) => {
-  const theme = customHooks.theme;
-  const navigate = customHooks.navigate;
-  const navValue = customHooks.navValue;
-  const setNavValue = customHooks.setNavValue;
+const BottomNavigationBar = ({ navValue, setNavValue }) => {
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#5bb647",
+        light: "#8ee976",
+        dark: "#238516",
+      },
+      secondary: {
+        main: "#fff44f",
+        light: "#ffff83",
+        dark: "#c9c208",
+      },
+    },
+  });
 
   return (
     <>

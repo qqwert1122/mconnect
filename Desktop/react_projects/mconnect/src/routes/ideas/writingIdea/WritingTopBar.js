@@ -1,19 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {} from "@fortawesome/free-regular-svg-icons";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { isEditState } from "atom";
+import { formTitleState } from "atom";
 
-const WritingTopBar = ({
-  whatEdit,
-  navigate,
-  setWhatEdit,
-  formTitle,
-  setFormTitle,
-  selectedIdeas,
-  formConnectedIdeas,
-}) => {
+const WritingTopBar = ({ navigate, showTitleAndCnctn }) => {
+  const [formTitle, setFormTitle] = useRecoilState(formTitleState);
+  const clearEdit = useResetRecoilState(isEditState);
+
   const onBackClick = (e) => {
     e.preventDefault();
-    setWhatEdit();
+    clearEdit();
     navigate(-1);
   };
 
@@ -32,8 +30,8 @@ const WritingTopBar = ({
           <FontAwesomeIcon icon={faAngleLeft} size="lg" />
         </button>
         {/* 제목 */}
-        {((whatEdit === undefined && selectedIdeas.length > 1) ||
-          (whatEdit != undefined && whatEdit.connectedIdeas.length > 1)) && (
+
+        {showTitleAndCnctn && (
           <input
             className="w-full px-2 text-lg font-black"
             type="text"

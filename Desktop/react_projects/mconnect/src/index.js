@@ -9,12 +9,12 @@ import { RecoilRoot } from "recoil";
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <RecoilRoot>
-        <ScrollToTop />
-        <App />
-      </RecoilRoot>
-    </BrowserRouter>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <BrowserRouter>
+    <RecoilRoot>
+      <ScrollToTop />
+      <App />
+    </RecoilRoot>
+  </BrowserRouter>
+  // </React.StrictMode>
 );

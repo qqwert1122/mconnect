@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,18 +6,16 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "@mui/material";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { whatViewState, selectedIdeasState } from "atom";
 
 const SelectedIdeasSlide = ({ ...props }) => {
-  const {
-    navigate,
-    selectedIdeas,
-    setSelectedIdeas,
-    setWhatView,
-    isViewDetailsClicked,
-    setIsViewDetailsClicked,
-  } = props;
-  // event handler
+  const { navigate, isViewDetailsClicked, setIsViewDetailsClicked } = props;
 
+  const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
+  const setWhatView = useSetRecoilState(whatViewState);
+
+  // event handler
   const onIdeaClick = (idea) => {
     setWhatView(idea);
     navigate(`/${idea.id}`);

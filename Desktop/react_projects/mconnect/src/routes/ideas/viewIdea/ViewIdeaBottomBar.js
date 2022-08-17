@@ -1,8 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import { useRecoilValue } from "recoil";
+import { whatViewState } from "atom";
 
-const ViewIdeaBottomBar = ({ whatView, itemChange, itemChangeProps }) => {
+const ViewIdeaBottomBar = ({ itemChange, itemChangeProps }) => {
+  const whatView = useRecoilValue(whatViewState);
+
   return (
     <div className="flex justify-between items-center p-2 py-4 shadow-inner bg-white">
       <div className="flex gap-2 text-lg">
@@ -14,7 +18,7 @@ const ViewIdeaBottomBar = ({ whatView, itemChange, itemChangeProps }) => {
         </button>
       </div>
 
-      {whatView.connectedIdeas.length > 0 && (
+      {whatView.connectedIDs.length > 0 && (
         <div className="flex justify-end items-center gap-2 ">
           <button
             className="text-base font-black"

@@ -8,9 +8,8 @@ import { faHashtag, faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const IdeaMiddle = ({
-  user,
   isOwner,
-  userIdea,
+  idea,
   onViewIdeaClick,
   onSelectIdea,
   timeDisplay,
@@ -18,9 +17,9 @@ const IdeaMiddle = ({
   const [dialogTags, setDialogTags] = useState([]);
   const [anchorEl, setAnchorEl] = useState(false);
 
-  // toast message when long pressed
+  // callback functions when long pressed
   const callback = useCallback((event) => {
-    onSelectIdea(userIdea);
+    onSelectIdea(idea);
   });
 
   const bind = useLongPress(callback, {
@@ -33,10 +32,12 @@ const IdeaMiddle = ({
 
   // tag ellipsis menu
   const open = Boolean(anchorEl);
+
   const handleEllipsisClick = (event, idea) => {
     setDialogTags(idea.tags);
     setAnchorEl(event.currentTarget);
   };
+
   const handleEllipsisClose = () => {
     setAnchorEl(false);
   };
@@ -44,40 +45,38 @@ const IdeaMiddle = ({
   return (
     <div className="w-full box-border px-4 mt-4 mb-4 " {...bind()}>
       {/* title */}
-      {userIdea.title !== "" && (
-        <div className="flex items-center mb-2 w-full break-all font-black">
-          {userIdea.title}
+      {idea.title !== "" && (
+        <div className="flex items-center mb-2 w-full break-all font-black truncate">
+          {idea.title}
         </div>
       )}
       {/* text */}
       <div
         className="w-full mb-5 flex items-center break-all whitespace-pre-line line-clamp-6"
         onClick={() => {
-          onViewIdeaClick(userIdea);
+          onViewIdeaClick(idea);
         }}
       >
-        {userIdea.text}
+        {idea.text}
       </div>
       {/* source */}
-      {userIdea.source !== "" && (
+      {idea.source !== "" && (
         <div className="flex items-center ml-2 pb-2 gap-2 text-xs">
           <span className="text-stone-300">
             <FontAwesomeIcon icon={faQuoteLeft} />
           </span>
-          <div className="w-full truncate text-stone-400">
-            {userIdea.source}
-          </div>
+          <div className="w-full truncate text-stone-400">{idea.source}</div>
         </div>
       )}
       {/* category, tags */}
-      {userIdea.tags.length > 0 && (
+      {idea.tags.length > 0 && (
         <span className="flex flex-wrap ml-2 pb-2 gap-2 text-xs">
           <span className="text-stone-300">
             <FontAwesomeIcon icon={faHashtag} />
           </span>
-          {userIdea.tags.length > 4 ? (
+          {idea.tags.length > 4 ? (
             <>
-              {userIdea.tags
+              {idea.tags
                 .filter((tag, index) => index < 4)
                 .map((tag, index) => (
                   <button
@@ -86,23 +85,21 @@ const IdeaMiddle = ({
                     aria-controls={open ? "demo-positioned-menu" : undefined}
                     aria-haspopup="true"
                     aria-expanded={open ? "true" : undefined}
-                    onClick={(e) =>
-                      index === 3 && handleEllipsisClick(e, userIdea)
-                    }
+                    onClick={(e) => index === 3 && handleEllipsisClick(e, idea)}
                     className="border-box text-stone-400"
                     sx={{
                       color: "inherit",
                     }}
                   >
-                    {index === 3 ? `+ ${userIdea.tags.length - 3}` : `${tag},`}
+                    {index === 3 ? `+ ${idea.tags.length - 3}` : `${tag},`}
                   </button>
                 ))}
             </>
           ) : (
             <>
-              {userIdea.tags.map((tag, index) => (
+              {idea.tags.map((tag, index) => (
                 <span key={index} className="border-box text-stone-400">
-                  {index === userIdea.tags.length - 1 ? tag : `${tag},`}
+                  {index === idea.tags.length - 1 ? tag : `${tag},`}
                 </span>
               ))}
             </>
@@ -111,7 +108,7 @@ const IdeaMiddle = ({
       )}
       {isOwner === false && (
         <span className="flex items-center pt-5 pb-2 text-xs text-stone-400">
-          {timeDisplay(userIdea.updatedAt)}에 저장됨
+          {timeDisplay(idea.updatedAt)}에 저장됨
         </span>
       )}
 

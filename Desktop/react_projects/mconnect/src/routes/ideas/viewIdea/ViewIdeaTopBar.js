@@ -15,28 +15,22 @@ import {
   faTrashCan,
   faCopy,
 } from "@fortawesome/free-regular-svg-icons";
+import { useRecoilValue } from "recoil";
+import { whatViewState } from "atom";
 
 const ViewIdeaTopBar = ({
   user,
   isOwner,
-  whatView,
-  setWhatEdit,
-  onBackClick,
   navigate,
+  initEditor,
+  onBackClick,
 }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const open = Boolean(anchorEl);
+  const whatView = useRecoilValue(whatViewState);
 
   const onEditClick = () => {
     setAnchorEl(null);
-    setWhatEdit(whatView);
+    initEditor(whatView);
     navigate("/writingidea");
-  };
-
-  const onDeleteMenuItemClick = () => {
-    setDeleteDialogOpen(true);
-    handleEllipsisClose();
   };
 
   const onDeleteClick = async () => {
@@ -66,6 +60,16 @@ const ViewIdeaTopBar = ({
       });
     }
     navigate("/ideas");
+  };
+
+  // Menu
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const open = Boolean(anchorEl);
+
+  const onDeleteMenuItemClick = () => {
+    setDeleteDialogOpen(true);
+    handleEllipsisClose();
   };
 
   const handleEllipsisClick = (event) => {

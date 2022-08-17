@@ -1,8 +1,6 @@
 import AppRouter from "components/Router";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { RecoilRoot, atom, useRecoilState } from "recoil";
-import { recoilPersist } from "recoil-persist";
 import { createTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { authService, dbService } from "fbase";
@@ -12,61 +10,45 @@ import {
   query,
   orderBy,
   where,
-  addDoc,
   doc,
-  getDoc,
   getDocs,
-  limit,
-  startAfter,
   documentId,
-  setDoc,
+  getDoc,
 } from "firebase/firestore";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  faCircle,
-  faDiceD6,
-  faSquare,
-  faMinus,
-} from "@fortawesome/free-solid-svg-icons";
-import { queryByTestId } from "@testing-library/react";
+  userState,
+  ideaListState,
+  selectedIdeaListState,
+  formTitleState,
+  formTextState,
+  formSourceState,
+  formTagsState,
+  formPublicState,
+  formCnctedListState,
+} from "atom";
+import { formCnctedIdeasState } from "atom";
+import { ideasState } from "atom";
+import { selectedIdeasState } from "atom";
+import { whatEditState } from "atom";
+import { cnctedIdeaState } from "atom";
+import { cnctedIdeasState } from "atom";
+import { countState } from "atom";
 
-const { persistAtom } = recoilPersist();
-const scrollAtom = atom({
-  key: "scrollAtom",
-  default: 0,
-  effects_UNSTABLE: [persistAtom],
-});
+// const { persistAtom } = recoilPersist();
+// const scrollAtom = atom({
+//   key: "scrollAtom",
+//   default: 0,
+//   effects_UNSTABLE: [persistAtom],
+// });
 
-const useCustomHooks = () => {
-  //auth
-  const [loggedInUser, setLoggedInUser] = useState(null);
+const useDeliverProps = () => {
+  // Auth
+  const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // db props
-  const [userIdeas, setUserIdeas] = useState([]);
-  const [ideaCount, setIdeaCount] = useState(0);
-
-  // Ideas props
-  const [selectedIdeas, setSelectedIdeas] = useState([]);
-  const [tagList, setTagList] = useState([]);
-  const [sourceList, setSourceList] = useState([]);
-
-  const [whatView, setWhatView] = useState();
-  const [whatEdit, setWhatEdit] = useState();
-
-  // scroll
-  const [scrollY, setScrollY] = useRecoilState(scrollAtom);
-
-  let navigate = useNavigate();
-
-  const [navValue, setNavValue] = useState("/");
-
-  useEffect(() => {
-    navigate(`${navValue}`, { replace: true });
-  }, [navValue]);
 
   useEffect(() => {
     authService.onAuthStateChanged(async (user) => {
@@ -79,15 +61,43 @@ const useCustomHooks = () => {
             setIsLoggedIn(true);
           }
         });
-        // const registeredUser = (
-        //   await getDoc(doc(dbService, "users", user.uid))
-        // ).data();
       } else {
         setIsLoggedIn(false);
       }
       setInit(true);
     });
   }, []);
+
+  // Get Ideas when app starts
+  const [ideas, setIdeas] = useRecoilState(ideasState);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const q1 = query(
+        collection(dbService, "users", loggedInUser.userId, "userIdeas"),
+        orderBy("updatedAt", "desc")
+      );
+      onSnapshot(q1, (snapshot) => {
+        const _ideas = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setIdeas(_ideas);
+      });
+    }
+  }, [isLoggedIn]);
+
+  // Ideas props
+  const selectedIdeas = useRecoilValue(selectedIdeasState);
+
+  // navigate
+  let navigate = useNavigate();
+
+  const [navValue, setNavValue] = useState("/");
+
+  useEffect(() => {
+    navigate(`${navValue}`, { replace: true });
+  }, [navValue]);
 
   // infinite scroll
   // const [lastVisible, setLastVisible] = useState();
@@ -137,111 +147,127 @@ const useCustomHooks = () => {
   //   getNextPosts();
   // }, []);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      // const q1 = query(
-      //   collection(dbService, "ideas"),
-      //   where("userId", "==", loggedInUser.userId),
-      //   orderBy("createdAt", "desc")
-      // );
+  // any functions
+  const setCnctedIdeas = useSetRecoilState(cnctedIdeasState);
 
-      // const q1 = query(
-      //   collection(dbService, "ideas"),
-      //   where("id", "in", loggedInUser.users_ideas),
-      //   orderBy("createdAt", "desc")
-      // );
+  const getIdeasFromIDs = async (IDs) => {
+    const q1 = query(
+      collection(dbService, "users", loggedInUser.userId, "userIdeas"),
+      where(documentId(), "in", IDs)
+    );
+    const ideaRef = await getDocs(q1);
+    const newData = ideaRef.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setCnctedIdeas(newData);
+  };
 
-      const q1 = query(
-        collection(dbService, "users", loggedInUser.userId, "userIdeas"),
-        where("isDeleted", "==", false),
-        orderBy("updatedAt", "desc")
-      );
-      onSnapshot(q1, (snapshot) => {
-        const ideas = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setUserIdeas(ideas);
-      });
-    }
-  }, [isLoggedIn]);
+  const getIDsFromIdeas = (ideas) => {
+    return ideas.map((idea) => idea.id);
+  };
+
+  const isItIn = (arr, i) => {
+    return getIDsFromIdeas(arr).includes(i.id);
+  };
+
+  const isOwner = (idea) => {
+    return idea.userId === loggedInUser.userId;
+  };
 
   const timeDisplay = (createdAt) => {
     if (dayjs().diff(dayjs(createdAt), "day") >= 31) {
       return <div>{dayjs(createdAt).format("YYYY. MM. DD. HH:mm")}</div>;
+    } else {
+      return <div>{dayjs(createdAt).fromNow()}</div>;
     }
-
-    return <div>{dayjs(createdAt).fromNow()}</div>;
   };
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#5bb647",
-        light: "#8ee976",
-        dark: "#238516",
-      },
-      secondary: {
-        main: "#fff44f",
-        light: "#ffff83",
-        dark: "#c9c208",
-      },
-    },
-  });
+  // form Props
+  const setWhatEdit = useSetRecoilState(whatEditState);
+  const setFormTitle = useSetRecoilState(formTitleState);
+  const setFormText = useSetRecoilState(formTextState);
+  const setFormSource = useSetRecoilState(formSourceState);
+  const setFormTags = useSetRecoilState(formTagsState);
+  const setFormPublic = useSetRecoilState(formPublicState);
+  const setFormCnctedIdeas = useSetRecoilState(formCnctedIdeasState);
 
-  const colorList = [
-    "bg-red-400",
-    "bg-orange-400",
-    "bg-amber-400",
-    "bg-yellow-400",
-    "bg-lime-400",
-    "bg-green-400",
-    "bg-emerald-400",
-    "bg-teal-400",
-    "bg-cyan-400",
-    "bg-sky-400",
-    "bg-blue-400",
-    "bg-indigo-400",
-    "bg-violet-400",
-    "bg-purple-400",
-    "bg-fuchsia-400",
-    "bg-pink-400",
-    "bg-rose-400",
-  ];
+  const concatTags = () => {
+    if (selectedIdeas.length > 1) {
+      const tempoInputTagList = [];
+      for (var a in selectedIdeas) {
+        for (var b in selectedIdeas[a].tags) {
+          if (tempoInputTagList.includes(selectedIdeas[a].tags[b])) {
+          } else {
+            tempoInputTagList.push(selectedIdeas[a].tags[b]);
+          }
+        }
+      }
+      return tempoInputTagList;
+    }
+  };
+
+  const initForm = () => {
+    setWhatEdit();
+    setFormTitle("");
+    setFormText("");
+    setFormSource("");
+    setFormPublic(true);
+    if (selectedIdeas.length > 1) {
+      setFormTags(concatTags());
+      setFormCnctedIdeas(selectedIdeas);
+    } else {
+      setFormTags([]);
+      setFormCnctedIdeas([]);
+    }
+  };
+
+  const initEditor = (idea) => {
+    setWhatEdit(idea);
+    setFormTitle(idea.title);
+    setFormText(idea.text);
+    setFormSource(idea.source);
+    setFormTags(idea.tags);
+    setFormPublic(idea.isPublic);
+    if (idea.connectedIDs.length > 0) {
+      setFormCnctedIdeas(getIdeasFromIDs(idea.connectedIDs));
+    }
+  };
+
+  // functions with firestore
+  const setCount = useSetRecoilState(countState);
+  const getCount = async (idea) => {
+    const data = (await getDoc(doc(dbService, "counts", idea.id))).data();
+    if (data === undefined) {
+      setCount();
+    } else {
+      setCount(data);
+    }
+  };
 
   return {
     // getNextPosts,
-    loggedInUser,
-    setLoggedInUser,
     init,
     setInit,
     isLoggedIn,
     setIsLoggedIn,
     navigate,
-    setNavValue,
     navValue,
-    userIdeas,
-    setUserIdeas,
-    whatView,
-    setWhatView,
-    whatEdit,
-    setWhatEdit,
-    selectedIdeas,
-    setSelectedIdeas,
-    tagList,
-    setTagList,
-    sourceList,
-    setSourceList,
-    colorList,
-    theme,
+    setNavValue,
     timeDisplay,
-    scrollY,
-    setScrollY,
+    getIdeasFromIDs,
+    getIDsFromIdeas,
+    isItIn,
+    isOwner,
+    initForm,
+    initEditor,
+    // firestore
+    getCount,
   };
 };
 
 const App = () => {
-  const customHooks = useCustomHooks();
+  const props = useDeliverProps();
 
   const loading = (
     <div className="w-screen h-screen flex justify-center items-center mx-auto">
@@ -256,9 +282,7 @@ const App = () => {
     </div>
   );
 
-  return (
-    <>{customHooks.init ? <AppRouter customHooks={customHooks} /> : loading}</>
-  );
+  return <>{props.init ? <AppRouter {...props} /> : loading}</>;
 };
 
 export default App;

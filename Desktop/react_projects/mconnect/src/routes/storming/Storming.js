@@ -51,8 +51,8 @@ import FloatingUpButton from "routes/ideas/FloatingUpButton";
 const Storming = ({ customHooks }) => {
   const timeDisplay = customHooks.timeDisplay;
   const user = customHooks.loggedInUser;
-  const scrollY = customHooks.scrollY;
-  const setScrollY = customHooks.setScrollY;
+  // const scrollY = customHooks.scrollY;
+  // const setScrollY = customHooks.setScrollY;
 
   const [ideasPublic, setIdeasPublic] = useState([]);
 
@@ -102,11 +102,11 @@ const Storming = ({ customHooks }) => {
           </div>
         )}
       </div>
-      <FloatingUpButton
+      {/* <FloatingUpButton
         floating={true}
         scrollY={scrollY}
         setScrollY={setScrollY}
-      />
+      /> */}
     </>
   );
 };

@@ -3,8 +3,14 @@ import Slider from "react-slick";
 import { Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
+import { useRecoilValue } from "recoil";
+import { whatViewState, cnctedIdeasState } from "atom";
+import { useEffect } from "react";
 
-const ConnectedIdeas = ({ connectedIdeas, whatView, onIdeaClick }) => {
+const ConnectedIdeas = ({ onIdeaClick, getIdeasFromIDs }) => {
+  const whatView = useRecoilValue(whatViewState);
+  const cnctedIdeas = useRecoilValue(cnctedIdeasState);
+
   const settings = {
     dots: true,
     arrows: false,
@@ -16,14 +22,20 @@ const ConnectedIdeas = ({ connectedIdeas, whatView, onIdeaClick }) => {
     initialSlide: 0,
   };
 
+  useEffect(() => {
+    if (whatView.connectedIDs.length > 0) {
+      getIdeasFromIDs(whatView.connectedIDs);
+    }
+  }, []);
+
   return (
     <div className="moveRightToLeft bg-stone-50 shadow-inner">
       <div className="mx-16 pt-5 mb-2 text-center text-base font-black z-10">
-        {whatView.connectedIdeas.length}개 연결됨
+        {whatView.connectedIDs.length}개 연결됨
       </div>
       <div className="relative pb-10 text-xs">
         <Slider {...settings}>
-          {connectedIdeas.map((idea, index) => (
+          {cnctedIdeas.map((idea, index) => (
             <div key={index}>
               <div
                 className="relative h-60 p-5 m-1 bg-white shadow rounded-3xl text-xs break-all"

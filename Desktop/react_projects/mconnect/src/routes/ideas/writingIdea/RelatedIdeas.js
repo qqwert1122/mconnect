@@ -11,22 +11,20 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { Avatar } from "@mui/material";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { whatViewState } from "atom";
+import { formCnctedIdeasState } from "atom";
+import { formTagsState } from "atom";
 
-const RelatedIdeas = ({
-  userIdeas,
-  whatEdit,
-  navigate,
-  formConnectedIdeas,
-  setFormConnectedIdeas,
-  formTags,
-  colorList,
-  selectedIdeas,
-  setSelectedIdeas,
-  setWhatView,
-}) => {
+const RelatedIdeas = ({ navigate }) => {
+  const setWhatView = useSetRecoilState(whatViewState);
+  const [formCnctedIdeas, setFormCnctedIdeas] =
+    useRecoilState(formCnctedIdeasState);
+  const formTags = useRecoilValue(formTagsState);
+
   const [tabs, setTabs] = useState(0);
 
-  const ontabsClick = () => {
+  const ontabsChange = () => {
     switch (tabs) {
       case 0:
         setTabs(1);
@@ -37,16 +35,16 @@ const RelatedIdeas = ({
     }
   };
 
-  const onIdeaClick = (event, idea) => {
-    event.preventDefault();
+  const onIdeaClick = (e, idea) => {
+    e.preventDefault();
     setWhatView(idea);
     navigate(`/${idea.id}`);
   };
 
   const onXmarkClick = (e, index) => {
     e.preventDefault();
-    setFormConnectedIdeas(
-      formConnectedIdeas.filter((fIdea, fIndex) => fIndex != index)
+    setFormCnctedIdeas(
+      formCnctedIdeas.filter((fIdea, fIndex) => fIndex != index)
     );
   };
 
@@ -72,9 +70,9 @@ const RelatedIdeas = ({
         {tabs === 0 && (
           <button
             className={` ${
-              formConnectedIdeas.length < 2 && "animate-bounce"
+              formCnctedIdeas.length < 2 && "animate-bounce"
             } m-2 p-1 px-2 bg-green-600 text-white font-black rounded-xl z-10`}
-            onClick={ontabsClick}
+            onClick={ontabsChange}
           >
             추천 아이디어 &nbsp;
             <FontAwesomeIcon icon={faRightToBracket} />
@@ -84,25 +82,25 @@ const RelatedIdeas = ({
         {tabs === 1 && (
           <button
             className="m-2 p-1 px-2 bg-green-600 text-white font-black rounded-xl z-10"
-            onClick={ontabsClick}
+            onClick={ontabsChange}
           >
             연결된 아이디어&nbsp;
             <FontAwesomeIcon icon={faRightToBracket} />
           </button>
         )}
-        <ColoredIdeaList ideas={formConnectedIdeas} colorList={colorList} />
+        <ColoredIdeaList ideas={formCnctedIdeas} />
       </div>
 
       <div className=" bg-stone-50 shadow-inner">
         {tabs === 0 && (
           <>
             <div className=" relative pt-5 mb-2 text-center text-base font-black z-10">
-              {formConnectedIdeas.length}개 선택됨
+              {formCnctedIdeas.length}개 선택됨
             </div>
-            {formConnectedIdeas.length > 0 ? (
+            {formCnctedIdeas.length > 0 ? (
               <div className="relative pb-10 ">
                 <Slider {...settings}>
-                  {formConnectedIdeas.map((idea, index) => (
+                  {formCnctedIdeas.map((idea, index) => (
                     <div key={index}>
                       <div className="relative h-60 p-5 m-1 bg-white shadow rounded-3xl text-xs break-all">
                         <button
@@ -115,8 +113,8 @@ const RelatedIdeas = ({
                         </button>
                         <div
                           className="text-xs"
-                          onClick={(event) => {
-                            onIdeaClick(event, idea);
+                          onClick={(e) => {
+                            onIdeaClick(e, idea);
                           }}
                         >
                           {idea.title.length > 0 && (
@@ -165,17 +163,10 @@ const RelatedIdeas = ({
         {tabs === 1 && (
           <>
             <SuggestedIdeas
-              userIdeas={userIdeas}
-              ideaPrmtr={formConnectedIdeas}
+              writing={true}
               tagsPrmtr={formTags}
-              itemChange=""
-              whatEdit={whatEdit}
-              formConnectedIdeas={formConnectedIdeas}
-              setFormConnectedIdeas={setFormConnectedIdeas}
+              tabChange=""
               onIdeaClick={onIdeaClick}
-              selectedIdeas={selectedIdeas}
-              setSelectedIdeas={setSelectedIdeas}
-              thumbsUp={true}
             />
           </>
         )}

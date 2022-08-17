@@ -1,5 +1,6 @@
 import functions from "firebase-functions";
 import algoliasearch from "algoliasearch";
+import { data } from "autoprefixer";
 
 const APP_ID = process.env.APP_ID;
 const API_KEY = process.env.API_KEY;
@@ -11,7 +12,9 @@ const addToIndex = functions.firestore
   .onCreate((snapshot) => {
     const data = snapshot.data();
     const objectID = snapshot.id;
-    return index.saveObject({ ...data, objectID });
+    if (data.isPublic === true) {
+      index.saveObject({ ...data, objectID });
+    }
   });
 
 const updateIndex = functions.firestore
@@ -19,7 +22,7 @@ const updateIndex = functions.firestore
   .onUpdate((change) => {
     const newData = change.after.data();
     const objectID = change.after.id;
-    return index.saveObject({ ...newData, objectID });
+    index.saveObject({ ...newData, objectID });
   });
 
 const deleteFromIndex = functions.firestore

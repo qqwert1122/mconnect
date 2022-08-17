@@ -1,27 +1,20 @@
 import "css/Animation.css";
+import { useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { formTagsState, recentTagsState } from "atom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faAngleUp,
   faHashtag,
   faMagnifyingGlass,
   faPlus,
-  faQuoteLeft,
-  faXmark,
-  faCompass as fasCompass,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faThumbsUp,
-  faCompass as farCompass,
-} from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
-const InputTagTab = ({
-  tagList,
-  tagInput,
-  formTag,
-  setFormTag,
-  formTags,
-  setFormTags,
-}) => {
+const InputTagTab = ({ tagInput }) => {
+  const [formTags, setFormTags] = useRecoilState(formTagsState);
+  const recentTags = useRecoilValue(recentTagsState);
+  const [formTag, setFormTag] = useState("");
+
   const onTagChange = (e) => {
     setFormTag(e.target.value);
   };
@@ -32,8 +25,8 @@ const InputTagTab = ({
       setFormTag("");
       return;
     }
-    if (!formTags.includes(formTag)) {
-      setFormTags([...formTags, formTag]);
+    if (formTags.includes(formTag) === false) {
+      setFormTags([formTag, ...formTags]);
     }
     setFormTag("");
   };
@@ -48,19 +41,19 @@ const InputTagTab = ({
   };
 
   const commonTags = [
+    "주식",
+    "부동산",
+    "사업",
     "경영",
     "경제",
+    "역사",
+    "환경",
+    "IT",
     "국제",
     "정치",
     "사회",
     "과학",
     "기술",
-    "IT",
-    "환경",
-    "역사",
-    "주식",
-    "부동산",
-    "사업",
   ];
 
   return (
@@ -103,11 +96,11 @@ const InputTagTab = ({
         <div className="px-4 text-stone-400">
           검색 <FontAwesomeIcon icon={faMagnifyingGlass} />
         </div>
-        {tagList.length === 0 ? (
+        {recentTags.length === 0 ? (
           <div className="p-4 pt-2 text-sm">기존 태그가 없습니다</div>
         ) : (
           <div className="p-4 pt-2 flex flex-nowrap overflow-x-auto">
-            {tagList
+            {recentTags
               .filter((tag) => tag.includes(formTag))
               .map((tag, index) => (
                 <button
