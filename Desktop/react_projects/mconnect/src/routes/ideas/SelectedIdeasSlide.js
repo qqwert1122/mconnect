@@ -60,22 +60,22 @@ const SelectedIdeasSlide = ({ ...props }) => {
             <div className="mx-16 pt-5 mb-2 text-center font-black z-10">
               선택된 아이디어
             </div>
-            <div className="relative pb-10 ">
+            <div className="relative pb-10">
               <Slider {...settings}>
                 {selectedIdeas.map((idea, index) => (
-                  <div key={index}>
+                  <div key={index} className="relative">
+                    <button
+                      className="absolute w-6 h-6 rounded-full border-2 border-stone-200 bg-white shadow right-0 top-0"
+                      onClick={(e) => {
+                        onXmarkClick(e, index);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faXmark} />
+                    </button>
                     <div
-                      className="relative h-60 p-5 m-1 mx-2 bg-stone-100 shadow-md rounded-3xl break-all text-xs"
+                      className="h-60 p-5 m-1 mx-2 bg-stone-100 shadow-md rounded-3xl break-all text-xs"
                       onClick={() => onIdeaClick(idea)}
                     >
-                      <button
-                        className="absolute w-6 h-6 rounded-full border-2 border-stone-200 bg-white shadow right-0 top-0"
-                        onClick={(e) => {
-                          onXmarkClick(e, index);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faXmark} />
-                      </button>
                       {idea.title.length > 0 && (
                         <div className="mb-2 truncate font-black text-sm">
                           {idea.title}

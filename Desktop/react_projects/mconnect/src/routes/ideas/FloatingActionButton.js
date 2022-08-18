@@ -22,7 +22,7 @@ const FloatingActionButton = ({ navigate, initForm }) => {
   return (
     <div className="fixed bottom-20 right-3 z-10">
       <button
-        className={`shadow-2xl rounded-full px-4 p-2 text-sm duration-200 border-4   ${
+        className={`flex gap-2 shadow-2xl rounded-full px-4 p-2 text-sm duration-200 border-4   ${
           selectedIdeas.length === 1
             ? "text-stone-400 border-stone-200 bg-stone-600"
             : "text-white border-green-200 bg-green-600 animate-bounce"

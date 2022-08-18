@@ -16,6 +16,7 @@ const WritingBottom = ({
   showTitleAndCnctn,
   bottomItemChangeProps,
   setBottomItemChangeProps,
+  isItIn,
 }) => {
   const sourceInput = useRef();
   const tagInput = useRef();
@@ -62,7 +63,9 @@ const WritingBottom = ({
 
       {bottomItemChangeProps === 2 && <InputTagTab tagInput={tagInput} />}
 
-      {bottomItemChangeProps === 3 && <RelatedIdeas navigate={navigate} />}
+      {bottomItemChangeProps === 3 && (
+        <RelatedIdeas navigate={navigate} isItIn={isItIn} />
+      )}
 
       <WritingBottomBar
         bottomItemChangeProps={bottomItemChangeProps}

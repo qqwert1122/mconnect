@@ -31,7 +31,6 @@ const ViewIdeaContent = ({
   const [whatView, setWhatView] = useRecoilState(whatViewState);
   const [count, setCount] = useRecoilState(countState);
   const isDeleted = count === undefined;
-  console.log(isDeleted);
 
   const countRef = doc(dbService, "counts", whatView.id);
   const ideaRef = doc(

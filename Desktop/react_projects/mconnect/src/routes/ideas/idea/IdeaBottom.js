@@ -169,19 +169,21 @@ const IdeaBottom = ({ isOwner, idea, viewDetail, setViewDetail, getCount }) => {
           </button>
         )}
 
-        {idea.connectedIDs.length > 0 && (
-          <div className="w-full flex justify-end gap-2">
-            <ColoredIdeaList ideas={idea.connectedIDs} small={true} />
-            <div
-              className={`flex items-center text-stone-500 ${
-                viewDetail && "rotate-180"
-              } duration-500`}
-              onClick={onDetailClick}
-            >
-              <FontAwesomeIcon icon={faAngleDown} size="xl" />
-            </div>
+        <div
+          className={`${
+            idea.connectedIDs.length === 0 && "hidden"
+          } w-full flex justify-end gap-2`}
+        >
+          <ColoredIdeaList ideas={idea.connectedIDs} small={true} />
+          <div
+            className={`flex items-center text-stone-500 ${
+              viewDetail && "rotate-180"
+            } duration-500`}
+            onClick={onDetailClick}
+          >
+            <FontAwesomeIcon icon={faAngleDown} size="xl" />
           </div>
-        )}
+        </div>
       </div>
     </>
   );

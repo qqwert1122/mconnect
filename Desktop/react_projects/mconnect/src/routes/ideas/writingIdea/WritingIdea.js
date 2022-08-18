@@ -34,7 +34,7 @@ dayjs.extend(customParseFormat);
 dayjs.locale("ko");
 
 const WritingIdea = ({ ...props }) => {
-  const { navigate } = props;
+  const { navigate, isItIn } = props;
   const loggedInUser = useRecoilValue(userState);
   const whatEdit = useRecoilValue(whatEditState);
   const isEdit = useRecoilValue(isEditState);
@@ -202,6 +202,7 @@ const WritingIdea = ({ ...props }) => {
           showTitleAndCnctn={showTitleAndCnctn}
           bottomItemChangeProps={bottomItemChangeProps}
           setBottomItemChangeProps={setBottomItemChangeProps}
+          isItIn={isItIn}
         />
       </form>
       <ToastContainer

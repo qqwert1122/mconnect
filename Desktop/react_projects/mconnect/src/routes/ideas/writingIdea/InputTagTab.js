@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { formTagsState, recentTagsState } from "atom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faClockRotateLeft,
   faHashtag,
   faMagnifyingGlass,
   faPlus,
@@ -94,7 +95,7 @@ const InputTagTab = ({ tagInput }) => {
         </div>
 
         <div className="px-4 text-stone-400">
-          검색 <FontAwesomeIcon icon={faMagnifyingGlass} />
+          최근 <FontAwesomeIcon icon={faClockRotateLeft} />
         </div>
         {recentTags.length === 0 ? (
           <div className="p-4 pt-2 text-sm">기존 태그가 없습니다</div>

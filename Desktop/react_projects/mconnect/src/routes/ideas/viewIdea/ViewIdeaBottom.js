@@ -15,6 +15,7 @@ const ViewIdeaBottom = ({
   setItemChangeProps,
   navigate,
   getIdeasFromIDs,
+  isItIn,
 }) => {
   const [whatView, setWhatView] = useRecoilState(whatViewState);
 
@@ -77,10 +78,11 @@ const ViewIdeaBottom = ({
             tagsPrmtr={whatView.tags}
             tabChange={itemChange}
             onIdeaClick={onIdeaClick}
+            isItIn={isItIn}
           />
         </div>
       )}
-      {itemChangeProps === 2 && whatView.connectedIdeas.length > 0 && (
+      {itemChangeProps === 2 && whatView.connectedIDs.length > 0 && (
         <ConnectedIdeas
           onIdeaClick={onIdeaClick}
           getIdeasFromIDs={getIdeasFromIDs}

@@ -44,55 +44,25 @@ import {
   faBookmark as fasBookmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Skeleton } from "@mui/material";
+import { useRecoilValue } from "recoil";
+import { userState } from "atom";
 
-const StormingIdea = ({ user, idea, timeDisplay }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
+const StormingIdea = ({ idea, timeDisplay }) => {
+  const loggedInUser = useRecoilValue(userState);
 
-  const open = Boolean(anchorEl);
-  // handle ellipsis menu
-  const handleEllipsisClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleEllipsisClose = () => {
-    setAnchorEl(null);
-  };
-
-  const [isTagsDialogOpen, setIsTagsDialogOpen] = useState(false);
-  const [DialogTags, setDialogTags] = useState([]);
-
-  const onTagsDialogClick = (idea) => {
-    setIsTagsDialogOpen((prev) => !prev);
-    setDialogTags(idea.tags);
-  };
-
-  const [userInfo, setUserInfo] = useState();
+  // user Information and Idea's like, bookmark, view count Information
   const [ideaInfo, setIdeaInfo] = useState();
-
-  const getUserInfo = async () => {
-    const userDoc = (await getDoc(doc(dbService, "users", idea.userId))).data();
-    setUserInfo(userDoc);
-  };
 
   const getCountInfo = async () => {
     const countDoc = (await getDoc(doc(dbService, "counts", idea.id))).data();
     setIdeaInfo(countDoc);
   };
 
-  const [isOwner, setIsOwner] = useState(user.userId === idea.userId);
+  const [isOwner, setIsOwner] = useState(loggedInUser.userId === idea.userId);
 
   useEffect(() => {
     setTimeout(() => {
-      // const countDoc = doc(dbService, "counts", idea.id);
-      // onSnapshot(countDoc, (snapshot) => {
-      //   const data = snapshot.data();
-      //   setIdeaInfo(data);
-      // });
       getCountInfo();
-      if (isOwner) {
-        setUserInfo(user);
-      } else {
-        getUserInfo();
-      }
     }, 1000);
   }, []);
 
@@ -101,13 +71,13 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
     const userIdeaRef = doc(
       dbService,
       "users",
-      user.userId,
+      loggedInUser.userId,
       "userIdeas",
       idea.id
     );
-    if (ideaInfo.like_users.hasOwnProperty(user.userId)) {
+    if (ideaInfo.like_users.hasOwnProperty(loggedInUser.userId)) {
       const newIdeaInfo = { ...ideaInfo };
-      delete newIdeaInfo.like_users[user.userId];
+      delete newIdeaInfo.like_users[loggedInUser.userId];
       setIdeaInfo(newIdeaInfo);
       await updateDoc(countRef, {
         like_count: increment(-1),
@@ -121,7 +91,10 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
     } else {
       await updateDoc(countRef, {
         like_count: increment(1),
-        like_users: { ...ideaInfo.like_users, [user.userId]: user.userName },
+        like_users: {
+          ...ideaInfo.like_users,
+          [loggedInUser.userId]: loggedInUser.userName,
+        },
       });
       if ((await getDoc(userIdeaRef)).data()) {
         await updateDoc(userIdeaRef, {
@@ -129,7 +102,7 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
         });
       }
       const newIdeaInfo = { ...ideaInfo };
-      newIdeaInfo.like_users[user.userId] = true;
+      newIdeaInfo.like_users[loggedInUser.userId] = true;
       setIdeaInfo(newIdeaInfo);
     }
   };
@@ -139,14 +112,14 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
     const userIdeaRef = doc(
       dbService,
       "users",
-      user.userId,
+      loggedInUser.userId,
       "userIdeas",
       idea.id
     );
-    const userRef = doc(dbService, "users", user.userId);
-    if (ideaInfo.bookmark_users.hasOwnProperty(user.userId)) {
+    const userRef = doc(dbService, "users", loggedInUser.userId);
+    if (ideaInfo.bookmark_users.hasOwnProperty(loggedInUser.userId)) {
       const newIdeaInfo = { ...ideaInfo };
-      delete newIdeaInfo.bookmark_users[user.userId];
+      delete newIdeaInfo.bookmark_users[loggedInUser.userId];
       setIdeaInfo(newIdeaInfo);
       await updateDoc(countRef, {
         bookmark_count: increment(-1),
@@ -163,29 +136,29 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
         bookmark_count: increment(1),
         bookmark_users: {
           ...ideaInfo.bookmark_users,
-          [user.userId]: user.userName,
+          [loggedInUser.userId]: loggedInUser.userName,
         },
       });
       const newIdeaInfo = { ...ideaInfo };
-      newIdeaInfo.bookmark_users[user.userId] = user.userName;
+      newIdeaInfo.bookmark_users[loggedInUser.userId] = loggedInUser.userName;
       setIdeaInfo(newIdeaInfo);
       if (isOwner === false) {
         await setDoc(userIdeaRef, {
           userId: idea.userId,
-          userName: userInfo.userName,
-          userPhotoURL: userInfo.userPhotoURL,
+          userName: idea.userName,
+          userPhotoURL: idea.userPhotoURL,
           title: idea.title,
           text: idea.text,
           source: idea.source,
           tags: idea.tags,
-          connectedIdeas: idea.connectedIdeas,
+          connectedIDs: idea.connectedIdeas,
           createdAt: idea.createdAt,
           updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
           isPublic: false,
-          isLiked: ideaInfo.like_users.hasOwnProperty(user.userId),
+          isLiked: ideaInfo.like_users.hasOwnProperty(loggedInUser.userId),
           isBookmarked: true,
-          isViewed: ideaInfo.view_users.hasOwnProperty(user.userId),
-          isDeleted: false,
+          isViewed: ideaInfo.view_users.hasOwnProperty(loggedInUser.userId),
+          isOriginal: false,
         });
       }
       await updateDoc(userRef, {
@@ -194,9 +167,30 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
     }
   };
 
+  // handle ellipsis menu
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleEllipsisClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleEllipsisClose = () => {
+    setAnchorEl(null);
+  };
+
+  // handle tag dialog
+  const [isTagsDialogOpen, setIsTagsDialogOpen] = useState(false);
+  const [DialogTags, setDialogTags] = useState([]);
+
+  const onTagsDialogClick = (idea) => {
+    setIsTagsDialogOpen((prev) => !prev);
+    setDialogTags(idea.tags);
+  };
+
   return (
     <>
-      {userInfo && ideaInfo ? (
+      {ideaInfo ? (
         <>
           <div className="flex justify-between items-center pt-2 ml-4">
             {/* avatar, name, time */}
@@ -204,7 +198,7 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
               <Avatar
                 className="border-2"
                 alt="avatar"
-                src={userInfo.userPhotoURL}
+                src={idea.userPhotoURL}
                 sx={{
                   display: "flex",
                   width: "30px",
@@ -213,7 +207,7 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
               />
               <div className="flex-col text-xs">
                 <div className="flex gap-1">
-                  <b>{userInfo.userName}</b>
+                  <b>{idea.userName}</b>
                 </div>
                 {timeDisplay(idea.createdAt)}
               </div>
@@ -331,14 +325,14 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
           <div className="flex px-5 pb-5 gap-5 text-stone-500">
             <button
               className={`${
-                ideaInfo.like_users.hasOwnProperty(user.userId) &&
+                ideaInfo.like_users.hasOwnProperty(loggedInUser.userId) &&
                 "text-red-400"
               }`}
               onClick={() => onLikeClick(idea)}
             >
               <FontAwesomeIcon
                 icon={
-                  ideaInfo.like_users.hasOwnProperty(user.userId)
+                  ideaInfo.like_users.hasOwnProperty(loggedInUser.userId)
                     ? fasHeart
                     : farHeart
                 }
@@ -347,14 +341,14 @@ const StormingIdea = ({ user, idea, timeDisplay }) => {
             </button>
             <button
               className={`${
-                ideaInfo.bookmark_users.hasOwnProperty(user.userId) &&
+                ideaInfo.bookmark_users.hasOwnProperty(loggedInUser.userId) &&
                 "text-orange-400"
               }`}
               onClick={() => onBookmarkClick(idea)}
             >
               <FontAwesomeIcon
                 icon={
-                  ideaInfo.bookmark_users.hasOwnProperty(user.userId)
+                  ideaInfo.bookmark_users.hasOwnProperty(loggedInUser.userId)
                     ? fasBookmark
                     : farBookmark
                 }

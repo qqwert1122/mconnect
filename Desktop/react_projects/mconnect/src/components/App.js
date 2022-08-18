@@ -36,6 +36,8 @@ import { whatEditState } from "atom";
 import { cnctedIdeaState } from "atom";
 import { cnctedIdeasState } from "atom";
 import { countState } from "atom";
+import { whatViewState } from "atom";
+import BottomNavigationBar from "routes/BottomNavigationBar";
 
 // const { persistAtom } = recoilPersist();
 // const scrollAtom = atom({
@@ -93,7 +95,7 @@ const useDeliverProps = () => {
   // navigate
   let navigate = useNavigate();
 
-  const [navValue, setNavValue] = useState("/");
+  const [navValue, setNavValue] = useState("/ideas");
 
   useEffect(() => {
     navigate(`${navValue}`, { replace: true });
@@ -148,7 +150,7 @@ const useDeliverProps = () => {
   // }, []);
 
   // any functions
-  const setCnctedIdeas = useSetRecoilState(cnctedIdeasState);
+  const [cnctedIdeas, setCnctedIdeas] = useRecoilState(cnctedIdeasState);
 
   const getIdeasFromIDs = async (IDs) => {
     const q1 = query(
@@ -167,8 +169,8 @@ const useDeliverProps = () => {
     return ideas.map((idea) => idea.id);
   };
 
-  const isItIn = (arr, i) => {
-    return getIDsFromIdeas(arr).includes(i.id);
+  const isItIn = (arr, idea) => {
+    return getIDsFromIdeas(arr).includes(idea.id);
   };
 
   const isOwner = (idea) => {
@@ -230,7 +232,8 @@ const useDeliverProps = () => {
     setFormTags(idea.tags);
     setFormPublic(idea.isPublic);
     if (idea.connectedIDs.length > 0) {
-      setFormCnctedIdeas(getIdeasFromIDs(idea.connectedIDs));
+      getIdeasFromIDs(idea.connectedIDs);
+      setFormCnctedIdeas(cnctedIdeas);
     }
   };
 
@@ -281,8 +284,21 @@ const App = () => {
       </div>
     </div>
   );
-
-  return <>{props.init ? <AppRouter {...props} /> : loading}</>;
+  return (
+    <>
+      {props.init ? (
+        <>
+          <AppRouter {...props} />
+          <BottomNavigationBar
+            navValue={props.navValue}
+            setNavValue={props.setNavValue}
+          />
+        </>
+      ) : (
+        loading
+      )}
+    </>
+  );
 };
 
 export default App;

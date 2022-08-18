@@ -4,14 +4,17 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { isEditState } from "atom";
 import { formTitleState } from "atom";
+import { whatEditState } from "atom";
 
 const WritingTopBar = ({ navigate, showTitleAndCnctn }) => {
   const [formTitle, setFormTitle] = useRecoilState(formTitleState);
   const clearEdit = useResetRecoilState(isEditState);
+  const clearWhatEdit = useResetRecoilState(whatEditState);
 
   const onBackClick = (e) => {
     e.preventDefault();
     clearEdit();
+    clearWhatEdit();
     navigate(-1);
   };
 

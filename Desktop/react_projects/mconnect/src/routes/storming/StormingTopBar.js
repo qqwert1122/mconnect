@@ -3,6 +3,11 @@ import {} from "@fortawesome/free-regular-svg-icons";
 import { faBolt, faCompass, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const StormingTopBar = () => {
+  const onSearchClick = () => {
+    // Navigate searchPage by adding props
+    // We can find out where we started from through this prop.
+  };
+
   return (
     <div className="fixed top-0 w-full z-10">
       <div className="flex justify-between items-center px-2 py-4 bg-white shadow">

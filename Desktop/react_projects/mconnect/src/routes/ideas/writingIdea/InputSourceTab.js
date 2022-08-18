@@ -1,6 +1,7 @@
 import "css/Animation.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faClockRotateLeft,
   faMagnifyingGlass,
   faQuoteLeft,
 } from "@fortawesome/free-solid-svg-icons";
@@ -30,7 +31,7 @@ const InputSourceTab = ({ sourceInput }) => {
     <div className="moveRightToLeft">
       <div className="overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
         <div className="pt-4 px-4 text-stone-400">
-          검색 <FontAwesomeIcon icon={faMagnifyingGlass} />
+          최근 <FontAwesomeIcon icon={faClockRotateLeft} />
         </div>
         {recentSources.length === 0 ? (
           <div className="p-4 pt-2 text-sm">기존 출처가 없습니다</div>

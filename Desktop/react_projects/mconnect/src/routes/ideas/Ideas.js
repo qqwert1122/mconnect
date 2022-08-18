@@ -37,8 +37,6 @@ import { selectedIdeasState } from "atom";
 const Ideas = ({ ...props }) => {
   const {
     navigate,
-    navValue,
-    setNavValue,
     timeDisplay,
     getIDsFromIdeas,
     getIdeasFromIDs,
@@ -75,7 +73,6 @@ const Ideas = ({ ...props }) => {
 
   return (
     <>
-      <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
       <div className="relative bg-stone-100">
         <IdeasTopBar
           {...props}

@@ -33,12 +33,14 @@ const IdeaTop = ({
   timeDisplay,
   setDeleteDialogOpen,
   initEditor,
+  isItIn,
 }) => {
   const loggedInUser = useRecoilValue(userState);
   const selectedIdeas = useRecoilValue(selectedIdeasState);
   const setIsEdit = useSetRecoilState(isEditState);
 
   const open = Boolean(anchorEl);
+  const isChecked = isItIn(selectedIdeas, idea);
 
   // handle ellipsis menu
   const handleEllipsisClick = (event) => {
@@ -61,9 +63,7 @@ const IdeaTop = ({
       <div className="flex items-center gap-2">
         <button
           className={`rounded-full ${
-            selectedIdeas.includes(idea)
-              ? "bg-red-400 text-white"
-              : "border-2 border-stone-400"
+            isChecked ? "bg-red-400 text-white" : "border-2 border-stone-400"
           } ${
             isSelectMode ? "visible w-5 h-5" : "invisible w-0 h-0"
           } duration-100`}
@@ -71,9 +71,7 @@ const IdeaTop = ({
             onSelectIdea(idea);
           }}
         >
-          {selectedIdeas.includes(idea) && (
-            <FontAwesomeIcon className="strech" icon={faCheck} />
-          )}
+          {isChecked && <FontAwesomeIcon className="strech" icon={faCheck} />}
         </button>
         {/* avatar, name, time */}
         <Avatar

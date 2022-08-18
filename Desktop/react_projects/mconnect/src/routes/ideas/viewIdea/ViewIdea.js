@@ -17,16 +17,24 @@ import {
   documentId,
 } from "firebase/firestore";
 import Skeleton from "@mui/material/Skeleton";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
 import { userState, whatViewState } from "atom";
 
 const ViewIdea = ({ ...props }) => {
-  const { timeDisplay, navigate, isOwner, getIdeasFromIDs, initEditor } = props;
+  const {
+    timeDisplay,
+    navigate,
+    isOwner,
+    getIdeasFromIDs,
+    initEditor,
+    isItIn,
+  } = props;
   const loggedInUser = useRecoilValue(userState);
-  const [whatView, setWhatView] = useRecoilState(whatViewState);
+  const whatView = useRecoilValue(whatViewState);
+  const clearWhatView = useResetRecoilState(whatViewState);
 
   const onBackClick = () => {
-    setWhatView(null);
+    clearWhatView();
     navigate(-1);
   };
 
@@ -61,6 +69,7 @@ const ViewIdea = ({ ...props }) => {
             setItemChangeProps={setItemChangeProps}
             navigate={navigate}
             getIdeasFromIDs={getIdeasFromIDs}
+            isItIn={isItIn}
           />
         </div>
       ) : (

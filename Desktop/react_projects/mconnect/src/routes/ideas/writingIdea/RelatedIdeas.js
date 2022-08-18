@@ -16,7 +16,7 @@ import { whatViewState } from "atom";
 import { formCnctedIdeasState } from "atom";
 import { formTagsState } from "atom";
 
-const RelatedIdeas = ({ navigate }) => {
+const RelatedIdeas = ({ navigate, isItIn }) => {
   const setWhatView = useSetRecoilState(whatViewState);
   const [formCnctedIdeas, setFormCnctedIdeas] =
     useRecoilState(formCnctedIdeasState);
@@ -167,6 +167,7 @@ const RelatedIdeas = ({ navigate }) => {
               tagsPrmtr={formTags}
               tabChange=""
               onIdeaClick={onIdeaClick}
+              isItIn={isItIn}
             />
           </>
         )}

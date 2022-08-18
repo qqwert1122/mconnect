@@ -27,33 +27,28 @@ const BottomNavigationBar = ({ navValue, setNavValue }) => {
       <div className="w-screen fixed bottom-0 shadow-inner z-20">
         <ThemeProvider theme={theme}>
           <BottomNavigation
-            // showLabels={true}
+            showLabels={true}
             value={navValue}
             onChange={(event, newValue) => {
               if (navValue === newValue) {
-                window.scrollTo(0, 0);
+                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
               } else {
                 setNavValue(newValue);
               }
             }}
           >
             <BottomNavigationAction
-              // label="아이디어"
+              label="My Ideas"
               value={"/ideas" || "*"}
               icon={<NotesRoundedIcon />}
             />
             <BottomNavigationAction
-              // label="번쩍"
+              label="Explore"
               value="/storming"
               icon={<ExploreRoundedIcon />}
             />
-            {/* <BottomNavigationAction
-              // label="탐색"
-              value="/explore"
-              icon={<ExploreRoundedIcon />}
-            /> */}
             <BottomNavigationAction
-              // label="프로필"
+              label="Profile"
               value="/setting"
               icon={<PersonRoundedIcon />}
             />

@@ -29,8 +29,14 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { userState, whatViewState, selectedIdeasState } from "atom";
 
 const Idea = ({ props, idea, isSelectMode }) => {
-  const { navigate, initEditor, timeDisplay, getIdeasFromIDs, getCount } =
-    props;
+  const {
+    navigate,
+    initEditor,
+    timeDisplay,
+    getIdeasFromIDs,
+    getCount,
+    isItIn,
+  } = props;
 
   const loggedInUser = useRecoilValue(userState);
   const setWhatView = useSetRecoilState(whatViewState);
@@ -49,13 +55,13 @@ const Idea = ({ props, idea, isSelectMode }) => {
   }, []);
 
   const onSelectIdea = (idea) => {
-    if (selectedIdeas.length > 4) {
-      toast.error("최대 5개까지 연결 가능합니다.", {
-        theme: "colored",
-      });
+    if (isItIn(selectedIdeas, idea)) {
+      setSelectedIdeas(selectedIdeas.filter((_idea) => _idea.id != idea.id));
     } else {
-      if (selectedIdeas.includes(idea)) {
-        setSelectedIdeas(selectedIdeas.filter((_idea) => _idea != idea));
+      if (selectedIdeas.length > 4) {
+        toast.error("최대 5개까지 연결 가능합니다.", {
+          theme: "colored",
+        });
       } else {
         setSelectedIdeas([idea, ...selectedIdeas]);
       }
@@ -133,6 +139,7 @@ const Idea = ({ props, idea, isSelectMode }) => {
               timeDisplay={timeDisplay}
               setDeleteDialogOpen={setDeleteDialogOpen}
               initEditor={initEditor}
+              isItIn={isItIn}
             />
             <IdeaMiddle
               isOwner={isOwner}

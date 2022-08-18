@@ -10,8 +10,12 @@ import Auth from "routes/auth/Auth";
 import SignUp from "routes/auth/SignUp";
 import { Route, Routes } from "react-router-dom";
 import AlarmPage from "routes/ideas/alarm/AlarmPage";
+import { useRecoilValue } from "recoil";
+import { whatViewState } from "atom";
 
 const AppRouter = ({ ...props }) => {
+  const whatView = useRecoilValue(whatViewState);
+
   return (
     <Routes>
       {props.isLoggedIn ? (
@@ -26,7 +30,7 @@ const AppRouter = ({ ...props }) => {
           />
           <Route
             exact
-            path={`/${props.whatView && props.whatView.id}`}
+            path={`/${whatView && whatView.id}`}
             element={<ViewIdea {...props} />}
           />
           <Route exact path="/alarm" element={<AlarmPage {...props} />} />

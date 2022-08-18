@@ -21,10 +21,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { toast } from "react-toastify";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedIdeasState, formCnctedIdeasState } from "atom";
+import { whatViewState } from "atom";
+import { whatEditState } from "atom";
 
-const SuggestedIdeas = ({ writing, tagsPrmtr, tabChange, onIdeaClick }) => {
+const SuggestedIdeas = ({
+  writing,
+  tagsPrmtr,
+  tabChange,
+  onIdeaClick,
+  isItIn,
+}) => {
   // Writing
   //  - is writing ? "from writing" : "from viewing"
   // tagsPrmtr
@@ -32,11 +40,16 @@ const SuggestedIdeas = ({ writing, tagsPrmtr, tabChange, onIdeaClick }) => {
   // tabChange
   //  - tab ? none : tabChange(=itemChange)
   // onIdeaClick={onIdeaClick}
-  // - navigate view page by clicking idea
+  //  - navigate view page by clicking idea
+  // isItIn ?
+  //  - isItIn(array, item) : Check whether the item is in the array or not.
 
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
   const [formCnctedIdeas, setFormCnctedIdeas] =
     useRecoilState(formCnctedIdeasState);
+  const whatView = useRecoilValue(whatViewState);
+  const whatEdit = useRecoilValue(whatEditState);
+  const idea = writing ? whatEdit : whatView;
 
   // select tagPrmtr
   const [tagChangeProps, setTagChangeProps] = useState(
@@ -50,31 +63,41 @@ const SuggestedIdeas = ({ writing, tagsPrmtr, tabChange, onIdeaClick }) => {
 
   const isChecked = (idea) => {
     if (writing) {
-      return formCnctedIdeas.includes(idea);
+      return isItIn(formCnctedIdeas, idea);
     } else {
-      return selectedIdeas.includes(idea);
+      return isItIn(selectedIdeas, idea);
     }
   };
 
   const onIdeaSelect = (e, idea) => {
     e.preventDefault();
     if (writing) {
-      if (formCnctedIdeas.length > 4) {
-        toast.error("최대 5개까지 연결 가능합니다.", {
-          theme: "colored",
-        });
+      if (isItIn(formCnctedIdeas, idea)) {
+        console.log("Yes! I'm In");
+        setFormCnctedIdeas(
+          formCnctedIdeas.filter((_idea) => _idea.id != idea.id)
+        );
       } else {
-        if (formCnctedIdeas.includes(idea)) {
-          setFormCnctedIdeas(formCnctedIdeas.filter((_idea) => _idea != idea));
+        if (formCnctedIdeas.length > 4) {
+          toast.error("최대 5개까지 연결 가능합니다.", {
+            theme: "colored",
+          });
         } else {
           setFormCnctedIdeas([idea, ...formCnctedIdeas]);
         }
       }
     } else {
-      if (selectedIdeas.includes(idea)) {
-        setSelectedIdeas(selectedIdeas.filter((idea) => idea != idea));
+      if (isItIn(selectedIdeas, idea)) {
+        console.log("Yes, I'm in");
+        setSelectedIdeas(selectedIdeas.filter((_idea) => _idea.id != idea.id));
       } else {
-        setSelectedIdeas([idea, ...selectedIdeas]);
+        if (selectedIdeas.length > 4) {
+          toast.error("최대 5개까지 연결 가능합니다.", {
+            theme: "colored",
+          });
+        } else {
+          setSelectedIdeas([idea, ...selectedIdeas]);
+        }
       }
     }
   };
@@ -157,12 +180,10 @@ const SuggestedIdeas = ({ writing, tagsPrmtr, tabChange, onIdeaClick }) => {
         ) : (
           <>
             <Slider {...sugtdSettings}>
-              {filteredIdeas.map((idea, index) => (
-                <div key={index}>
-                  <div
-                    className="relative h-60 p-4 m-1 bg-white shadow rounded-3xl text-xs break-all"
-                    onClick={() => onIdeaClick(idea)}
-                  >
+              {filteredIdeas
+                .filter((_idea) => _idea.id != idea.id)
+                .map((idea, index) => (
+                  <div key={index} className="relative">
                     <button
                       className={`absolute top-0 right-0 rounded-full ${
                         isChecked(idea)
@@ -175,42 +196,46 @@ const SuggestedIdeas = ({ writing, tagsPrmtr, tabChange, onIdeaClick }) => {
                     >
                       {isChecked(idea) && <FontAwesomeIcon icon={faCheck} />}
                     </button>
-                    {idea.title.length > 0 && (
-                      <div className="mb-2 truncate font-black text-sm">
-                        {idea.title}
+                    <div
+                      className="h-60 p-4 m-1 bg-white shadow rounded-3xl text-xs break-all"
+                      onClick={() => onIdeaClick(idea)}
+                    >
+                      {idea.title.length > 0 && (
+                        <div className="mb-2 truncate font-black text-sm">
+                          {idea.title}
+                        </div>
+                      )}
+                      <div className="mb-3 line-clamp-6">{idea.text}</div>
+                      {idea.source.length > 0 && (
+                        <div className="ml-2 mb-1 flex gap-1 text-stone-400">
+                          <FontAwesomeIcon icon={faQuoteLeft} />
+                          <span>{idea.source}</span>
+                        </div>
+                      )}
+                      <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
+                        <Avatar
+                          className="border-2"
+                          alt="avatar"
+                          src={idea.userPhotoURL}
+                          sx={{
+                            display: "flex",
+                            width: "25px",
+                            height: "25px",
+                          }}
+                        />
+                        <div className="flex-col">
+                          <span className="flex">{idea.userName}</span>
+                          <span className="flex text-stone-400">
+                            {idea.createdAt}
+                          </span>
+                        </div>
                       </div>
-                    )}
-                    <div className="mb-3 line-clamp-6">{idea.text}</div>
-                    {idea.source.length > 0 && (
-                      <div className="ml-2 mb-1 flex gap-1 text-stone-400">
-                        <FontAwesomeIcon icon={faQuoteLeft} />
-                        <span>{idea.source}</span>
+                      <div className="absolute bottom-4 right-4 text-xl text-orange-400">
+                        <FontAwesomeIcon icon={faBookmark} />
                       </div>
-                    )}
-                    <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
-                      <Avatar
-                        className="border-2"
-                        alt="avatar"
-                        src={idea.userPhotoURL}
-                        sx={{
-                          display: "flex",
-                          width: "25px",
-                          height: "25px",
-                        }}
-                      />
-                      <div className="flex-col">
-                        <span className="flex">{idea.userName}</span>
-                        <span className="flex text-stone-400">
-                          {idea.createdAt}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="absolute bottom-4 right-4 text-xl text-orange-400">
-                      <FontAwesomeIcon icon={faBookmark} />
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </Slider>
           </>
         )}

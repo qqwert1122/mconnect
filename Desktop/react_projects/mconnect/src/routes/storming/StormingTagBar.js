@@ -14,75 +14,62 @@ import { useEffect, useState } from "react";
 import { faFireFlameCurved } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const StormingTagBar = ({ setIdeasPublic }) => {
+const StormingTagBar = ({ setIdeas }) => {
+  // tags toggle
   const [itemPrmtr, setItemPrmtr] = useState("");
 
   const onItemClick = (tag) => {
     setItemPrmtr(tag);
   };
 
-  const getDocuments = async (query) => {
-    const stormingRef = await getDocs(query);
-    const newData = stormingRef.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setIdeasPublic(newData);
-  };
-
-  useEffect(() => {
-    if (itemPrmtr === "전체") {
-      const q1 = query(
-        collectionGroup(dbService, "userIdeas"),
-        where("isPublic", "==", true),
-        orderBy("createdAt", "desc")
-      );
-      getDocuments(q1);
-    } else {
-      const q1 = query(
-        collectionGroup(dbService, "userIdeas"),
-        where("isPublic", "==", true),
-        where("tags", "array-contains", itemPrmtr),
-        orderBy("createdAt", "desc")
-      );
-      getDocuments(q1);
-    }
-  }, [itemPrmtr]);
-
-  // const commonTags = [
-  //   "전체",
-  //   "엘지에너지솔루션",
-  //   "경영",
-  //   "경제",
-  //   "국제",
-  //   "정치",
-  //   "사회",
-  //   "과학",
-  //   "기술",
-  //   "IT",
-  //   "환경",
-  //   "역사",
-  //   "주식",
-  //   "부동산",
-  //   "사업",
-  // ];
-
-  const [commonTags, setCommonTags] = useState([]);
-
-  const getTrends = async () => {
-    const trends = (await getDoc(doc(dbService, "trends", "hotTrends"))).data()
-      .tags;
-    setCommonTags(trends);
-  };
+  // get Trend Keywords from firestore
+  const [trends, setTrends] = useState([]);
 
   useEffect(() => {
     getTrends();
   }, []);
 
+  const getTrends = async () => {
+    const trends = (await getDoc(doc(dbService, "trends", "hotTrends"))).data()
+      .tags;
+    setTrends(trends);
+  };
+
+  // get new ideas filtered by selected trend keywords
+  useEffect(() => {
+    if (itemPrmtr === "전체") {
+      const q1 = query(
+        collectionGroup(dbService, "userIdeas"),
+        where("isOriginal", "==", true),
+        where("isPublic", "==", true),
+        orderBy("createdAt", "desc")
+      );
+      getNewIdeas(q1);
+    } else {
+      const q1 = query(
+        collectionGroup(dbService, "userIdeas"),
+        where("isOriginal", "==", true),
+        where("isPublic", "==", true),
+        where("tags", "array-contains", itemPrmtr),
+        orderBy("createdAt", "desc")
+      );
+      getNewIdeas(q1);
+    }
+  }, [itemPrmtr]);
+
+  const getNewIdeas = async (query) => {
+    const stormingRef = await getDocs(query);
+    const newData = stormingRef.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setIdeas(newData);
+  };
+
   return (
     <div className="relative p-4 h-52 flex items-end shadow-inner bg-gradient-to-r from-indigo-900 to-sky-800">
       <div className="absolute top-20 left-4 flex items-center text-lg text-blue-400 font-black gap-2">
-        Hot Topics
+        Hot Trends
         <FontAwesomeIcon icon={faFireFlameCurved} />
       </div>
       <div
@@ -91,7 +78,7 @@ const StormingTagBar = ({ setIdeasPublic }) => {
         {itemPrmtr}
       </div>
       <div className="relative flex items-end flex-nowrap gap-4 overflow-x-scroll">
-        {commonTags.map((tag, index) => (
+        {trends.map((tag, index) => (
           <button
             key={index}
             className={`${
@@ -104,20 +91,6 @@ const StormingTagBar = ({ setIdeasPublic }) => {
             {tag}
           </button>
         ))}
-
-        {/* {commonTags.map((tag, index) => (
-        <button
-          key={index}
-          className={`${
-            tag === itemPrmtr
-              ? "-top-1 bg-red-400 text-white"
-              : "top-0 bg-white"
-          } relative flex-grow-0 flex-shrink-0 border-box rounded-xl rounded-tr-3xl border-2 mr-1 mb-1 px-3 py-2 text-sm shadow-sm duration-500 break-words `}
-          onClick={() => onItemClick(tag)}
-        >
-          {tag}
-        </button>
-      ))} */}
       </div>
     </div>
   );
