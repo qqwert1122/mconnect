@@ -1,11 +1,6 @@
 import "css/Animation.css";
 import "instantsearch.css/themes/satellite.css";
-import SearchPageTopBar from "./SearchPageTopBar";
-import SearchCriteria from "./SearchCriteria";
-import CriteriaSource from "./CriteriaSource";
-import CriteriaTag from "./CriteriaTag";
-import CriteriaUser from "./CriteriaUser";
-import CriteriaAll from "./CriteriaAll";
+// import "instantsearch.css/themes/reset.css";
 import { useEffect, useState } from "react";
 import algoliasearch from "algoliasearch/lite";
 import {
@@ -20,123 +15,45 @@ import {
 } from "react-instantsearch-hooks-web";
 import ShowingSearchIdeas from "./ShowingSearchIdeas";
 import FloatingUpButton from "../FloatingUpButton";
+import { toast } from "react-toastify";
 import { Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookmark,
+  faCheck,
   faChevronLeft,
   faHashtag,
   faQuoteLeft,
   faXmarkCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { selectedIdeasState } from "atom";
+import { userState } from "atom";
 
-const SearchPage = ({ customHooks }) => {
-  const {
-    loggedInUser,
-    userIdeas,
-    navigate,
-    setWhatView,
-    tagList,
-    sourceList,
-    selectedIdeas,
-    setSelectedIdeas,
-    // scrollY,
-    // setScrollY,
-  } = customHooks;
-
-  const userList = userIdeas.filter(
-    (idea, index, callback) =>
-      index === callback.findIndex((t) => t.userId === idea.userId)
-  );
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCriteria, setSelectedCriteria] = useState(0);
-  const [listSearchCriteriaSource, setListSearchCriteriaSource] = useState([]);
-  const [listSearchCriteriaTag, setListSearchCriteriaTag] = useState([]);
-  const [listSearchCriteriaUser, setListSearchCriteriaUser] = useState([]);
-  const [listAllCriteria, setListAllCriteria] = useState([]);
-  const [showingSearchIdeas, setShowingSearchIdeas] = useState([]);
-
-  const searchCriteria = ["전체", "출처", "태그", "유저"];
-
-  // useEffect(() => {
-  //   setShowingSearchIdeas(userIdeas);
-  // }, []);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     window.scrollTo(0, scrollY);
-  //   }, 100);
-  // }, []);
+const SearchPage = ({ ...props }) => {
+  const { navigate, getIDsFromIdeas } = props;
+  const loggedInUser = useRecoilValue(userState);
+  const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
 
   const onBackClick = () => {
     navigate(-1);
   };
 
-  // useEffect(() => {
-  //   if (listAllCriteria.length === 0) {
-  //     setShowingSearchIdeas(userIdeas);
-  //   } else {
-  //     setShowingSearchIdeas(
-  //       userIdeas.filter(
-  //         (idea, index) =>
-  //           listSearchCriteriaSource.some((x) =>
-  //             userIdeas[index].source.includes(x)
-  //           ) ||
-  //           listSearchCriteriaTag.some((x) =>
-  //             userIdeas[index].tags.includes(x)
-  //           ) ||
-  //           listSearchCriteriaUser.some((x) =>
-  //             userIdeas[index].userName.includes(x)
-  //           )
-  //       )
-  //     );
-  //   }
-  // }, [listSearchCriteriaSource, listSearchCriteriaTag, listSearchCriteriaUser]);
-
-  const onSourceCriteriaClick = (source) => {
-    if (listSearchCriteriaSource.includes(source)) {
-      setListSearchCriteriaSource(
-        listSearchCriteriaSource.filter((_source) => _source !== source)
-      );
-      setListAllCriteria(listAllCriteria.filter((all) => all !== source));
+  const onIdeaSelect = (hit) => {
+    const newHit = {
+      id: hit.objectID,
+      ...hit,
+    };
+    if (getIDsFromIdeas(selectedIdeas).includes(newHit.id)) {
+      setSelectedIdeas(selectedIdeas.filter((_idea) => _idea.id != newHit.id));
     } else {
-      setListSearchCriteriaSource([...listSearchCriteriaSource, source]);
-      setListAllCriteria([source, ...listAllCriteria]);
-    }
-  };
-
-  const onTagCriteriaClick = (tag) => {
-    if (listSearchCriteriaTag.includes(tag)) {
-      setListSearchCriteriaTag(
-        listSearchCriteriaTag.filter((_tag) => _tag !== tag)
-      );
-      setListAllCriteria(listAllCriteria.filter((all) => all !== tag));
-    } else {
-      setListSearchCriteriaTag([...listSearchCriteriaTag, tag]);
-      setListAllCriteria([tag, ...listAllCriteria]);
-    }
-  };
-
-  const onUserCriteriaClick = (user) => {
-    if (listSearchCriteriaUser.includes(user)) {
-      setListSearchCriteriaUser(
-        listSearchCriteriaUser.filter((_user) => _user !== user)
-      );
-      setListAllCriteria(listAllCriteria.filter((all) => all !== user));
-    } else {
-      setListSearchCriteriaUser([...listSearchCriteriaUser, user]);
-      setListAllCriteria([user, ...listAllCriteria]);
-    }
-  };
-
-  const onXmarkClick = (all) => {
-    if (listSearchCriteriaSource.includes(all)) {
-      onSourceCriteriaClick(all);
-    } else if (listSearchCriteriaTag.includes(all)) {
-      onTagCriteriaClick(all);
-    } else {
-      onUserCriteriaClick(all);
+      if (selectedIdeas.length > 4) {
+        toast.error("최대 5개까지 연결 가능합니다.", {
+          theme: "colored",
+        });
+      } else {
+        setSelectedIdeas([hit, ...selectedIdeas]);
+      }
     }
   };
 
@@ -145,15 +62,14 @@ const SearchPage = ({ customHooks }) => {
     process.env.REACT_APP_ALGOLIA_API_KEY
   );
 
-  const onBookmarkClick = (hit) => {
-    console.log(hit.objectID);
-  };
-
   const Hit = ({ hit }) => {
     return (
-      <div key={hit.objectID} className="w-full break-all overflow-hidden">
+      <div
+        key={hit.objectID}
+        className="relative w-full px-4 py-2 break-all overflow-hidden bg-stone-100 rounded-xl shadow-lg"
+      >
         {hit.title.length > 0 && (
-          <div className="mb-2 font-black text-base">
+          <div className="mb-2 font-black">
             <Highlight className="truncate" attribute="title" hit={hit} />
           </div>
         )}
@@ -200,25 +116,43 @@ const SearchPage = ({ customHooks }) => {
               <span className="flex">{hit.createdAt}</span>
             </div>
           </span>
-          <button
-            className="text-orange-400"
-            onClick={() => {
-              onBookmarkClick(hit);
-            }}
-          >
-            <FontAwesomeIcon icon={faBookmark} size="xl" />
-          </button>
         </div>
+        <button
+          className={`absolute top-2 right-2 w-5 h-5 ${
+            getIDsFromIdeas(selectedIdeas).includes(hit.objectID)
+              ? "bg-red-400 text-white"
+              : "border-2 border-stone-400"
+          } border-2 rounded-full shadow-inner duration-100`}
+          onClick={() => {
+            onIdeaSelect(hit);
+          }}
+        >
+          {getIDsFromIdeas(selectedIdeas).includes(hit.objectID) && (
+            <FontAwesomeIcon icon={faCheck} />
+          )}
+        </button>
+        <button
+          className="absolute bottom-2 right-2 text-orange-400"
+          onClick={() => {
+            onBookmarkClick(hit);
+          }}
+        >
+          <FontAwesomeIcon icon={faBookmark} size="xl" />
+        </button>
       </div>
     );
   };
 
   const myIdea = true;
 
+  const onBookmarkClick = (hit) => {
+    console.log(hit.objectID);
+  };
+
   return (
     <div className="min-h-screen flex-col">
       <div className="relative">
-        {/* <InstantSearch searchClient={searchClient} indexName="userIdeas">
+        <InstantSearch searchClient={searchClient} indexName="userIdeas">
           <div className="fixed top-0 w-full p-3 flex gap-4 justify-between items-center bg-white shadow z-10">
             <button onClick={onBackClick}>
               <FontAwesomeIcon icon={faChevronLeft} size="lg" />
@@ -237,73 +171,8 @@ const SearchPage = ({ customHooks }) => {
             />
             <InfiniteHits hitComponent={Hit} showPrevious={false} />
           </div>
-        </InstantSearch> */}
-
-        {/* <SearchPageTopBar
-          navigate={navigate}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-        />
-        <div className="shadow">
-          <SearchCriteria
-            searchCriteria={searchCriteria}
-            selectedCriteria={selectedCriteria}
-            setSelectedCriteria={setSelectedCriteria}
-            setListSearchCriteriaSource={setListSearchCriteriaSource}
-            setListSearchCriteriaTag={setListSearchCriteriaTag}
-            setListSearchCriteriaUser={setListSearchCriteriaUser}
-            setListAllCriteria={setListAllCriteria}
-          />
-
-          {selectedCriteria === 1 && (
-            <CriteriaSource
-              sourceList={sourceList}
-              searchTerm={searchTerm}
-              listSearchCriteriaSource={listSearchCriteriaSource}
-              onSourceCriteriaClick={onSourceCriteriaClick}
-            />
-          )}
-
-          {selectedCriteria === 2 && (
-            <CriteriaTag
-              tagList={tagList}
-              searchTerm={searchTerm}
-              listSearchCriteriaTag={listSearchCriteriaTag}
-              onTagCriteriaClick={onTagCriteriaClick}
-            />
-          )}
-
-          {selectedCriteria === 3 && (
-            <CriteriaUser
-              userList={userList}
-              searchTerm={searchTerm}
-              listSearchCriteriaUser={listSearchCriteriaUser}
-              onUserCriteriaClick={onUserCriteriaClick}
-            />
-          )}
-
-          {listAllCriteria.length > 0 && (
-            <CriteriaAll
-              listAllCriteria={listAllCriteria}
-              onXmarkClick={onXmarkClick}
-            />
-          )}
-        </div>
-        <ShowingSearchIdeas
-          navigate={navigate}
-          setWhatView={setWhatView}
-          showingSearchIdeas={showingSearchIdeas}
-          searchTerm={searchTerm}
-          selectedIdeas={selectedIdeas}
-          setSelectedIdeas={setSelectedIdeas}
-          listAllCriteria={listAllCriteria}
-        /> */}
+        </InstantSearch>
       </div>
-      {/* <FloatingUpButton
-        floating={true}
-        scrollY={scrollY}
-        setScrollY={setScrollY}
-      /> */}
 
       <div
         className={` ${

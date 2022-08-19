@@ -36,6 +36,8 @@ import { selectedIdeasState } from "atom";
 
 const Ideas = ({ ...props }) => {
   const {
+    navValue,
+    setNavValue,
     navigate,
     timeDisplay,
     getIDsFromIdeas,
@@ -73,6 +75,7 @@ const Ideas = ({ ...props }) => {
 
   return (
     <>
+      <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
       <div className="relative bg-stone-100">
         <IdeasTopBar
           {...props}
@@ -94,11 +97,12 @@ const Ideas = ({ ...props }) => {
               itemCount={showingIdeas.length}
               itemSize={getItemSize}
             > */}
-              {ideas.map((idea) => (
+              {ideas.map((idea, index) => (
                 <Idea
                   key={idea.id}
                   props={props}
                   idea={idea}
+                  index={index}
                   isSelectMode={isSelectMode}
                 />
               ))}

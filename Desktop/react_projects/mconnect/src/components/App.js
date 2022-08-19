@@ -39,13 +39,6 @@ import { countState } from "atom";
 import { whatViewState } from "atom";
 import BottomNavigationBar from "routes/BottomNavigationBar";
 
-// const { persistAtom } = recoilPersist();
-// const scrollAtom = atom({
-//   key: "scrollAtom",
-//   default: 0,
-//   effects_UNSTABLE: [persistAtom],
-// });
-
 const useDeliverProps = () => {
   // Auth
   const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
@@ -248,6 +241,8 @@ const useDeliverProps = () => {
     }
   };
 
+  console.log("1분만 닥쳐줄래요");
+
   return {
     // getNextPosts,
     init,
@@ -284,21 +279,7 @@ const App = () => {
       </div>
     </div>
   );
-  return (
-    <>
-      {props.init ? (
-        <>
-          <AppRouter {...props} />
-          <BottomNavigationBar
-            navValue={props.navValue}
-            setNavValue={props.setNavValue}
-          />
-        </>
-      ) : (
-        loading
-      )}
-    </>
-  );
+  return <>{props.init ? <AppRouter {...props} /> : loading}</>;
 };
 
 export default App;

@@ -15,10 +15,12 @@ import {
   faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
+import { useRecoilValue } from "recoil";
+import { userState } from "atom";
 
-const Setting = ({ customHooks }) => {
-  const navigate = customHooks.navigate;
-  const loggedInUser = customHooks.loggedInUser;
+const Setting = ({ ...props }) => {
+  const { navigate, navValue, setNavValue } = props;
+  const loggedInUser = useRecoilValue(userState);
 
   const [detailMode, setDetailMode] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
@@ -126,6 +128,7 @@ const Setting = ({ customHooks }) => {
 
   return (
     <>
+      <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
       <div className="fixed top-0 w-full z-10">
         <div className="flex justify-between items-center px-2 p-4 bg-white shadow">
           <div className="px-2 text-lg font-black">프로필</div>
@@ -134,13 +137,13 @@ const Setting = ({ customHooks }) => {
       </div>
       <div className="mt-20 mb-16">
         <div className="flex justify-between">
-          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-gradient-to-br from-red-500  via-orange-400 to-yellow-500 text-white font-black text-sm">
+          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-gradient-to-br from-red-500  via-orange-400 to-yellow-500 text-orange-50 font-black text-sm">
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faCommentDollar} size="xl" />
             </span>
             <span className="absolute bottom-2 right-2">개발자 후원</span>
           </div>
-          <div className="w-1/2 h-24 relative mr-5 ml-2  p-5 rounded-xl shadow-lg bg-gradient-to-br from-yellow-300 via-orange-300 to-rose-400 text-white font-black text-sm">
+          <div className="w-1/2 h-24 relative mr-5 ml-2  p-5 rounded-xl shadow-lg bg-gradient-to-br from-yellow-300 via-orange-300 to-rose-400 text-orange-50 font-black text-sm">
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faRectangleAd} size="xl" />
             </span>
@@ -243,7 +246,6 @@ const Setting = ({ customHooks }) => {
           </button>
         </div>
       </div>
-      <BottomNavigationBar customHooks={customHooks} />
     </>
   );
 };

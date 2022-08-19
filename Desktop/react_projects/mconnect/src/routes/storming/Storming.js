@@ -51,7 +51,7 @@ import { useRecoilValue } from "recoil";
 import { userState } from "atom";
 
 const Storming = ({ ...props }) => {
-  const { isLoggedIn, timeDisplay } = props;
+  const { isLoggedIn, timeDisplay, navValue, setNavValue } = props;
 
   // original and opened ideas
   const [ideas, setIdeas] = useState([]);
@@ -80,7 +80,7 @@ const Storming = ({ ...props }) => {
 
   return (
     <>
-      <BottomNavigationBar />
+      <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
       <StormingTopBar />
       <div className="bg-white min-h-screen pb-14 text-sm">
         <StormingTagBar setIdeas={setIdeas} />

@@ -27,7 +27,7 @@ const BottomNavigationBar = ({ navValue, setNavValue }) => {
       <div className="w-screen fixed bottom-0 shadow-inner z-20">
         <ThemeProvider theme={theme}>
           <BottomNavigation
-            showLabels={true}
+            // showLabels={true}
             value={navValue}
             onChange={(event, newValue) => {
               if (navValue === newValue) {

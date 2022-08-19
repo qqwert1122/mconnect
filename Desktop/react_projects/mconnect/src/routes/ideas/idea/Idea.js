@@ -27,8 +27,9 @@ import { useNavigate } from "react-router-dom";
 import { getContainerUtilityClass } from "@mui/system";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { userState, whatViewState, selectedIdeasState } from "atom";
+import { ideasState } from "atom";
 
-const Idea = ({ props, idea, isSelectMode }) => {
+const Idea = ({ props, idea, index, isSelectMode }) => {
   const {
     navigate,
     initEditor,
@@ -39,6 +40,7 @@ const Idea = ({ props, idea, isSelectMode }) => {
   } = props;
 
   const loggedInUser = useRecoilValue(userState);
+  const ideas = useRecoilValue(ideasState);
   const setWhatView = useSetRecoilState(whatViewState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
 
@@ -124,7 +126,11 @@ const Idea = ({ props, idea, isSelectMode }) => {
   };
 
   return (
-    <div className="bg-white text-sm">
+    <div
+      className={`bg-white text-sm ${
+        index === ideas.length - 1 && "shadow-xl"
+      }`}
+    >
       {idea ? (
         <>
           <div className="btn pt-4">
@@ -159,7 +165,9 @@ const Idea = ({ props, idea, isSelectMode }) => {
           {idea.connectedIDs.length > 0 && (
             <IdeaConnectedIdeas viewDetail={viewDetail} />
           )}
-          <Divider variant="middle" />
+          <div className="px-2">
+            <Divider className="" variant="middle" light={true} />
+          </div>
           <DeleteDialog
             deleteDialogOpen={deleteDialogOpen}
             setDeleteDialogOpen={setDeleteDialogOpen}

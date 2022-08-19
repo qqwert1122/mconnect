@@ -1,6 +1,5 @@
 import functions from "firebase-functions";
 import algoliasearch from "algoliasearch";
-import { data } from "autoprefixer";
 
 const APP_ID = process.env.APP_ID;
 const API_KEY = process.env.API_KEY;
@@ -10,10 +9,10 @@ const index = client.initIndex("userIdeas");
 const addToIndex = functions.firestore
   .document("users/{userId}/userIdeas/{docId}")
   .onCreate((snapshot) => {
-    const data = snapshot.data();
+    const _data = snapshot.data();
     const objectID = snapshot.id;
-    if (data.isPublic === true) {
-      index.saveObject({ ...data, objectID });
+    if (_data.isPublic === true) {
+      index.saveObject({ ..._data, objectID });
     }
   });
 
