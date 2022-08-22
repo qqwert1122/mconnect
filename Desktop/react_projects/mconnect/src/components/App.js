@@ -241,7 +241,7 @@ const useDeliverProps = () => {
     }
   };
 
-  console.log("1분만 닥쳐줄래요");
+  console.log("rendering");
 
   return {
     // getNextPosts,

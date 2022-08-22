@@ -59,11 +59,13 @@ const WritingIdea = ({ ...props }) => {
   const MAX_LENGTH = 10;
 
   const arrangeRecentSources = (_source) => {
-    const tempSources = [
-      _source,
-      ...recentSources.filter((source) => source !== _source),
-    ];
-    setRecentSources(tempSources.filter((e, i) => i < MAX_LENGTH));
+    if (_source !== "") {
+      const tempSources = [
+        _source,
+        ...recentSources.filter((source) => source !== _source),
+      ];
+      setRecentSources(tempSources.filter((e, i) => i < MAX_LENGTH));
+    }
   };
 
   const arrangeRecentTags = (_tags) => {

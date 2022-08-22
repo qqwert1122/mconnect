@@ -10,7 +10,7 @@ const BottomNavigationBar = ({ navValue, setNavValue }) => {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#5bb647",
+        main: "#fb923c",
         light: "#8ee976",
         dark: "#238516",
       },

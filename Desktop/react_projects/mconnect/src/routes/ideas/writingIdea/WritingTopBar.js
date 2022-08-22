@@ -1,13 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {} from "@fortawesome/free-regular-svg-icons";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import { isEditState } from "atom";
 import { formTitleState } from "atom";
 import { whatEditState } from "atom";
+import { formTextState } from "atom";
 
 const WritingTopBar = ({ navigate, showTitleAndCnctn }) => {
   const [formTitle, setFormTitle] = useRecoilState(formTitleState);
+  const formText = useRecoilValue(formTextState);
   const clearEdit = useResetRecoilState(isEditState);
   const clearWhatEdit = useResetRecoilState(whatEditState);
 
@@ -48,7 +50,11 @@ const WritingTopBar = ({ navigate, showTitleAndCnctn }) => {
       </div>
       <input
         type="submit"
-        className="p-1 px-2 rounded font-black text-center shadow-md text-white bg-green-600"
+        className={`${
+          formText
+            ? "bg-gradient-to-tr from-rose-400 to-orange-400 text-orange-100"
+            : "bg-stone-200 text-stone-400"
+        } p-1 px-2 rounded font-black text-center shadow-md `}
         value="작성"
       />
     </div>

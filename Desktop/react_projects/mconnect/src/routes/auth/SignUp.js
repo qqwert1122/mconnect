@@ -206,7 +206,7 @@ const SignUp = ({ customHooks }) => {
           className={`absolute left-5 bottom-5 px-4 py-2 flex items-center justify-center rounded-full text-lg font-black duration-500 shadow-lg  ${
             tabValue === 0
               ? "bg-stone-200 text-stone-400"
-              : "bg-green-600 text-white"
+              : "bg-orange-400 text-white"
           }`}
           onClick={onPrevClick}
         >
@@ -214,7 +214,7 @@ const SignUp = ({ customHooks }) => {
         </button>
         <button
           className={`absolute right-5 bottom-5 px-4 py-2 flex items-center justify-center rounded-full text-lg font-black  duration-500 shadow-lg ${
-            isDuplicated ? "bg-red-400 text-white" : "bg-green-600 text-white"
+            isDuplicated ? "bg-red-400 text-white" : "bg-orange-400 text-white"
           } `}
           onClick={onNextClick}
         >

@@ -71,7 +71,7 @@ const RelatedIdeas = ({ navigate, isItIn }) => {
           <button
             className={` ${
               formCnctedIdeas.length < 2 && "animate-bounce"
-            } m-2 p-1 px-2 bg-green-600 text-white font-black rounded-xl z-10`}
+            } m-2 p-1 px-2 bg-gradient-to-tr from-rose-400 to-orange-400 text-orange-100 font-black rounded-xl z-10`}
             onClick={ontabsChange}
           >
             추천 아이디어 &nbsp;
@@ -81,7 +81,7 @@ const RelatedIdeas = ({ navigate, isItIn }) => {
 
         {tabs === 1 && (
           <button
-            className="m-2 p-1 px-2 bg-green-600 text-white font-black rounded-xl z-10"
+            className="m-2 p-1 px-2 bg-gradient-to-tr from-rose-400 to-orange-400 text-orange-100 text-white font-black rounded-xl z-10"
             onClick={ontabsChange}
           >
             연결된 아이디어&nbsp;

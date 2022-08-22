@@ -52,7 +52,7 @@ const SearchPage = ({ ...props }) => {
           theme: "colored",
         });
       } else {
-        setSelectedIdeas([hit, ...selectedIdeas]);
+        setSelectedIdeas([newHit, ...selectedIdeas]);
       }
     }
   };

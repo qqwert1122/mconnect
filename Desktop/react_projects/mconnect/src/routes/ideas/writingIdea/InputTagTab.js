@@ -78,7 +78,7 @@ const InputTagTab = ({ tagInput }) => {
         <div
           className={`px-4 ${formTags.length === 0 && "pt-10"} text-stone-400`}
         >
-          이런 태그는 어때요 ? <FontAwesomeIcon icon={faThumbsUp} />
+          이런 태그는 어때요 <FontAwesomeIcon icon={faThumbsUp} />
         </div>
         <div className="p-4 pt-2 flex flex-wrap">
           {commonTags.map((tag, index) => (
