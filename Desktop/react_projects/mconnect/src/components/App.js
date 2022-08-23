@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
-import { authService, dbService } from "fbase";
+import { authService, dbService, messaging } from "fbase";
 import {
   collection,
   onSnapshot,
@@ -38,6 +38,8 @@ import { cnctedIdeasState } from "atom";
 import { countState } from "atom";
 import { whatViewState } from "atom";
 import BottomNavigationBar from "routes/BottomNavigationBar";
+import { getToken, onMessage } from "firebase/messaging";
+import { toast } from "react-toastify";
 
 const useDeliverProps = () => {
   // Auth

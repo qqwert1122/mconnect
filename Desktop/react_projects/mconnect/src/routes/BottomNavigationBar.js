@@ -27,7 +27,7 @@ const BottomNavigationBar = ({ navValue, setNavValue }) => {
       <div className="w-screen fixed bottom-0 shadow-inner z-20">
         <ThemeProvider theme={theme}>
           <BottomNavigation
-            // showLabels={true}
+            showLabels={false}
             value={navValue}
             onChange={(event, newValue) => {
               if (navValue === newValue) {
@@ -38,17 +38,17 @@ const BottomNavigationBar = ({ navValue, setNavValue }) => {
             }}
           >
             <BottomNavigationAction
-              label="My Ideas"
-              value={"/ideas" || "*"}
+              // label="아이디어"
+              value={"/ideas" || "/"}
               icon={<NotesRoundedIcon />}
             />
             <BottomNavigationAction
-              label="Explore"
+              // label="탐색"
               value="/storming"
               icon={<ExploreRoundedIcon />}
             />
             <BottomNavigationAction
-              label="Profile"
+              // label="Profile"
               value="/setting"
               icon={<PersonRoundedIcon />}
             />

@@ -133,7 +133,7 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
     >
       {idea ? (
         <>
-          <div className="btn pt-4">
+          <div className="pt-4">
             <IdeaTop
               isOwner={isOwner}
               idea={idea}
@@ -165,9 +165,6 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
           {idea.connectedIDs.length > 0 && (
             <IdeaConnectedIdeas viewDetail={viewDetail} />
           )}
-          <div className="px-2">
-            <Divider className="" variant="middle" light={true} />
-          </div>
           <DeleteDialog
             deleteDialogOpen={deleteDialogOpen}
             setDeleteDialogOpen={setDeleteDialogOpen}

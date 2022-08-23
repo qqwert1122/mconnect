@@ -11,6 +11,7 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import { ToastContainer } from "react-toastify";
 import { authService } from "fbase";
 import "react-toastify/dist/ReactToastify.css";
+import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircle,
@@ -22,6 +23,9 @@ import {
   faBookmark as fasBookmark,
   faHeart,
   faCircleNodes,
+  faPencil,
+  faCircleExclamation,
+  faAd,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faCompass as farCompass,
@@ -73,6 +77,17 @@ const Ideas = ({ ...props }) => {
     }
   }, [selectedIdeas.length]);
 
+  const settings = {
+    dots: true,
+    arrows: false,
+    infinite: false,
+    speed: 500,
+    slidesToScroll: 1,
+    centerMode: false,
+    focusOnSelect: true,
+    initialSlide: 0,
+  };
+
   return (
     <>
       <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
@@ -89,6 +104,22 @@ const Ideas = ({ ...props }) => {
             isSelectMode && selectedIdeas.length ? "pt-36" : "pt-14"
           } pb-14 bg-stone-100 min-h-screen`}
         >
+          <div className="pt-6 pb-2 pl-4 font-black text-sm">
+            기록하세요, 저장하세요, 연결하세요
+          </div>
+          <ul className={`pb-10`}>
+            <Slider {...settings}>
+              <li className="p-5 w-full h-32 bg-stone-600 text-stone-400  text-sm">
+                정보 <FontAwesomeIcon icon={faCircleExclamation} />
+              </li>
+              <li className="p-5 w-full h-32 bg-stone-600 text-stone-400  text-sm">
+                정보 <FontAwesomeIcon icon={faCircleExclamation} />
+              </li>
+              <li className="p-5 w-full h-32 bg-stone-600 text-stone-400  text-sm">
+                정보 <FontAwesomeIcon icon={faCircleExclamation} />
+              </li>
+            </Slider>
+          </ul>
           {ideas.length > 0 ? (
             <>
               {/* <List
@@ -98,13 +129,20 @@ const Ideas = ({ ...props }) => {
               itemSize={getItemSize}
             > */}
               {ideas.map((idea, index) => (
-                <Idea
-                  key={idea.id}
-                  props={props}
-                  idea={idea}
-                  index={index}
-                  isSelectMode={isSelectMode}
-                />
+                <div key={idea.id} className="my-2">
+                  {index % 5 === 4 ? (
+                    <div className="py-6 bg-stone-600 text-stone-400 text-sm text-center font-black ">
+                      광고 <FontAwesomeIcon icon={faAd} />
+                    </div>
+                  ) : (
+                    <Idea
+                      props={props}
+                      idea={idea}
+                      index={index}
+                      isSelectMode={isSelectMode}
+                    />
+                  )}
+                </div>
               ))}
               {/* </List> */}
             </>

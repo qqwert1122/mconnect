@@ -43,7 +43,7 @@ const IdeaMiddle = ({
   };
 
   return (
-    <div className="w-full box-border px-4 mt-4 mb-4 " {...bind()}>
+    <div className="btn w-full box-border px-4 mt-4 mb-4 " {...bind()}>
       {/* title */}
       {idea.title !== "" && (
         <div className="flex items-center mb-2 w-full break-all font-black truncate">

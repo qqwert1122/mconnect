@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookmark,
   faChevronLeft,
+  faCircle,
   faEllipsisVertical,
   faHeart,
   faXmark,
@@ -93,11 +94,6 @@ const AlarmPage = ({ ...props }) => {
               >
                 @ {data.date}
               </span>
-              <span
-                className={`absolute -right-1 -top-1 text-center text-orange-400 bg-orange-200 w-5 h-5 rounded-full shadow`}
-              >
-                <FontAwesomeIcon icon={faXmark} />
-              </span>
               {data.type === "좋아요" && (
                 <span
                   className={`absolute left-3 bottom-1 ${
@@ -119,6 +115,9 @@ const AlarmPage = ({ ...props }) => {
             </div>
           </>
         ))}
+      </div>
+      <div className="p-5 pb-10 text-center text-stone-400">
+        최근 5개 알람만 보입니다
       </div>
     </>
   );
