@@ -356,7 +356,6 @@ const StormingIdea = ({ idea, timeDisplay }) => {
               />
             </button>
           </div>
-          <hr />
         </>
       ) : (
         <div className="ml-4 pt-2">

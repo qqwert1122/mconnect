@@ -26,6 +26,7 @@ const IdeasTopBar = ({ ...props }) => {
     setIsSelectMode,
     isViewDetailsClicked,
     setIsViewDetailsClicked,
+    alarm,
   } = props;
   const loggedInUser = useRecoilValue(userState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
@@ -45,30 +46,22 @@ const IdeasTopBar = ({ ...props }) => {
     navigate("/alarm");
   };
 
-  const [alarm, setAlarm] = useState(false);
-  const toastAlarm = () => {
-    setAlarm(true);
-    setTimeout(() => {
-      setAlarm(false);
-    }, 3000);
-  };
-
   return (
     <div className="fixed top-0 w-full z-10">
       <div className="flex justify-between items-center px-2 py-4 bg-white shadow">
         <div className="flex items-center gap-2">
           <span className="pl-2 text-lg font-black">아이디어</span>
           <span
-            className="h-5 flex justify-center items-center text-xs text-stone-400 bg-stone-100 rounded-xl px-2"
+            className="h-5 flex justify-center items-center font-black text-xs text-stone-400 bg-stone-200 rounded-xl px-2"
             style={{ minWidth: "24px", maxWidth: "128px" }}
           >
             {loggedInUser.idea_count}
           </span>
         </div>
         <div className="flex gap-2">
-          <button className="relative px-2" onClick={toastAlarm}>
+          {/* <button className="relative px-2" onClick={toastAlarm}>
             <FontAwesomeIcon icon={faCommentDots} size="lg" />
-          </button>
+          </button> */}
           <button className="relative px-2" onClick={onAlarmClick}>
             <FontAwesomeIcon icon={faBell} size="lg" />
             <span className="animate-ping absolute right-0 -top-1 w-4 h-4 bg-red-300 text-white rounded-full" />

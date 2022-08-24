@@ -67,7 +67,13 @@ const useDeliverProps = () => {
 
   // Get Ideas when app starts
   const [ideas, setIdeas] = useRecoilState(ideasState);
-
+  const [alarm, setAlarm] = useState(false);
+  const toastAlarm = () => {
+    setAlarm(true);
+    setTimeout(() => {
+      setAlarm(false);
+    }, 5000);
+  };
   useEffect(() => {
     if (isLoggedIn) {
       const q1 = query(
@@ -80,6 +86,7 @@ const useDeliverProps = () => {
           ...doc.data(),
         }));
         setIdeas(_ideas);
+        toastAlarm();
       });
     }
   }, [isLoggedIn]);
@@ -263,6 +270,7 @@ const useDeliverProps = () => {
     initEditor,
     // firestore
     getCount,
+    alarm,
   };
 };
 

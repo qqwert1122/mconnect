@@ -1,6 +1,7 @@
 import "css/Animation.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faAd,
   faBookmark,
   faChevronLeft,
   faCircle,
@@ -117,7 +118,10 @@ const AlarmPage = ({ ...props }) => {
         ))}
       </div>
       <div className="p-5 pb-10 text-center text-stone-400">
-        최근 5개 알람만 보입니다
+        최근 알림 5개만 보입니다
+      </div>
+      <div className="py-6 bg-stone-600 text-stone-400 text-sm text-center font-black ">
+        광고 <FontAwesomeIcon icon={faAd} />
       </div>
     </>
   );

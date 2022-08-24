@@ -253,7 +253,7 @@ const ViewIdeaContent = ({
 
       <hr />
       <div
-        className={`flex items-center px-5 py-4 mb-56 gap-4 duration-100 ${
+        className={`flex items-center px-5 py-4 gap-4 duration-100 ${
           itemChangeProps != 0 && "blur-sm"
         }`}
       >

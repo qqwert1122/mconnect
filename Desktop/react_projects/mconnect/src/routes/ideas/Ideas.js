@@ -50,6 +50,7 @@ const Ideas = ({ ...props }) => {
     initForm,
     initEditor,
     getCount,
+    alarm,
   } = props;
 
   const ideas = useRecoilValue(ideasState);
@@ -129,7 +130,7 @@ const Ideas = ({ ...props }) => {
               itemSize={getItemSize}
             > */}
               {ideas.map((idea, index) => (
-                <div key={idea.id} className="my-2">
+                <div key={index} className="my-2">
                   {index % 5 === 4 ? (
                     <div className="py-6 bg-stone-600 text-stone-400 text-sm text-center font-black ">
                       광고 <FontAwesomeIcon icon={faAd} />

@@ -67,13 +67,13 @@ const StormingTagBar = ({ setIdeas }) => {
   };
 
   return (
-    <div className="relative p-4 h-52 flex items-end shadow-inner bg-gradient-to-r from-indigo-900 to-sky-800">
-      <div className="absolute top-20 left-4 flex items-center text-lg text-blue-400 font-black gap-2">
+    <div className="relative p-4 h-40 flex items-end shadow-inner bg-gradient-to-r from-indigo-900 to-sky-800 ">
+      <div className="absolute top-4 left-4 flex items-center text-lg text-blue-400 font-black gap-2">
         Hot Trends
         <FontAwesomeIcon icon={faFireFlameCurved} />
       </div>
       <div
-        className={`absolute top-28 left-4 text-2xl font-black text-blue-200 duration-500`}
+        className={`absolute top-12 left-4 text-2xl font-black text-blue-200 duration-500`}
       >
         {itemPrmtr}
       </div>

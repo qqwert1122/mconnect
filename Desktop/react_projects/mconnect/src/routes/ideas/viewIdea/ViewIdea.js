@@ -19,6 +19,8 @@ import {
 import Skeleton from "@mui/material/Skeleton";
 import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
 import { userState, whatViewState } from "atom";
+import { faAd } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ViewIdea = ({ ...props }) => {
   const {
@@ -63,6 +65,9 @@ const ViewIdea = ({ ...props }) => {
               timeDisplay={timeDisplay}
               onBackClick={onBackClick}
             />
+          </div>
+          <div className="py-6 mt-2 mb-56 bg-stone-600 text-stone-400 text-sm text-center font-black ">
+            광고 <FontAwesomeIcon icon={faAd} />
           </div>
           <ViewIdeaBottom
             itemChangeProps={itemChangeProps}

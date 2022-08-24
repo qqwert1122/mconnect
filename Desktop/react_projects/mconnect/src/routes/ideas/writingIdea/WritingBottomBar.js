@@ -89,7 +89,7 @@ const WritingBottomBar = ({
           <FontAwesomeIcon icon={farCompass} />
           {formPublic && (
             <div
-              className="absolute bottom-0 -right-2 text-xs px-1 bg-stone-600 text-white rounded-3xl"
+              className="absolute -bottom-2 -right-5 text-xs px-1 bg-stone-600 text-white rounded-3xl border-white border-4"
               style={{ minWidth: "20px" }}
             >
               공개

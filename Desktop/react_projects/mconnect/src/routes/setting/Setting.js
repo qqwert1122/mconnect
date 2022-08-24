@@ -137,7 +137,7 @@ const Setting = ({ ...props }) => {
       </div>
       <div className="mt-20 mb-16">
         <div className="flex justify-between">
-          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-gradient-to-br from-red-500  via-orange-400 to-yellow-500 text-orange-50 font-black text-sm">
+          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-gradient-to-br from-red-400  via-orange-400 to-yellow-500 text-orange-50 font-black text-sm">
             <span className="absolute top-2 left-2">
               <FontAwesomeIcon icon={faCommentDollar} size="xl" />
             </span>

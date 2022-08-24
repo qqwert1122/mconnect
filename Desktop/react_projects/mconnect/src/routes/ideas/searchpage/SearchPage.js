@@ -6,13 +6,12 @@ import algoliasearch from "algoliasearch/lite";
 import {
   InstantSearch,
   SearchBox,
-  Hits,
   InfiniteHits,
   Highlight,
-  RefinementList,
-  Index,
   Configure,
+  RefinementList,
 } from "react-instantsearch-hooks-web";
+import { createInfiniteHitsSessionStorageCache } from "instantsearch.js/es/lib/infiniteHitsCache";
 import ShowingSearchIdeas from "./ShowingSearchIdeas";
 import FloatingUpButton from "../FloatingUpButton";
 import { toast } from "react-toastify";
@@ -23,6 +22,7 @@ import {
   faCheck,
   faChevronLeft,
   faHashtag,
+  faPlusCircle,
   faQuoteLeft,
   faXmarkCircle,
 } from "@fortawesome/free-solid-svg-icons";
@@ -149,6 +149,8 @@ const SearchPage = ({ ...props }) => {
     console.log(hit.objectID);
   };
 
+  const sessionStorageCache = createInfiniteHitsSessionStorageCache();
+
   return (
     <div className="min-h-screen flex-col">
       <div className="relative">
@@ -165,11 +167,16 @@ const SearchPage = ({ ...props }) => {
           </div>
           <div className="mt-14">
             <Configure
+              hitsPerPage={5}
               filters={
                 myIdea ? `userId:${loggedInUser.userId}` : "isPublic:true"
               }
             />
-            <InfiniteHits hitComponent={Hit} showPrevious={false} />
+            <InfiniteHits
+              hitComponent={Hit}
+              showPrevious={true}
+              cache={sessionStorageCache}
+            />
           </div>
         </InstantSearch>
       </div>
