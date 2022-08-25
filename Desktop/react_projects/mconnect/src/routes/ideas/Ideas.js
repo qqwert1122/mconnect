@@ -131,7 +131,7 @@ const Ideas = ({ ...props }) => {
             > */}
               {ideas.map((idea, index) => (
                 <div key={index} className="my-2">
-                  {index % 5 === 4 ? (
+                  {index % 7 === 6 ? (
                     <div className="py-6 bg-stone-600 text-stone-400 text-sm text-center font-black ">
                       광고 <FontAwesomeIcon icon={faAd} />
                     </div>

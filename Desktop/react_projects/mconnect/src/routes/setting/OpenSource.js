@@ -7,19 +7,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
-const OpenSource = ({ customHooks }) => {
-  const navigate = customHooks.navigate;
+const OpenSource = ({ ...props }) => {
+  const { navigate } = props;
   const onBackClick = () => {
     navigate(-1);
   };
 
   return (
     <div className="moveRightToLeft min-h-screen">
-      <div className="fixed top-0 w-full p-3 flex items-center gap-4 bg-white shadow z-10">
+      <div className="fixed top-0 z-10 w-full h-14 px-5 p-3 flex  items-center shadow bg-white">
         <button onClick={onBackClick}>
           <FontAwesomeIcon icon={faChevronLeft} size="lg" />
         </button>
-        <div className="font-black">오픈소스</div>
       </div>
       <div className="pt-20 px-5">
         <Accordion>

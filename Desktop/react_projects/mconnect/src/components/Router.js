@@ -12,6 +12,8 @@ import { Route, Routes } from "react-router-dom";
 import AlarmPage from "routes/ideas/alarm/AlarmPage";
 import { useRecoilValue } from "recoil";
 import { whatViewState } from "atom";
+import Report from "routes/setting/Report";
+import Eval from "routes/setting/Eval";
 
 const AppRouter = ({ ...props }) => {
   const whatView = useRecoilValue(whatViewState);
@@ -36,6 +38,8 @@ const AppRouter = ({ ...props }) => {
           <Route exact path="/alarm" element={<AlarmPage {...props} />} />
           <Route exact path="/storming" element={<Storming {...props} />} />
           <Route exact path="/setting" element={<Setting {...props} />} />
+          <Route exact path="/setting/report" element={<Report {...props} />} />
+          <Route exact path="/setting/eval" element={<Eval {...props} />} />
           <Route
             exact
             path="/setting/opensource"

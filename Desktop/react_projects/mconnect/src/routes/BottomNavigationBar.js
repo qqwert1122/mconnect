@@ -3,7 +3,7 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import NotesRoundedIcon from "@mui/icons-material/NotesRounded";
 import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
-import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const BottomNavigationBar = ({ navValue, setNavValue }) => {
@@ -50,7 +50,7 @@ const BottomNavigationBar = ({ navValue, setNavValue }) => {
             <BottomNavigationAction
               // label="Profile"
               value="/setting"
-              icon={<PersonRoundedIcon />}
+              icon={<MoreHorizRoundedIcon />}
             />
           </BottomNavigation>
         </ThemeProvider>

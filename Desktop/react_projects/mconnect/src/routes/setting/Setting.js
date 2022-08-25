@@ -13,10 +13,25 @@ import {
   faCommentDollar,
   faEnvelope,
   faCircleInfo,
+  faStar,
+  faMagnifyingGlass,
+  faMagnifyingGlassPlus,
+  faAd,
 } from "@fortawesome/free-solid-svg-icons";
-import { faImage } from "@fortawesome/free-regular-svg-icons";
+import { faEye, faImage } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilValue } from "recoil";
 import { userState } from "atom";
+import {
+  Button,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import InboxIcon from "@mui/icons-material/Inbox";
+import DraftsIcon from "@mui/icons-material/Drafts";
 
 const Setting = ({ ...props }) => {
   const { navigate, navValue, setNavValue } = props;
@@ -90,11 +105,6 @@ const Setting = ({ ...props }) => {
 
   const achievementItems = [
     {
-      label: "주가 떡상중📈",
-      bgColor: "bg-red-500",
-      color: "text-white",
-    },
-    {
       label: "불타는 열정🔥",
       bgColor: "bg-red-400",
       color: "text-white",
@@ -126,12 +136,31 @@ const Setting = ({ ...props }) => {
     },
   ];
 
+  const onEvalClick = () => {
+    navigate("/setting/eval");
+  };
+
+  const [checked, setChecked] = React.useState(["wifi"]);
+
+  const handleToggle = (value) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
   return (
     <>
       <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
       <div className="fixed top-0 w-full z-10">
         <div className="flex justify-between items-center px-2 p-4 bg-white shadow">
-          <div className="px-2 text-lg font-black">프로필</div>
+          <div className="px-2 text-lg font-black">더보기</div>
           <div className="flex gap-2"></div>
         </div>
       </div>
@@ -188,8 +217,8 @@ const Setting = ({ ...props }) => {
             </div>
           </div>
         </div>
-        <div className="relative m-5 p-5 rounded-xl shadow-lg bg-stone-100">
-          <div className="text-sm font-black pb-5">업적</div>
+        <div className="relative mx-5 p-5">
+          <div className="font-black pb-2">업적</div>
           <div className="flex flex-wrap gap-1">
             {achievementItems.map((item, index) => (
               <div
@@ -201,49 +230,60 @@ const Setting = ({ ...props }) => {
             ))}
           </div>
         </div>
-        <div className="flex justify-between">
-          <div className="w-1/2 h-24 relative ml-5 mr-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-sm">
-            <span className="absolute top-2 left-2">상세 모드</span>
-            <span className="absolute bottom-2 right-2">
-              <FormControlLabel
-                control={
-                  <Switch onChange={onDetailModeChange} color="warning" />
-                }
-              />
-            </span>
-          </div>
-          <div
-            className={`w-1/2 h-24 relative mr-5 ml-2 p-5 rounded-xl duration-1000 shadow-lg ${
-              darkMode ? "bg-stone-600 text-white" : "bg-stone-100"
-            } font-black text-sm`}
-          >
-            <span className="absolute top-2 left-2">다크 모드</span>
-            <span className="absolute bottom-2 right-2 ">
-              <FormControlLabel
-                checked={darkMode}
-                onChange={onDarkModeChange}
-                control={<MaterialUISwitch />}
-              />
-            </span>
-          </div>
-        </div>
-
-        <div className="flex justify-between">
-          <div className="w-1/2 h-24 relative my-5 ml-5 mr-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-sm">
-            <span className="absolute top-2 left-2">
-              <FontAwesomeIcon icon={faEnvelope} size="xl" />
-            </span>
-            <span className="absolute bottom-2 right-2">제안/제보</span>
-          </div>
+        {/* <div className="mx-5 p-5">
+          <div className="font-black">세팅</div>
+          <List>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Inbox" />
+                <Switch
+                  edge="end"
+                  onChange={handleToggle("wifi")}
+                  checked={checked.indexOf("wifi") !== -1}
+                  inputProps={{
+                    "aria-labelledby": "switch-list-label-wifi",
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <DraftsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Drafts" />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </div> */}
+        <div className="mx-5 p-5">
+          <div className="font-black pb-2">정보</div>
           <button
-            className="btn w-1/2 h-24 relative my-5 mr-5 ml-2 p-5 rounded-xl shadow-lg bg-stone-100 font-black text-sm"
+            className="btn flex items-center gap-5 p-2 w-full text-start shadow bg-stone-50 rounded-t-lg "
+            onClick={onEvalClick}
+          >
+            <FontAwesomeIcon icon={faStar} size="sm" color="gray" />
+            &nbsp;평가
+          </button>
+          <Divider />
+          <button className="btn flex items-center gap-5 p-2 w-full text-start shadow bg-stone-50  ">
+            <FontAwesomeIcon icon={faEnvelope} size="sm" color="gray" />
+            &nbsp;제안
+          </button>
+          <Divider />
+          <button
+            className="btn flex items-center gap-5 p-2 w-full text-start shadow-lg bg-stone-50 rounded-b-lg "
             onClick={onOpenSourceClick}
           >
-            <span className="absolute top-2 left-2">
-              <FontAwesomeIcon icon={faCircleInfo} size="xl" />
-            </span>
-            <span className="absolute bottom-2 right-2">오픈소스</span>
+            <FontAwesomeIcon icon={faCircleInfo} size="sm" color="gray" />
+            &nbsp;오픈소스
           </button>
+        </div>
+        <div className="m-5 mb-24 py-6 h-32 flex gap-2 justify-center items-center bg-stone-600 text-stone-400 text-sm text-center font-black ">
+          광고 <FontAwesomeIcon icon={faAd} />
         </div>
       </div>
     </>

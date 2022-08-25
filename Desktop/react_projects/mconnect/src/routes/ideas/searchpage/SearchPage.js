@@ -174,7 +174,7 @@ const SearchPage = ({ ...props }) => {
             />
             <InfiniteHits
               hitComponent={Hit}
-              showPrevious={true}
+              showPrevious={false}
               cache={sessionStorageCache}
             />
           </div>

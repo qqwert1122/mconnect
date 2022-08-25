@@ -67,7 +67,7 @@ const AlarmPage = ({ ...props }) => {
           <FontAwesomeIcon icon={faChevronLeft} size="lg" />
         </button>
       </div>
-      <div className="pt-14 bg-stone-50">
+      <div className="pt-14">
         {arr.map((data, index) => (
           <>
             <div
