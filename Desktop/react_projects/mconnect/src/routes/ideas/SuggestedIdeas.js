@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { dbService } from "fbase";
 import {
-  collection,
   collectionGroup,
   getDocs,
   orderBy,
@@ -16,23 +15,28 @@ import {
   faQuoteRight,
   faAngleDown,
   faCheck,
-  faHashtag,
   faBookmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { selectedIdeasState, formCnctedIdeasState } from "atom";
-import { whatViewState } from "atom";
-import { whatEditState } from "atom";
+import {
+  whatViewState,
+  whatEditState,
+  selectedIdeasState,
+  formCnctedIdeasState,
+} from "atom";
 
 const SuggestedIdeas = ({
+  id,
   writing,
   tagsPrmtr,
   tabChange,
   onIdeaClick,
   isItIn,
 }) => {
+  // id
+  //  - whatEdit or whatView id
   // Writing
   //  - is writing ? "from writing" : "from viewing"
   // tagsPrmtr
@@ -47,9 +51,6 @@ const SuggestedIdeas = ({
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
   const [formCnctedIdeas, setFormCnctedIdeas] =
     useRecoilState(formCnctedIdeasState);
-  const whatView = useRecoilValue(whatViewState);
-  const whatEdit = useRecoilValue(whatEditState);
-  const idea = writing ? whatEdit : whatView;
 
   // select tagPrmtr
   const [tagChangeProps, setTagChangeProps] = useState(
@@ -104,6 +105,7 @@ const SuggestedIdeas = ({
 
   // get Ideas that matches the tagPrmtr.
   const [filteredIdeas, setFilteredIdeas] = useState([]);
+  console.log(filteredIdeas);
 
   const getFilteredIdeas = async (query) => {
     const ideaRef = await getDocs(query);
@@ -167,8 +169,9 @@ const SuggestedIdeas = ({
           </button>
         ))}
       </div>
+
       <div className="relative pb-10">
-        {filteredIdeas.length === 0 ? (
+        {filteredIdeas.filter((_idea, index) => _idea.id != id).length === 0 ? (
           <div
             className="flex justify-center items-center text-xl font-black "
             style={{ height: "248px" }}
@@ -181,7 +184,7 @@ const SuggestedIdeas = ({
           <>
             <Slider {...sugtdSettings}>
               {filteredIdeas
-                .filter((_idea) => _idea.id != idea.id)
+                .filter((_idea) => _idea.id != id)
                 .map((idea, index) => (
                   <div key={index} className="relative">
                     <button

@@ -11,7 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
-const InputTagTab = ({ tagInput }) => {
+const InputTagTab = ({ tagInput, trends }) => {
   const [formTags, setFormTags] = useRecoilState(formTagsState);
   const recentTags = useRecoilValue(recentTagsState);
   const [formTag, setFormTag] = useState("");
@@ -41,22 +41,6 @@ const InputTagTab = ({ tagInput }) => {
     }
   };
 
-  const commonTags = [
-    "주식",
-    "부동산",
-    "사업",
-    "경영",
-    "경제",
-    "역사",
-    "환경",
-    "IT",
-    "국제",
-    "정치",
-    "사회",
-    "과학",
-    "기술",
-  ];
-
   return (
     <div className="moveRightToLeft">
       <div className="overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
@@ -81,12 +65,16 @@ const InputTagTab = ({ tagInput }) => {
           이런 태그는 어때요 <FontAwesomeIcon icon={faThumbsUp} />
         </div>
         <div className="p-4 pt-2 flex flex-wrap">
-          {commonTags.map((tag, index) => (
+          {trends.map((tag, index) => (
             <button
               key={index}
               className={`border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words ${
-                formTags.includes(tag) ? "bg-stone-300 " : "bg-white"
-              }`}
+                formTags.includes(tag)
+                  ? "bg-stone-300 "
+                  : index === 0
+                  ? "bg-gradient-to-r from-orange-200 to-pink-200 border-red-200"
+                  : "bg-white"
+              } `}
               onClick={(e) => onTagClick(e, tag)}
             >
               {tag}

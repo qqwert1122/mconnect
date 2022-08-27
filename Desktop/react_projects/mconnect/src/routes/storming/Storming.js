@@ -1,60 +1,28 @@
 import BottomNavigationBar from "routes/BottomNavigationBar";
 import StormingTopBar from "./StormingTopBar";
-import StormingToggleButton from "./StormingToggleButton";
 import StormingTagBar from "./StormingTagBar";
 import StormingIdea from "./StormingIdea";
 import React, { useEffect, useState } from "react";
 import { dbService } from "fbase";
 import {
-  doc,
-  increment,
-  updateDoc,
-  collection,
-  onSnapshot,
   query,
   orderBy,
   where,
-  arrayUnion,
   collectionGroup,
   getDocs,
 } from "firebase/firestore";
-import dayjs from "dayjs";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Dialog from "@mui/material/Dialog";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {} from "@fortawesome/free-regular-svg-icons";
 import {
-  faCopy,
-  faCompass as farCompass,
-  faHeart as farHeart,
-  faBookmark as farBookmark,
-  faThumbsUp,
-} from "@fortawesome/free-regular-svg-icons";
-import {
-  faEllipsis,
-  faHashtag,
-  faFireFlameCurved,
-  faDice,
-  faBolt,
   faQuoteLeft,
-  faCompass as fasCompass,
-  faHeart as fasHeart,
-  faBookmark as fasBookmark,
   faAd,
-  faCircleExclamation,
+  faFireFlameCurved,
 } from "@fortawesome/free-solid-svg-icons";
-import FloatingUpButton from "routes/ideas/FloatingUpButton";
-import { useRecoilValue } from "recoil";
-import { userState } from "atom";
 import Slider from "react-slick";
 
 const Storming = ({ ...props }) => {
-  const { isLoggedIn, timeDisplay, navValue, setNavValue } = props;
+  const { isLoggedIn, timeDisplay, navValue, setNavValue, trends } = props;
 
   // original and opened ideas
   const [ideas, setIdeas] = useState([]);
@@ -82,13 +50,14 @@ const Storming = ({ ...props }) => {
   };
 
   const settings = {
-    dots: true,
+    className: "center",
+    centerMode: true,
+    centerPadding: "30px",
     arrows: false,
     infinite: false,
     speed: 500,
-    slidesToScroll: 1,
-    centerMode: true,
     focusOnSelect: true,
+    slidesToScroll: 1,
     initialSlide: 0,
   };
 
@@ -97,8 +66,8 @@ const Storming = ({ ...props }) => {
       <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
       <StormingTopBar />
       <div className="bg-stone-100 min-h-screen pb-14 text-sm">
-        <div className="text-center mt-14 pt-6 pb-2 pl-4 font-black text-base">
-          이번 주 추천 아이디어 👍
+        <div className="pt-20 m-4 mb-2  font-black text-base">
+          👍 이번 주 추천 아이디어
         </div>
         <ul className={`pb-10`}>
           <Slider {...settings}>
@@ -188,8 +157,11 @@ const Storming = ({ ...props }) => {
             </div>
           </Slider>
         </ul>
-        <StormingTagBar setIdeas={setIdeas} />
-
+        <div className="flex gap-2 ml-4 mb-2 font-black text-base">
+          <FontAwesomeIcon icon={faFireFlameCurved} size="lg" color="orange" />
+          인기 태그
+        </div>
+        <StormingTagBar setIdeas={setIdeas} trends={trends} />
         {ideas.length > 0 ? (
           <>
             {ideas.map((idea, index) => (
@@ -199,7 +171,7 @@ const Storming = ({ ...props }) => {
                     광고 <FontAwesomeIcon icon={faAd} />
                   </div>
                 ) : (
-                  <div key={index} className="bg-white">
+                  <div key={index} className="bg-white rounded-lg">
                     <StormingIdea idea={idea} timeDisplay={timeDisplay} />
                   </div>
                 )}

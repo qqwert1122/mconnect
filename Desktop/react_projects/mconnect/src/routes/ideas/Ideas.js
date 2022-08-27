@@ -1,42 +1,19 @@
 import Idea from "routes/ideas/idea/Idea";
 import IdeasTopBar from "./IdeasTopBar";
 import BottomNavigationBar from "routes/BottomNavigationBar";
-import IdeasToggleButton from "routes/ideas/IdeasToggleButton";
 import FloatingActionButton from "./FloatingActionButton";
-import FloatingUpButton from "./FloatingUpButton";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useBottomScrollListener } from "react-bottom-scroll-listener";
 import { VariableSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { ToastContainer } from "react-toastify";
-import { authService } from "fbase";
 import "react-toastify/dist/ReactToastify.css";
 import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircle,
-  faDiceD6,
-  faMinus,
-  faSquare,
-  faCompass as fasCompass,
-  faHeart as fasHeart,
-  faBookmark as fasBookmark,
-  faHeart,
-  faCircleNodes,
-  faPencil,
-  faCircleExclamation,
-  faAd,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  faCompass as farCompass,
-  faHeart as farHeart,
-  faBookmark as farBookmark,
-} from "@fortawesome/free-regular-svg-icons";
+import { faCircleExclamation, faAd } from "@fortawesome/free-solid-svg-icons";
+import {} from "@fortawesome/free-regular-svg-icons";
 import { useRecoilValue } from "recoil";
-import { ideaListState } from "atom";
-import { selectedIdeaListState } from "atom";
-import { ideasState } from "atom";
-import { selectedIdeasState } from "atom";
+import { ideasState, selectedIdeasState } from "atom";
 
 const Ideas = ({ ...props }) => {
   const {
@@ -49,8 +26,11 @@ const Ideas = ({ ...props }) => {
     isItIn,
     initForm,
     initEditor,
-    getCount,
     alarm,
+    countUpdate,
+    onLikeUpdate,
+    onBookmarkUpdate,
+    onPublicUpdate,
   } = props;
 
   const ideas = useRecoilValue(ideasState);

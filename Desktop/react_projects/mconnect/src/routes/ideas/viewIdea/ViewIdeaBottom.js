@@ -74,6 +74,7 @@ const ViewIdeaBottom = ({
       {itemChangeProps === 1 && (
         <div className="moveRightToLeft bg-stone-50 shadow-inner">
           <SuggestedIdeas
+            id={whatView.id}
             Writing={false}
             tagsPrmtr={whatView.tags}
             tabChange={itemChange}

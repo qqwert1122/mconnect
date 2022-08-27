@@ -1,7 +1,5 @@
 import "css/Animation.css";
 import "instantsearch.css/themes/satellite.css";
-// import "instantsearch.css/themes/reset.css";
-import { useEffect, useState } from "react";
 import algoliasearch from "algoliasearch/lite";
 import {
   InstantSearch,
@@ -9,26 +7,21 @@ import {
   InfiniteHits,
   Highlight,
   Configure,
-  RefinementList,
 } from "react-instantsearch-hooks-web";
 import { createInfiniteHitsSessionStorageCache } from "instantsearch.js/es/lib/infiniteHitsCache";
-import ShowingSearchIdeas from "./ShowingSearchIdeas";
-import FloatingUpButton from "../FloatingUpButton";
-import { toast } from "react-toastify";
-import { Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookmark,
   faCheck,
   faChevronLeft,
   faHashtag,
-  faPlusCircle,
   faQuoteLeft,
-  faXmarkCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedIdeasState } from "atom";
 import { userState } from "atom";
+import { toast } from "react-toastify";
+import { Avatar } from "@mui/material";
 
 const SearchPage = ({ ...props }) => {
   const { navigate, getIDsFromIdeas } = props;

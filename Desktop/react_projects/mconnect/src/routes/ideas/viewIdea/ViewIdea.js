@@ -2,22 +2,11 @@ import "css/Animation.css";
 import ViewIdeaTopBar from "./ViewIdeaTopBar";
 import ViewIdeaContent from "./ViewIdeaContent";
 import ViewIdeaBottom from "./ViewIdeaBottom";
-import React, { useEffect, useState, useRef } from "react";
-import { dbService } from "fbase";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  increment,
-  query,
-  onSnapshot,
-  collection,
-  where,
-  getDocs,
-  documentId,
-} from "firebase/firestore";
+import React, { useState } from "react";
+import {} from "fbase";
+import {} from "firebase/firestore";
 import Skeleton from "@mui/material/Skeleton";
-import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { userState, whatViewState } from "atom";
 import { faAd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,14 +15,19 @@ const ViewIdea = ({ ...props }) => {
   const {
     timeDisplay,
     navigate,
-    isOwner,
     getIdeasFromIDs,
     initEditor,
     isItIn,
+    getCount,
+    countUpdate,
+    onLikeUpdate,
+    onBookmarkUpdate,
+    onPublicUpdate,
   } = props;
   const loggedInUser = useRecoilValue(userState);
   const whatView = useRecoilValue(whatViewState);
   const clearWhatView = useResetRecoilState(whatViewState);
+  const isOwner = loggedInUser.userId === whatView.userId;
 
   const onBackClick = () => {
     clearWhatView();
@@ -64,6 +58,11 @@ const ViewIdea = ({ ...props }) => {
               isOwner={isOwner}
               timeDisplay={timeDisplay}
               onBackClick={onBackClick}
+              getCount={getCount}
+              countUpdate={countUpdate}
+              onLikeUpdate={onLikeUpdate}
+              onBookmarkUpdate={onBookmarkUpdate}
+              onPublicUpdate={onPublicUpdate}
             />
           </div>
           <div className="py-6 mt-2 mb-56 bg-stone-600 text-stone-400 text-sm text-center font-black ">

@@ -1,16 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
-import { dbService } from "fbase";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  increment,
-  query,
-  onSnapshot,
-  collection,
-} from "firebase/firestore";
-import Skeleton from "@mui/material/Skeleton";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import {} from "fbase";
+import {} from "firebase/firestore";
 import { colorsState } from "atom";
 import { useRecoilValue } from "recoil";
 import { cnctedIdeasState } from "atom";

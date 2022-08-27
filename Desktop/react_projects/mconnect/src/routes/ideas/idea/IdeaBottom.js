@@ -1,5 +1,11 @@
 import { dbService } from "fbase";
-import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  increment,
+  updateDoc,
+} from "firebase/firestore";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,17 +23,21 @@ import {
 import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { userState } from "atom";
-import { countState } from "atom";
+import { userState, countState } from "atom";
 
-const IdeaBottom = ({ isOwner, idea, viewDetail, setViewDetail, getCount }) => {
+const IdeaBottom = ({
+  isOwner,
+  idea,
+  viewDetail,
+  setViewDetail,
+  countUpdate,
+  onLikeUpdate,
+  onBookmarkUpdate,
+  onPublicUpdate,
+}) => {
   const loggedInUser = useRecoilValue(userState);
-  const count = useRecoilValue(countState);
-  const isDeleted = count === undefined;
-
-  useEffect(() => {
-    getCount(idea);
-  }, []);
+  // const isDeleted = count === undefined;
+  const isDeleted = false;
 
   const countRef = doc(dbService, "counts", idea.id);
   const ideaRef = doc(
@@ -39,97 +49,21 @@ const IdeaBottom = ({ isOwner, idea, viewDetail, setViewDetail, getCount }) => {
   );
   const userRef = doc(dbService, "users", loggedInUser.userId);
 
-  const onLikeClick = async () => {
-    if (idea.isLiked) {
-      if (isDeleted) {
-        await updateDoc(ideaRef, {
-          isLiked: false,
-        });
-      } else {
-        delete count.like_users[loggedInUser.userId];
-        await updateDoc(countRef, {
-          like_count: increment(-1),
-          like_users: count.like_users,
-        });
-        await updateDoc(ideaRef, {
-          isLiked: false,
-        });
-      }
-    } else {
-      if (isDeleted) {
-        await updateDoc(ideaRef, {
-          isLiked: true,
-        });
-      } else {
-        await updateDoc(countRef, {
-          like_count: increment(1),
-          like_users: {
-            ...count.like_users,
-            [loggedInUser.userId]: loggedInUser.userName,
-          },
-        });
-        await updateDoc(ideaRef, {
-          isLiked: true,
-        });
-      }
-    }
+  const onLikeClick = () => {
+    onLikeUpdate(idea);
+    countUpdate(idea, "like");
   };
 
-  const onBookmarkClick = async () => {
-    if (idea.isBookmarked) {
-      if (isDeleted) {
-        await updateDoc(ideaRef, {
-          isBookmarked: false,
-        });
-      } else {
-        delete count.bookmark_users[loggedInUser.userId];
-        await updateDoc(countRef, {
-          bookmark_count: increment(-1),
-          bookmark_users: count.bookmark_users,
-        });
-        await updateDoc(ideaRef, {
-          isBookmarked: false,
-        });
-      }
-      if (isOwner === false) {
-        await updateDoc(ideaRef, {
-          isDeleted: true,
-        });
-        await updateDoc(userRef, {
-          idea_count: increment(-1),
-        });
-      }
-    } else {
-      if (isDeleted) {
-        await updateDoc(ideaRef, {
-          isBookmarked: true,
-        });
-      } else {
-        await updateDoc(countRef, {
-          bookmark_count: increment(1),
-          bookmark_users: {
-            ...count.bookmark_users,
-            [loggedInUser.userId]: loggedInUser.userName,
-          },
-        });
-        await updateDoc(ideaRef, {
-          isBookmarked: true,
-        });
-      }
+  const onBookmarkClick = () => {
+    onBookmarkUpdate(idea);
+    if (isOwner === false) {
+      deleteDoc(ideaRef);
     }
+    countUpdate(idea, "bookmark");
   };
 
-  const onPublicClick = async () => {
-    if (isOwner) {
-      const ideaRef = doc(
-        dbService,
-        "users",
-        loggedInUser.userId,
-        "userIdeas",
-        idea.id
-      );
-      await updateDoc(ideaRef, { isPublic: !idea.isPublic });
-    }
+  const onPublicClick = () => {
+    onPublicUpdate(idea);
   };
 
   const onDetailClick = () => {

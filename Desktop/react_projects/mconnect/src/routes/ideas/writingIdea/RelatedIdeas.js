@@ -12,11 +12,15 @@ import {
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { Avatar } from "@mui/material";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { whatViewState } from "atom";
-import { formCnctedIdeasState } from "atom";
-import { formTagsState } from "atom";
+import {
+  whatEditState,
+  whatViewState,
+  formCnctedIdeasState,
+  formTagsState,
+} from "atom";
 
 const RelatedIdeas = ({ navigate, isItIn }) => {
+  const whatEdit = useRecoilValue(whatEditState);
   const setWhatView = useSetRecoilState(whatViewState);
   const [formCnctedIdeas, setFormCnctedIdeas] =
     useRecoilState(formCnctedIdeasState);
@@ -163,6 +167,7 @@ const RelatedIdeas = ({ navigate, isItIn }) => {
         {tabs === 1 && (
           <>
             <SuggestedIdeas
+              id={-1}
               writing={true}
               tagsPrmtr={formTags}
               tabChange=""

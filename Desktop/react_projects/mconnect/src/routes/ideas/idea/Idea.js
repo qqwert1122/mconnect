@@ -7,27 +7,11 @@ import DeleteDialog from "./DeleteDialog";
 import IdeaConnectedIdeas from "./IdeaConnectedIdeas";
 import React, { useEffect, useState, useRef } from "react";
 import { dbService } from "fbase";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  increment,
-  query,
-  onSnapshot,
-  collection,
-  documentId,
-  getDocs,
-  where,
-} from "firebase/firestore";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
+import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
 import Skeleton from "@mui/material/Skeleton";
-import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { getContainerUtilityClass } from "@mui/system";
+import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { userState, whatViewState, selectedIdeasState } from "atom";
-import { ideasState } from "atom";
+import { userState, ideasState, whatViewState, selectedIdeasState } from "atom";
 
 const Idea = ({ props, idea, index, isSelectMode }) => {
   const {
@@ -35,8 +19,11 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
     initEditor,
     timeDisplay,
     getIdeasFromIDs,
-    getCount,
     isItIn,
+    countUpdate,
+    onLikeUpdate,
+    onBookmarkUpdate,
+    onPublicUpdate,
   } = props;
 
   const loggedInUser = useRecoilValue(userState);
@@ -127,7 +114,7 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
 
   return (
     <div
-      className={`bg-white text-sm ${
+      className={`rounded-lg bg-white text-sm ${
         index === ideas.length - 1 && "shadow-xl"
       }`}
     >
@@ -160,7 +147,10 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
             idea={idea}
             viewDetail={viewDetail}
             setViewDetail={setViewDetail}
-            getCount={getCount}
+            countUpdate={countUpdate}
+            onLikeUpdate={onLikeUpdate}
+            onBookmarkUpdate={onBookmarkUpdate}
+            onPublicUpdate={onPublicUpdate}
           />
           {idea.connectedIDs.length > 0 && (
             <IdeaConnectedIdeas viewDetail={viewDetail} />

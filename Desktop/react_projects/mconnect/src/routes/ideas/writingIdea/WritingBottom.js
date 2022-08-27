@@ -17,25 +17,12 @@ const WritingBottom = ({
   bottomItemChangeProps,
   setBottomItemChangeProps,
   isItIn,
+  trends,
 }) => {
   const sourceInput = useRef();
   const tagInput = useRef();
 
   const formCnctedIdeas = useRecoilValue(formCnctedIdeasState);
-
-  // const tabRef = useRef();
-
-  // const tabCloseHandler = ({ target }) => {
-  //   if (bottomItemChangeProps != 0 && !tabRef.current.contains(target))
-  //     setBottomItemChangeProps(0);
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("click", tabCloseHandler);
-  //   return () => {
-  //     window.removeEventListener("click", tabCloseHandler);
-  //   };
-  // });
 
   useEffect(() => {
     switch (bottomItemChangeProps) {
@@ -49,10 +36,7 @@ const WritingBottom = ({
   }, [bottomItemChangeProps]);
 
   return (
-    <div
-      className="w-screen fixed bottom-0 z-30"
-      // ref={tabRef}
-    >
+    <div className="w-screen fixed bottom-0 z-30">
       {bottomItemChangeProps === 0 && (
         <ColoredIdeaList ideas={formCnctedIdeas} />
       )}
@@ -61,7 +45,9 @@ const WritingBottom = ({
         <InputSourceTab sourceInput={sourceInput} />
       )}
 
-      {bottomItemChangeProps === 2 && <InputTagTab tagInput={tagInput} />}
+      {bottomItemChangeProps === 2 && (
+        <InputTagTab tagInput={tagInput} trends={trends} />
+      )}
 
       {bottomItemChangeProps === 3 && (
         <RelatedIdeas navigate={navigate} isItIn={isItIn} />

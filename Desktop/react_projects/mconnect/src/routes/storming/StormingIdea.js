@@ -4,16 +4,9 @@ import {
   doc,
   increment,
   updateDoc,
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-  where,
-  arrayUnion,
-  collectionGroup,
-  getDocs,
   getDoc,
   setDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import dayjs from "dayjs";
 import Avatar from "@mui/material/Avatar";
@@ -27,19 +20,13 @@ import ListItemText from "@mui/material/ListItemText";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCopy,
-  faCompass as farCompass,
   faHeart as farHeart,
   faBookmark as farBookmark,
-  faThumbsUp,
 } from "@fortawesome/free-regular-svg-icons";
 import {
   faEllipsis,
   faHashtag,
-  faFireFlameCurved,
-  faDice,
-  faBolt,
   faQuoteLeft,
-  faCompass as fasCompass,
   faHeart as fasHeart,
   faBookmark as fasBookmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -49,100 +36,115 @@ import { userState } from "atom";
 
 const StormingIdea = ({ idea, timeDisplay }) => {
   const loggedInUser = useRecoilValue(userState);
+  const isOwner = loggedInUser.userId === idea.userId;
+
+  // fb reference
+  const countRef = doc(dbService, "counts", idea.id);
+  const userIdeaRef = doc(
+    dbService,
+    "users",
+    loggedInUser.userId,
+    "userIdeas",
+    idea.id
+  );
+  const userRef = doc(dbService, "users", loggedInUser.userId);
 
   // user Information and Idea's like, bookmark, view count Information
-  const [ideaInfo, setIdeaInfo] = useState();
+  const [count, setCount] = useState();
 
-  const getCountInfo = async () => {
-    const countDoc = (await getDoc(doc(dbService, "counts", idea.id))).data();
-    setIdeaInfo(countDoc);
+  const getCount = async () => {
+    const countDoc = (await getDoc(countRef)).data();
+    setCount(countDoc);
   };
-
-  const [isOwner, setIsOwner] = useState(loggedInUser.userId === idea.userId);
 
   useEffect(() => {
     setTimeout(() => {
-      getCountInfo();
+      getCount();
     }, 1000);
   }, []);
 
-  const onLikeClick = async (idea) => {
-    const countRef = doc(dbService, "counts", `${idea.id}`);
-    const userIdeaRef = doc(
-      dbService,
-      "users",
-      loggedInUser.userId,
-      "userIdeas",
-      idea.id
-    );
-    if (ideaInfo.like_users.hasOwnProperty(loggedInUser.userId)) {
-      const newIdeaInfo = { ...ideaInfo };
-      delete newIdeaInfo.like_users[loggedInUser.userId];
-      setIdeaInfo(newIdeaInfo);
+  // update firestore about like or bookmark
+  const onLikeClick = async () => {
+    if (count.like_users.hasOwnProperty(loggedInUser.userId)) {
+      const newCount = { ...count };
+      delete newCount.like_users[loggedInUser.userId];
+      // update state for re-rendering
+      setCount(newCount);
+      // update firestore
       await updateDoc(countRef, {
         like_count: increment(-1),
-        like_users: ideaInfo.like_users,
+        like_users: newCount.like_users,
       });
+      // update userIdea if user has this idea
       if ((await getDoc(userIdeaRef)).data()) {
         await updateDoc(userIdeaRef, {
           isLiked: false,
         });
       }
     } else {
+      const newCount = { ...count };
+      newCount.like_users[loggedInUser.userId] = loggedInUser.userName;
+      // update state for re-rendering
+      setCount(newCount);
+      // update firestore
       await updateDoc(countRef, {
         like_count: increment(1),
         like_users: {
-          ...ideaInfo.like_users,
+          ...count.like_users,
           [loggedInUser.userId]: loggedInUser.userName,
         },
       });
+      // update userIdea if user has this idea
       if ((await getDoc(userIdeaRef)).data()) {
         await updateDoc(userIdeaRef, {
           isLiked: true,
         });
       }
-      const newIdeaInfo = { ...ideaInfo };
-      newIdeaInfo.like_users[loggedInUser.userId] = true;
-      setIdeaInfo(newIdeaInfo);
     }
   };
 
   const onBookmarkClick = async (idea) => {
-    const countRef = doc(dbService, "counts", idea.id);
-    const userIdeaRef = doc(
-      dbService,
-      "users",
-      loggedInUser.userId,
-      "userIdeas",
-      idea.id
-    );
-    const userRef = doc(dbService, "users", loggedInUser.userId);
-    if (ideaInfo.bookmark_users.hasOwnProperty(loggedInUser.userId)) {
-      const newIdeaInfo = { ...ideaInfo };
-      delete newIdeaInfo.bookmark_users[loggedInUser.userId];
-      setIdeaInfo(newIdeaInfo);
+    const newCount = { ...count };
+    if (count.bookmark_users.hasOwnProperty(loggedInUser.userId)) {
+      delete newCount.bookmark_users[loggedInUser.userId];
+      // update state for re-rendering
+      setCount(newCount);
+      // update firestore
       await updateDoc(countRef, {
         bookmark_count: increment(-1),
-        bookmark_users: ideaInfo.bookmark_users,
+        bookmark_users: newCount.bookmark_users,
       });
-      if (isOwner === false) {
-        await updateDoc(userIdeaRef, { isDeleted: true });
+      if (isOwner) {
+        // if user is owner, update userIdea
+        await updateDoc(userIdeaRef, {
+          isBookmarked: false,
+        });
+      } else {
+        // if user is not owner, delete userIdea
+        await deleteDoc(userIdeaRef);
         await updateDoc(userRef, {
           idea_count: increment(-1),
         });
       }
     } else {
+      newCount.bookmark_users[loggedInUser.userId] = loggedInUser.userName;
+      // update state for re-rendering
+      setCount(newCount);
+      // update firestore
       await updateDoc(countRef, {
         bookmark_count: increment(1),
         bookmark_users: {
-          ...ideaInfo.bookmark_users,
+          ...count.bookmark_users,
           [loggedInUser.userId]: loggedInUser.userName,
         },
       });
-      const newIdeaInfo = { ...ideaInfo };
-      newIdeaInfo.bookmark_users[loggedInUser.userId] = loggedInUser.userName;
-      setIdeaInfo(newIdeaInfo);
-      if (isOwner === false) {
+      if (isOwner) {
+        // if user is owner, update userIdea
+        await updateDoc(userIdeaRef, {
+          isBookmarked: true,
+        });
+      } else {
+        // if user is not owner, create new userIdea
         await setDoc(userIdeaRef, {
           userId: idea.userId,
           userName: idea.userName,
@@ -151,19 +153,19 @@ const StormingIdea = ({ idea, timeDisplay }) => {
           text: idea.text,
           source: idea.source,
           tags: idea.tags,
-          connectedIDs: idea.connectedIdeas,
+          connectedIDs: idea.connectedIDs,
           createdAt: idea.createdAt,
           updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
           isPublic: false,
-          isLiked: ideaInfo.like_users.hasOwnProperty(loggedInUser.userId),
+          isLiked: count.like_users.hasOwnProperty(loggedInUser.userId),
           isBookmarked: true,
-          isViewed: ideaInfo.view_users.hasOwnProperty(loggedInUser.userId),
+          isViewed: count.view_users.hasOwnProperty(loggedInUser.userId),
           isOriginal: false,
         });
+        await updateDoc(userRef, {
+          idea_count: increment(1),
+        });
       }
-      await updateDoc(userRef, {
-        idea_count: increment(1),
-      });
     }
   };
 
@@ -190,9 +192,9 @@ const StormingIdea = ({ idea, timeDisplay }) => {
 
   return (
     <>
-      {ideaInfo ? (
+      {count ? (
         <>
-          <div className="flex justify-between items-center pt-2 ml-4">
+          <div className="flex justify-between items-center pt-4 ml-4">
             {/* avatar, name, time */}
             <div className="flex items-center gap-2">
               <Avatar
@@ -325,14 +327,14 @@ const StormingIdea = ({ idea, timeDisplay }) => {
           <div className="flex px-5 pb-5 gap-5 text-stone-500">
             <button
               className={`${
-                ideaInfo.like_users.hasOwnProperty(loggedInUser.userId) &&
+                count.like_users.hasOwnProperty(loggedInUser.userId) &&
                 "text-red-400"
               }`}
               onClick={() => onLikeClick(idea)}
             >
               <FontAwesomeIcon
                 icon={
-                  ideaInfo.like_users.hasOwnProperty(loggedInUser.userId)
+                  count.like_users.hasOwnProperty(loggedInUser.userId)
                     ? fasHeart
                     : farHeart
                 }
@@ -341,14 +343,14 @@ const StormingIdea = ({ idea, timeDisplay }) => {
             </button>
             <button
               className={`${
-                ideaInfo.bookmark_users.hasOwnProperty(loggedInUser.userId) &&
+                count.bookmark_users.hasOwnProperty(loggedInUser.userId) &&
                 "text-orange-400"
               }`}
               onClick={() => onBookmarkClick(idea)}
             >
               <FontAwesomeIcon
                 icon={
-                  ideaInfo.bookmark_users.hasOwnProperty(loggedInUser.userId)
+                  count.bookmark_users.hasOwnProperty(loggedInUser.userId)
                     ? fasBookmark
                     : farBookmark
                 }

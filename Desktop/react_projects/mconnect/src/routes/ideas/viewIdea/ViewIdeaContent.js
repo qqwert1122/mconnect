@@ -1,6 +1,12 @@
-import { useState } from "react";
-import { authService, dbService } from "fbase";
-import { doc, updateDoc, increment } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { dbService } from "fbase";
+import {
+  doc,
+  updateDoc,
+  increment,
+  getDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -27,12 +33,37 @@ const ViewIdeaContent = ({
   isOwner,
   timeDisplay,
   onBackClick,
+  getCount,
+  countUpdate,
+  onLikeUpdate,
+  onBookmarkUpdate,
+  onPublicUpdate,
 }) => {
   const [whatView, setWhatView] = useRecoilState(whatViewState);
-  const [count, setCount] = useRecoilState(countState);
-  const isDeleted = count === undefined;
+  const [count, setCount] = useState({});
 
-  const countRef = doc(dbService, "counts", whatView.id);
+  const [init, setInit] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  // get Data from promise
+  getCount(whatView).then((data) => {
+    if (data === undefined || null) {
+      setIsDeleted(true);
+    } else {
+      setIsDeleted(false);
+    }
+    setCount(data);
+    // initialize the state of deletion
+    setInit(true);
+  });
+
+  // click event with firestore
+  const onLikeClick = () => {
+    onLikeUpdate(whatView);
+    countUpdate(whatView, "like");
+    setWhatView({ ...whatView, isLiked: !whatView.isLiked });
+  };
+
   const ideaRef = doc(
     dbService,
     "users",
@@ -40,114 +71,19 @@ const ViewIdeaContent = ({
     "userIdeas",
     whatView.id
   );
-  const userRef = doc(dbService, "users", user.userId);
-
-  const onLikeClick = async () => {
-    if (whatView.isLiked) {
-      if (isDeleted) {
-        await updateDoc(ideaRef, {
-          isLiked: false,
-        });
-      } else {
-        const newCount = {
-          ...count,
-          like_count: count.like_count - 1,
-        };
-        delete newCount.like_users[user.userId];
-        setCount(newCount);
-        await updateDoc(countRef, {
-          like_count: increment(-1),
-          like_users: count.like_users,
-        });
-        await updateDoc(ideaRef, {
-          isLiked: false,
-        });
-      }
-      setWhatView({ ...whatView, isLiked: false });
-    } else {
-      if (isDeleted) {
-        await updateDoc(ideaRef, {
-          isLiked: true,
-        });
-      } else {
-        await updateDoc(countRef, {
-          like_count: increment(1),
-          like_users: { ...count.like_users, [user.userId]: user.userName },
-        });
-        await updateDoc(ideaRef, {
-          isLiked: true,
-        });
-        const newCount = {
-          ...count,
-          like_count: count.like_count + 1,
-        };
-        setCount(newCount);
-      }
-      setWhatView({ ...whatView, isLiked: true });
-    }
-  };
-
-  const onBookmarkClick = async () => {
-    if (isOwner) {
-      if (whatView.isBookmarked) {
-        delete count.bookmark_users[user.userId];
-        await updateDoc(countRef, {
-          bookmark_count: increment(-1),
-          bookmark_users: count.bookmark_users,
-        });
-        await updateDoc(ideaRef, {
-          isBookmarked: false,
-        });
-        const newCount = {
-          ...count,
-          bookmark_count: count.bookmark_count - 1,
-        };
-        setCount(newCount);
-        setWhatView({ ...whatView, isBookmarked: false });
-      } else {
-        await updateDoc(countRef, {
-          bookmark_count: increment(1),
-          bookmark_users: {
-            ...count.bookmark_users,
-            [user.userId]: user.userName,
-          },
-        });
-        await updateDoc(ideaRef, {
-          isBookmarked: true,
-        });
-        const newCount = {
-          ...count,
-          bookmark_count: count.bookmark_count + 1,
-        };
-        setCount(newCount);
-        setWhatView({ ...whatView, isBookmarked: true });
-      }
-    } else {
+  const onBookmarkClick = () => {
+    onBookmarkUpdate(whatView);
+    countUpdate(whatView, "bookmark");
+    setWhatView({ ...whatView, isBookmarked: !whatView.isBookmarked });
+    if (isOwner === false) {
       onBackClick();
-      delete count.bookmark_users[user.userId];
-      await updateDoc(countRef, {
-        bookmark_count: increment(-1),
-        bookmark_users: count.bookmark_users,
-      });
-      await updateDoc(userRef, {
-        idea_count: increment(-1),
-      });
-      await updateDoc(ideaRef, {
-        isDeleted: true,
-      });
+      deleteDoc(ideaRef);
     }
   };
 
-  const onPublicClick = async () => {
+  const onPublicClick = () => {
     if (isOwner) {
-      const ideaRef = doc(
-        dbService,
-        "users",
-        user.userId,
-        "userIdeas",
-        whatView.id
-      );
-      await updateDoc(ideaRef, { isPublic: !whatView.isPublic });
+      onPublicUpdate(whatView);
       setWhatView({ ...whatView, isPublic: !whatView.isPublic });
     }
   };
@@ -222,32 +158,38 @@ const ViewIdeaContent = ({
           </div>
         )}
 
-        {isDeleted ? (
-          <div className="flex items-center p-5 pt-1 pb-4 gap-1 text-stone-300 text-xs">
-            <FontAwesomeIcon icon={faCircleInfo} />원 작성자가 비공개하거나
-            삭제한 아이디어입니다.
-          </div>
+        {init ? (
+          <>
+            {isDeleted ? (
+              <div className="flex items-center p-5 pt-1 pb-4 gap-1 text-stone-300 text-xs">
+                <FontAwesomeIcon icon={faCircleInfo} />원 작성자가 비공개하거나
+                삭제한 아이디어입니다.
+              </div>
+            ) : (
+              <div className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs">
+                <span>
+                  조회&nbsp;
+                  {count.view_count}
+                </span>
+                {count.like_count != 0 && (
+                  <button
+                    aria-controls={open ? "demo-positioned-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleEllipsisClick}
+                  >
+                    좋아요&nbsp;
+                    {count.like_count}
+                  </button>
+                )}
+                {count.bookmark_count != 0 && (
+                  <span>저장됨&nbsp;{count.bookmark_count}</span>
+                )}
+              </div>
+            )}
+          </>
         ) : (
-          <div className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs">
-            <span>
-              조회&nbsp;
-              {count.view_count}
-            </span>
-            {count.like_count != 0 && (
-              <button
-                aria-controls={open ? "demo-positioned-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleEllipsisClick}
-              >
-                좋아요&nbsp;
-                {count.like_count}
-              </button>
-            )}
-            {count.bookmark_count != 0 && (
-              <span>저장됨&nbsp;{count.bookmark_count}</span>
-            )}
-          </div>
+          <></>
         )}
       </div>
 
@@ -257,7 +199,10 @@ const ViewIdeaContent = ({
           itemChangeProps != 0 && "blur-sm"
         }`}
       >
-        <button className="text-red-400 px-2" onClick={onLikeClick}>
+        <button
+          className="text-red-400 px-2"
+          onClick={() => onLikeClick(whatView)}
+        >
           <FontAwesomeIcon
             icon={whatView.isLiked ? fasHeart : farHeart}
             size="lg"
@@ -278,7 +223,8 @@ const ViewIdeaContent = ({
           </button>
         )}
       </div>
-      {isDeleted === false && (
+
+      {init && (
         <Menu
           id="demo-positioned-menu"
           aria-labelledby="demo-positioned-button"

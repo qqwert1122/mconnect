@@ -11,28 +11,22 @@ import {
   doc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { faFireFlameCurved } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFireFlameCurved,
+  faXmarkCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const StormingTagBar = ({ setIdeas }) => {
+const StormingTagBar = ({ setIdeas, trends }) => {
   // tags toggle
-  const [itemPrmtr, setItemPrmtr] = useState("");
+  const [itemPrmtr, setItemPrmtr] = useState("전체");
 
   const onItemClick = (tag) => {
     setItemPrmtr(tag);
   };
 
-  // get Trend Keywords from firestore
-  const [trends, setTrends] = useState([]);
-
-  useEffect(() => {
-    getTrends();
-  }, []);
-
-  const getTrends = async () => {
-    const trends = (await getDoc(doc(dbService, "trends", "hotTrends"))).data()
-      .tags;
-    setTrends(trends);
+  const onPrmtrClear = () => {
+    setItemPrmtr("전체");
   };
 
   // get new ideas filtered by selected trend keywords
@@ -67,30 +61,35 @@ const StormingTagBar = ({ setIdeas }) => {
   };
 
   return (
-    <div className="relative p-4 h-40 flex items-end shadow-inner bg-gradient-to-r from-indigo-900 to-sky-800 ">
-      <div className="absolute top-4 left-4 flex items-center text-lg text-blue-400 font-black gap-2">
-        Hot Trends
-        <FontAwesomeIcon icon={faFireFlameCurved} />
-      </div>
-      <div
-        className={`absolute top-12 left-4 text-2xl font-black text-blue-200 duration-500`}
-      >
-        {itemPrmtr}
-      </div>
-      <div className="relative flex items-end flex-nowrap gap-4 overflow-x-scroll">
-        {trends.map((tag, index) => (
-          <button
-            key={index}
-            className={`${
-              tag === itemPrmtr
-                ? "-top-10 left-0 text-xl opacity-0"
-                : "top-0 opacity-50"
-            } relative flex-grow-0 flex-shrink-0 border-box text-sm duration-500 break-words font-black text-blue-200`}
-            onClick={() => onItemClick(tag)}
-          >
-            {tag}
-          </button>
-        ))}
+    <div className="relative p-4 pl-6 h-32 flex shadow-inner rounded bg-gradient-to-r from-rose-400 to-orange-400">
+      <div className="flex-col">
+        {/* <div className="flex items-center text-lg text-blue-400 font-black gap-2">
+          Hot Trends
+          <FontAwesomeIcon icon={faFireFlameCurved} />
+        </div> */}
+        <div className="flex items-center gap-4 text-2xl font-black text-orange-100 duration-500">
+          {itemPrmtr}
+          {itemPrmtr !== "전체" && (
+            <button onClick={onPrmtrClear}>
+              <FontAwesomeIcon icon={faXmarkCircle} size="xs" />
+            </button>
+          )}
+        </div>
+        <div className="absolute bottom-5 flex items-end flex-nowrap gap-4 overflow-x-scroll">
+          {trends.map((tag, index) => (
+            <button
+              key={index}
+              className={`${
+                tag === itemPrmtr
+                  ? "-top-10 left-0 text-xl opacity-0"
+                  : "top-0 opacity-50"
+              } relative flex-grow-0 flex-shrink-0 border-box text-sm duration-500 break-words font-black text-orange-100`}
+              onClick={() => onItemClick(tag)}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
