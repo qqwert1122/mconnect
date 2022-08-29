@@ -7,18 +7,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "@mui/material";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { whatViewState, selectedIdeasState } from "atom";
+import { selectedIdeasState } from "atom";
 
 const SelectedIdeasSlide = ({ ...props }) => {
-  const { navigate, isViewDetailsClicked, setIsViewDetailsClicked } = props;
+  const { viewIdea, isViewDetailsClicked, setIsViewDetailsClicked } = props;
 
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
-  const setWhatView = useSetRecoilState(whatViewState);
 
   // event handler
   const onIdeaClick = (idea) => {
-    setWhatView(idea);
-    navigate(`/${idea.id}`);
+    viewIdea(idea);
   };
 
   const onViewDetailsClick = (e) => {

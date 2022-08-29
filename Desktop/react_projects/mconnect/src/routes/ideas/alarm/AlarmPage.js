@@ -16,11 +16,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 
 const AlarmPage = ({ ...props }) => {
-  const { navigate } = props;
-
-  const onBackClick = () => {
-    navigate(-1);
-  };
+  const { navigate, onBackClick } = props;
 
   const arr = [
     {

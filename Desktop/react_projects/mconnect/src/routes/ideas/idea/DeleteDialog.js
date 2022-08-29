@@ -9,6 +9,7 @@ const DeleteDialog = ({
   deleteDialogOpen,
   setDeleteDialogOpen,
   onDeleteClick,
+  idea,
 }) => {
   const onCancleClick = () => {
     setDeleteDialogOpen(false);
@@ -33,7 +34,7 @@ const DeleteDialog = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancleClick}>취소</Button>
-        <Button onClick={onDeleteClick} autoFocus>
+        <Button onClick={() => onDeleteClick(idea)} autoFocus>
           삭제
         </Button>
       </DialogActions>

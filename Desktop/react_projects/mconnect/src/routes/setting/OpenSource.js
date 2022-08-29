@@ -8,10 +8,7 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const OpenSource = ({ ...props }) => {
-  const { navigate } = props;
-  const onBackClick = () => {
-    navigate(-1);
-  };
+  const { onBackClick } = props;
 
   return (
     <div className="moveRightToLeft min-h-screen">

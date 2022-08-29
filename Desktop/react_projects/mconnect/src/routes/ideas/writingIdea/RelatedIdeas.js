@@ -19,9 +19,7 @@ import {
   formTagsState,
 } from "atom";
 
-const RelatedIdeas = ({ navigate, isItIn }) => {
-  const whatEdit = useRecoilValue(whatEditState);
-  const setWhatView = useSetRecoilState(whatViewState);
+const RelatedIdeas = ({ viewIdea, isItIn }) => {
   const [formCnctedIdeas, setFormCnctedIdeas] =
     useRecoilState(formCnctedIdeasState);
   const formTags = useRecoilValue(formTagsState);
@@ -41,8 +39,7 @@ const RelatedIdeas = ({ navigate, isItIn }) => {
 
   const onIdeaClick = (e, idea) => {
     e.preventDefault();
-    setWhatView(idea);
-    navigate(`/${idea.id}`);
+    viewIdea(idea);
   };
 
   const onXmarkClick = (e, index) => {

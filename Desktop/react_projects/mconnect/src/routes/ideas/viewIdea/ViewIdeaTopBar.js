@@ -24,6 +24,8 @@ const ViewIdeaTopBar = ({
   navigate,
   initEditor,
   onBackClick,
+  onDeleteClick,
+  toastAlarm,
 }) => {
   const whatView = useRecoilValue(whatViewState);
 
@@ -33,33 +35,12 @@ const ViewIdeaTopBar = ({
     navigate("/writingidea");
   };
 
-  const onDeleteClick = async () => {
+  const _onDeleteClick = () => {
     setDeleteDialogOpen(false);
     setAnchorEl(null);
-    const userIdeaRef = doc(
-      dbService,
-      "users",
-      user.userId,
-      "userIdeas",
-      whatView.id
-    );
-    await updateDoc(userIdeaRef, {
-      isDeleted: true,
-    });
-    const userRef = doc(dbService, "users", user.userId);
-    await updateDoc(userRef, {
-      idea_count: increment(-1),
-    });
-    const countRef = doc(dbService, "counts", whatView.id);
-    const countData = (await getDoc(countRef)).data();
-    if (isOwner === false) {
-      delete countData.bookmark_users[user.userId];
-      await updateDoc(countRef, {
-        bookmark_count: increment(-1),
-        bookmark_users: countData.bookmark_users,
-      });
-    }
-    navigate("/ideas");
+    onDeleteClick(whatView);
+    toastAlarm("delete");
+    navigate(-1);
   };
 
   // Menu
@@ -82,7 +63,7 @@ const ViewIdeaTopBar = ({
 
   return (
     <div className="fixed top-0 z-10 w-full p-3 flex justify-between items-center shadow bg-white">
-      <button onClick={onBackClick}>
+      <button onClick={() => onBackClick("view")}>
         <FontAwesomeIcon icon={faChevronLeft} size="lg" />
       </button>
       {/* ellipsis */}
@@ -131,7 +112,8 @@ const ViewIdeaTopBar = ({
       <DeleteDialog
         deleteDialogOpen={deleteDialogOpen}
         setDeleteDialogOpen={setDeleteDialogOpen}
-        onDeleteClick={onDeleteClick}
+        onDeleteClick={_onDeleteClick}
+        idea={whatView}
       />
     </div>
   );

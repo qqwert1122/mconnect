@@ -12,21 +12,19 @@ import {
   faCircleCheck as farCircleCheck,
   faCommentDots,
 } from "@fortawesome/free-regular-svg-icons";
-import { useNavigate } from "react-router-dom";
-import { selectedIdeaListState } from "atom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { userState } from "atom";
-import { selectedIdeasState } from "atom";
-import { useState } from "react";
+import { userState, selectedIdeasState } from "atom";
 
 const IdeasTopBar = ({ ...props }) => {
   const {
     navigate,
+    viewIdea,
     isSelectMode,
     setIsSelectMode,
     isViewDetailsClicked,
     setIsViewDetailsClicked,
     alarm,
+    setAlarm,
   } = props;
   const loggedInUser = useRecoilValue(userState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
@@ -44,6 +42,10 @@ const IdeasTopBar = ({ ...props }) => {
 
   const onAlarmClick = () => {
     navigate("/alarm");
+  };
+
+  const onDeleteClick = () => {
+    setAlarm({ boolean: false, message: "" });
   };
 
   return (
@@ -81,7 +83,7 @@ const IdeasTopBar = ({ ...props }) => {
       </div>
       {isSelectMode && selectedIdeas.length > 0 && (
         <SelectedIdeasSlide
-          navigate={navigate}
+          viewIdea={viewIdea}
           isViewDetailsClicked={isViewDetailsClicked}
           setIsViewDetailsClicked={setIsViewDetailsClicked}
         />
@@ -89,15 +91,19 @@ const IdeasTopBar = ({ ...props }) => {
 
       <div
         className={`${
-          alarm ? "visible opacity-100" : "invisible opacity-0"
+          alarm.boolean ? "visible opacity-100" : "invisible opacity-0"
         } duration-1000 p-4 flex justify-between bg-gradient-to-br from-pink-500  to-orange-500  text-orange-200 shadow-xl`}
       >
-        <span>
-          <FontAwesomeIcon icon={faBell} /> 알림
+        <span className="flex gap-5">
+          <span>
+            <FontAwesomeIcon icon={faBell} /> 알림
+          </span>
+          <span>{alarm.message}</span>
         </span>
-        <span>
+
+        <button onClick={onDeleteClick}>
           <FontAwesomeIcon icon={faXmarkCircle} />
-        </span>
+        </button>
       </div>
     </div>
   );

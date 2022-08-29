@@ -20,6 +20,7 @@ const Ideas = ({ ...props }) => {
     navValue,
     setNavValue,
     navigate,
+    viewIdea,
     timeDisplay,
     getIDsFromIdeas,
     getIdeasFromIDs,
@@ -27,10 +28,12 @@ const Ideas = ({ ...props }) => {
     initForm,
     initEditor,
     alarm,
+    setAlarm,
     countUpdate,
     onLikeUpdate,
     onBookmarkUpdate,
     onPublicUpdate,
+    onDeleteClick,
   } = props;
 
   const ideas = useRecoilValue(ideasState);

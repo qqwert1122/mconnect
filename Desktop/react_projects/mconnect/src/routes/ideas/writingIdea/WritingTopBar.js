@@ -1,23 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {} from "@fortawesome/free-regular-svg-icons";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { isEditState } from "atom";
-import { formTitleState } from "atom";
-import { whatEditState } from "atom";
-import { formTextState } from "atom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { formTitleState, formTextState } from "atom";
 
-const WritingTopBar = ({ navigate, showTitleAndCnctn }) => {
+const WritingTopBar = ({ onBackClick, showTitleAndCnctn }) => {
   const [formTitle, setFormTitle] = useRecoilState(formTitleState);
   const formText = useRecoilValue(formTextState);
-  const clearEdit = useResetRecoilState(isEditState);
-  const clearWhatEdit = useResetRecoilState(whatEditState);
 
-  const onBackClick = (e) => {
+  const _onBackClick = (e) => {
     e.preventDefault();
-    clearEdit();
-    clearWhatEdit();
-    navigate(-1);
+    onBackClick("edit");
   };
 
   const onTitleChange = (e) => {
@@ -31,7 +24,7 @@ const WritingTopBar = ({ navigate, showTitleAndCnctn }) => {
   return (
     <div className="fixed top-0 w-full z-20 p-3 flex justify-between items-center shadow bg-white">
       <div className="flex gap-4">
-        <button onClick={onBackClick}>
+        <button onClick={_onBackClick}>
           <FontAwesomeIcon icon={faAngleLeft} size="lg" />
         </button>
         {/* 제목 */}

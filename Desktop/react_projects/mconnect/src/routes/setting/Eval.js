@@ -14,11 +14,7 @@ import { Box, TextField } from "@mui/material";
 import { useState } from "react";
 
 const Eval = ({ ...props }) => {
-  const { navigate } = props;
-
-  const onBackClick = () => {
-    navigate(-1);
-  };
+  const { onBackClick } = props;
 
   const evl = [
     {

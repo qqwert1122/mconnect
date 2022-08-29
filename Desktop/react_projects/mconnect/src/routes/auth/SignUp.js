@@ -1,7 +1,11 @@
 import "css/App.css";
 import React, { useRef, useState } from "react";
-import { authService, dbService, storageService } from "fbase";
-import { ref, uploadString, getDownloadURL } from "@firebase/storage";
+import {
+  authService,
+  dbService,
+  // storageService
+} from "fbase";
+// import { ref, uploadString, getDownloadURL } from "@firebase/storage";
 import {
   collection,
   doc,
@@ -17,16 +21,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 
-const SignUp = ({ customHooks }) => {
-  const setLoggedInUser = customHooks.setLoggedInUser;
-  const setIsLoggedIn = customHooks.setIsLoggedIn;
-  const navigate = customHooks.navigate;
+const SignUp = ({ ...props }) => {
+  const { setLoggedInUser, setIsLoggedIn, navigate } = props;
+
   const userNameRef = useRef();
 
   const [userName, setUserName] = useState("");
-  const [userPhotoURL, setUserPhotoURL] = useState(
-    authService.currentUser.photoURL
-  );
+  // const [userPhotoURL, setUserPhotoURL] = useState(
+  //   authService.currentUser.photoURL
+  // );
   const [tabValue, setTabValue] = useState(0);
 
   const [isDuplicated, setIsDuplicated] = useState(false);
@@ -41,18 +44,18 @@ const SignUp = ({ customHooks }) => {
     }
   };
 
-  const onXmarkClick = () => {
-    setUserPhotoURL(authService.currentUser.photoURL);
-  };
+  // const onXmarkClick = () => {
+  //   setUserPhotoURL(authService.currentUser.photoURL);
+  // };
 
-  const onUserPhotoURLChange = (e) => {
-    const theFile = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = (finishedEvent) => {
-      setUserPhotoURL(finishedEvent.currentTarget.result);
-    };
-    reader.readAsDataURL(theFile);
-  };
+  // const onUserPhotoURLChange = (e) => {
+  //   const theFile = e.target.files[0];
+  //   const reader = new FileReader();
+  //   reader.onloadend = (finishedEvent) => {
+  //     setUserPhotoURL(finishedEvent.currentTarget.result);
+  //   };
+  //   reader.readAsDataURL(theFile);
+  // };
 
   const onPrevClick = () => {
     setTabValue(0);
@@ -80,25 +83,27 @@ const SignUp = ({ customHooks }) => {
         }
         break;
       case 1:
-        let attachmentUrl = authService.currentUser.photoURL;
-        if (userPhotoURL !== authService.currentUser.photoURL) {
-          const fileRef = ref(
-            storageService,
-            `${authService.currentUser.uid}/${v4()}`
-          );
-          const response = await uploadString(
-            fileRef,
-            userPhotoURL,
-            "data_url"
-          );
-          attachmentUrl = await getDownloadURL(response.ref);
-        }
+        // let attachmentUrl = authService.currentUser.photoURL;
+        // if (userPhotoURL !== authService.currentUser.photoURL) {
+        //   const fileRef = ref(
+        //     storageService,
+        //     `${authService.currentUser.uid}/${v4()}`
+        //   );
+        //   const response = await uploadString(
+        //     fileRef,
+        //     userPhotoURL,
+        //     "data_url"
+        //   );
+        //   attachmentUrl = await getDownloadURL(response.ref);
+        // }
         await setDoc(doc(dbService, "users", authService.currentUser.uid), {
           userId: authService.currentUser.uid,
           userEmail: authService.currentUser.email,
           userName:
             userName === "" ? authService.currentUser.displayName : userName,
-          userPhotoURL: attachmentUrl,
+          userPhotoURL: `https://avatars.dicebear.com/api/miniavs/${
+            userName === "" ? authService.currentUser.displayName : userName
+          }.svg`,
           isAdRemoved: false,
           isAuthority: false,
           isOfficial: false,
@@ -120,13 +125,13 @@ const SignUp = ({ customHooks }) => {
   return (
     <div className="w-screen h-screen flex items-center justify-center">
       <div
-        className="absolute w-screen h-screen opacity-50"
-        style={{
-          background: "linear-gradient(to bottom, #1D976C, #93F9B9)",
-        }}
+        className="absolute w-screen h-screen opacity-50 bg-gradient-to-t from-rose-400 to-orange-400"
+        // style={{
+        //   background: "linear-gradient(to bottom, #1D976C, #93F9B9)",
+        // }}
       ></div>
-      <img className="z-20 fixed -top-8 -left-20 w-72" src="img/line_1.png" />
-      <img className="fixed -bottom-8 -right-16 w-72" src="img/line_2.png" />
+      {/* <img className="z-20 fixed -top-8 -left-20 w-72" src="img/line_1.png" /> */}
+      {/* <img className="fixed -bottom-8 -right-16 w-72" src="img/line_2.png" /> */}
       <div className="z-10 relative w-4/5 h-3/4 py-24 px-5 flex justify-center items-center rounded-3xl shadow-xl bg-white">
         <div className="absolute top-8 right-8 english__font text-4xl text-stone-400">
           Sign Up
@@ -170,7 +175,11 @@ const SignUp = ({ customHooks }) => {
             <div className="relative">
               <Avatar
                 alt="avatar"
-                src={userPhotoURL}
+                src={`https://avatars.dicebear.com/api/miniavs/${
+                  userName === ""
+                    ? authService.currentUser.displayName
+                    : userName
+                }.svg`}
                 sx={{
                   display: "flex",
                   width: "150px",
@@ -178,27 +187,27 @@ const SignUp = ({ customHooks }) => {
                   borderWidth: "2px",
                 }}
               />
-              {authService.currentUser.photoURL != userPhotoURL && (
+              {/* {authService.currentUser.photoURL != userPhotoURL && (
                 <button
                   className="absolute top-2 right-2 bg-white rounded-full text-stone-600"
-                  onClick={onXmarkClick}
+                  // onClick={onXmarkClick}
                 >
                   <FontAwesomeIcon icon={faCircleXmark} size="2xl" />
                 </button>
-              )}
-              <label
+              )} */}
+              {/* <label
                 for="inputUserPhotoURL"
                 className="absolute -bottom-2 -right-2 p-2 rounded-lg shadow-xl border-2 border-stone-100 bg-white text-stone-600"
               >
                 <FontAwesomeIcon icon={faImage} size="2xl" />
-              </label>
+              </label> */}
             </div>
             <input
               className="hidden"
               id="inputUserPhotoURL"
               type="file"
               accept="image/*"
-              onChange={onUserPhotoURLChange}
+              // onChange={onUserPhotoURLChange}
             />
           </div>
         )}

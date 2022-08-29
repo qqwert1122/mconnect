@@ -23,7 +23,7 @@ import {
 import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { userState, countState } from "atom";
+import { userState } from "atom";
 
 const IdeaBottom = ({
   isOwner,

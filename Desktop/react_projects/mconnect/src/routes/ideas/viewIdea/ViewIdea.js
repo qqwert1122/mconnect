@@ -15,6 +15,8 @@ const ViewIdea = ({ ...props }) => {
   const {
     timeDisplay,
     navigate,
+    viewIdea,
+    onBackClick,
     getIdeasFromIDs,
     initEditor,
     isItIn,
@@ -23,16 +25,12 @@ const ViewIdea = ({ ...props }) => {
     onLikeUpdate,
     onBookmarkUpdate,
     onPublicUpdate,
+    onDeleteClick,
+    toastAlarm,
   } = props;
   const loggedInUser = useRecoilValue(userState);
   const whatView = useRecoilValue(whatViewState);
-  const clearWhatView = useResetRecoilState(whatViewState);
   const isOwner = loggedInUser.userId === whatView.userId;
-
-  const onBackClick = () => {
-    clearWhatView();
-    navigate(-1);
-  };
 
   // tab state
   const [itemChangeProps, setItemChangeProps] = useState(0);
@@ -51,6 +49,8 @@ const ViewIdea = ({ ...props }) => {
               navigate={navigate}
               initEditor={initEditor}
               onBackClick={onBackClick}
+              onDeleteClick={onDeleteClick}
+              toastAlarm={toastAlarm}
             />
             <ViewIdeaContent
               user={loggedInUser}
@@ -72,6 +72,7 @@ const ViewIdea = ({ ...props }) => {
             itemChangeProps={itemChangeProps}
             setItemChangeProps={setItemChangeProps}
             navigate={navigate}
+            viewIdea={viewIdea}
             getIdeasFromIDs={getIdeasFromIDs}
             isItIn={isItIn}
           />

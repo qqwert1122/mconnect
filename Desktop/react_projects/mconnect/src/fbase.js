@@ -7,7 +7,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+// import { getStorage } from "firebase/storage";
 import { getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
@@ -28,13 +28,13 @@ const authService = getAuth(firebaseApp);
 authService.useDeviceLanguage();
 const provider = new GoogleAuthProvider();
 const dbService = getFirestore(firebaseApp);
-const storageService = getStorage();
+// const storageService = getStorage();
 const functions = getFunctions();
 
 export {
   authService,
   dbService,
-  storageService,
+  // storageService,
   signInWithPopup,
   provider,
   signOut,

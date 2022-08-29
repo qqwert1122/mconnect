@@ -10,7 +10,7 @@ import {} from "@fortawesome/free-regular-svg-icons";
 const IdeaMiddle = ({
   isOwner,
   idea,
-  onViewIdeaClick,
+  onIdeaClick,
   onSelectIdea,
   timeDisplay,
 }) => {
@@ -54,7 +54,7 @@ const IdeaMiddle = ({
       <div
         className="w-full mb-5 flex items-center break-all whitespace-pre-line line-clamp-6"
         onClick={() => {
-          onViewIdeaClick(idea);
+          onIdeaClick(idea);
         }}
       >
         {idea.text}

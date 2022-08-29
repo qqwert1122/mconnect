@@ -34,7 +34,7 @@ dayjs.extend(customParseFormat);
 dayjs.locale("ko");
 
 const WritingIdea = ({ ...props }) => {
-  const { navigate, isItIn, trends } = props;
+  const { navigate, viewIdea, isItIn, trends, onBackClick, toastAlarm } = props;
   const loggedInUser = useRecoilValue(userState);
   const whatEdit = useRecoilValue(whatEditState);
   const isEdit = useRecoilValue(isEditState);
@@ -161,6 +161,7 @@ const WritingIdea = ({ ...props }) => {
         console.error("Error adding document: ", event);
       }
       setSelectedIdeas([]);
+      toastAlarm("new");
     }
     arrangeRecentSources(formSource);
     arrangeRecentTags(formTags);
@@ -184,7 +185,7 @@ const WritingIdea = ({ ...props }) => {
     <div className="flex-col text-sm">
       <form onSubmit={onSubmit}>
         <WritingTopBar
-          navigate={navigate}
+          onBackClick={onBackClick}
           showTitleAndCnctn={showTitleAndCnctn}
         />
         <textarea
@@ -201,6 +202,7 @@ const WritingIdea = ({ ...props }) => {
         />
         <WritingBottom
           navigate={navigate}
+          viewIdea={viewIdea}
           showTitleAndCnctn={showTitleAndCnctn}
           bottomItemChangeProps={bottomItemChangeProps}
           setBottomItemChangeProps={setBottomItemChangeProps}

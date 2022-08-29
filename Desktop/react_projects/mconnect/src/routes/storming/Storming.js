@@ -69,7 +69,7 @@ const Storming = ({ ...props }) => {
         <div className="pt-20 m-4 mb-2  font-black text-base">
           👍 이번 주 추천 아이디어
         </div>
-        <ul className={`pb-10`}>
+        <ul className={`pb-5`}>
           <Slider {...settings}>
             <div className="relative">
               <div className="h-60 p-5 m-1 mx-2 bg-white shadow-md rounded-3xl break-all text-xs">

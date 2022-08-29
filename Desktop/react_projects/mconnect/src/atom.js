@@ -89,11 +89,6 @@ export const formCnctedIdeasState = atom({
   default: [],
 });
 
-export const countState = atom({
-  key: "countState",
-  default: {},
-});
-
 const { persistAtom } = recoilPersist();
 
 export const recentTagsState = atom({

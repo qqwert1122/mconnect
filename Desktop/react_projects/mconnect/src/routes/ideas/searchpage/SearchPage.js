@@ -24,13 +24,9 @@ import { toast } from "react-toastify";
 import { Avatar } from "@mui/material";
 
 const SearchPage = ({ ...props }) => {
-  const { navigate, getIDsFromIdeas } = props;
+  const { navigate, getIDsFromIdeas, onBackClick } = props;
   const loggedInUser = useRecoilValue(userState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
-
-  const onBackClick = () => {
-    navigate(-1);
-  };
 
   const onIdeaSelect = (hit) => {
     const newHit = {
@@ -59,7 +55,10 @@ const SearchPage = ({ ...props }) => {
     return (
       <div
         key={hit.objectID}
-        className="relative w-full px-4 py-2 break-all overflow-hidden bg-stone-100 rounded-xl shadow-lg"
+        className={`${
+          getIDsFromIdeas(selectedIdeas).includes(hit.objectID) &&
+          "shadow-rose-200"
+        } relative w-full px-4 py-4 break-all overflow-hidden bg-stone-100 rounded-xl shadow-lg`}
       >
         {hit.title.length > 0 && (
           <div className="mb-2 font-black">
@@ -111,7 +110,7 @@ const SearchPage = ({ ...props }) => {
           </span>
         </div>
         <button
-          className={`absolute top-2 right-2 w-5 h-5 ${
+          className={`absolute top-1 right-1 w-6 h-6 ${
             getIDsFromIdeas(selectedIdeas).includes(hit.objectID)
               ? "bg-red-400 text-white"
               : "border-2 border-stone-400"
@@ -125,7 +124,7 @@ const SearchPage = ({ ...props }) => {
           )}
         </button>
         <button
-          className="absolute bottom-2 right-2 text-orange-400"
+          className="absolute bottom-4 right-2 text-orange-400"
           onClick={() => {
             onBookmarkClick(hit);
           }}
@@ -160,7 +159,7 @@ const SearchPage = ({ ...props }) => {
           </div>
           <div className="mt-14">
             <Configure
-              hitsPerPage={5}
+              hitsPerPage={1}
               filters={
                 myIdea ? `userId:${loggedInUser.userId}` : "isPublic:true"
               }

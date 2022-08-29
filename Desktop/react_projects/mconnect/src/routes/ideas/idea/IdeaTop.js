@@ -60,12 +60,12 @@ const IdeaTop = ({
 
   return (
     <div className="flex justify-between items-center ml-4">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center">
         <button
           className={`rounded-full ${
             isChecked ? "bg-red-400 text-white" : "border-2 border-stone-400"
           } ${
-            isSelectMode ? "visible w-5 h-5" : "invisible w-0 h-0"
+            isSelectMode ? "visible w-5 h-5 mr-2" : "invisible w-0 h-0"
           } duration-100`}
           onClick={() => {
             onSelectIdea(idea);
@@ -75,7 +75,7 @@ const IdeaTop = ({
         </button>
         {/* avatar, name, time */}
         <Avatar
-          className="border-2"
+          className="border-2 mr-1"
           alt="avatar"
           src={isOwner ? loggedInUser.userPhotoURL : idea.userPhotoURL}
           sx={{
@@ -86,7 +86,7 @@ const IdeaTop = ({
         />
 
         <div className="flex-col text-xs">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center">
             <b>{isOwner ? loggedInUser.userName : idea.userName}</b>
             {idea.isOfficial && (
               <span className="opacity-80">

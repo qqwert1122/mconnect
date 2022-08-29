@@ -24,7 +24,7 @@ import {
   faHeart as farHeart,
   faBookmark as farBookmark,
 } from "@fortawesome/free-regular-svg-icons";
-import { whatViewState, countState } from "atom";
+import { whatViewState } from "atom";
 import { useRecoilState } from "recoil";
 
 const ViewIdeaContent = ({
@@ -76,7 +76,7 @@ const ViewIdeaContent = ({
     countUpdate(whatView, "bookmark");
     setWhatView({ ...whatView, isBookmarked: !whatView.isBookmarked });
     if (isOwner === false) {
-      onBackClick();
+      onBackClick("view");
       deleteDoc(ideaRef);
     }
   };
@@ -162,8 +162,8 @@ const ViewIdeaContent = ({
           <>
             {isDeleted ? (
               <div className="flex items-center p-5 pt-1 pb-4 gap-1 text-stone-300 text-xs">
-                <FontAwesomeIcon icon={faCircleInfo} />원 작성자가 비공개하거나
-                삭제한 아이디어입니다.
+                <FontAwesomeIcon icon={faCircleInfo} />원 작성자가 삭제한
+                아이디어입니다.
               </div>
             ) : (
               <div className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs">
@@ -224,7 +224,7 @@ const ViewIdeaContent = ({
         )}
       </div>
 
-      {init && (
+      {init && isDeleted === false && (
         <Menu
           id="demo-positioned-menu"
           aria-labelledby="demo-positioned-button"

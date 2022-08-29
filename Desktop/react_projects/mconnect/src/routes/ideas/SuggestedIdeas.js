@@ -2,9 +2,15 @@ import { useEffect, useState } from "react";
 import { dbService } from "fbase";
 import {
   collectionGroup,
+  deleteDoc,
+  doc,
+  getDoc,
   getDocs,
+  increment,
   orderBy,
   query,
+  setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import Slider from "react-slick";
@@ -16,8 +22,12 @@ import {
   faAngleDown,
   faCheck,
   faBookmark,
+  faBookmark as fasBookmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import {
+  faThumbsUp,
+  faBookmark as farBookmark,
+} from "@fortawesome/free-regular-svg-icons";
 import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -26,6 +36,9 @@ import {
   selectedIdeasState,
   formCnctedIdeasState,
 } from "atom";
+import { userState } from "atom";
+import dayjs from "dayjs";
+import SuggestedIdea from "./SuggestedIdea";
 
 const SuggestedIdeas = ({
   id,
@@ -47,16 +60,12 @@ const SuggestedIdeas = ({
   //  - navigate view page by clicking idea
   // isItIn ?
   //  - isItIn(array, item) : Check whether the item is in the array or not.
-
+  const loggedInUser = useRecoilValue(userState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
   const [formCnctedIdeas, setFormCnctedIdeas] =
     useRecoilState(formCnctedIdeasState);
 
-  // select tagPrmtr
-  const [tagChangeProps, setTagChangeProps] = useState(
-    tagsPrmtr.length > 0 && tagsPrmtr[0]
-  );
-
+  // change tag parameter
   const onSuggestedTagClick = (e, tag) => {
     e.preventDefault();
     setTagChangeProps(tag);
@@ -69,6 +78,34 @@ const SuggestedIdeas = ({
       return isItIn(selectedIdeas, idea);
     }
   };
+
+  // select tagPrmtr
+  const [tagChangeProps, setTagChangeProps] = useState(
+    tagsPrmtr.length > 0 && tagsPrmtr[0]
+  );
+
+  // get Ideas that matches the tagPrmtr.
+  const [filteredIdeas, setFilteredIdeas] = useState([]);
+  console.log(filteredIdeas);
+
+  const getFilteredIdeas = async (query) => {
+    const ideaRef = await getDocs(query);
+    const newData = ideaRef.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setFilteredIdeas(newData);
+  };
+
+  useEffect(() => {
+    const q1 = query(
+      collectionGroup(dbService, "userIdeas"),
+      where("isPublic", "==", true),
+      where("tags", "array-contains", tagChangeProps),
+      orderBy("createdAt", "desc")
+    );
+    getFilteredIdeas(q1);
+  }, [tagChangeProps]);
 
   const onIdeaSelect = (e, idea) => {
     e.preventDefault();
@@ -102,29 +139,6 @@ const SuggestedIdeas = ({
       }
     }
   };
-
-  // get Ideas that matches the tagPrmtr.
-  const [filteredIdeas, setFilteredIdeas] = useState([]);
-  console.log(filteredIdeas);
-
-  const getFilteredIdeas = async (query) => {
-    const ideaRef = await getDocs(query);
-    const newData = ideaRef.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setFilteredIdeas(newData);
-  };
-
-  useEffect(() => {
-    const q1 = query(
-      collectionGroup(dbService, "userIdeas"),
-      where("isPublic", "==", true),
-      where("tags", "array-contains", tagChangeProps),
-      orderBy("createdAt", "desc")
-    );
-    getFilteredIdeas(q1);
-  }, [tagChangeProps]);
 
   // Slider configuration
   const sugtdSettings = {
@@ -186,58 +200,15 @@ const SuggestedIdeas = ({
               {filteredIdeas
                 .filter((_idea) => _idea.id != id)
                 .map((idea, index) => (
-                  <div key={index} className="relative">
-                    <button
-                      className={`absolute top-0 right-0 rounded-full ${
-                        isChecked(idea)
-                          ? "bg-red-400 text-white"
-                          : "border-2 border-stone-400"
-                      } w-6 h-6 shadow-xl`}
-                      onClick={(e) => {
-                        onIdeaSelect(e, idea);
-                      }}
-                    >
-                      {isChecked(idea) && <FontAwesomeIcon icon={faCheck} />}
-                    </button>
-                    <div
-                      className="h-60 p-4 m-1 bg-white shadow rounded-3xl text-xs break-all"
-                      onClick={() => onIdeaClick(idea)}
-                    >
-                      {idea.title.length > 0 && (
-                        <div className="mb-2 truncate font-black text-sm">
-                          {idea.title}
-                        </div>
-                      )}
-                      <div className="mb-3 line-clamp-6">{idea.text}</div>
-                      {idea.source.length > 0 && (
-                        <div className="ml-2 mb-1 flex gap-1 text-stone-400">
-                          <FontAwesomeIcon icon={faQuoteLeft} />
-                          <span>{idea.source}</span>
-                        </div>
-                      )}
-                      <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
-                        <Avatar
-                          className="border-2"
-                          alt="avatar"
-                          src={idea.userPhotoURL}
-                          sx={{
-                            display: "flex",
-                            width: "25px",
-                            height: "25px",
-                          }}
-                        />
-                        <div className="flex-col">
-                          <span className="flex">{idea.userName}</span>
-                          <span className="flex text-stone-400">
-                            {idea.createdAt}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="absolute bottom-4 right-4 text-xl text-orange-400">
-                        <FontAwesomeIcon icon={faBookmark} />
-                      </div>
-                    </div>
-                  </div>
+                  <SuggestedIdea
+                    key={index}
+                    writing={writing}
+                    loggedInUser={loggedInUser}
+                    idea={idea}
+                    isChecked={isChecked}
+                    onIdeaSelect={onIdeaSelect}
+                    onIdeaClick={onIdeaClick}
+                  />
                 ))}
             </Slider>
           </>

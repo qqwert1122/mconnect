@@ -16,6 +16,7 @@ import { userState, ideasState, whatViewState, selectedIdeasState } from "atom";
 const Idea = ({ props, idea, index, isSelectMode }) => {
   const {
     navigate,
+    viewIdea,
     initEditor,
     timeDisplay,
     getIdeasFromIDs,
@@ -24,6 +25,8 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
     onLikeUpdate,
     onBookmarkUpdate,
     onPublicUpdate,
+    onDeleteClick,
+    toastAlarm,
   } = props;
 
   const loggedInUser = useRecoilValue(userState);
@@ -57,59 +60,16 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
     }
   };
 
-  const onViewIdeaClick = async () => {
-    const countRef = doc(dbService, "counts", idea.id);
-    const countData = (await getDoc(countRef)).data();
-    const userIdeaRef = doc(
-      dbService,
-      "users",
-      loggedInUser.userId,
-      "userIdeas",
-      idea.id
-    );
-    if (countData.view_users.hasOwnProperty(loggedInUser.userId) === false) {
-      await updateDoc(countRef, {
-        view_count: increment(1),
-        view_users: {
-          ...countData.view_users,
-          [loggedInUser.userId]: loggedInUser.userName,
-        },
-      });
-      await updateDoc(userIdeaRef, {
-        isViewed: true,
-      });
-    }
-    setWhatView(idea);
-    navigate(`/${idea.id}`);
+  const onIdeaClick = (idea) => {
+    viewIdea(idea);
   };
 
   // 삭제 대화상자
-  const onDeleteClick = async () => {
+  const _onDeleteClick = (idea) => {
     setDeleteDialogOpen(false);
     setAnchorEl(null);
-    const userIdeaRef = doc(
-      dbService,
-      "users",
-      loggedInUser.userId,
-      "userIdeas",
-      idea.id
-    );
-    await updateDoc(userIdeaRef, {
-      isDeleted: true,
-    });
-    const countRef = doc(dbService, "counts", idea.id);
-    const countData = (await getDoc(countRef)).data();
-    if (loggedInUser.userId != idea.userId) {
-      delete countData.bookmark_users[loggedInUser.userId];
-      await updateDoc(countRef, {
-        bookmark_count: increment(-1),
-        bookmark_users: countData.bookmark_users,
-      });
-    }
-    const userRef = doc(dbService, "users", loggedInUser.userId);
-    await updateDoc(userRef, {
-      idea_count: increment(-1),
-    });
+    onDeleteClick(idea);
+    toastAlarm("delete");
   };
 
   return (
@@ -138,7 +98,7 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
               isOwner={isOwner}
               idea={idea}
               onSelectIdea={onSelectIdea}
-              onViewIdeaClick={onViewIdeaClick}
+              onIdeaClick={onIdeaClick}
               timeDisplay={timeDisplay}
             />
           </div>
@@ -158,7 +118,8 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
           <DeleteDialog
             deleteDialogOpen={deleteDialogOpen}
             setDeleteDialogOpen={setDeleteDialogOpen}
-            onDeleteClick={onDeleteClick}
+            onDeleteClick={_onDeleteClick}
+            idea={idea}
           />
         </>
       ) : (

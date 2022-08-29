@@ -15,10 +15,16 @@ import {
   getDoc,
   updateDoc,
   increment,
+  deleteDoc,
 } from "firebase/firestore";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
 import {
   userState,
   formTitleState,
@@ -29,10 +35,14 @@ import {
   formCnctedIdeasState,
   ideasState,
   selectedIdeasState,
+  isEditState,
   whatEditState,
+  whatViewState,
   cnctedIdeasState,
-  countState,
 } from "atom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import {} from "@fortawesome/free-regular-svg-icons";
 
 const useDeliverProps = () => {
   console.log("rendering");
@@ -53,6 +63,7 @@ const useDeliverProps = () => {
             setIsLoggedIn(true);
           }
         });
+        console.log("user snapshot");
       } else {
         setIsLoggedIn(false);
       }
@@ -62,13 +73,24 @@ const useDeliverProps = () => {
 
   // Get Ideas when app starts
   const [ideas, setIdeas] = useRecoilState(ideasState);
-  const [alarm, setAlarm] = useState(false);
-  const toastAlarm = () => {
-    setAlarm(true);
+  const [alarm, setAlarm] = useState({
+    boolean: true,
+    message: "새 글이 등록되었습니다",
+  });
+  const toastAlarm = (type) => {
+    switch (type) {
+      case "new":
+        setAlarm({ boolean: true, message: "새 글이 등록되었습니다" });
+        break;
+      case "delete":
+        setAlarm({ boolean: true, message: "글이 삭제되었습니다" });
+        break;
+    }
     setTimeout(() => {
-      setAlarm(false);
+      setAlarm({ boolean: false, message: "" });
     }, 5000);
   };
+
   useEffect(() => {
     if (isLoggedIn) {
       const q1 = query(
@@ -81,7 +103,7 @@ const useDeliverProps = () => {
           ...doc.data(),
         }));
         setIdeas(_ideas);
-        toastAlarm();
+        console.log("idea snapshot");
       });
     }
   }, [isLoggedIn]);
@@ -93,6 +115,55 @@ const useDeliverProps = () => {
   let navigate = useNavigate();
 
   const [navValue, setNavValue] = useState("/ideas");
+
+  const clearWhatView = useResetRecoilState(whatViewState);
+  const clearEdit = useResetRecoilState(isEditState);
+  const clearWhatEdit = useResetRecoilState(whatEditState);
+
+  const onBackClick = (type = "default") => {
+    navigate(-1);
+    switch (type) {
+      case "view":
+        clearWhatView();
+        break;
+      case "edit":
+        clearEdit();
+        clearWhatEdit();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const setWhatView = useSetRecoilState(whatViewState);
+  const viewIdea = async (idea) => {
+    const countRef = doc(dbService, "counts", idea.id);
+    const countData = (await getDoc(countRef)).data();
+    const userIdeaRef = doc(
+      dbService,
+      "users",
+      loggedInUser.userId,
+      "userIdeas",
+      idea.id
+    );
+    if (countData !== undefined) {
+      if (countData.view_users.hasOwnProperty(loggedInUser.userId) === false) {
+        await updateDoc(countRef, {
+          view_count: increment(1),
+          view_users: {
+            ...countData.view_users,
+            [loggedInUser.userId]: loggedInUser.userName,
+          },
+        });
+        await updateDoc(userIdeaRef, {
+          isViewed: true,
+        });
+        console.log("update view_count");
+      }
+    }
+    setWhatView(idea);
+    navigate(`/${idea.id}`);
+  };
 
   useEffect(() => {
     navigate(`${navValue}`, { replace: true });
@@ -159,6 +230,7 @@ const useDeliverProps = () => {
       id: doc.id,
       ...doc.data(),
     }));
+    console.log("get ideas from ids");
     setCnctedIdeas(newData);
   };
 
@@ -238,50 +310,55 @@ const useDeliverProps = () => {
     } else {
       return data;
     }
+    console.log("get count");
   };
 
   const countUpdate = async (idea, type) => {
     const countRef = doc(dbService, "counts", idea.id);
     const count = (await getDoc(countRef)).data();
-    switch (type) {
-      case "like":
-        if (idea.isLiked) {
-          delete count.like_users[loggedInUser.userId];
-          await updateDoc(countRef, {
-            like_count: increment(-1),
-            like_users: count.like_users,
-          });
-        } else {
-          await updateDoc(countRef, {
-            like_count: increment(1),
-            like_users: {
-              ...count.like_users,
-              [loggedInUser.userId]: loggedInUser.userName,
-            },
-          });
-        }
-        break;
-      case "bookmark":
-        if (idea.isBookmarked) {
-          delete count.bookmark_users[loggedInUser.userId];
-          await updateDoc(countRef, {
-            bookmark_count: increment(-1),
-            bookmark_users: count.bookmark_users,
-          });
-        } else {
-          await updateDoc(countRef, {
-            bookmark_count: increment(1),
-            bookmark_users: {
-              ...count.bookmark_users,
-              [loggedInUser.userId]: loggedInUser.userName,
-            },
-          });
-        }
-        break;
+    console.log("update counts");
+    if (count !== undefined) {
+      switch (type) {
+        case "like":
+          if (idea.isLiked) {
+            delete count.like_users[loggedInUser.userId];
+            await updateDoc(countRef, {
+              like_count: increment(-1),
+              like_users: count.like_users,
+            });
+          } else {
+            await updateDoc(countRef, {
+              like_count: increment(1),
+              like_users: {
+                ...count.like_users,
+                [loggedInUser.userId]: loggedInUser.userName,
+              },
+            });
+          }
+          break;
+        case "bookmark":
+          if (idea.isBookmarked) {
+            delete count.bookmark_users[loggedInUser.userId];
+            await updateDoc(countRef, {
+              bookmark_count: increment(-1),
+              bookmark_users: count.bookmark_users,
+            });
+          } else {
+            await updateDoc(countRef, {
+              bookmark_count: increment(1),
+              bookmark_users: {
+                ...count.bookmark_users,
+                [loggedInUser.userId]: loggedInUser.userName,
+              },
+            });
+          }
+          break;
+      }
     }
   };
 
   const onLikeUpdate = async (idea) => {
+    console.log("update likes");
     const ideaRef = doc(
       dbService,
       "users",
@@ -301,6 +378,7 @@ const useDeliverProps = () => {
   };
 
   const onBookmarkUpdate = async (idea) => {
+    console.log("update bookmark");
     const ideaRef = doc(
       dbService,
       "users",
@@ -320,6 +398,7 @@ const useDeliverProps = () => {
   };
 
   const onPublicUpdate = async (idea) => {
+    console.log("update public");
     const ideaRef = doc(
       dbService,
       "users",
@@ -330,6 +409,24 @@ const useDeliverProps = () => {
     await updateDoc(ideaRef, { isPublic: !idea.isPublic });
   };
 
+  const onDeleteClick = async (idea) => {
+    console.log("delete doc");
+    const userIdeaRef = doc(
+      dbService,
+      "users",
+      loggedInUser.userId,
+      "userIdeas",
+      idea.id
+    );
+    await deleteDoc(userIdeaRef);
+    const userRef = doc(dbService, "users", loggedInUser.userId);
+    await updateDoc(userRef, {
+      idea_count: increment(-1),
+    });
+    const countRef = doc(dbService, "counts", idea.id);
+    await deleteDoc(countRef);
+  };
+
   // get Trend Keywords from firestore
   const [trends, setTrends] = useState([]);
 
@@ -338,6 +435,7 @@ const useDeliverProps = () => {
   }, []);
 
   const getTrends = async () => {
+    console.log("get trends");
     const trends = (await getDoc(doc(dbService, "trends", "hotTrends"))).data()
       .tags;
     setTrends(trends);
@@ -350,6 +448,8 @@ const useDeliverProps = () => {
     isLoggedIn,
     setIsLoggedIn,
     navigate,
+    viewIdea,
+    onBackClick,
     navValue,
     setNavValue,
     timeDisplay,
@@ -359,12 +459,15 @@ const useDeliverProps = () => {
     initForm,
     initEditor,
     alarm,
+    setAlarm,
+    toastAlarm,
     // firestore
     getCount,
     countUpdate,
     onLikeUpdate,
     onBookmarkUpdate,
     onPublicUpdate,
+    onDeleteClick,
     trends,
   };
 };

@@ -7,17 +7,18 @@ import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { whatViewState } from "atom";
 
 const ViewIdeaBottom = ({
   itemChangeProps,
   setItemChangeProps,
   navigate,
+  viewIdea,
   getIdeasFromIDs,
   isItIn,
 }) => {
-  const [whatView, setWhatView] = useRecoilState(whatViewState);
+  const whatView = useRecoilValue(whatViewState);
 
   const itemChange = (props) => {
     switch (props) {
@@ -46,9 +47,8 @@ const ViewIdeaBottom = ({
   };
 
   const onIdeaClick = (idea) => {
-    setWhatView(idea);
     setItemChangeProps(0);
-    navigate(`/${idea.id}`);
+    viewIdea(idea);
   };
 
   // Ref
