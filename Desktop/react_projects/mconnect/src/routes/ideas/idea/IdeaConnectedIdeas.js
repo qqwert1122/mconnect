@@ -4,8 +4,10 @@ import {} from "firebase/firestore";
 import { colorsState } from "atom";
 import { useRecoilValue } from "recoil";
 import { cnctedIdeasState } from "atom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
-const IdeaConnectedIdeas = ({ viewDetail }) => {
+const IdeaConnectedIdeas = ({ viewDetail, IDs }) => {
   const colors = useRecoilValue(colorsState);
   const cnctedIdeas = useRecoilValue(cnctedIdeasState);
 
@@ -25,16 +27,29 @@ const IdeaConnectedIdeas = ({ viewDetail }) => {
                 style={{ borderWidth: "6px" }}
               ></div>
               <div className="z-10 relative box-border ml-10 my-4 p-2 bg-white shadow-lg break-all rounded-xl">
-                <div className="mb-2">
-                  <span className="mb-2 font-black text-sm truncate">
-                    {idea.title}
-                  </span>
-                  <span className="line-clamp-5">{idea.text}</span>
-                </div>
-                <div className="w-full text-xs flex justify-between text-stone-400">
-                  <div>{idea.createdAt}</div>
-                  <div>{idea.userName}</div>
-                </div>
+                {idea.id === -1 ? (
+                  <div
+                    className="flex gap-1 items-center text-stone-300"
+                    style={{
+                      minHeight: "44px",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCircleInfo} /> 삭제되었습니다
+                  </div>
+                ) : (
+                  <>
+                    <div className="mb-2">
+                      <span className="mb-2 font-black text-sm truncate">
+                        {idea.title}
+                      </span>
+                      <span className="line-clamp-5">{idea.text}</span>
+                    </div>
+                    <div className="w-full text-xs flex justify-between text-stone-400">
+                      <div>{idea.createdAt}</div>
+                      <div>{idea.userName}</div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           ))}

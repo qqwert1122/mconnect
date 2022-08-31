@@ -18,6 +18,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import dayjs from "dayjs";
+import { v4 } from "uuid";
 import "dayjs/locale/ko";
 import {
   useRecoilState,
@@ -74,8 +75,8 @@ const useDeliverProps = () => {
   // Get Ideas when app starts
   const [ideas, setIdeas] = useRecoilState(ideasState);
   const [alarm, setAlarm] = useState({
-    boolean: true,
-    message: "새 글이 등록되었습니다",
+    boolean: false,
+    message: "",
   });
   const toastAlarm = (type) => {
     switch (type) {
@@ -232,6 +233,16 @@ const useDeliverProps = () => {
     }));
     console.log("get ideas from ids");
     setCnctedIdeas(newData);
+    const DIFF_VALUE = IDs.length - cnctedIdeas.length;
+    const tempArr = IDs.filter((x, i) => i < DIFF_VALUE).map((x, i) => ({
+      id: -1,
+    }));
+    console.log(tempArr);
+    setCnctedIdeas(cnctedIdeas.concat(tempArr));
+    // for (let i = 0; i < DIFF_VALUE; i++) {
+    // console.log("!!!");
+    // const newUniq = v4();
+    // setCnctedIdeas([...cnctedIdeas, { id: -1, uniq: newUniq }]);
   };
 
   const getIDsFromIdeas = (ideas) => {
@@ -257,7 +268,8 @@ const useDeliverProps = () => {
   const setFormSource = useSetRecoilState(formSourceState);
   const setFormTags = useSetRecoilState(formTagsState);
   const setFormPublic = useSetRecoilState(formPublicState);
-  const setFormCnctedIdeas = useSetRecoilState(formCnctedIdeasState);
+  const [formCnctedIdeas, setFormCnctedIdeas] =
+    useRecoilState(formCnctedIdeasState);
 
   const concatTags = () => {
     if (selectedIdeas.length > 1) {

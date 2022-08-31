@@ -15,8 +15,9 @@ import {
   faTrashCan,
   faCopy,
 } from "@fortawesome/free-regular-svg-icons";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { whatViewState } from "atom";
+import { isEditState } from "atom";
 
 const ViewIdeaTopBar = ({
   user,
@@ -28,9 +29,11 @@ const ViewIdeaTopBar = ({
   toastAlarm,
 }) => {
   const whatView = useRecoilValue(whatViewState);
+  const setIsEdit = useSetRecoilState(isEditState);
 
   const onEditClick = () => {
     setAnchorEl(null);
+    setIsEdit(true);
     initEditor(whatView);
     navigate("/writingidea");
   };

@@ -113,7 +113,10 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
             onPublicUpdate={onPublicUpdate}
           />
           {idea.connectedIDs.length > 0 && (
-            <IdeaConnectedIdeas viewDetail={viewDetail} />
+            <IdeaConnectedIdeas
+              viewDetail={viewDetail}
+              IDs={idea.connectedIDs}
+            />
           )}
           <DeleteDialog
             deleteDialogOpen={deleteDialogOpen}
