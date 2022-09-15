@@ -150,6 +150,9 @@ const Setting = ({ ...props }) => {
             </div>
           </div>
         </div>
+        <div className="m-5 py-6 h-32 flex gap-2 justify-center items-center bg-stone-600 text-stone-400 text-sm text-center font-black ">
+          광고 <FontAwesomeIcon icon={faAd} />
+        </div>
         <div className="m-5 p-2">
           <div className="font-black pb-2">후원</div>
           <div className="flex gap-5 relative p-4 rounded-xl shadow-lg bg-stone-100">
@@ -188,7 +191,7 @@ const Setting = ({ ...props }) => {
             {menuItem.map((item, index) => (
               <button
                 key={index}
-                className="p-2 py-4 shadow-lg bg-white rounded-xl font-black text-stone-600"
+                className="p-2 py-4 shadow-lg bg-white rounded-xl font-black text-sm text-stone-600 "
                 onClick={() => navigate(item.navigation)}
               >
                 {item.icon}
@@ -196,9 +199,6 @@ const Setting = ({ ...props }) => {
               </button>
             ))}
           </div>
-        </div>
-        <div className="m-5 mb-24 py-6 h-32 flex gap-2 justify-center items-center bg-stone-600 text-stone-400 text-sm text-center font-black ">
-          광고 <FontAwesomeIcon icon={faAd} />
         </div>
       </div>
     </>

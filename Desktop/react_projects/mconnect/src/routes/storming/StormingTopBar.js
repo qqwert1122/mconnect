@@ -13,17 +13,7 @@ const StormingTopBar = () => {
       <div className="flex justify-between items-center px-2 py-4 bg-white shadow">
         <div className="flex items-center gap-2 px-2 text-lg font-black">
           탐색
-          <span className="text-sky-400">
-            <FontAwesomeIcon icon={faCompass} />
-          </span>
-        </div>
-        <div className="flex gap-2">
-          <button
-            className="px-2"
-            // onClick={onSearchClick}
-          >
-            <FontAwesomeIcon icon={faSearch} />
-          </button>
+          <FontAwesomeIcon className="text-sky-400" icon={faCompass} />
         </div>
       </div>
     </div>

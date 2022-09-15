@@ -22,8 +22,9 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilSnapshot, useRecoilState, useRecoilValue } from "recoil";
 import { userState } from "atom";
+import { ideasState } from "atom";
 
 const IdeaBottom = ({
   isOwner,
@@ -36,34 +37,45 @@ const IdeaBottom = ({
   onPublicUpdate,
 }) => {
   const loggedInUser = useRecoilValue(userState);
-  // const isDeleted = count === undefined;
-  const isDeleted = false;
-
-  const countRef = doc(dbService, "counts", idea.id);
-  const ideaRef = doc(
-    dbService,
-    "users",
-    loggedInUser.userId,
-    "userIdeas",
-    idea.id
-  );
-  const userRef = doc(dbService, "users", loggedInUser.userId);
+  const [ideas, setIdeas] = useRecoilState(ideasState);
 
   const onLikeClick = () => {
     onLikeUpdate(idea);
     countUpdate(idea, "like");
+    setIdeas(
+      ideas.map((m) =>
+        m.id === idea.id ? { ...idea, isLiked: !idea.isLiked } : m
+      )
+    );
   };
 
   const onBookmarkClick = () => {
     onBookmarkUpdate(idea);
+    const ideaRef = doc(
+      dbService,
+      "users",
+      loggedInUser.userId,
+      "userIdeas",
+      idea.id
+    );
     if (isOwner === false) {
       deleteDoc(ideaRef);
     }
     countUpdate(idea, "bookmark");
+    setIdeas(
+      ideas.map((m) =>
+        m.id === idea.id ? { ...idea, isBookmarked: !idea.isBookmarked } : m
+      )
+    );
   };
 
   const onPublicClick = () => {
     onPublicUpdate(idea);
+    setIdeas(
+      ideas.map((m) =>
+        m.id === idea.id ? { ...idea, isPublic: !idea.isPublic } : m
+      )
+    );
   };
 
   const onDetailClick = () => {

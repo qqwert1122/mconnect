@@ -6,9 +6,13 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
+import { useSetRecoilState } from "recoil";
+import { userState } from "atom";
 
 const Auth = ({ ...props }) => {
-  const { setLoggedInUser, setIsLoggedIn, setInit, setNavValue } = props;
+  const { setIsLoggedIn, setInit, navigate } = props;
+  const setLoggedInUser = useSetRecoilState(userState);
+
   const onGoogleClick = async (event) => {
     event.preventDefault();
     try {
@@ -20,7 +24,7 @@ const Auth = ({ ...props }) => {
     } catch (error) {
       console.log(error);
     }
-    setNavValue("/ideas");
+    navigate("/ideas");
   };
 
   const onTestClick = async () => {
@@ -41,7 +45,7 @@ const Auth = ({ ...props }) => {
     setLoggedInUser(testUser);
     setIsLoggedIn(true);
     setInit(true);
-    setNavValue("/ideas");
+    navigate("/ideas");
   };
 
   return (

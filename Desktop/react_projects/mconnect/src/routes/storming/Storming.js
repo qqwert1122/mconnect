@@ -10,6 +10,7 @@ import {
   where,
   collectionGroup,
   getDocs,
+  collection,
 } from "firebase/firestore";
 import Avatar from "@mui/material/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,6 +27,7 @@ const Storming = ({ ...props }) => {
 
   // original and opened ideas
   const [ideas, setIdeas] = useState([]);
+  const [recommendation, setRecommendation] = useState([]);
 
   // get original and opened ideas by quering from collectionGroup
   useEffect(() => {
@@ -37,6 +39,8 @@ const Storming = ({ ...props }) => {
         orderBy("createdAt", "desc")
       );
       getIdeas(q1);
+      const q2 = query(collection(dbService, "recommendation"));
+      getRecommendation(q2);
     }
   }, []);
 
@@ -47,6 +51,15 @@ const Storming = ({ ...props }) => {
       ...doc.data(),
     }));
     setIdeas(newData);
+  };
+
+  const getRecommendation = async (query) => {
+    const recommendgRef = await getDocs(query);
+    const newData = recommendgRef.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setRecommendation(newData);
   };
 
   const settings = {
@@ -65,96 +78,47 @@ const Storming = ({ ...props }) => {
     <>
       <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
       <StormingTopBar />
-      <div className="bg-stone-100 min-h-screen pb-14 text-sm">
+      <div className="bg-stone-50 min-h-screen pb-14 text-sm">
         <div className="pt-20 m-4 mb-2  font-black text-base">
           👍 이번 주 추천 아이디어
         </div>
         <ul className={`pb-5`}>
           <Slider {...settings}>
-            <div className="relative">
-              <div className="h-60 p-5 m-1 mx-2 bg-white shadow-md rounded-3xl break-all text-xs">
-                <div className="mb-2 truncate font-black text-sm">Title</div>
+            {recommendation.map((idea) => (
+              <div key={idea.id} className="relative">
+                <div className="h-60 p-5 m-1 mx-2 bg-white shadow-md rounded-3xl break-all text-xs">
+                  <div className="mb-2 truncate font-black text-sm">
+                    {idea.title}
+                  </div>
 
-                <div className="mb-3 line-clamp-6">Text</div>
+                  <div className="mb-3 line-clamp-6">{idea.text}</div>
 
-                <div className="ml-2 mb-1 flex gap-1 text-stone-400">
-                  <FontAwesomeIcon icon={faQuoteLeft} />
-                  <span>Source</span>
-                </div>
+                  <div className="ml-2 mb-1 flex gap-1 text-stone-400">
+                    <FontAwesomeIcon icon={faQuoteLeft} />
+                    <span>{idea.source}</span>
+                  </div>
 
-                <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
-                  <Avatar
-                    className="border-2"
-                    alt="avatar"
-                    sx={{
-                      display: "flex",
-                      width: "25px",
-                      height: "25px",
-                    }}
-                  />
-                  <div className="flex-col">
-                    <span className="flex">Name</span>
-                    <span className="flex text-stone-400">CreateAt</span>
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
+                    <Avatar
+                      className="border-2"
+                      alt="avatar"
+                      sx={{
+                        display: "flex",
+                        width: "25px",
+                        height: "25px",
+                      }}
+                      src={idea.userPhotoURL}
+                    />
+                    <div className="flex-col">
+                      <span className="flex">{idea.userName}</span>
+                      <span className="flex text-stone-400">
+                        {idea.createdAt}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="relative">
-              <div className="h-60 p-5 m-1 mx-2 bg-white shadow-md rounded-3xl break-all text-xs">
-                <div className="mb-2 truncate font-black text-sm">Title</div>
-
-                <div className="mb-3 line-clamp-6">Text</div>
-
-                <div className="ml-2 mb-1 flex gap-1 text-stone-400">
-                  <FontAwesomeIcon icon={faQuoteLeft} />
-                  <span>Source</span>
-                </div>
-
-                <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
-                  <Avatar
-                    className="border-2"
-                    alt="avatar"
-                    sx={{
-                      display: "flex",
-                      width: "25px",
-                      height: "25px",
-                    }}
-                  />
-                  <div className="flex-col">
-                    <span className="flex">Name</span>
-                    <span className="flex text-stone-400">CreateAt</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="h-60 p-5 m-1 mx-2 bg-white shadow-md rounded-3xl break-all text-xs">
-                <div className="mb-2 truncate font-black text-sm">Title</div>
-
-                <div className="mb-3 line-clamp-6">Text</div>
-
-                <div className="ml-2 mb-1 flex gap-1 text-stone-400">
-                  <FontAwesomeIcon icon={faQuoteLeft} />
-                  <span>Source</span>
-                </div>
-
-                <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
-                  <Avatar
-                    className="border-2"
-                    alt="avatar"
-                    sx={{
-                      display: "flex",
-                      width: "25px",
-                      height: "25px",
-                    }}
-                  />
-                  <div className="flex-col">
-                    <span className="flex">Name</span>
-                    <span className="flex text-stone-400">CreateAt</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </Slider>
         </ul>
         <div className="flex gap-2 ml-4 mb-2 font-black text-base">

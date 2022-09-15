@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {} from "fbase";
 import {} from "firebase/firestore";
 import { colorsState } from "atom";
 import { useRecoilValue } from "recoil";
-import { cnctedIdeasState } from "atom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
-const IdeaConnectedIdeas = ({ viewDetail, IDs }) => {
+const IdeaConnectedIdeas = ({ idea, getIdeasFromIDs, viewDetail }) => {
   const colors = useRecoilValue(colorsState);
-  const cnctedIdeas = useRecoilValue(cnctedIdeasState);
+  const [cnctedIdeas, setCnctedIdeas] = useState([]);
+  useEffect(() => {
+    if (idea.connectedIDs.length > 0) {
+      getIdeasFromIDs(idea.connectedIDs).then((idea) => setCnctedIdeas(idea));
+    }
+  }, []);
 
   return (
     <div
@@ -18,7 +22,7 @@ const IdeaConnectedIdeas = ({ viewDetail, IDs }) => {
       }`}
     >
       <div className="z-0 absolute top-0 left-6 h-full border-r-4 border-stone-200"></div>
-      {cnctedIdeas ? (
+      {cnctedIdeas && (
         <>
           {cnctedIdeas.map((idea, index) => (
             <div className="relative" key={index}>
@@ -54,8 +58,6 @@ const IdeaConnectedIdeas = ({ viewDetail, IDs }) => {
             </div>
           ))}
         </>
-      ) : (
-        <></>
       )}
     </div>
   );

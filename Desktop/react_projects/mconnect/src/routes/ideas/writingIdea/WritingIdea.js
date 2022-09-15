@@ -11,7 +11,7 @@ import "dayjs/locale/ko";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer, toast } from "react-toastify";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   userState,
   formTitleState,
@@ -26,6 +26,8 @@ import {
   selectedIdeasState,
   formPublicState,
 } from "atom";
+import { ideasState } from "atom";
+import { whatViewState } from "atom";
 
 var relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
@@ -46,7 +48,11 @@ const WritingIdea = ({ ...props }) => {
   const formCnctedIdeas = useRecoilValue(formCnctedIdeasState);
   const [recentTags, setRecentTags] = useRecoilState(recentTagsState);
   const [recentSources, setRecentSources] = useRecoilState(recentSourcesState);
+  const [ideas, setIdeas] = useRecoilState(ideasState);
+  const [whatView, setWhatView] = useRecoilState(whatViewState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
+
+  const clearEdit = useResetRecoilState(isEditState);
 
   const isCnctnRequired = isEdit
     ? whatEdit.connectedIDs.length >= 2 && formCnctedIdeas.length < 2
@@ -107,6 +113,34 @@ const WritingIdea = ({ ...props }) => {
           connectedIDs: connectedIdeasId,
           updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
         });
+        setIdeas(
+          ideas.map((m) =>
+            m.id === whatEdit.id
+              ? {
+                  ...whatEdit,
+                  title: formTitle,
+                  text: formText,
+                  source: formSource,
+                  tags: formTags,
+                  isPublic: formPublic,
+                  connectedIDs: connectedIdeasId,
+                  updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+                }
+              : m
+          )
+        );
+        if (whatView) {
+          setWhatView({
+            ...whatView,
+            title: formTitle,
+            text: formText,
+            source: formSource,
+            tags: formTags,
+            isPublic: formPublic,
+            connectedIDs: connectedIdeasId,
+            updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+          });
+        }
       } catch (event) {
         console.error("Error editing document: ", event);
       }
@@ -157,12 +191,34 @@ const WritingIdea = ({ ...props }) => {
         await updateDoc(userRef, {
           idea_count: increment(1),
         });
+        setIdeas([
+          {
+            id: newIdeaId,
+            userId: loggedInUser.userId,
+            userName: loggedInUser.userName,
+            userPhotoURL: loggedInUser.userPhotoURL,
+            title: formTitle,
+            text: formText,
+            source: formSource,
+            tags: formTags,
+            connectedIDs: connectedIdeasId,
+            createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+            updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+            isPublic: formPublic,
+            isLiked: false,
+            isBookmarked: false,
+            isViewed: false,
+            isOriginal: true,
+          },
+          ...ideas,
+        ]);
       } catch (event) {
         console.error("Error adding document: ", event);
       }
       setSelectedIdeas([]);
       toastAlarm("new");
     }
+    clearEdit();
     arrangeRecentSources(formSource);
     arrangeRecentTags(formTags);
     navigate(-1);

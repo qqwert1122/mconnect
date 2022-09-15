@@ -4,12 +4,19 @@ import { Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilValue } from "recoil";
-import { whatViewState, cnctedIdeasState } from "atom";
-import { useEffect } from "react";
+import { whatViewState } from "atom";
+import { useEffect, useState } from "react";
 
 const ConnectedIdeas = ({ onIdeaClick, getIdeasFromIDs }) => {
   const whatView = useRecoilValue(whatViewState);
-  const cnctedIdeas = useRecoilValue(cnctedIdeasState);
+  const [cnctedIdeas, setCnctedIdeas] = useState([]);
+  useEffect(() => {
+    if (whatView.connectedIDs.length > 0) {
+      getIdeasFromIDs(whatView.connectedIDs).then((idea) =>
+        setCnctedIdeas(idea)
+      );
+    }
+  }, []);
 
   const settings = {
     dots: true,
@@ -21,12 +28,6 @@ const ConnectedIdeas = ({ onIdeaClick, getIdeasFromIDs }) => {
     focusOnSelect: false,
     initialSlide: 0,
   };
-
-  useEffect(() => {
-    if (whatView.connectedIDs.length > 0) {
-      getIdeasFromIDs(whatView.connectedIDs);
-    }
-  }, []);
 
   return (
     <div className="moveRightToLeft bg-stone-50 shadow-inner">

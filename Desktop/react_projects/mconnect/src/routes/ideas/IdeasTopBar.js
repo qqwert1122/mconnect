@@ -36,10 +36,6 @@ const IdeasTopBar = ({ ...props }) => {
     }
   };
 
-  const onSearchClick = () => {
-    navigate("/searchpage");
-  };
-
   const onAlarmClick = () => {
     navigate("/alarm");
   };
@@ -47,6 +43,8 @@ const IdeasTopBar = ({ ...props }) => {
   const onDeleteClick = () => {
     setAlarm({ boolean: false, message: "" });
   };
+
+  // bg-gradient-to-r text-white from-orange-400 via-red-400 to-pink-400
 
   return (
     <div className="fixed top-0 w-full z-10">
@@ -75,9 +73,6 @@ const IdeasTopBar = ({ ...props }) => {
             ) : (
               <FontAwesomeIcon icon={farCircleCheck} size="lg" />
             )}
-          </button>
-          <button className="px-2" onClick={onSearchClick}>
-            <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>
       </div>

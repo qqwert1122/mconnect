@@ -3,6 +3,7 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import NotesRoundedIcon from "@mui/icons-material/NotesRounded";
 import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -47,6 +48,11 @@ const BottomNavigationBar = ({ navValue, setNavValue }) => {
               // label="탐색"
               value="/storming"
               icon={<ExploreRoundedIcon />}
+            />
+            <BottomNavigationAction
+              // label="검색"
+              value="/searchpage"
+              icon={<SearchRoundedIcon />}
             />
             <BottomNavigationAction
               // label="Profile"

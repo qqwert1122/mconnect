@@ -61,7 +61,7 @@ const StormingTagBar = ({ setIdeas, trends }) => {
   };
 
   return (
-    <div className="relative p-4 pl-6 h-32 flex shadow-inner rounded bg-gradient-to-r from-rose-400 to-orange-400">
+    <div className="relative p-4 px-6 h-32 flex shadow-inner rounded bg-gradient-to-r from-rose-400 to-orange-400">
       <div className="flex-col">
         {/* <div className="flex items-center text-lg text-blue-400 font-black gap-2">
           Hot Trends
@@ -75,7 +75,7 @@ const StormingTagBar = ({ setIdeas, trends }) => {
             </button>
           )}
         </div>
-        <div className="absolute bottom-5 flex items-end flex-nowrap gap-4 overflow-x-scroll">
+        <div className="absolute mr-6 bottom-5 flex items-end flex-nowrap gap-4 overflow-x-scroll">
           {trends.map((tag, index) => (
             <button
               key={index}

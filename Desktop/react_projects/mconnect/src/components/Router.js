@@ -22,7 +22,6 @@ const AppRouter = ({ ...props }) => {
     <Routes>
       {props.isLoggedIn ? (
         <>
-          {/* <Route exact path="/home" element={<Home props={props} />} /> */}
           <Route exact path="/ideas" element={<Ideas {...props} />} />
           <Route exact path="/searchpage" element={<SearchPage {...props} />} />
           <Route

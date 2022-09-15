@@ -22,9 +22,11 @@ import { selectedIdeasState } from "atom";
 import { userState } from "atom";
 import { toast } from "react-toastify";
 import { Avatar } from "@mui/material";
+import BottomNavigationBar from "routes/BottomNavigationBar";
 
 const SearchPage = ({ ...props }) => {
-  const { navigate, getIDsFromIdeas, onBackClick } = props;
+  const { navValue, setNavValue, navigate, getIDsFromIdeas, onBackClick } =
+    props;
   const loggedInUser = useRecoilValue(userState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
 
@@ -135,8 +137,6 @@ const SearchPage = ({ ...props }) => {
     );
   };
 
-  const myIdea = true;
-
   const onBookmarkClick = (hit) => {
     console.log(hit.objectID);
   };
@@ -145,26 +145,20 @@ const SearchPage = ({ ...props }) => {
 
   return (
     <div className="min-h-screen flex-col">
+      <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
       <div className="relative">
         <InstantSearch searchClient={searchClient} indexName="userIdeas">
-          <div className="fixed top-0 w-full p-3 flex gap-4 justify-between items-center bg-white shadow z-10">
-            <button onClick={onBackClick}>
-              <FontAwesomeIcon icon={faChevronLeft} size="lg" />
-            </button>
+          <div>
             <SearchBox
-              className="w-full"
+              className="fixed top-0 w-full p-3 bg-white shadow z-10"
               placeholder="검색어를 입력하세요..."
               searchAsYouType={false}
             />
           </div>
           <div className="mt-14">
-            <Configure
-              hitsPerPage={1}
-              filters={
-                myIdea ? `userId:${loggedInUser.userId}` : "isPublic:true"
-              }
-            />
+            <Configure hitsPerPage={5} filters={"isPublic:true"} />
             <InfiniteHits
+              className="mt-16"
               hitComponent={Hit}
               showPrevious={false}
               cache={sessionStorageCache}

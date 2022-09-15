@@ -30,7 +30,7 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
   } = props;
 
   const loggedInUser = useRecoilValue(userState);
-  const ideas = useRecoilValue(ideasState);
+  const [ideas, setIdeas] = useRecoilState(ideasState);
   const setWhatView = useSetRecoilState(whatViewState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
 
@@ -39,12 +39,6 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const [viewDetail, setViewDetail] = useState(false);
-
-  useEffect(() => {
-    if (idea.connectedIDs.length > 0) {
-      getIdeasFromIDs(idea.connectedIDs);
-    }
-  }, []);
 
   const onSelectIdea = (idea) => {
     if (isItIn(selectedIdeas, idea)) {
@@ -69,6 +63,7 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
     setDeleteDialogOpen(false);
     setAnchorEl(null);
     onDeleteClick(idea);
+    setIdeas(ideas.filter((f) => f !== idea));
     toastAlarm("delete");
   };
 
@@ -114,8 +109,9 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
           />
           {idea.connectedIDs.length > 0 && (
             <IdeaConnectedIdeas
+              idea={idea}
+              getIdeasFromIDs={getIdeasFromIDs}
               viewDetail={viewDetail}
-              IDs={idea.connectedIDs}
             />
           )}
           <DeleteDialog

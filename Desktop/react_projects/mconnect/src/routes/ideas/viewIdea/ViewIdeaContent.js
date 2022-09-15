@@ -26,6 +26,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { whatViewState } from "atom";
 import { useRecoilState } from "recoil";
+import { ideasState } from "atom";
 
 const ViewIdeaContent = ({
   user,
@@ -40,6 +41,7 @@ const ViewIdeaContent = ({
   onPublicUpdate,
 }) => {
   const [whatView, setWhatView] = useRecoilState(whatViewState);
+  const [ideas, setIdeas] = useRecoilState(ideasState);
   const [count, setCount] = useState({});
 
   const [init, setInit] = useState(false);
@@ -62,6 +64,11 @@ const ViewIdeaContent = ({
     onLikeUpdate(whatView);
     countUpdate(whatView, "like");
     setWhatView({ ...whatView, isLiked: !whatView.isLiked });
+    setIdeas(
+      ideas.map((m) =>
+        m.id === whatView.id ? { ...whatView, isLiked: !whatView.isLiked } : m
+      )
+    );
   };
 
   const ideaRef = doc(
@@ -79,6 +86,13 @@ const ViewIdeaContent = ({
       onBackClick("view");
       deleteDoc(ideaRef);
     }
+    setIdeas(
+      ideas.map((m) =>
+        m.id === whatView.id
+          ? { ...whatView, isBookmarked: !whatView.isBookmarked }
+          : m
+      )
+    );
   };
 
   const onPublicClick = () => {
@@ -86,6 +100,11 @@ const ViewIdeaContent = ({
       onPublicUpdate(whatView);
       setWhatView({ ...whatView, isPublic: !whatView.isPublic });
     }
+    setIdeas(
+      ideas.map((m) =>
+        m.id === whatView.id ? { ...whatView, isPublic: !whatView.isPublic } : m
+      )
+    );
   };
 
   // Ellipsis Menu

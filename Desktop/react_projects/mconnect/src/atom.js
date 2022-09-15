@@ -11,11 +11,6 @@ export const ideasState = atom({
   default: [],
 });
 
-export const cnctedIdeasState = atom({
-  key: "cnctedIdeasState",
-  default: [],
-});
-
 export const selectedIdeasState = atom({
   key: "selectedIdeastState",
   default: [],

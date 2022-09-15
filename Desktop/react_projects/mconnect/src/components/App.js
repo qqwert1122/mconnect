@@ -16,6 +16,8 @@ import {
   updateDoc,
   increment,
   deleteDoc,
+  limit,
+  startAfter,
 } from "firebase/firestore";
 import dayjs from "dayjs";
 import { v4 } from "uuid";
@@ -46,9 +48,6 @@ import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const useDeliverProps = () => {
-  console.log("rendering");
-
-  // Auth
   const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -64,7 +63,6 @@ const useDeliverProps = () => {
             setIsLoggedIn(true);
           }
         });
-        console.log("user snapshot");
       } else {
         setIsLoggedIn(false);
       }
@@ -72,7 +70,6 @@ const useDeliverProps = () => {
     });
   }, []);
 
-  // Get Ideas when app starts
   const [ideas, setIdeas] = useRecoilState(ideasState);
   const [alarm, setAlarm] = useState({
     boolean: false,
@@ -92,27 +89,49 @@ const useDeliverProps = () => {
     }, 5000);
   };
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      const q1 = query(
-        collection(dbService, "users", loggedInUser.userId, "userIdeas"),
-        orderBy("updatedAt", "desc")
-      );
-      onSnapshot(q1, (snapshot) => {
-        const _ideas = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setIdeas(_ideas);
-        console.log("idea snapshot");
-      });
-    }
-  }, [isLoggedIn]);
+  const [lastVisible, setLastVisible] = useState();
 
-  // Ideas props
+  const getNextPosts = async () => {
+    let q;
+    if (lastVisible === -1) {
+      return;
+    } else if (lastVisible) {
+      q = query(
+        collection(dbService, "users", loggedInUser.userId, "userIdeas"),
+        orderBy("updatedAt", "desc"),
+        limit(5),
+        startAfter(lastVisible)
+      );
+    } else {
+      q = query(
+        collection(dbService, "users", loggedInUser.userId, "userIdeas"),
+        orderBy("updatedAt", "desc"),
+        limit(5)
+      );
+    }
+
+    await getDocs(q).then((snapshot) => {
+      setIdeas((ideas) => {
+        const arr = [...ideas];
+        snapshot.forEach((doc) => {
+          arr.push({ id: doc.id, ...doc.data() });
+        });
+        return arr;
+      });
+      if (snapshot.docs.length === 0) {
+        setLastVisible(-1);
+      } else {
+        setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (loggedInUser) getNextPosts();
+  }, [loggedInUser]);
+
   const selectedIdeas = useRecoilValue(selectedIdeasState);
 
-  // navigate
   let navigate = useNavigate();
 
   const [navValue, setNavValue] = useState("/ideas");
@@ -159,7 +178,6 @@ const useDeliverProps = () => {
         await updateDoc(userIdeaRef, {
           isViewed: true,
         });
-        console.log("update view_count");
       }
     }
     setWhatView(idea);
@@ -169,57 +187,6 @@ const useDeliverProps = () => {
   useEffect(() => {
     navigate(`${navValue}`, { replace: true });
   }, [navValue]);
-
-  // infinite scroll
-  // const [lastVisible, setLastVisible] = useState();
-
-  // const getNextPosts = async () => {
-  //   let q;
-
-  //   if (lastVisible === -1) {
-  //     return;
-  //   } else if (lastVisible) {
-  //     q = query(
-  //       collection(dbService, "ideas"),
-  //       where("userId", "==", loggedInUser.userId),
-  //       orderBy("createdAt", "desc"),
-  //       limit(5),
-  //       startAfter(lastVisible)
-  //     );
-  //   } else {
-  //     q = query(
-  //       collection(dbService, "ideas"),
-  //       where("userId", "==", loggedInUser.userId),
-  //       orderBy("createdAt", "desc"),
-  //       limit(5)
-  //     );
-  //   }
-
-  //   getDocs(q).then((snapshot) => {
-  //     setdbIdeas((dbIdeas) => {
-  //       const arr = [...dbIdeas];
-
-  //       snapshot.forEach((doc) => {
-  //         arr.push(doc.data());
-  //       });
-  //       console.log(arr);
-  //       return arr;
-  //     });
-
-  //     if (snapshot.docs.length === 0) {
-  //       setLastVisible(-1);
-  //     } else {
-  //       setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
-  //     }
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   getNextPosts();
-  // }, []);
-
-  // any functions
-  const [cnctedIdeas, setCnctedIdeas] = useRecoilState(cnctedIdeasState);
 
   const getIdeasFromIDs = async (IDs) => {
     const q1 = query(
@@ -231,18 +198,11 @@ const useDeliverProps = () => {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log("get ideas from ids");
-    setCnctedIdeas(newData);
-    const DIFF_VALUE = IDs.length - cnctedIdeas.length;
+    const DIFF_VALUE = IDs.length - newData.length;
     const tempArr = IDs.filter((x, i) => i < DIFF_VALUE).map((x, i) => ({
       id: -1,
     }));
-    console.log(tempArr);
-    setCnctedIdeas(cnctedIdeas.concat(tempArr));
-    // for (let i = 0; i < DIFF_VALUE; i++) {
-    // console.log("!!!");
-    // const newUniq = v4();
-    // setCnctedIdeas([...cnctedIdeas, { id: -1, uniq: newUniq }]);
+    return [...newData, ...tempArr];
   };
 
   const getIDsFromIdeas = (ideas) => {
@@ -261,7 +221,6 @@ const useDeliverProps = () => {
     }
   };
 
-  // form Props
   const setWhatEdit = useSetRecoilState(whatEditState);
   const setFormTitle = useSetRecoilState(formTitleState);
   const setFormText = useSetRecoilState(formTextState);
@@ -287,7 +246,7 @@ const useDeliverProps = () => {
   };
 
   const initForm = () => {
-    setWhatEdit();
+    clearWhatEdit();
     setFormTitle("");
     setFormText("");
     setFormSource("");
@@ -309,12 +268,14 @@ const useDeliverProps = () => {
     setFormTags(idea.tags);
     setFormPublic(idea.isPublic);
     if (idea.connectedIDs.length > 0) {
-      getIdeasFromIDs(idea.connectedIDs);
-      setFormCnctedIdeas(cnctedIdeas);
+      getIdeasFromIDs(idea.connectedIDs).then((idea) =>
+        setFormCnctedIdeas(idea)
+      );
+    } else {
+      setFormCnctedIdeas([]);
     }
   };
 
-  // functions with firestore
   const getCount = async (idea) => {
     const data = (await getDoc(doc(dbService, "counts", idea.id))).data();
     if (data === undefined) {
@@ -322,13 +283,11 @@ const useDeliverProps = () => {
     } else {
       return data;
     }
-    console.log("get count");
   };
 
   const countUpdate = async (idea, type) => {
     const countRef = doc(dbService, "counts", idea.id);
     const count = (await getDoc(countRef)).data();
-    console.log("update counts");
     if (count !== undefined) {
       switch (type) {
         case "like":
@@ -370,7 +329,6 @@ const useDeliverProps = () => {
   };
 
   const onLikeUpdate = async (idea) => {
-    console.log("update likes");
     const ideaRef = doc(
       dbService,
       "users",
@@ -390,7 +348,6 @@ const useDeliverProps = () => {
   };
 
   const onBookmarkUpdate = async (idea) => {
-    console.log("update bookmark");
     const ideaRef = doc(
       dbService,
       "users",
@@ -410,7 +367,6 @@ const useDeliverProps = () => {
   };
 
   const onPublicUpdate = async (idea) => {
-    console.log("update public");
     const ideaRef = doc(
       dbService,
       "users",
@@ -422,7 +378,6 @@ const useDeliverProps = () => {
   };
 
   const onDeleteClick = async (idea) => {
-    console.log("delete doc");
     const userIdeaRef = doc(
       dbService,
       "users",
@@ -447,14 +402,13 @@ const useDeliverProps = () => {
   }, []);
 
   const getTrends = async () => {
-    console.log("get trends");
     const trends = (await getDoc(doc(dbService, "trends", "hotTrends"))).data()
       .tags;
     setTrends(trends);
   };
 
   return {
-    // getNextPosts,
+    getNextPosts,
     init,
     setInit,
     isLoggedIn,
@@ -473,7 +427,6 @@ const useDeliverProps = () => {
     alarm,
     setAlarm,
     toastAlarm,
-    // firestore
     getCount,
     countUpdate,
     onLikeUpdate,

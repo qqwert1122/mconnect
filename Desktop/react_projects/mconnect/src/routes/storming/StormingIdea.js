@@ -22,6 +22,7 @@ import {
   faCopy,
   faHeart as farHeart,
   faBookmark as farBookmark,
+  faThumbsUp,
 } from "@fortawesome/free-regular-svg-icons";
 import {
   faEllipsis,
@@ -181,6 +182,18 @@ const StormingIdea = ({ idea, timeDisplay }) => {
     setAnchorEl(null);
   };
 
+  const onRecommendationClick = async () => {
+    const recommendRef = doc(dbService, "recommendation", idea.id);
+    await setDoc(recommendRef, {
+      ...idea,
+      isBookmarked: false,
+      isLiked: false,
+      isOriginal: false,
+      isViewed: false,
+    });
+    handleEllipsisClose();
+  };
+
   // handle tag dialog
   const [isTagsDialogOpen, setIsTagsDialogOpen] = useState(false);
   const [DialogTags, setDialogTags] = useState([]);
@@ -246,6 +259,12 @@ const StormingIdea = ({ idea, timeDisplay }) => {
                 <FontAwesomeIcon icon={faCopy} />
                 &nbsp; 복사
               </MenuItem>
+              {loggedInUser.isAuthority && (
+                <MenuItem onClick={onRecommendationClick}>
+                  <FontAwesomeIcon icon={faThumbsUp} />
+                  &nbsp; 추천
+                </MenuItem>
+              )}
             </Menu>
           </div>
           <div className="w-full box-border px-4 mt-4 mb-4 duration-200">
