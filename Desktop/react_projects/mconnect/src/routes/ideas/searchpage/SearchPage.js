@@ -11,23 +11,37 @@ import {
 import { createInfiniteHitsSessionStorageCache } from "instantsearch.js/es/lib/infiniteHitsCache";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBookmark,
+  faBookmark as fasBookmark,
   faCheck,
   faChevronLeft,
   faHashtag,
   faQuoteLeft,
 } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as farBookmark } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedIdeasState } from "atom";
 import { userState } from "atom";
 import { toast } from "react-toastify";
 import { Avatar } from "@mui/material";
+import dayjs from "dayjs";
 import BottomNavigationBar from "routes/BottomNavigationBar";
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  increment,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { ideasState } from "atom";
+import { dbService } from "fbase";
+import { useEffect, useState } from "react";
 
 const SearchPage = ({ ...props }) => {
   const { navValue, setNavValue, navigate, getIDsFromIdeas, onBackClick } =
     props;
   const loggedInUser = useRecoilValue(userState);
+  const [ideas, setIdeas] = useRecoilState(ideasState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
 
   const onIdeaSelect = (hit) => {
@@ -54,13 +68,122 @@ const SearchPage = ({ ...props }) => {
   );
 
   const Hit = ({ hit }) => {
+    const isOwner = loggedInUser.userId === hit.userId;
+
+    const countRef = doc(dbService, "counts", hit.objectID);
+    const userIdeaRef = doc(
+      dbService,
+      "users",
+      loggedInUser.userId,
+      "userIdeas",
+      hit.objectID
+    );
+    const userRef = doc(dbService, "users", loggedInUser.userId);
+    const [count, setCount] = useState();
+
+    const getCount = async () => {
+      const countDoc = (await getDoc(countRef)).data();
+      setCount(countDoc);
+    };
+
+    useEffect(() => {
+      getCount();
+    }, []);
+
+    const onBookmarkClick = async (idea) => {
+      const newCount = { ...count };
+      if (count.bookmark_users.hasOwnProperty(loggedInUser.userId)) {
+        delete newCount.bookmark_users[loggedInUser.userId];
+        setCount(newCount);
+        await updateDoc(countRef, {
+          bookmark_count: increment(-1),
+          bookmark_users: newCount.bookmark_users,
+        });
+        if (isOwner) {
+          await updateDoc(userIdeaRef, {
+            isBookmarked: false,
+          });
+          setIdeas(
+            ideas.map((m) =>
+              m.id === idea.objectID ? { ...m, isBookmarked: false } : m
+            )
+          );
+        } else {
+          await deleteDoc(userIdeaRef);
+          await updateDoc(userRef, {
+            idea_count: increment(-1),
+          });
+          setIdeas(ideas.filter((f) => f.id !== idea.objectID));
+        }
+      } else {
+        newCount.bookmark_users[loggedInUser.userId] = loggedInUser.userName;
+        setCount(newCount);
+        await updateDoc(countRef, {
+          bookmark_count: increment(1),
+          bookmark_users: {
+            ...count.bookmark_users,
+            [loggedInUser.userId]: loggedInUser.userName,
+          },
+        });
+        if (isOwner) {
+          await updateDoc(userIdeaRef, {
+            isBookmarked: true,
+          });
+          setIdeas(
+            ideas.map((m) =>
+              m.id === idea.objectID ? { ...m, isBookmarked: true } : m
+            )
+          );
+        } else {
+          await setDoc(userIdeaRef, {
+            userId: idea.userId,
+            userName: idea.userName,
+            userPhotoURL: idea.userPhotoURL,
+            title: idea.title,
+            text: idea.text,
+            source: idea.source,
+            tags: idea.tags,
+            connectedIDs: idea.connectedIDs,
+            createdAt: idea.createdAt,
+            updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+            isPublic: false,
+            isLiked: count.like_users.hasOwnProperty(loggedInUser.userId),
+            isBookmarked: true,
+            isViewed: count.view_users.hasOwnProperty(loggedInUser.userId),
+            isOriginal: false,
+          });
+          await updateDoc(userRef, {
+            idea_count: increment(1),
+          });
+          setIdeas([
+            {
+              id: idea.objectID,
+              userId: idea.userId,
+              userName: idea.userName,
+              userPhotoURL: idea.userPhotoURL,
+              title: idea.title,
+              text: idea.text,
+              source: idea.source,
+              tags: idea.tags,
+              connectedIDs: idea.connectedIDs,
+              createdAt: idea.createdAt,
+              updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+              isPublic: false,
+              isLiked: count.like_users.hasOwnProperty(loggedInUser.userId),
+              isBookmarked: true,
+              isViewed: count.view_users.hasOwnProperty(loggedInUser.userId),
+              isOriginal: false,
+            },
+            ...ideas,
+          ]);
+        }
+      }
+    };
+
     return (
       <div
         key={hit.objectID}
-        className={`${
-          getIDsFromIdeas(selectedIdeas).includes(hit.objectID) &&
-          "shadow-rose-200"
-        } relative w-full px-4 py-4 break-all overflow-hidden bg-stone-100 rounded-xl shadow-lg`}
+        className={`relative w-full px-4 py-4 break-all overflow-hidden bg-stone-100 rounded-xl shadow-lg`}
       >
         {hit.title.length > 0 && (
           <div className="mb-2 font-black">
@@ -112,33 +235,43 @@ const SearchPage = ({ ...props }) => {
           </span>
         </div>
         <button
-          className={`absolute top-1 right-1 w-6 h-6 ${
+          className={`absolute top-1 right-1 w-5 h-5 ${
             getIDsFromIdeas(selectedIdeas).includes(hit.objectID)
               ? "bg-red-400 text-white"
               : "border-2 border-stone-400"
           } border-2 rounded-full shadow-inner duration-100`}
           onClick={() => {
             onIdeaSelect(hit);
+            onBookmarkClick(hit);
           }}
         >
           {getIDsFromIdeas(selectedIdeas).includes(hit.objectID) && (
             <FontAwesomeIcon icon={faCheck} />
           )}
         </button>
-        <button
-          className="absolute bottom-4 right-2 text-orange-400"
-          onClick={() => {
-            onBookmarkClick(hit);
-          }}
-        >
-          <FontAwesomeIcon icon={faBookmark} size="xl" />
-        </button>
+        {count && (
+          <button
+            className={`absolute bottom-4 right-2 ${
+              count.bookmark_users.hasOwnProperty(loggedInUser.userId)
+                ? "text-orange-400"
+                : "text-stone-500"
+            }`}
+            onClick={() => {
+              onBookmarkClick(hit);
+            }}
+          >
+            <FontAwesomeIcon
+              icon={
+                count.bookmark_users.hasOwnProperty(loggedInUser.userId)
+                  ? fasBookmark
+                  : farBookmark
+              }
+              size="xl"
+            />
+          </button>
+        )}
       </div>
     );
-  };
-
-  const onBookmarkClick = (hit) => {
-    console.log(hit.objectID);
   };
 
   const sessionStorageCache = createInfiniteHitsSessionStorageCache();

@@ -84,6 +84,16 @@ export const formCnctedIdeasState = atom({
   default: [],
 });
 
+export const chatUserState = atom({
+  key: "chatUserState",
+  default: [],
+});
+
+export const isFirstChatState = atom({
+  key: "isFirstChatState",
+  default: true,
+});
+
 const { persistAtom } = recoilPersist();
 
 export const recentTagsState = atom({

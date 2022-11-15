@@ -20,7 +20,7 @@ import {
   formTagsState,
 } from "atom";
 
-const RelatedIdeas = ({ viewIdea, isItIn }) => {
+const RelatedIdeas = ({ setNavValue, viewIdea, isItIn }) => {
   const [formCnctedIdeas, setFormCnctedIdeas] =
     useRecoilState(formCnctedIdeasState);
   const formTags = useRecoilValue(formTagsState);
@@ -184,6 +184,7 @@ const RelatedIdeas = ({ viewIdea, isItIn }) => {
         {tabs === 1 && (
           <>
             <SuggestedIdeas
+              setNavValue={setNavValue}
               id={-1}
               writing={true}
               tagsPrmtr={formTags}

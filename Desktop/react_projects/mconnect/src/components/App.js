@@ -114,7 +114,7 @@ const useDeliverProps = () => {
       setIdeas((ideas) => {
         const arr = [...ideas];
         snapshot.forEach((doc) => {
-          arr.push({ id: doc.id, ...doc.data() });
+          arr.push(doc.data());
         });
         return arr;
       });
@@ -134,7 +134,7 @@ const useDeliverProps = () => {
 
   let navigate = useNavigate();
 
-  const [navValue, setNavValue] = useState("/ideas");
+  const [navValue, setNavValue] = useState("/");
 
   const clearWhatView = useResetRecoilState(whatViewState);
   const clearEdit = useResetRecoilState(isEditState);
@@ -157,31 +157,32 @@ const useDeliverProps = () => {
 
   const setWhatView = useSetRecoilState(whatViewState);
   const viewIdea = async (idea) => {
-    const countRef = doc(dbService, "counts", idea.id);
+    const countRef = doc(dbService, "counts", idea.docId);
     const countData = (await getDoc(countRef)).data();
     const userIdeaRef = doc(
       dbService,
       "users",
       loggedInUser.userId,
       "userIdeas",
-      idea.id
+      idea.docId
     );
-    if (countData !== undefined) {
-      if (countData.view_users.hasOwnProperty(loggedInUser.userId) === false) {
-        await updateDoc(countRef, {
-          view_count: increment(1),
-          view_users: {
-            ...countData.view_users,
-            [loggedInUser.userId]: loggedInUser.userName,
-          },
-        });
-        await updateDoc(userIdeaRef, {
-          isViewed: true,
-        });
-      }
+    if (
+      countData !== undefined &&
+      countData.view_users.hasOwnProperty(loggedInUser.userId) === false
+    ) {
+      await updateDoc(countRef, {
+        view_count: increment(1),
+        view_users: {
+          ...countData.view_users,
+          [loggedInUser.userId]: loggedInUser.userName,
+        },
+      });
+      await updateDoc(userIdeaRef, {
+        isViewed: true,
+      });
     }
     setWhatView(idea);
-    navigate(`/${idea.id}`);
+    navigate(`/${idea.docId}`);
   };
 
   useEffect(() => {
@@ -191,26 +192,23 @@ const useDeliverProps = () => {
   const getIdeasFromIDs = async (IDs) => {
     const q1 = query(
       collection(dbService, "users", loggedInUser.userId, "userIdeas"),
-      where(documentId(), "in", IDs)
+      where("docId", "in", IDs)
     );
     const ideaRef = await getDocs(q1);
-    const newData = ideaRef.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const newData = ideaRef.docs.map((doc) => doc.data());
     const DIFF_VALUE = IDs.length - newData.length;
     const tempArr = IDs.filter((x, i) => i < DIFF_VALUE).map((x, i) => ({
-      id: -1,
+      docId: -1,
     }));
     return [...newData, ...tempArr];
   };
 
   const getIDsFromIdeas = (ideas) => {
-    return ideas.map((idea) => idea.id);
+    return ideas.map((idea) => idea.docId);
   };
 
   const isItIn = (arr, idea) => {
-    return getIDsFromIdeas(arr).includes(idea.id);
+    return getIDsFromIdeas(arr).includes(idea.docId);
   };
 
   const timeDisplay = (createdAt) => {
@@ -277,7 +275,7 @@ const useDeliverProps = () => {
   };
 
   const getCount = async (idea) => {
-    const data = (await getDoc(doc(dbService, "counts", idea.id))).data();
+    const data = (await getDoc(doc(dbService, "counts", idea.docId))).data();
     if (data === undefined) {
       return undefined;
     } else {
@@ -286,7 +284,7 @@ const useDeliverProps = () => {
   };
 
   const countUpdate = async (idea, type) => {
-    const countRef = doc(dbService, "counts", idea.id);
+    const countRef = doc(dbService, "counts", idea.docId);
     const count = (await getDoc(countRef)).data();
     if (count !== undefined) {
       switch (type) {
@@ -334,7 +332,7 @@ const useDeliverProps = () => {
       "users",
       loggedInUser.userId,
       "userIdeas",
-      idea.id
+      idea.docId
     );
     if (idea.isLiked) {
       await updateDoc(ideaRef, {
@@ -353,7 +351,7 @@ const useDeliverProps = () => {
       "users",
       loggedInUser.userId,
       "userIdeas",
-      idea.id
+      idea.docId
     );
     if (idea.isBookmarked) {
       await updateDoc(ideaRef, {
@@ -372,7 +370,7 @@ const useDeliverProps = () => {
       "users",
       loggedInUser.userId,
       "userIdeas",
-      idea.id
+      idea.docId
     );
     await updateDoc(ideaRef, { isPublic: !idea.isPublic });
   };
@@ -383,7 +381,7 @@ const useDeliverProps = () => {
       "users",
       loggedInUser.userId,
       "userIdeas",
-      idea.id
+      idea.docId
     );
     await deleteDoc(userIdeaRef);
     const userRef = doc(dbService, "users", loggedInUser.userId);

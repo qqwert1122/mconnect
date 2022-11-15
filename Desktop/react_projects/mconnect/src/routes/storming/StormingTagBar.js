@@ -17,62 +17,32 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const StormingTagBar = ({ setIdeas, trends }) => {
+const StormingTagBar = ({ loadNewIdea, trends, itemPrmtr, setItemPrmtr }) => {
   // tags toggle
-  const [itemPrmtr, setItemPrmtr] = useState("전체");
-
   const onItemClick = (tag) => {
+    if (tag === itemPrmtr) initItemPrmtr();
     setItemPrmtr(tag);
+    loadNewIdea(tag);
   };
 
-  const onPrmtrClear = () => {
-    setItemPrmtr("전체");
-  };
-
-  // get new ideas filtered by selected trend keywords
-  useEffect(() => {
-    if (itemPrmtr === "전체") {
-      const q1 = query(
-        collectionGroup(dbService, "userIdeas"),
-        where("isOriginal", "==", true),
-        where("isPublic", "==", true),
-        orderBy("createdAt", "desc")
-      );
-      getNewIdeas(q1);
-    } else {
-      const q1 = query(
-        collectionGroup(dbService, "userIdeas"),
-        where("isOriginal", "==", true),
-        where("isPublic", "==", true),
-        where("tags", "array-contains", itemPrmtr),
-        orderBy("createdAt", "desc")
-      );
-      getNewIdeas(q1);
-    }
-  }, [itemPrmtr]);
-
-  const getNewIdeas = async (query) => {
-    const stormingRef = await getDocs(query);
-    const newData = stormingRef.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setIdeas(newData);
+  const initItemPrmtr = () => {
+    setItemPrmtr();
+    loadNewIdea();
   };
 
   return (
     <div className="relative p-4 px-6 h-32 flex shadow-inner rounded bg-gradient-to-r from-rose-400 to-orange-400">
       <div className="flex-col">
-        {/* <div className="flex items-center text-lg text-blue-400 font-black gap-2">
-          Hot Trends
-          <FontAwesomeIcon icon={faFireFlameCurved} />
-        </div> */}
         <div className="flex items-center gap-4 text-2xl font-black text-orange-100 duration-500">
-          {itemPrmtr}
-          {itemPrmtr !== "전체" && (
-            <button onClick={onPrmtrClear}>
-              <FontAwesomeIcon icon={faXmarkCircle} size="xs" />
-            </button>
+          {itemPrmtr === undefined ? (
+            <>전체</>
+          ) : (
+            <>
+              {itemPrmtr}
+              <button onClick={initItemPrmtr}>
+                <FontAwesomeIcon icon={faXmarkCircle} size="xs" />
+              </button>
+            </>
           )}
         </div>
         <div className="absolute mr-6 bottom-5 flex items-end flex-nowrap gap-4 overflow-x-scroll">

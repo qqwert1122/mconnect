@@ -4,32 +4,31 @@ import {
   collectionGroup,
   deleteDoc,
   doc,
+  documentId,
   getDoc,
   getDocs,
   increment,
+  limit,
   orderBy,
   query,
   setDoc,
+  startAfter,
   updateDoc,
   where,
 } from "firebase/firestore";
 import Slider from "react-slick";
-import Avatar from "@mui/material/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faQuoteLeft,
   faQuoteRight,
   faAngleDown,
-  faCheck,
-  faBookmark,
-  faBookmark as fasBookmark,
+  faAnglesRight,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faThumbsUp,
-  faBookmark as farBookmark,
-} from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
 import {
   whatViewState,
   whatEditState,
@@ -37,19 +36,19 @@ import {
   formCnctedIdeasState,
 } from "atom";
 import { userState } from "atom";
-import dayjs from "dayjs";
 import SuggestedIdea from "./SuggestedIdea";
 
 const SuggestedIdeas = ({
-  id,
+  setNavValue,
+  docId,
   writing,
   tagsPrmtr,
   tabChange,
   onIdeaClick,
   isItIn,
 }) => {
-  // id
-  //  - whatEdit or whatView id
+  // docId
+  //  - whatEdit or whatView docId
   // Writing
   //  - is writing ? "from writing" : "from viewing"
   // tagsPrmtr
@@ -86,34 +85,98 @@ const SuggestedIdeas = ({
 
   // get Ideas that matches the tagPrmtr.
   const [filteredIdeas, setFilteredIdeas] = useState([]);
-  console.log(filteredIdeas);
 
   const getFilteredIdeas = async (query) => {
-    const ideaRef = await getDocs(query);
-    const newData = ideaRef.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setFilteredIdeas(newData);
+    const ideaRef = await getDocs(query).then((snapshot) => {
+      setFilteredIdeas((ideas) => {
+        const arr = [...ideas];
+        snapshot.forEach((doc) => {
+          if (doc.data().docId != docId) {
+            arr.push(doc.data());
+          }
+        });
+        return arr;
+      });
+      if (snapshot.docs.length === 0) {
+        setLastVisible(-1);
+      } else {
+        setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+      }
+    });
   };
 
-  useEffect(() => {
+  const MAX_IDEAS_LENGTH = 15;
+  const NUM_LOADMORE = 5;
+
+  const [lastVisible, setLastVisible] = useState();
+
+  function clearLastVisible() {
+    setLastVisible();
+  }
+
+  async function initLoad() {
+    clearLastVisible();
     const q1 = query(
       collectionGroup(dbService, "userIdeas"),
-      where("isPublic", "==", true),
+      orderBy("userId"),
+      where("userId", "!=", loggedInUser.userId),
       where("tags", "array-contains", tagChangeProps),
-      orderBy("createdAt", "desc")
+      where("isOriginal", "==", true),
+      where("isPublic", "==", true),
+      orderBy("createdAt", "desc"),
+      limit(NUM_LOADMORE)
     );
-    getFilteredIdeas(q1);
+    const ideaRef = await getDocs(q1).then((snapshot) => {
+      const arr = [];
+      snapshot.forEach((doc) => {
+        if (doc.docId != docId) {
+          arr.push(doc.data());
+        }
+      });
+      setFilteredIdeas(arr);
+      if (snapshot.docs.length === 0) {
+        setLastVisible(-1);
+      } else {
+        setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+      }
+    });
+  }
+
+  function loadMore() {
+    let q;
+    if (lastVisible === -1) return;
+    else if (lastVisible) {
+      q = query(
+        collectionGroup(dbService, "userIdeas"),
+        orderBy("userId"),
+        where("userId", "!=", loggedInUser.userId),
+        where("tags", "array-contains", tagChangeProps),
+        where("isOriginal", "==", true),
+        where("isPublic", "==", true),
+        orderBy("createdAt", "desc"),
+        limit(NUM_LOADMORE),
+        startAfter(lastVisible)
+      );
+    }
+    getFilteredIdeas(q);
+  }
+
+  let navigate = useNavigate();
+
+  function searchMore() {
+    setNavValue("/searchpage");
+  }
+
+  useEffect(() => {
+    initLoad();
   }, [tagChangeProps]);
 
   const onIdeaSelect = (e, idea) => {
     e.preventDefault();
     if (writing) {
       if (isItIn(formCnctedIdeas, idea)) {
-        console.log("Yes! I'm In");
         setFormCnctedIdeas(
-          formCnctedIdeas.filter((_idea) => _idea.id != idea.id)
+          formCnctedIdeas.filter((_idea) => _idea.docId != idea.docId)
         );
       } else {
         if (formCnctedIdeas.length > 4) {
@@ -126,8 +189,9 @@ const SuggestedIdeas = ({
       }
     } else {
       if (isItIn(selectedIdeas, idea)) {
-        console.log("Yes, I'm in");
-        setSelectedIdeas(selectedIdeas.filter((_idea) => _idea.id != idea.id));
+        setSelectedIdeas(
+          selectedIdeas.filter((_idea) => _idea.docId != idea.docId)
+        );
       } else {
         if (selectedIdeas.length > 4) {
           toast.error("최대 5개까지 연결 가능합니다.", {
@@ -185,7 +249,7 @@ const SuggestedIdeas = ({
       </div>
 
       <div className="relative pb-10">
-        {filteredIdeas.filter((_idea, index) => _idea.id != id).length === 0 ? (
+        {filteredIdeas.length === 0 ? (
           <div
             className="flex justify-center items-center text-xl font-black "
             style={{ height: "248px" }}
@@ -195,23 +259,36 @@ const SuggestedIdeas = ({
             <FontAwesomeIcon icon={faQuoteRight} />
           </div>
         ) : (
-          <>
-            <Slider {...sugtdSettings}>
-              {filteredIdeas
-                .filter((_idea) => _idea.id != id)
-                .map((idea, index) => (
-                  <SuggestedIdea
-                    key={index}
-                    writing={writing}
-                    loggedInUser={loggedInUser}
-                    idea={idea}
-                    isChecked={isChecked}
-                    onIdeaSelect={onIdeaSelect}
-                    onIdeaClick={onIdeaClick}
-                  />
-                ))}
-            </Slider>
-          </>
+          <Slider {...sugtdSettings}>
+            {filteredIdeas.map((idea, index) => (
+              <div key={index} className="relative">
+                <SuggestedIdea
+                  writing={writing}
+                  loggedInUser={loggedInUser}
+                  idea={idea}
+                  isChecked={isChecked}
+                  onIdeaSelect={onIdeaSelect}
+                  onIdeaClick={onIdeaClick}
+                />
+                {index === filteredIdeas.length - 1 && lastVisible !== -1 && (
+                  <button
+                    className="absolute -right-8 top-24 text-stone-600 text-2xl"
+                    onClick={
+                      filteredIdeas.length === MAX_IDEAS_LENGTH
+                        ? searchMore
+                        : loadMore
+                    }
+                  >
+                    {filteredIdeas.length === MAX_IDEAS_LENGTH ? (
+                      <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    ) : (
+                      <FontAwesomeIcon icon={faAnglesRight} />
+                    )}
+                  </button>
+                )}
+              </div>
+            ))}
+          </Slider>
         )}
       </div>
     </>

@@ -71,12 +71,12 @@ const Ideas = ({ ...props }) => {
   const settings = {
     dots: true,
     arrows: false,
-    infinite: false,
+    infinite: true,
     speed: 500,
     slidesToScroll: 1,
     centerMode: false,
-    focusOnSelect: true,
-    initialSlide: 0,
+    autoplay: true,
+    autoplaySpeed: 4000,
   };
 
   return (
@@ -128,7 +128,7 @@ const Ideas = ({ ...props }) => {
                   src="./img/info_2.png"
                 />
               </li>
-              <li className="relative p-5 w-full h-32 bg-gradient-to-r from-red-300 to-amber-200 text-orange-100 text-sm shadow">
+              <li className="relative p-5 w-full h-32 bg-gradient-to-r from-red-300 to-orange-300 text-orange-100 text-sm shadow">
                 <div className="w-3/5 font-bold">
                   <h1 className="mb-2 font-black text-xl text-white">
                     연결하세요
@@ -170,7 +170,6 @@ const Ideas = ({ ...props }) => {
           )}
         </div>
         <FloatingActionButton navigate={navigate} initForm={initForm} />
-        {/* <FloatingUpButton scrollY={scrollY} setScrollY={setScrollY} /> */}
       </>
       <ToastContainer
         className="black-background"

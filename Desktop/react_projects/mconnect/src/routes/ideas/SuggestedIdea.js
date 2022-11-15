@@ -29,6 +29,8 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import dayjs from "dayjs";
 import { CircularProgress } from "@mui/material";
+import { useRecoilState } from "recoil";
+import { ideasState } from "atom";
 
 const SuggestedIdea = ({
   writing,
@@ -38,8 +40,18 @@ const SuggestedIdea = ({
   onIdeaSelect,
   onIdeaClick,
 }) => {
+  const [ideas, setIdeas] = useRecoilState(ideasState);
+
+  //TODO
+  // 바닥에 닿는 무한스크롤은 아니지만,
+  // 마지막 페이지에 추가 로드 버튼을 만들고 마지막 위치라면 해당 버튼을 보여줌
+  // 버튼 클릭시 아이디어 추가 로드.
+  // 단 이때 slick을 이용하므로 너무 많이 로드되지 않도록
+  // startAfter, limit을 활용하고 배열에 추가하는 것이 아니라
+  // 페이지화를 해서 before로 돌아갈 수도 있게끔 구현
+
   const getCount = async () => {
-    const countRef = doc(dbService, "counts", idea.id);
+    const countRef = doc(dbService, "counts", idea.docId);
     const countDoc = (await getDoc(countRef)).data();
     setCount(countDoc);
   };
@@ -56,43 +68,42 @@ const SuggestedIdea = ({
   const onBookmarkClick = async (idea) => {
     const isOwner = loggedInUser.userId === idea.userId;
     // fb reference
-    const countRef = doc(dbService, "counts", idea.id);
+    const countRef = doc(dbService, "counts", idea.docId);
     const userIdeaRef = doc(
       dbService,
       "users",
       loggedInUser.userId,
       "userIdeas",
-      idea.id
+      idea.docId
     );
     const userRef = doc(dbService, "users", loggedInUser.userId);
-
     const newCount = { ...count };
     if (count.bookmark_users.hasOwnProperty(loggedInUser.userId)) {
       delete newCount.bookmark_users[loggedInUser.userId];
-      // update state for re-rendering
       setCount(newCount);
-      // update firestore
       await updateDoc(countRef, {
         bookmark_count: increment(-1),
         bookmark_users: newCount.bookmark_users,
       });
       if (isOwner) {
-        // if user is owner, update userIdea
         await updateDoc(userIdeaRef, {
           isBookmarked: false,
         });
+        setIdeas(
+          ideas.map((m) =>
+            m.docId === idea.docId ? { ...m, isBookmarked: false } : m
+          )
+        );
       } else {
-        // if user is not owner, delete userIdea
         await deleteDoc(userIdeaRef);
         await updateDoc(userRef, {
           idea_count: increment(-1),
         });
+        setIdeas(ideas.filter((f) => f.docId !== idea.docId));
       }
     } else {
       newCount.bookmark_users[loggedInUser.userId] = loggedInUser.userName;
-      // update state for re-rendering
       setCount(newCount);
-      // update firestore
       await updateDoc(countRef, {
         bookmark_count: increment(1),
         bookmark_users: {
@@ -101,13 +112,17 @@ const SuggestedIdea = ({
         },
       });
       if (isOwner) {
-        // if user is owner, update userIdea
         await updateDoc(userIdeaRef, {
           isBookmarked: true,
         });
+        setIdeas(
+          ideas.map((m) =>
+            m.docId === idea.docId ? { ...m, isBookmarked: true } : m
+          )
+        );
       } else {
-        // if user is not owner, create new userIdea
         await setDoc(userIdeaRef, {
+          docId: idea.docId,
           userId: idea.userId,
           userName: idea.userName,
           userPhotoURL: idea.userPhotoURL,
@@ -127,6 +142,27 @@ const SuggestedIdea = ({
         await updateDoc(userRef, {
           idea_count: increment(1),
         });
+        setIdeas([
+          {
+            docId: idea.docId,
+            userId: idea.userId,
+            userName: idea.userName,
+            userPhotoURL: idea.userPhotoURL,
+            title: idea.title,
+            text: idea.text,
+            source: idea.source,
+            tags: idea.tags,
+            connectedIDs: idea.connectedIDs,
+            createdAt: idea.createdAt,
+            updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+            isPublic: false,
+            isLiked: count.like_users.hasOwnProperty(loggedInUser.userId),
+            isBookmarked: true,
+            isViewed: count.view_users.hasOwnProperty(loggedInUser.userId),
+            isOriginal: false,
+          },
+          ...ideas,
+        ]);
       }
     }
   };
@@ -134,31 +170,33 @@ const SuggestedIdea = ({
   return (
     <div className="relative">
       <button
-        className={`absolute top-0 right-0 rounded-full ${
+        className={`absolute -top-1 -right-1 rounded-full ${
           isChecked(idea)
             ? "bg-red-400 text-white"
             : "border-2 border-stone-400"
         } w-6 h-6 shadow-xl`}
         onClick={(e) => {
           onIdeaSelect(e, idea);
+          onBookmarkClick(idea);
         }}
       >
         {isChecked(idea) && <FontAwesomeIcon icon={faCheck} />}
       </button>
-      <div
-        className="h-60 p-4 m-1 bg-white shadow rounded-3xl text-xs break-all"
-        onClick={(e) => (writing ? onIdeaClick(e, idea) : onIdeaClick(idea))}
-      >
-        {idea.title.length > 0 && (
-          <div className="mb-2 truncate font-black text-sm">{idea.title}</div>
-        )}
-        <div className="mb-3 line-clamp-6">{idea.text}</div>
-        {idea.source.length > 0 && (
-          <div className="ml-2 mb-1 flex gap-1 text-stone-400">
-            <FontAwesomeIcon icon={faQuoteLeft} />
-            <span>{idea.source}</span>
-          </div>
-        )}
+      <div className="h-60 p-4 m-1 bg-white shadow rounded-3xl text-xs break-all">
+        <div
+          onClick={(e) => (writing ? onIdeaClick(e, idea) : onIdeaClick(idea))}
+        >
+          {idea.title.length > 0 && (
+            <div className="mb-2 truncate font-black text-sm">{idea.title}</div>
+          )}
+          <div className="mb-3 line-clamp-6">{idea.text}</div>
+          {idea.source.length > 0 && (
+            <div className="ml-2 mb-1 flex gap-1 text-stone-400">
+              <FontAwesomeIcon icon={faQuoteLeft} />
+              <span>{idea.source}</span>
+            </div>
+          )}
+        </div>
         <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
           <Avatar
             className="border-2"

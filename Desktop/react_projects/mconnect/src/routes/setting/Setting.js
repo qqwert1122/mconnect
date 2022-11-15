@@ -1,7 +1,7 @@
 import "css/Animation.css";
 import BottomNavigationBar from "routes/BottomNavigationBar";
 import React, { useState } from "react";
-import { authService } from "fbase";
+import { authService, dbService } from "fbase";
 import Avatar from "@mui/material/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,78 +11,59 @@ import {
   faCircleInfo,
   faStar,
   faAd,
+  faThumbsUp,
+  faArrowRightFromBracket,
+  faCode,
+  faLayerGroup,
+  faCommentDots,
 } from "@fortawesome/free-solid-svg-icons";
-import {} from "@fortawesome/free-regular-svg-icons";
-import { useRecoilValue } from "recoil";
-import { userState } from "atom";
-import { Divider } from "@mui/material";
+import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { userState, chatUserState, isFirstChatState } from "atom";
+import { doc, setDoc } from "firebase/firestore";
 
 const Setting = ({ ...props }) => {
   const { navigate, navValue, setNavValue } = props;
   const loggedInUser = useRecoilValue(userState);
+  const setChatUser = useSetRecoilState(chatUserState);
+  const [isFirstChat, setIsFirstChat] = useRecoilState(isFirstChatState);
 
-  const [detailMode, setDetailMode] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-
-  const onDetailModeChange = () => {
-    setDetailMode((prev) => !prev);
-  };
-  const onDarkModeChange = (e) => {
-    setDarkMode(e.target.checked);
-  };
   const onSignOutClick = async () => {
     await authService.signOut();
     navigate("/");
   };
 
-  const achievementItems = [
-    {
-      label: "불타는 열정🔥",
-      bgColor: "bg-red-400",
-      color: "text-white",
-    },
-    {
-      label: "인기쟁이😎",
-      bgColor: "bg-orange-400",
-      color: "text-white",
-    },
-    {
-      label: "공부벌레✏️",
-      bgColor: "bg-yellow-400",
-      color: "text-white",
-    },
-    {
-      label: "뉴비🥳",
-      bgColor: "bg-green-400",
-      color: "text-white",
-    },
-    {
-      label: "항해자🗺️",
-      bgColor: "bg-sky-400",
-      color: "text-white",
-    },
-    {
-      label: "소통왕🤗",
-      bgColor: "bg-purple-400",
-      color: "text-white",
-    },
-  ];
-
   const menuItem = [
     {
       label: "평가",
+      dscrp: "Connects에 대해 솔직히 평가해주세요",
       navigation: "/setting/eval",
-      icon: <FontAwesomeIcon icon={faStar} size="sm" color="gray" />,
+      color: "bg-red-400",
+      icon: <FontAwesomeIcon icon={faStar} size="sm" />,
     },
     {
-      label: "제안",
-      navigation: "",
-      icon: <FontAwesomeIcon icon={faEnvelope} size="sm" color="gray" />,
+      label: "제안 / 협업",
+      dscrp:
+        "Connects 운영자에게 서비스 개선 방안, 협업 등에 대해 제안해주세요",
+      navigation: `${
+        loggedInUser.isAuthority ? "/setting/offer" : "/setting/offer/offerChat"
+      }`,
+      color: "bg-yellow-400",
+      icon: <FontAwesomeIcon icon={faCommentDots} size="sm" />,
+    },
+    {
+      label: "다른 어플리케이션",
+      dscrp: "Connects 제작자의 다른 어플리케이션들을 확인해보세요",
+      navigation: "/setting/developerApp",
+      color: "bg-green-400",
+      icon: <FontAwesomeIcon icon={faLayerGroup} size="sm" />,
     },
     {
       label: "오픈소스",
+      dscrp: "Connects 제작에 도움을 준 오픈소스를 확인해보세요",
       navigation: "/setting/opensource",
-      icon: <FontAwesomeIcon icon={faCircleInfo} size="sm" color="gray" />,
+      color: "bg-sky-400",
+      icon: <FontAwesomeIcon icon={faCode} size="sm" />,
     },
   ];
 
@@ -100,6 +81,25 @@ const Setting = ({ ...props }) => {
 
     setChecked(newChecked);
   };
+  // 처음 chat을 열면 채팅방을 개설해줘야지.
+  // 채팅
+  async function onItemClick(item, index) {
+    if (index === 1 && loggedInUser.isAuthority === false) {
+      setChatUser(loggedInUser.userId);
+      if (isFirstChat) {
+        await setDoc(doc(dbService, "chatList", loggedInUser.userId), {
+          userId: loggedInUser.userId,
+          userName: loggedInUser.userName,
+          userPhotoURL: loggedInUser.userPhotoURL,
+          updatedAt: "",
+          recentMessage: "",
+          notToRead: false,
+        });
+        setIsFirstChat(false);
+      }
+    }
+    navigate(item.navigation);
+  }
 
   return (
     <>
@@ -107,62 +107,47 @@ const Setting = ({ ...props }) => {
       <div className="fixed top-0 w-full z-10">
         <div className="flex justify-between items-center px-2 p-4 bg-white shadow">
           <div className="px-2 text-lg font-black">더보기</div>
-          <div className="flex gap-2"></div>
+          <button className="mr-2 text-stone-400" onClick={onSignOutClick}>
+            <FontAwesomeIcon icon={faArrowRightFromBracket} size="lg" />
+          </button>
         </div>
       </div>
       <div className="mt-20 mb-16">
-        <div className="m-5 p-2">
-          <div className="font-black pb-2">프로필</div>
-          <div className="relative p-4 rounded-xl shadow-lg bg-stone-100">
-            <div className="flex gap-5">
-              <div className="relative">
-                <Avatar
-                  className="bg-white border-2"
-                  alt="avatar"
-                  src={loggedInUser.userPhotoURL}
-                  sx={{
-                    display: "flex",
-                    width: "80px",
-                    height: "80px",
-                  }}
-                />
-              </div>
-
-              <div className="w-full flex items-center">
-                <div className="flex-col">
-                  <div className="font-black text-base">
-                    {loggedInUser.userName}
-                  </div>
-                  <div className="pb-2 text-xs">{loggedInUser.userEmail}</div>
-                  <div className="flex gap-2 text-sm text-white">
-                    <button className="p-1 rounded-lg bg-stone-400 font-black ">
-                      프로필 수정
-                    </button>
-                    <button
-                      className="p-1 rounded-lg bg-stone-400 font-black"
-                      onClick={onSignOutClick}
-                    >
-                      로그아웃
-                    </button>
-                  </div>
-                </div>
-              </div>
+        <div className="m-5 p-2 flex justify-between items-center">
+          <div className="flex items-center gap-5">
+            <Avatar
+              className="bg-white border-2"
+              alt="avatar"
+              src={loggedInUser.userPhotoURL}
+              sx={{
+                display: "flex",
+                width: "50px",
+                height: "50px",
+              }}
+            />
+            <div className="flex-col">
+              <span className="flex font-black text-base">
+                {loggedInUser.userName}
+              </span>
+              <span className="flex text-xs text-stone-400">
+                {loggedInUser.userEmail}
+              </span>
             </div>
           </div>
-        </div>
-        <div className="m-5 py-6 h-32 flex gap-2 justify-center items-center bg-stone-600 text-stone-400 text-sm text-center font-black ">
-          광고 <FontAwesomeIcon icon={faAd} />
+          <button className="text-xl text-stone-600">
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </button>
         </div>
         <div className="m-5 p-2">
           <div className="font-black pb-2">후원</div>
-          <div className="flex gap-5 relative p-4 rounded-xl shadow-lg bg-stone-100">
-            <div className="w-1/2 h-24 relative p-5 rounded-xl shadow-lg bg-gradient-to-br from-red-400  via-orange-400 to-yellow-500 text-orange-50 font-black text-sm">
+          <div className="flex gap-5 relative">
+            <div className="w-1/2 h-24 relative p-5 rounded shadow-lg bg-gradient-to-br from-red-400  via-orange-400 to-yellow-500 text-orange-50 font-black text-sm">
               <span className="absolute top-2 left-2">
                 <FontAwesomeIcon icon={faCommentDollar} size="xl" />
               </span>
               <span className="absolute bottom-2 right-2">개발자 후원</span>
             </div>
-            <div className="w-1/2 h-24 relative p-5 rounded-xl shadow-lg bg-gradient-to-br from-yellow-300 via-orange-300 to-rose-400 text-orange-50 font-black text-sm">
+            <div className="w-1/2 h-24 relative p-5 rounded shadow-lg bg-gradient-to-br from-yellow-300 via-orange-300 to-rose-400 text-orange-50 font-black text-sm">
               <span className="absolute top-2 left-2">
                 <FontAwesomeIcon icon={faRectangleAd} size="xl" />
               </span>
@@ -171,34 +156,27 @@ const Setting = ({ ...props }) => {
           </div>
         </div>
         <div className="m-5 p-2">
-          <div className="font-black pb-2">업적</div>
-          <div className="relative p-4 rounded-xl shadow-lg bg-stone-100">
-            <div className="flex flex-wrap gap-1 ">
-              {achievementItems.map((item, index) => (
-                <div
-                  key={index}
-                  className={`flex justify-center items-center p-1 rounded-3xl text-xs  font-black ${item.bgColor} ${item.color} shadow-xl border-2 border-white`}
-                >
-                  {item.label}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="m-5 p-2">
-          <div className="font-black pb-2">더보기</div>
-          <div className="flex gap-5 relative p-4 rounded-xl shadow-lg bg-stone-100">
-            {menuItem.map((item, index) => (
+          {menuItem.map((item, index) => (
+            <div key={index}>
               <button
-                key={index}
-                className="p-2 py-4 shadow-lg bg-white rounded-xl font-black text-sm text-stone-600 "
-                onClick={() => navigate(item.navigation)}
+                className="flex gap-5 items-center py-4 w-full"
+                onClick={() => onItemClick(item, index)}
               >
-                {item.icon}
-                &nbsp;{item.label}
+                <p
+                  className={`flex items-center justify-center w-10 h-10 p-2 text-2xl rounded-full text-white ${item.color}`}
+                >
+                  {item.icon}
+                </p>
+                <div className="text-start">
+                  <p className="font-black">{item.label}</p>
+                  <p className="line-clamp-2 text-sm text-stone-400">
+                    {item.dscrp}
+                  </p>
+                </div>
               </button>
-            ))}
-          </div>
+              {index !== menuItem.length - 1 && <hr />}
+            </div>
+          ))}
         </div>
       </div>
     </>

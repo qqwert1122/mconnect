@@ -15,6 +15,7 @@ const ViewIdea = ({ ...props }) => {
   const {
     timeDisplay,
     navigate,
+    setNavValue,
     viewIdea,
     onBackClick,
     getIdeasFromIDs,
@@ -72,6 +73,7 @@ const ViewIdea = ({ ...props }) => {
             itemChangeProps={itemChangeProps}
             setItemChangeProps={setItemChangeProps}
             navigate={navigate}
+            setNavValue={setNavValue}
             viewIdea={viewIdea}
             getIdeasFromIDs={getIdeasFromIDs}
             isItIn={isItIn}

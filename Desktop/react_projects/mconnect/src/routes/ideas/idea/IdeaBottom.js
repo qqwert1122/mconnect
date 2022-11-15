@@ -44,36 +44,42 @@ const IdeaBottom = ({
     countUpdate(idea, "like");
     setIdeas(
       ideas.map((m) =>
-        m.id === idea.id ? { ...idea, isLiked: !idea.isLiked } : m
+        m.docId === idea.docId ? { ...m, isLiked: !m.isLiked } : m
       )
     );
   };
 
-  const onBookmarkClick = () => {
+  const onBookmarkClick = async () => {
     onBookmarkUpdate(idea);
     const ideaRef = doc(
       dbService,
       "users",
       loggedInUser.userId,
       "userIdeas",
-      idea.id
+      idea.docId
     );
+    const userRef = doc(dbService, "users", loggedInUser.userId);
     if (isOwner === false) {
       deleteDoc(ideaRef);
+      await updateDoc(userRef, {
+        idea_count: increment(-1),
+      });
+      setIdeas(ideas.filter((f) => f.docId !== idea.docId));
+    } else {
+      setIdeas(
+        ideas.map((m) =>
+          m.docId === idea.docId ? { ...m, isBookmarked: !m.isBookmarked } : m
+        )
+      );
     }
     countUpdate(idea, "bookmark");
-    setIdeas(
-      ideas.map((m) =>
-        m.id === idea.id ? { ...idea, isBookmarked: !idea.isBookmarked } : m
-      )
-    );
   };
 
   const onPublicClick = () => {
     onPublicUpdate(idea);
     setIdeas(
       ideas.map((m) =>
-        m.id === idea.id ? { ...idea, isPublic: !idea.isPublic } : m
+        m.docId === idea.docId ? { ...idea, isPublic: !idea.isPublic } : m
       )
     );
   };

@@ -1,47 +1,80 @@
 import "css/Animation.css";
+import { addDoc, collection } from "firebase/firestore";
+import { dbService } from "fbase";
+import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { userState } from "atom";
+import dayjs from "dayjs";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFaceGrin,
-  faFaceGrinHearts,
   faFaceGrinSquint,
-  faFaceGrinStars,
   faFaceRollingEyes,
   faFaceSadTear,
   faPaperPlane,
+  faFaceAngry,
 } from "@fortawesome/free-regular-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, TextField } from "@mui/material";
-import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 const Eval = ({ ...props }) => {
+  const loggedInUser = useRecoilValue(userState);
   const { onBackClick } = props;
 
-  const evl = [
+  const [text, setText] = useState();
+  function onChange(e) {
+    setText(e.target.value);
+  }
+
+  const ratings = [
     {
       icon: <FontAwesomeIcon icon={faFaceGrinSquint} size="xl" />,
-      color: "bg-red-400 text-red-100 shadow-red-400",
-      value: 10,
+      color: "bg-blue-500 text-white",
+      value: 5,
     },
     {
       icon: <FontAwesomeIcon icon={faFaceGrin} size="xl" />,
-      color: "bg-orange-400 text-orange-100 shadow-orange-400",
-      value: 7,
-    },
-    {
-      icon: <FontAwesomeIcon icon={faFaceRollingEyes} size="xl" />,
-      color: "bg-sky-400 text-sky-100 shadow-sky-400",
+      color: "bg-sky-400 text-white",
       value: 4,
     },
     {
+      icon: <FontAwesomeIcon icon={faFaceRollingEyes} size="xl" />,
+      color: "bg-lime-400 text-white",
+      value: 3,
+    },
+    {
       icon: <FontAwesomeIcon icon={faFaceSadTear} size="xl" />,
-      color: "bg-purple-400 text-purple-100 shadow-purple-400",
+      color: "bg-orange-400 text-white",
+      value: 2,
+    },
+    {
+      icon: <FontAwesomeIcon icon={faFaceAngry} size="xl" />,
+      color: "bg-red-400 text-white",
       value: 1,
     },
   ];
-  const [evlPrmtr, setEvlPrmtr] = useState(1);
-  const changePrmtr = (index) => {
-    setEvlPrmtr(index);
+  const [ratingsPrmtr, setRatingsPrmtr] = useState(0);
+  let rating = 5;
+  const changePrmtr = (index, value) => {
+    setRatingsPrmtr(index);
+    rating = value;
   };
+
+  async function onSubmit() {
+    await addDoc(collection(dbService, "evaluation"), {
+      userId: loggedInUser.userId,
+      userName: loggedInUser.userName,
+      date: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+      rating: rating,
+      text: text,
+    });
+    setRatingsPrmtr(0);
+    setText("");
+    rating = 5;
+    toast.success("정상적으로 제출되었습니다", {
+      theme: "colored",
+    });
+  }
 
   return (
     <div className="moveRightToLeft">
@@ -49,7 +82,7 @@ const Eval = ({ ...props }) => {
         <button onClick={onBackClick}>
           <FontAwesomeIcon icon={faChevronLeft} size="lg" />
         </button>
-        <button>
+        <button onClick={onSubmit}>
           <FontAwesomeIcon icon={faPaperPlane} size="lg" />
         </button>
       </div>
@@ -57,26 +90,40 @@ const Eval = ({ ...props }) => {
         <div className="pt-20 mx-5">
           <div className="mb-2 font-black">App을 평가해주세요</div>
           <div className="mb-5 flex gap-5 font-black">
-            {evl.map((_evl, index) => (
+            {ratings.map((rating, index) => (
               <button
                 key={index}
                 className={`${
-                  index === evlPrmtr
-                    ? _evl.color
+                  index === ratingsPrmtr
+                    ? rating.color
                     : "bg-stone-600 text-stone-500"
-                } shadow-lg p-2 rounded-full text-xl duration-500`}
-                onClick={() => changePrmtr(index)}
+                } shadow-lg p-2 rounded text-xl duration-500`}
+                onClick={() => changePrmtr(index, rating.value)}
               >
-                {_evl.icon}
+                {rating.icon}
               </button>
             ))}
           </div>
         </div>
         <textarea
-          className="mx-auto m-10 p-5 w-11/12 h-2/3 flex rounded-3xl shadow-inner bg-stone-50 text-sm"
+          className="mx-auto m-10 p-5 w-11/12 h-2/3 flex rounded shadow-inner bg-stone-50 text-sm"
           placeholder="당신의 목소리를 자세히 들려주세요"
+          value={text}
+          onChange={onChange}
         />
       </div>
+      <ToastContainer
+        className="black-background"
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

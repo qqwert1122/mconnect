@@ -14,6 +14,7 @@ const ViewIdeaBottom = ({
   itemChangeProps,
   setItemChangeProps,
   navigate,
+  setNavValue,
   viewIdea,
   getIdeasFromIDs,
   isItIn,
@@ -74,7 +75,8 @@ const ViewIdeaBottom = ({
       {itemChangeProps === 1 && (
         <div className="moveRightToLeft bg-stone-50 shadow-inner">
           <SuggestedIdeas
-            id={whatView.id}
+            setNavValue={setNavValue}
+            docId={whatView.docId}
             Writing={false}
             tagsPrmtr={whatView.tags}
             tabChange={itemChange}

@@ -21,6 +21,9 @@ const IdeaConnectedIdeas = ({ idea, getIdeasFromIDs, viewDetail }) => {
         viewDetail === false && "hidden"
       }`}
     >
+      <div className="mt-4 ml-12 font-black text-sm text-stone-400">
+        연결된 아이디어
+      </div>
       <div className="z-0 absolute top-0 left-6 h-full border-r-4 border-stone-200"></div>
       {cnctedIdeas && (
         <>

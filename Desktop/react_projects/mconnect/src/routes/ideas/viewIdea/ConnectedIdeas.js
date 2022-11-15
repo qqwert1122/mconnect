@@ -38,7 +38,7 @@ const ConnectedIdeas = ({ onIdeaClick, getIdeasFromIDs }) => {
         <Slider {...settings}>
           {cnctedIdeas.map((idea, index) => (
             <div key={index}>
-              {idea.id === -1 ? (
+              {idea.docId === -1 ? (
                 <div className="flex gap-2 items-center justify-center relative h-60 p-5 m-1 bg-white text-stone-300 shadow rounded-3xl text-xs break-all">
                   <FontAwesomeIcon icon={faCircleInfo} /> 삭제되었습니다
                 </div>

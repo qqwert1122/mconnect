@@ -13,6 +13,7 @@ import { formCnctedIdeasState } from "atom";
 
 const WritingBottom = ({
   navigate,
+  setNavValue,
   viewIdea,
   showTitleAndCnctn,
   bottomItemChangeProps,
@@ -51,7 +52,11 @@ const WritingBottom = ({
       )}
 
       {bottomItemChangeProps === 3 && (
-        <RelatedIdeas viewIdea={viewIdea} isItIn={isItIn} />
+        <RelatedIdeas
+          setNavValue={setNavValue}
+          viewIdea={viewIdea}
+          isItIn={isItIn}
+        />
       )}
 
       <WritingBottomBar

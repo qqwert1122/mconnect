@@ -10,7 +10,7 @@ import { useSetRecoilState } from "recoil";
 import { userState } from "atom";
 
 const Auth = ({ ...props }) => {
-  const { setIsLoggedIn, setInit, navigate } = props;
+  const { setIsLoggedIn, setInit, navigate, setNavValue } = props;
   const setLoggedInUser = useSetRecoilState(userState);
 
   const onGoogleClick = async (event) => {
@@ -24,12 +24,12 @@ const Auth = ({ ...props }) => {
     } catch (error) {
       console.log(error);
     }
-    navigate("/ideas");
+    setNavValue("/ideas");
   };
 
   const onTestClick = async () => {
     const auth = getAuth();
-    const data = await signInWithEmailAndPassword(
+    await signInWithEmailAndPassword(
       auth,
       "qqwert11223344@naver.com",
       "yjh3706!@"
@@ -45,46 +45,34 @@ const Auth = ({ ...props }) => {
     setLoggedInUser(testUser);
     setIsLoggedIn(true);
     setInit(true);
-    navigate("/ideas");
+    setNavValue("/ideas");
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center">
-      <div
-        className="absolute w-screen h-screen opacity-50"
-        style={{
-          background: "linear-gradient(to bottom, #1D976C, #93F9B9)",
-        }}
-      ></div>
-      <img className="z-20 fixed -top-8 -left-20 w-72" src="img/line_1.png" />
-      <img className="fixed -bottom-8 -right-16 w-72" src="img/line_2.png" />
-      <div className="z-10 relative py-24 px-5 rounded-3xl shadow-xl bg-white">
-        <div className="font-black mx-auto mb-24 text-center">
-          <p className="english__font text-4xl">Welcome,</p>
-          <p className="english__font text-5xl text-green-600">Connects</p>
-          <p className="my-5 text-base text-lime-500">
-            아이디어를 연결하고 찾으세요
-          </p>
-        </div>
-        <div className="mb-3 text-lg text-center font-black">간편 로그인</div>
-        <img
-          className="mb-3"
-          width={250}
-          onClick={onGoogleClick}
-          src="./img/btn_google.png"
-        />
-        <button
-          className="relative w-full h-12 mb-3 p-2 font-black rounded bg-black text-white shadow"
-          onClick={onTestClick}
-        >
-          <div className="absolute bg-white h-10 w-12 m-auto left-1 top-1 text-black text-2xl">
-            t
-          </div>
-          Test mode
-        </button>
-        <div className="absolute bottom-2 text-sm text-stone-400">
-          © 2022 Connects, All rights reserved
-        </div>
+    <div className="w-screen h-screen">
+      <img className="m-auto pt-16 w-72" src="img/auth.png" />
+      <div className="mt-5 font-black text-center">
+        <p className="english__font text-4xl">Welcome,</p>
+        <p className="english__font text-5xl text-orange-400">Connects</p>
+        <p className="my-5 text-sm text-orange-300">
+          아이디어를 기록하고, 저장하고, 연결해 <br />
+          통찰력 있는 새 아이디어를 찾으세요
+        </p>
+        <>
+          <p className="mb-5 text-base text-center font-black">간편 로그인</p>
+          <img
+            className="mx-auto mb-1"
+            width={200}
+            onClick={onGoogleClick}
+            src="./img/btn_google.png"
+          />
+          <button
+            className="relative w-48 h-12 mb-3 m-1 font-black rounded-sm bg-black text-white text-sm shadow"
+            onClick={onTestClick}
+          >
+            Test mode
+          </button>
+        </>
       </div>
     </div>
   );

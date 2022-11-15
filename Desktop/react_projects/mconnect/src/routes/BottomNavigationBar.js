@@ -41,7 +41,7 @@ const BottomNavigationBar = ({ navValue, setNavValue }) => {
           >
             <BottomNavigationAction
               // label="아이디어"
-              value={"/ideas" || "/"}
+              value="/ideas"
               icon={<NotesRoundedIcon />}
             />
             <BottomNavigationAction

@@ -32,25 +32,25 @@ import {
   faBookmark as fasBookmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Skeleton } from "@mui/material";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userState } from "atom";
+import { ideasState } from "atom";
+import { matchPath, matchRoutes } from "react-router-dom";
 
 const StormingIdea = ({ idea, timeDisplay }) => {
   const loggedInUser = useRecoilValue(userState);
   const isOwner = loggedInUser.userId === idea.userId;
 
-  // fb reference
-  const countRef = doc(dbService, "counts", idea.id);
+  const countRef = doc(dbService, "counts", idea.docId);
   const userIdeaRef = doc(
     dbService,
     "users",
     loggedInUser.userId,
     "userIdeas",
-    idea.id
+    idea.docId
   );
   const userRef = doc(dbService, "users", loggedInUser.userId);
-
-  // user Information and Idea's like, bookmark, view count Information
+  const [ideas, setIdeas] = useRecoilState(ideasState);
   const [count, setCount] = useState();
 
   const getCount = async () => {
@@ -64,19 +64,15 @@ const StormingIdea = ({ idea, timeDisplay }) => {
     }, 1000);
   }, []);
 
-  // update firestore about like or bookmark
   const onLikeClick = async () => {
     if (count.like_users.hasOwnProperty(loggedInUser.userId)) {
       const newCount = { ...count };
       delete newCount.like_users[loggedInUser.userId];
-      // update state for re-rendering
       setCount(newCount);
-      // update firestore
       await updateDoc(countRef, {
         like_count: increment(-1),
         like_users: newCount.like_users,
       });
-      // update userIdea if user has this idea
       if ((await getDoc(userIdeaRef)).data()) {
         await updateDoc(userIdeaRef, {
           isLiked: false,
@@ -85,9 +81,7 @@ const StormingIdea = ({ idea, timeDisplay }) => {
     } else {
       const newCount = { ...count };
       newCount.like_users[loggedInUser.userId] = loggedInUser.userName;
-      // update state for re-rendering
       setCount(newCount);
-      // update firestore
       await updateDoc(countRef, {
         like_count: increment(1),
         like_users: {
@@ -95,43 +89,47 @@ const StormingIdea = ({ idea, timeDisplay }) => {
           [loggedInUser.userId]: loggedInUser.userName,
         },
       });
-      // update userIdea if user has this idea
       if ((await getDoc(userIdeaRef)).data()) {
         await updateDoc(userIdeaRef, {
           isLiked: true,
         });
       }
     }
+    setIdeas(
+      ideas.map((m) =>
+        m.docId === idea.docId ? { ...m, isLiked: !m.isLiked } : m
+      )
+    );
   };
 
   const onBookmarkClick = async (idea) => {
     const newCount = { ...count };
     if (count.bookmark_users.hasOwnProperty(loggedInUser.userId)) {
       delete newCount.bookmark_users[loggedInUser.userId];
-      // update state for re-rendering
       setCount(newCount);
-      // update firestore
       await updateDoc(countRef, {
         bookmark_count: increment(-1),
         bookmark_users: newCount.bookmark_users,
       });
       if (isOwner) {
-        // if user is owner, update userIdea
         await updateDoc(userIdeaRef, {
           isBookmarked: false,
         });
+        setIdeas(
+          ideas.map((m) =>
+            m.docId === idea.docId ? { ...m, isBookmarked: false } : m
+          )
+        );
       } else {
-        // if user is not owner, delete userIdea
         await deleteDoc(userIdeaRef);
         await updateDoc(userRef, {
           idea_count: increment(-1),
         });
+        setIdeas(ideas.filter((f) => f.docId !== idea.docId));
       }
     } else {
       newCount.bookmark_users[loggedInUser.userId] = loggedInUser.userName;
-      // update state for re-rendering
       setCount(newCount);
-      // update firestore
       await updateDoc(countRef, {
         bookmark_count: increment(1),
         bookmark_users: {
@@ -140,13 +138,17 @@ const StormingIdea = ({ idea, timeDisplay }) => {
         },
       });
       if (isOwner) {
-        // if user is owner, update userIdea
         await updateDoc(userIdeaRef, {
           isBookmarked: true,
         });
+        setIdeas(
+          ideas.map((m) =>
+            m.docId === idea.docId ? { ...m, isBookmarked: true } : m
+          )
+        );
       } else {
-        // if user is not owner, create new userIdea
         await setDoc(userIdeaRef, {
+          docId: idea.docId,
           userId: idea.userId,
           userName: idea.userName,
           userPhotoURL: idea.userPhotoURL,
@@ -166,11 +168,31 @@ const StormingIdea = ({ idea, timeDisplay }) => {
         await updateDoc(userRef, {
           idea_count: increment(1),
         });
+        setIdeas([
+          {
+            docId: idea.docId,
+            userId: idea.userId,
+            userName: idea.userName,
+            userPhotoURL: idea.userPhotoURL,
+            title: idea.title,
+            text: idea.text,
+            source: idea.source,
+            tags: idea.tags,
+            connectedIDs: idea.connectedIDs,
+            createdAt: idea.createdAt,
+            updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+            isPublic: false,
+            isLiked: count.like_users.hasOwnProperty(loggedInUser.userId),
+            isBookmarked: true,
+            isViewed: count.view_users.hasOwnProperty(loggedInUser.userId),
+            isOriginal: false,
+          },
+          ...ideas,
+        ]);
       }
     }
   };
 
-  // handle ellipsis menu
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -183,7 +205,7 @@ const StormingIdea = ({ idea, timeDisplay }) => {
   };
 
   const onRecommendationClick = async () => {
-    const recommendRef = doc(dbService, "recommendation", idea.id);
+    const recommendRef = doc(dbService, "recommendation", idea.docId);
     await setDoc(recommendRef, {
       ...idea,
       isBookmarked: false,
@@ -194,7 +216,6 @@ const StormingIdea = ({ idea, timeDisplay }) => {
     handleEllipsisClose();
   };
 
-  // handle tag dialog
   const [isTagsDialogOpen, setIsTagsDialogOpen] = useState(false);
   const [DialogTags, setDialogTags] = useState([]);
 
@@ -208,7 +229,6 @@ const StormingIdea = ({ idea, timeDisplay }) => {
       {count ? (
         <>
           <div className="flex justify-between items-center pt-4 ml-4">
-            {/* avatar, name, time */}
             <div className="flex items-center gap-2">
               <Avatar
                 className="border-2"
@@ -227,7 +247,6 @@ const StormingIdea = ({ idea, timeDisplay }) => {
                 {timeDisplay(idea.createdAt)}
               </div>
             </div>
-            {/* ellipsis */}
             <Button
               id="demo-positioned-button"
               aria-controls={open ? "demo-positioned-menu" : undefined}
@@ -268,13 +287,11 @@ const StormingIdea = ({ idea, timeDisplay }) => {
             </Menu>
           </div>
           <div className="w-full box-border px-4 mt-4 mb-4 duration-200">
-            {/* title */}
             {idea.title !== "" && (
               <div className="flex items-center mb-2 w-full font-black truncate">
                 {idea.title}
               </div>
             )}
-            {/* text */}
             <div
               className="w-full mb-5 flex items-center break-all whitespace-pre-line line-clamp-6"
               // onClick={() => {
@@ -283,7 +300,6 @@ const StormingIdea = ({ idea, timeDisplay }) => {
             >
               {idea.text}
             </div>
-            {/* source */}
             {idea.source !== "" && (
               <div className="flex items-center ml-2 mb-2 text-xs">
                 <span className="text-stone-300">
@@ -292,7 +308,6 @@ const StormingIdea = ({ idea, timeDisplay }) => {
                 <div className="mx-2 w-full text-stone-400">{idea.source}</div>
               </div>
             )}
-            {/* category, tags */}
             {idea.tags.length > 0 && (
               <span className="flex flex-wrap ml-2 pb-2 gap-2 text-xs">
                 <span className="text-stone-300">

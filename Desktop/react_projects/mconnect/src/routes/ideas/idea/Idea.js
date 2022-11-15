@@ -31,7 +31,6 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
 
   const loggedInUser = useRecoilValue(userState);
   const [ideas, setIdeas] = useRecoilState(ideasState);
-  const setWhatView = useSetRecoilState(whatViewState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
 
   const isOwner = loggedInUser.userId === idea.userId;
@@ -42,7 +41,9 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
 
   const onSelectIdea = (idea) => {
     if (isItIn(selectedIdeas, idea)) {
-      setSelectedIdeas(selectedIdeas.filter((_idea) => _idea.id != idea.id));
+      setSelectedIdeas(
+        selectedIdeas.filter((_idea) => _idea.docId != idea.docId)
+      );
     } else {
       if (selectedIdeas.length > 4) {
         toast.error("최대 5개까지 연결 가능합니다.", {
@@ -63,7 +64,7 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
     setDeleteDialogOpen(false);
     setAnchorEl(null);
     onDeleteClick(idea);
-    setIdeas(ideas.filter((f) => f !== idea));
+    setIdeas(ideas.filter((f) => f.docId !== idea.docId));
     toastAlarm("delete");
   };
 

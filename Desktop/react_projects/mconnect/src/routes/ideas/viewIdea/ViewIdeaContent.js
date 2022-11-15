@@ -66,7 +66,9 @@ const ViewIdeaContent = ({
     setWhatView({ ...whatView, isLiked: !whatView.isLiked });
     setIdeas(
       ideas.map((m) =>
-        m.id === whatView.id ? { ...whatView, isLiked: !whatView.isLiked } : m
+        m.docId === whatView.docId
+          ? { ...whatView, isLiked: !whatView.isLiked }
+          : m
       )
     );
   };
@@ -76,7 +78,7 @@ const ViewIdeaContent = ({
     "users",
     user.userId,
     "userIdeas",
-    whatView.id
+    whatView.docId
   );
   const onBookmarkClick = () => {
     onBookmarkUpdate(whatView);
@@ -88,7 +90,7 @@ const ViewIdeaContent = ({
     }
     setIdeas(
       ideas.map((m) =>
-        m.id === whatView.id
+        m.docId === whatView.docId
           ? { ...whatView, isBookmarked: !whatView.isBookmarked }
           : m
       )
@@ -102,7 +104,9 @@ const ViewIdeaContent = ({
     }
     setIdeas(
       ideas.map((m) =>
-        m.id === whatView.id ? { ...whatView, isPublic: !whatView.isPublic } : m
+        m.docId === whatView.docId
+          ? { ...whatView, isPublic: !whatView.isPublic }
+          : m
       )
     );
   };

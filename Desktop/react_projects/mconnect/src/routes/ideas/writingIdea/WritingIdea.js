@@ -36,7 +36,15 @@ dayjs.extend(customParseFormat);
 dayjs.locale("ko");
 
 const WritingIdea = ({ ...props }) => {
-  const { navigate, viewIdea, isItIn, trends, onBackClick, toastAlarm } = props;
+  const {
+    navigate,
+    setNavValue,
+    viewIdea,
+    isItIn,
+    trends,
+    onBackClick,
+    toastAlarm,
+  } = props;
   const loggedInUser = useRecoilValue(userState);
   const whatEdit = useRecoilValue(whatEditState);
   const isEdit = useRecoilValue(isEditState);
@@ -86,7 +94,7 @@ const WritingIdea = ({ ...props }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const connectedIdeasId = formCnctedIdeas.map((idea) => idea.id);
+    const connectedIdeasId = formCnctedIdeas.map((idea) => idea.docId);
     if (isEdit) {
       // UPDATE
       try {
@@ -101,7 +109,7 @@ const WritingIdea = ({ ...props }) => {
           "users",
           loggedInUser.userId,
           "userIdeas",
-          `${whatEdit.id}`
+          `${whatEdit.docId}`
         );
         await updateDoc(ideaRef, {
           ...whatEdit,
@@ -115,7 +123,7 @@ const WritingIdea = ({ ...props }) => {
         });
         setIdeas(
           ideas.map((m) =>
-            m.id === whatEdit.id
+            m.docId === whatEdit.docId
               ? {
                   ...whatEdit,
                   title: formTitle,
@@ -162,6 +170,7 @@ const WritingIdea = ({ ...props }) => {
           newIdeaId
         );
         await setDoc(newUserIdeaRef, {
+          docId: newIdeaId,
           userId: loggedInUser.userId,
           userName: loggedInUser.userName,
           userPhotoURL: loggedInUser.userPhotoURL,
@@ -193,7 +202,7 @@ const WritingIdea = ({ ...props }) => {
         });
         setIdeas([
           {
-            id: newIdeaId,
+            docId: newIdeaId,
             userId: loggedInUser.userId,
             userName: loggedInUser.userName,
             userPhotoURL: loggedInUser.userPhotoURL,
@@ -258,6 +267,7 @@ const WritingIdea = ({ ...props }) => {
         />
         <WritingBottom
           navigate={navigate}
+          setNavValue={setNavValue}
           viewIdea={viewIdea}
           showTitleAndCnctn={showTitleAndCnctn}
           bottomItemChangeProps={bottomItemChangeProps}
