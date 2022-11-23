@@ -51,7 +51,7 @@ const OfferChat = ({ ...props }) => {
         </button>
       </div>
       <div
-        className="w-screen bg-stone-50 text-sm"
+        className="w-screen bg-stone-50 text-xs"
         style={{
           minHeight: "100vh",
         }}

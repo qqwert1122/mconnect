@@ -15,10 +15,8 @@ const YourChat = ({ beforeChat, chat, afterChat }) => {
         : false
       : false;
 
-  console.log(chat);
-
   return (
-    <div className={`flex ${!willContinue && "mb-2"}`}>
+    <div className={`flex ${!willContinue && "mb-5"}`}>
       <div className="flex items-start">
         {!isContinued && (
           <Avatar

@@ -15,7 +15,7 @@ const MyChat = ({ beforeChat, chat, afterChat }) => {
       : false;
 
   return (
-    <div className="flex justify-end items-end">
+    <div className={`flex justify-end items-end ${!willContinue && "mb-5"}`}>
       {!willContinue && (
         <div
           className="text-stone-400"

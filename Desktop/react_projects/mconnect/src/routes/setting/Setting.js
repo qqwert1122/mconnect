@@ -1,26 +1,22 @@
+import SettingProfile from "./SettingProfile";
 import "css/Animation.css";
 import BottomNavigationBar from "routes/BottomNavigationBar";
-import React, { useState } from "react";
+import React from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { authService, dbService } from "fbase";
-import Avatar from "@mui/material/Avatar";
+import { userState, chatUserState, isFirstChatState } from "atom";
+import { doc, setDoc } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faRectangleAd,
   faCommentDollar,
-  faEnvelope,
-  faCircleInfo,
   faStar,
-  faAd,
-  faThumbsUp,
   faArrowRightFromBracket,
   faCode,
   faLayerGroup,
   faCommentDots,
 } from "@fortawesome/free-solid-svg-icons";
-import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { userState, chatUserState, isFirstChatState } from "atom";
-import { doc, setDoc } from "firebase/firestore";
+import {} from "@fortawesome/free-regular-svg-icons";
 
 const Setting = ({ ...props }) => {
   const { navigate, navValue, setNavValue } = props;
@@ -113,31 +109,7 @@ const Setting = ({ ...props }) => {
         </div>
       </div>
       <div className="mt-20 mb-16">
-        <div className="m-5 p-2 flex justify-between items-center">
-          <div className="flex items-center gap-5">
-            <Avatar
-              className="bg-white border-2"
-              alt="avatar"
-              src={loggedInUser.userPhotoURL}
-              sx={{
-                display: "flex",
-                width: "50px",
-                height: "50px",
-              }}
-            />
-            <div className="flex-col">
-              <span className="flex font-black text-base">
-                {loggedInUser.userName}
-              </span>
-              <span className="flex text-xs text-stone-400">
-                {loggedInUser.userEmail}
-              </span>
-            </div>
-          </div>
-          <button className="text-xl text-stone-600">
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </button>
-        </div>
+        <SettingProfile loggedInUser={loggedInUser} />
         <div className="m-5 p-2">
           <div className="font-black pb-2">후원</div>
           <div className="flex gap-5 relative">
