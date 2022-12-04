@@ -119,7 +119,7 @@ const SettingProfileEdit = ({ loggedInUser, isEdit, setIsEdit }) => {
         <button
           className={`absolute bottom-2 right-2 ${
             isDuplicated || name.length === 0 ? "text-red-300" : "text-white"
-          }`}
+          } duration-100`}
           onClick={onSubmit}
         >
           <FontAwesomeIcon icon={faCircleCheck} size="2xl" />

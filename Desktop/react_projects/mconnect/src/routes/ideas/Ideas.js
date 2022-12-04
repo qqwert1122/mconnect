@@ -4,8 +4,6 @@ import BottomNavigationBar from "routes/BottomNavigationBar";
 import FloatingActionButton from "./FloatingActionButton";
 import React, { useEffect, useState } from "react";
 import { useBottomScrollListener } from "react-bottom-scroll-listener";
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Slider from "react-slick";

@@ -11,14 +11,13 @@ const addToIndex = functions.firestore
   .onCreate((snapshot) => {
     const _data = snapshot.data();
     const objectID = snapshot.id;
-    if (_data.isPublic === true) {
-      index.saveObject({ ..._data, objectID });
-    }
+    index.saveObject({ ..._data, objectID });
   });
 
 const updateIndex = functions.firestore
   .document("users/{userId}/userIdeas/{docId}")
   .onUpdate((change) => {
+    const beforeData = change.before.data();
     const newData = change.after.data();
     const objectID = change.after.id;
     index.saveObject({ ...newData, objectID });
@@ -26,6 +25,8 @@ const updateIndex = functions.firestore
 
 const deleteFromIndex = functions.firestore
   .document("users/{userId}/userIdeas/{docId}")
-  .onDelete((snapshot) => index.deleteObject(snapshot.id));
+  .onDelete((snapshot) => {
+    index.deleteObject(snapshot.id);
+  });
 
 export { addToIndex, updateIndex, deleteFromIndex };

@@ -17,7 +17,7 @@ const IdeaConnectedIdeas = ({ idea, getIdeasFromIDs, viewDetail }) => {
 
   return (
     <div
-      className={`z-0 relative p-2 w-full bg-stone-100 shadow-inner duration-500 ${
+      className={`z-0 relative py-2 pl-2 w-full bg-stone-100 shadow-inner duration-500 ${
         viewDetail === false && "hidden"
       }`}
     >
@@ -33,7 +33,7 @@ const IdeaConnectedIdeas = ({ idea, getIdeasFromIDs, viewDetail }) => {
                 className={`w-5 h-5 border-stone-100 ${colors[index]} rounded-full absolute top-6 left-2`}
                 style={{ borderWidth: "6px" }}
               ></div>
-              <div className="z-10 relative box-border ml-10 my-4 p-2 bg-white shadow-lg break-all rounded-xl">
+              <div className="z-10 relative box-border ml-10 my-4 p-2 py-4 bg-white shadow break-all rounded">
                 {idea.id === -1 ? (
                   <div
                     className="flex gap-1 items-center text-stone-300"
