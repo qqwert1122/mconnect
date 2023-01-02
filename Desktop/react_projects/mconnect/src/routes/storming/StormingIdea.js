@@ -35,9 +35,9 @@ import { Skeleton } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userState } from "atom";
 import { ideasState } from "atom";
-import { matchPath, matchRoutes } from "react-router-dom";
+import { v4 } from "uuid";
 
-const StormingIdea = ({ idea, timeDisplay }) => {
+const StormingIdea = ({ index, idea, timeDisplay }) => {
   const loggedInUser = useRecoilValue(userState);
   const isOwner = loggedInUser.userId === idea.userId;
 
@@ -105,6 +105,7 @@ const StormingIdea = ({ idea, timeDisplay }) => {
   const onBookmarkClick = async (idea) => {
     const newCount = { ...count };
     if (count.bookmark_users.hasOwnProperty(loggedInUser.userId)) {
+      // update || delete
       delete newCount.bookmark_users[loggedInUser.userId];
       setCount(newCount);
       await updateDoc(countRef, {
@@ -112,6 +113,7 @@ const StormingIdea = ({ idea, timeDisplay }) => {
         bookmark_users: newCount.bookmark_users,
       });
       if (isOwner) {
+        // update
         await updateDoc(userIdeaRef, {
           isBookmarked: false,
         });
@@ -121,13 +123,16 @@ const StormingIdea = ({ idea, timeDisplay }) => {
           )
         );
       } else {
+        // delete
         await deleteDoc(userIdeaRef);
         await updateDoc(userRef, {
           idea_count: increment(-1),
         });
         setIdeas(ideas.filter((f) => f.docId !== idea.docId));
+        index.deleteObject(idea.searchId);
       }
     } else {
+      // update || create
       newCount.bookmark_users[loggedInUser.userId] = loggedInUser.userName;
       setCount(newCount);
       await updateDoc(countRef, {
@@ -138,6 +143,7 @@ const StormingIdea = ({ idea, timeDisplay }) => {
         },
       });
       if (isOwner) {
+        // update
         await updateDoc(userIdeaRef, {
           isBookmarked: true,
         });
@@ -147,7 +153,9 @@ const StormingIdea = ({ idea, timeDisplay }) => {
           )
         );
       } else {
-        await setDoc(userIdeaRef, {
+        // create
+        const newIdeaId = v4();
+        const _document = {
           docId: idea.docId,
           userId: idea.userId,
           userName: idea.userName,
@@ -159,36 +167,22 @@ const StormingIdea = ({ idea, timeDisplay }) => {
           connectedIDs: idea.connectedIDs,
           createdAt: idea.createdAt,
           updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+        };
+        const document = {
+          ..._document,
+          searchId: newIdeaId,
           isPublic: false,
           isLiked: count.like_users.hasOwnProperty(loggedInUser.userId),
           isBookmarked: true,
           isViewed: count.view_users.hasOwnProperty(loggedInUser.userId),
           isOriginal: false,
-        });
+        };
+        await setDoc(userIdeaRef, { ...document });
         await updateDoc(userRef, {
           idea_count: increment(1),
         });
-        setIdeas([
-          {
-            docId: idea.docId,
-            userId: idea.userId,
-            userName: idea.userName,
-            userPhotoURL: idea.userPhotoURL,
-            title: idea.title,
-            text: idea.text,
-            source: idea.source,
-            tags: idea.tags,
-            connectedIDs: idea.connectedIDs,
-            createdAt: idea.createdAt,
-            updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-            isPublic: false,
-            isLiked: count.like_users.hasOwnProperty(loggedInUser.userId),
-            isBookmarked: true,
-            isViewed: count.view_users.hasOwnProperty(loggedInUser.userId),
-            isOriginal: false,
-          },
-          ...ideas,
-        ]);
+        setIdeas([{ ...document }, ...ideas]);
+        index.saveObject({ ..._document, objectID: newIdeaId });
       }
     }
   };
@@ -399,7 +393,7 @@ const StormingIdea = ({ idea, timeDisplay }) => {
             <Skeleton variant="circular" width={30} height={30} />
             <Skeleton variant="text" width={100} height={30} />
           </div>
-          <Skeleton variant="text" width={320} height={160} />
+          <Skeleton variant="text" width={300} height={160} />
         </div>
       )}
     </>

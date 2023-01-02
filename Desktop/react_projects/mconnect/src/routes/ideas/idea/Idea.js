@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { userState, ideasState, whatViewState, selectedIdeasState } from "atom";
 
-const Idea = ({ props, idea, index, isSelectMode }) => {
+const Idea = ({ props, idea, i, index, isSelectMode }) => {
   const {
     navigate,
     viewIdea,
@@ -71,7 +71,7 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
   return (
     <div
       className={`rounded-lg bg-white text-sm ${
-        index === ideas.length - 1 && "shadow-xl"
+        i === ideas.length - 1 && "shadow-xl"
       }`}
     >
       {idea ? (
@@ -101,6 +101,7 @@ const Idea = ({ props, idea, index, isSelectMode }) => {
           <IdeaBottom
             isOwner={isOwner}
             idea={idea}
+            index={index}
             viewDetail={viewDetail}
             setViewDetail={setViewDetail}
             countUpdate={countUpdate}

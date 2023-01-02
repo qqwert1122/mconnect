@@ -2,6 +2,7 @@ import AppRouter from "components/Router";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import algoliasearch from "algoliasearch";
 import { authService, dbService, messaging } from "fbase";
 import {
   collection,
@@ -51,6 +52,12 @@ const useDeliverProps = () => {
   const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const APP_ID = process.env.REACT_APP_ALGOLIA_APP_ID;
+  const API_KEY = process.env.REACT_APP_ALGOLIA_API_KEY;
+
+  const client = algoliasearch(APP_ID, API_KEY);
+  const index = client.initIndex("userIdeas");
 
   useEffect(() => {
     authService.onAuthStateChanged(async (user) => {
@@ -388,8 +395,9 @@ const useDeliverProps = () => {
     await updateDoc(userRef, {
       idea_count: increment(-1),
     });
-    const countRef = doc(dbService, "counts", idea.id);
+    const countRef = doc(dbService, "counts", idea.docId);
     await deleteDoc(countRef);
+    index.deleteObject(idea.searchId);
   };
 
   // get Trend Keywords from firestore
@@ -432,6 +440,7 @@ const useDeliverProps = () => {
     onPublicUpdate,
     onDeleteClick,
     trends,
+    index,
   };
 };
 

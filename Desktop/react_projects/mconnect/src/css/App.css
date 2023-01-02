@@ -33,9 +33,9 @@ body {
   animation-fill-mode: forwards;
   content: "";
   width: 0%;
-  height: 1rem;
+  height: 0.2rem;
   display: inline-block;
-  background: #fb923c;
+  background: #38bdf8;
   position: absolute;
   bottom: 0;
   left: 0;

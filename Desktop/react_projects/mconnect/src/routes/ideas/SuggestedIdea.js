@@ -1,38 +1,29 @@
 import { dbService } from "fbase";
 import {
-  collectionGroup,
   deleteDoc,
   doc,
   getDoc,
-  getDocs,
   increment,
-  orderBy,
-  query,
   setDoc,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faQuoteLeft,
-  faQuoteRight,
-  faAngleDown,
   faCheck,
-  faBookmark,
   faBookmark as fasBookmark,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faThumbsUp,
-  faBookmark as farBookmark,
-} from "@fortawesome/free-regular-svg-icons";
+import { faBookmark as farBookmark } from "@fortawesome/free-regular-svg-icons";
 import dayjs from "dayjs";
 import { CircularProgress } from "@mui/material";
 import { useRecoilState } from "recoil";
 import { ideasState } from "atom";
+import { v4 } from "uuid";
 
 const SuggestedIdea = ({
+  index,
   writing,
   loggedInUser,
   idea,
@@ -41,14 +32,6 @@ const SuggestedIdea = ({
   onIdeaClick,
 }) => {
   const [ideas, setIdeas] = useRecoilState(ideasState);
-
-  //TODO
-  // 바닥에 닿는 무한스크롤은 아니지만,
-  // 마지막 페이지에 추가 로드 버튼을 만들고 마지막 위치라면 해당 버튼을 보여줌
-  // 버튼 클릭시 아이디어 추가 로드.
-  // 단 이때 slick을 이용하므로 너무 많이 로드되지 않도록
-  // startAfter, limit을 활용하고 배열에 추가하는 것이 아니라
-  // 페이지화를 해서 before로 돌아갈 수도 있게끔 구현
 
   const getCount = async () => {
     const countRef = doc(dbService, "counts", idea.docId);
@@ -67,7 +50,7 @@ const SuggestedIdea = ({
 
   const onBookmarkClick = async (idea) => {
     const isOwner = loggedInUser.userId === idea.userId;
-    // fb reference
+
     const countRef = doc(dbService, "counts", idea.docId);
     const userIdeaRef = doc(
       dbService,
@@ -79,49 +62,77 @@ const SuggestedIdea = ({
     const userRef = doc(dbService, "users", loggedInUser.userId);
     const newCount = { ...count };
     if (count.bookmark_users.hasOwnProperty(loggedInUser.userId)) {
-      delete newCount.bookmark_users[loggedInUser.userId];
-      setCount(newCount);
-      await updateDoc(countRef, {
-        bookmark_count: increment(-1),
-        bookmark_users: newCount.bookmark_users,
-      });
+      // update || delete
+      try {
+        delete newCount.bookmark_users[loggedInUser.userId];
+        setCount(newCount);
+        await updateDoc(countRef, {
+          bookmark_count: increment(-1),
+          bookmark_users: newCount.bookmark_users,
+        });
+      } catch (event) {
+        console.error("Error count bookmark: ", event);
+      }
       if (isOwner) {
-        await updateDoc(userIdeaRef, {
-          isBookmarked: false,
-        });
-        setIdeas(
-          ideas.map((m) =>
-            m.docId === idea.docId ? { ...m, isBookmarked: false } : m
-          )
-        );
+        // update
+        try {
+          await updateDoc(userIdeaRef, {
+            isBookmarked: false,
+          });
+          setIdeas(
+            ideas.map((m) =>
+              m.docId === idea.docId ? { ...m, isBookmarked: false } : m
+            )
+          );
+        } catch (event) {
+          console.error("Error updating user's document: ", event);
+        }
       } else {
-        await deleteDoc(userIdeaRef);
-        await updateDoc(userRef, {
-          idea_count: increment(-1),
-        });
-        setIdeas(ideas.filter((f) => f.docId !== idea.docId));
+        // delete
+        try {
+          await deleteDoc(userIdeaRef);
+          await updateDoc(userRef, {
+            idea_count: increment(-1),
+          });
+          setIdeas(ideas.filter((f) => f.docId !== idea.docId));
+          index.deleteObject(idea.searchId);
+        } catch (event) {
+          console.error("Error deleting someone else's document: ", event);
+        }
       }
     } else {
-      newCount.bookmark_users[loggedInUser.userId] = loggedInUser.userName;
-      setCount(newCount);
-      await updateDoc(countRef, {
-        bookmark_count: increment(1),
-        bookmark_users: {
-          ...count.bookmark_users,
-          [loggedInUser.userId]: loggedInUser.userName,
-        },
-      });
-      if (isOwner) {
-        await updateDoc(userIdeaRef, {
-          isBookmarked: true,
+      // update || create
+      try {
+        newCount.bookmark_users[loggedInUser.userId] = loggedInUser.userName;
+        setCount(newCount);
+        await updateDoc(countRef, {
+          bookmark_count: increment(1),
+          bookmark_users: {
+            ...count.bookmark_users,
+            [loggedInUser.userId]: loggedInUser.userName,
+          },
         });
-        setIdeas(
-          ideas.map((m) =>
-            m.docId === idea.docId ? { ...m, isBookmarked: true } : m
-          )
-        );
+      } catch (event) {
+        console.error("Error count bookmark: ", event);
+      }
+      if (isOwner) {
+        // update
+        try {
+          await updateDoc(userIdeaRef, {
+            isBookmarked: true,
+          });
+          setIdeas(
+            ideas.map((m) =>
+              m.docId === idea.docId ? { ...m, isBookmarked: true } : m
+            )
+          );
+        } catch (event) {
+          console.error("Error updating user's document: ", event);
+        }
       } else {
-        await setDoc(userIdeaRef, {
+        // create
+        const newIdeaId = v4();
+        const _document = {
           docId: idea.docId,
           userId: idea.userId,
           userName: idea.userName,
@@ -133,36 +144,26 @@ const SuggestedIdea = ({
           connectedIDs: idea.connectedIDs,
           createdAt: idea.createdAt,
           updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+        };
+        const document = {
+          ..._document,
+          searchId: newIdeaId,
           isPublic: false,
           isLiked: count.like_users.hasOwnProperty(loggedInUser.userId),
           isBookmarked: true,
           isViewed: count.view_users.hasOwnProperty(loggedInUser.userId),
           isOriginal: false,
-        });
-        await updateDoc(userRef, {
-          idea_count: increment(1),
-        });
-        setIdeas([
-          {
-            docId: idea.docId,
-            userId: idea.userId,
-            userName: idea.userName,
-            userPhotoURL: idea.userPhotoURL,
-            title: idea.title,
-            text: idea.text,
-            source: idea.source,
-            tags: idea.tags,
-            connectedIDs: idea.connectedIDs,
-            createdAt: idea.createdAt,
-            updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-            isPublic: false,
-            isLiked: count.like_users.hasOwnProperty(loggedInUser.userId),
-            isBookmarked: true,
-            isViewed: count.view_users.hasOwnProperty(loggedInUser.userId),
-            isOriginal: false,
-          },
-          ...ideas,
-        ]);
+        };
+        try {
+          await setDoc(userIdeaRef, { ...document });
+          await updateDoc(userRef, {
+            idea_count: increment(1),
+          });
+          setIdeas([{ ...document }, ...ideas]);
+          index.saveObject({ ...document, objectID: newIdeaId });
+        } catch (event) {
+          console.error("Error creating someone else's document: ", event);
+        }
       }
     }
   };

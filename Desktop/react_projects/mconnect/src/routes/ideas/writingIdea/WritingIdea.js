@@ -3,6 +3,7 @@ import "css/Animation.css";
 import WritingTopBar from "./WritingTopBar";
 import WritingBottom from "./WritingBottom";
 import React, { useState } from "react";
+import algoliasearch from "algoliasearch";
 import { dbService } from "fbase";
 import { updateDoc, doc, setDoc, increment } from "firebase/firestore";
 import { v4 } from "uuid";
@@ -25,15 +26,20 @@ import {
   recentSourcesState,
   selectedIdeasState,
   formPublicState,
+  ideasState,
+  whatViewState,
 } from "atom";
-import { ideasState } from "atom";
-import { whatViewState } from "atom";
 
 var relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
 var customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 dayjs.locale("ko");
+const APP_ID = process.env.REACT_APP_ALGOLIA_APP_ID;
+const API_KEY = process.env.REACT_APP_ALGOLIA_API_KEY;
+
+const client = algoliasearch(APP_ID, API_KEY);
+const index = client.initIndex("userIdeas");
 
 const WritingIdea = ({ ...props }) => {
   const {
@@ -97,6 +103,16 @@ const WritingIdea = ({ ...props }) => {
     const connectedIdeasId = formCnctedIdeas.map((idea) => idea.docId);
     if (isEdit) {
       // UPDATE
+      const document = {
+        ...whatEdit,
+        title: formTitle,
+        text: formText,
+        source: formSource,
+        tags: formTags,
+        isPublic: formPublic,
+        connectedIDs: connectedIdeasId,
+        updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+      };
       try {
         if (isCnctnRequired) {
           toast.error("아이디어 2개 이상을 선택하세요", {
@@ -111,49 +127,42 @@ const WritingIdea = ({ ...props }) => {
           "userIdeas",
           `${whatEdit.docId}`
         );
-        await updateDoc(ideaRef, {
-          ...whatEdit,
-          title: formTitle,
-          text: formText,
-          source: formSource,
-          tags: formTags,
-          isPublic: formPublic,
-          connectedIDs: connectedIdeasId,
-          updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-        });
+        await updateDoc(ideaRef, { ...document });
         setIdeas(
-          ideas.map((m) =>
-            m.docId === whatEdit.docId
-              ? {
-                  ...whatEdit,
-                  title: formTitle,
-                  text: formText,
-                  source: formSource,
-                  tags: formTags,
-                  isPublic: formPublic,
-                  connectedIDs: connectedIdeasId,
-                  updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-                }
-              : m
-          )
+          ideas.map((m) => (m.docId === whatEdit.docId ? { ...document } : m))
         );
         if (whatView) {
-          setWhatView({
-            ...whatView,
-            title: formTitle,
-            text: formText,
-            source: formSource,
-            tags: formTags,
-            isPublic: formPublic,
-            connectedIDs: connectedIdeasId,
-            updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-          });
+          setWhatView({ ...document });
         }
+        index.saveObject({ ...document, objectID: whatEdit.docId });
       } catch (event) {
         console.error("Error editing document: ", event);
       }
     } else {
       // CREATE
+      const newIdeaId = v4();
+      const _document = {
+        docId: newIdeaId,
+        userId: loggedInUser.userId,
+        userName: loggedInUser.userName,
+        userPhotoURL: loggedInUser.userPhotoURL,
+        title: formTitle,
+        text: formText,
+        source: formSource,
+        tags: formTags,
+        connectedIDs: connectedIdeasId,
+        createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+        updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+      };
+      const document = {
+        ..._document,
+        searchId: newIdeaId,
+        isPublic: formPublic,
+        isLiked: false,
+        isBookmarked: false,
+        isViewed: false,
+        isOriginal: true,
+      };
       try {
         if (isCnctnRequired) {
           toast.error("아이디어 2개 이상을 선택하세요", {
@@ -161,7 +170,6 @@ const WritingIdea = ({ ...props }) => {
           });
           return;
         }
-        const newIdeaId = v4();
         const newUserIdeaRef = doc(
           dbService,
           "users",
@@ -169,24 +177,7 @@ const WritingIdea = ({ ...props }) => {
           "userIdeas",
           newIdeaId
         );
-        await setDoc(newUserIdeaRef, {
-          docId: newIdeaId,
-          userId: loggedInUser.userId,
-          userName: loggedInUser.userName,
-          userPhotoURL: loggedInUser.userPhotoURL,
-          title: formTitle,
-          text: formText,
-          source: formSource,
-          tags: formTags,
-          connectedIDs: connectedIdeasId,
-          createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-          updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-          isPublic: formPublic,
-          isLiked: false,
-          isBookmarked: false,
-          isViewed: false,
-          isOriginal: true,
-        });
+        await setDoc(newUserIdeaRef, { ...document });
         const newCountRef = doc(dbService, "counts", newIdeaId);
         await setDoc(newCountRef, {
           like_count: 0,
@@ -200,27 +191,12 @@ const WritingIdea = ({ ...props }) => {
         await updateDoc(userRef, {
           idea_count: increment(1),
         });
-        setIdeas([
-          {
-            docId: newIdeaId,
-            userId: loggedInUser.userId,
-            userName: loggedInUser.userName,
-            userPhotoURL: loggedInUser.userPhotoURL,
-            title: formTitle,
-            text: formText,
-            source: formSource,
-            tags: formTags,
-            connectedIDs: connectedIdeasId,
-            createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-            updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-            isPublic: formPublic,
-            isLiked: false,
-            isBookmarked: false,
-            isViewed: false,
-            isOriginal: true,
-          },
-          ...ideas,
-        ]);
+        setIdeas([{ ...document }, ...ideas]);
+        index.saveObject({
+          ..._document,
+          isPublic: formPublic,
+          objectID: newIdeaId,
+        });
       } catch (event) {
         console.error("Error adding document: ", event);
       }

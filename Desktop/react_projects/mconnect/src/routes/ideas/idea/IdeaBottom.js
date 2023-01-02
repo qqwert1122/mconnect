@@ -25,10 +25,12 @@ import { useEffect, useState } from "react";
 import { useRecoilSnapshot, useRecoilState, useRecoilValue } from "recoil";
 import { userState } from "atom";
 import { ideasState } from "atom";
+import { AssistantDirection } from "@mui/icons-material";
 
 const IdeaBottom = ({
   isOwner,
   idea,
+  index,
   viewDetail,
   setViewDetail,
   countUpdate,
@@ -65,6 +67,7 @@ const IdeaBottom = ({
         idea_count: increment(-1),
       });
       setIdeas(ideas.filter((f) => f.docId !== idea.docId));
+      index.deleteObject(idea.searchId);
     } else {
       setIdeas(
         ideas.map((m) =>
@@ -82,6 +85,24 @@ const IdeaBottom = ({
         m.docId === idea.docId ? { ...idea, isPublic: !idea.isPublic } : m
       )
     );
+    const _idea = {
+      docId: idea.docId,
+      userId: idea.userId,
+      userName: idea.userName,
+      userPhotoURL: idea.userPhotoURL,
+      title: idea.title,
+      text: idea.text,
+      source: idea.source,
+      tags: idea.tags,
+      connectedIDs: idea.connectedIDs,
+      createdAt: idea.createdAt,
+      updatedAt: idea.updatedAt,
+    };
+    index.saveObject({
+      ..._idea,
+      isPublic: !idea.isPublic,
+      objectID: idea.searchId,
+    });
   };
 
   const onDetailClick = () => {

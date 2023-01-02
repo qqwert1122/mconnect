@@ -28,6 +28,7 @@ const ViewIdea = ({ ...props }) => {
     onPublicUpdate,
     onDeleteClick,
     toastAlarm,
+    index,
   } = props;
   const loggedInUser = useRecoilValue(userState);
   const whatView = useRecoilValue(whatViewState);
@@ -54,6 +55,7 @@ const ViewIdea = ({ ...props }) => {
               toastAlarm={toastAlarm}
             />
             <ViewIdeaContent
+              index={index}
               user={loggedInUser}
               itemChangeProps={itemChangeProps}
               isOwner={isOwner}

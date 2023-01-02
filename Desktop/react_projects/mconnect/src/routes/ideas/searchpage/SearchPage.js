@@ -10,18 +10,19 @@ import {
 import { createInfiniteHitsSessionStorageCache } from "instantsearch.js/es/lib/infiniteHitsCache";
 
 import BottomNavigationBar from "routes/BottomNavigationBar";
+import { useRecoilValue } from "recoil";
+import { userState } from "atom";
 
 const SearchPage = ({ ...props }) => {
-  const { navValue, setNavValue, navigate, getIDsFromIdeas, onBackClick } =
-    props;
+  const { navValue, setNavValue, getIDsFromIdeas, viewIdea } = props;
+  const loggedInUser = useRecoilValue(userState);
 
   const searchClient = algoliasearch(
     process.env.REACT_APP_ALGOLIA_APP_ID,
-    process.env.REACT_APP_ALGOLIA_API_KEY
+    process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY
   );
-  const sessionStorageCache = createInfiniteHitsSessionStorageCache();
 
-  console.log("search Page 전체가 rerender");
+  const sessionStorageCache = createInfiniteHitsSessionStorageCache();
 
   return (
     <div className="min-h-screen flex-col">
@@ -36,14 +37,14 @@ const SearchPage = ({ ...props }) => {
             />
           </div>
           <div className="mt-14">
-            <Configure filters={"isPublic:true"} />
+            <Configure
+              filters={`isPublic:true OR userId:${loggedInUser.userId}`}
+            />
             <InfiniteHits
               classNames={{
-                root: "mt-16",
+                root: "mt-18",
               }}
-              hitComponent={({ hit }) => (
-                <Hit hit={hit} getIDsFromIdeas={getIDsFromIdeas} />
-              )}
+              hitComponent={({ hit }) => <Hit hit={hit} viewIdea={viewIdea} />}
               cache={sessionStorageCache}
               showPrevious={false}
             />

@@ -1,19 +1,14 @@
+import SuggestedIdea from "./SuggestedIdea";
 import { useEffect, useState } from "react";
+import algoliasearch from "algoliasearch";
 import { dbService } from "fbase";
 import {
   collectionGroup,
-  deleteDoc,
-  doc,
-  documentId,
-  getDoc,
   getDocs,
-  increment,
   limit,
   orderBy,
   query,
-  setDoc,
   startAfter,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import Slider from "react-slick";
@@ -29,14 +24,8 @@ import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
-import {
-  whatViewState,
-  whatEditState,
-  selectedIdeasState,
-  formCnctedIdeasState,
-} from "atom";
+import { selectedIdeasState, formCnctedIdeasState } from "atom";
 import { userState } from "atom";
-import SuggestedIdea from "./SuggestedIdea";
 
 const SuggestedIdeas = ({
   setNavValue,
@@ -59,6 +48,11 @@ const SuggestedIdeas = ({
   //  - navigate view page by clicking idea
   // isItIn ?
   //  - isItIn(array, item) : Check whether the item is in the array or not.
+  const APP_ID = process.env.REACT_APP_ALGOLIA_APP_ID;
+  const API_KEY = process.env.REACT_APP_ALGOLIA_API_KEY;
+  const client = algoliasearch(APP_ID, API_KEY);
+  const index = client.initIndex("userIdeas");
+
   const loggedInUser = useRecoilValue(userState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
   const [formCnctedIdeas, setFormCnctedIdeas] =
@@ -260,9 +254,10 @@ const SuggestedIdeas = ({
           </div>
         ) : (
           <Slider {...sugtdSettings}>
-            {filteredIdeas.map((idea, index) => (
-              <div key={index} className="relative">
+            {filteredIdeas.map((idea, i) => (
+              <div key={i} className="relative">
                 <SuggestedIdea
+                  index={index}
                   writing={writing}
                   loggedInUser={loggedInUser}
                   idea={idea}
@@ -270,7 +265,7 @@ const SuggestedIdeas = ({
                   onIdeaSelect={onIdeaSelect}
                   onIdeaClick={onIdeaClick}
                 />
-                {index === filteredIdeas.length - 1 && lastVisible !== -1 && (
+                {i === filteredIdeas.length - 1 && lastVisible !== -1 && (
                   <button
                     className="absolute -right-8 top-24 text-stone-600 text-2xl"
                     onClick={

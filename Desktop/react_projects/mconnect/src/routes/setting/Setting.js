@@ -77,8 +77,7 @@ const Setting = ({ ...props }) => {
 
     setChecked(newChecked);
   };
-  // 처음 chat을 열면 채팅방을 개설해줘야지.
-  // 채팅
+
   async function onItemClick(item, index) {
     if (index === 1 && loggedInUser.isAuthority === false) {
       setChatUser(loggedInUser.userId);

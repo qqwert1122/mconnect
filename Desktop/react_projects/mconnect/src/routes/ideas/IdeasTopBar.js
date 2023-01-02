@@ -44,8 +44,6 @@ const IdeasTopBar = ({ ...props }) => {
     setAlarm({ boolean: false, message: "" });
   };
 
-  // bg-gradient-to-r text-white from-orange-400 via-red-400 to-pink-400
-
   return (
     <div className="fixed top-0 w-full z-10">
       <div className="flex justify-between items-center px-2 py-4 bg-white shadow">
@@ -59,14 +57,11 @@ const IdeasTopBar = ({ ...props }) => {
           </span>
         </div>
         <div className="flex gap-2">
-          {/* <button className="relative px-2" onClick={toastAlarm}>
-            <FontAwesomeIcon icon={faCommentDots} size="lg" />
-          </button> */}
-          <button className="relative px-2" onClick={onAlarmClick}>
+          {/* <button className="relative px-2" onClick={onAlarmClick}>
             <FontAwesomeIcon icon={faBell} size="lg" />
             <span className="animate-ping absolute right-0 -top-1 w-4 h-4 bg-red-300 text-white rounded-full" />
             <span className="absolute right-1 top-0 w-2 h-2 bg-red-400 text-white rounded-full" />
-          </button>
+          </button> */}
           <button className="px-2" onClick={onSelectModeClick}>
             {isSelectMode ? (
               <FontAwesomeIcon icon={fasCircleCheck} size="lg" />

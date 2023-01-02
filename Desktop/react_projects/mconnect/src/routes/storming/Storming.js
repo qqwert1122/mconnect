@@ -1,8 +1,10 @@
 import BottomNavigationBar from "routes/BottomNavigationBar";
+import Recommendation from "./Recommendation";
 import StormingTopBar from "./StormingTopBar";
 import StormingTagBar from "./StormingTagBar";
 import StormingIdea from "./StormingIdea";
 import React, { useEffect, useState } from "react";
+import algoliasearch from "algoliasearch";
 import { dbService } from "fbase";
 import { useBottomScrollListener } from "react-bottom-scroll-listener";
 import {
@@ -28,28 +30,15 @@ import Slider from "react-slick";
 const Storming = ({ ...props }) => {
   const { isLoggedIn, timeDisplay, navValue, setNavValue, trends } = props;
 
+  const APP_ID = process.env.REACT_APP_ALGOLIA_APP_ID;
+  const API_KEY = process.env.REACT_APP_ALGOLIA_API_KEY;
+  const client = algoliasearch(APP_ID, API_KEY);
+  const index = client.initIndex("userIdeas");
+
   const [lastVisible, setLastVisible] = useState();
   const [ideas, setIdeas] = useState([]);
   const [recommendation, setRecommendation] = useState([]);
   const [itemPrmtr, setItemPrmtr] = useState();
-
-  //TODO
-  // - 바닥에 닿으면 query에 limit을 줘서 불러오기
-  // 단 이때 전체 ideas와 tag에 따른 ideas를 불러올 때에 모두 적용되어야 함
-
-  // lastVisible -1, value, undefined
-  // case -1
-  // case value
-  // 최초 load 시 undefined 이고 이때에 limit
-  // 이후 lastVisible에 이어서 load
-  // 마지막의 경우 -1
-  // 만약 키워드 변경 시 lastVisible 초기화,
-
-  const getIdeas = async (query) => {
-    const stormingRef = await getDocs(query);
-    const newData = stormingRef.docs.map((doc) => doc.data());
-    setIdeas(newData);
-  };
 
   const getRecommendation = async (query) => {
     const recommendgRef = await getDocs(query);
@@ -180,52 +169,21 @@ const Storming = ({ ...props }) => {
     <>
       <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
       <StormingTopBar />
-      <div className="bg-stone-50 min-h-screen pb-14 text-sm">
-        <div className="pt-20 m-4 mb-2  font-black text-base">
-          👍 이번 주 추천 아이디어
+      <div className=" min-h-screen pb-14 text-sm">
+        <div className="pt-20 m-4 ml-10 mb-2">
+          <div className="font-black text-lg">오늘의 발견</div>
+          <div className="text-stone-400 text-xs">에디터 추천</div>
         </div>
-        <ul className={`pb-5`}>
+        <ul className={`pb-10`}>
           <Slider {...settings}>
-            {recommendation.map((idea) => (
-              <div key={idea.id} className="relative">
-                <div className="h-60 p-5 m-1 mx-2 bg-white shadow-md rounded-3xl break-all text-xs">
-                  <div className="mb-2 truncate font-black text-sm">
-                    {idea.title}
-                  </div>
-
-                  <div className="mb-3 line-clamp-6">{idea.text}</div>
-
-                  <div className="ml-2 mb-1 flex gap-1 text-stone-400">
-                    <FontAwesomeIcon icon={faQuoteLeft} />
-                    <span>{idea.source}</span>
-                  </div>
-
-                  <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs">
-                    <Avatar
-                      className="border-2"
-                      alt="avatar"
-                      sx={{
-                        display: "flex",
-                        width: "25px",
-                        height: "25px",
-                      }}
-                      src={idea.userPhotoURL}
-                    />
-                    <div className="flex-col">
-                      <span className="flex">{idea.userName}</span>
-                      <span className="flex text-stone-400">
-                        {idea.createdAt}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {recommendation.map((idea, i) => (
+              <Recommendation key={i} idea={idea} />
             ))}
           </Slider>
         </ul>
-        <div className="flex gap-2 ml-4 mb-2 font-black text-base">
-          <FontAwesomeIcon icon={faFireFlameCurved} size="lg" color="orange" />
-          인기 태그
+        <div className="ml-10 mb-2">
+          <div className="font-black text-lg">인기 태그</div>
+          <div className="text-stone-400 text-xs">최근 트렌드</div>
         </div>
         <StormingTagBar
           loadNewIdea={loadNewIdea}
@@ -234,20 +192,24 @@ const Storming = ({ ...props }) => {
           setItemPrmtr={setItemPrmtr}
         />
         {ideas.length > 0 ? (
-          <>
-            {ideas.map((idea, index) => (
-              <div key={index} className="my-2">
-                <div key={index} className="bg-white rounded-lg">
-                  <StormingIdea idea={idea} timeDisplay={timeDisplay} />
+          <div className="mt-10 ml-5">
+            {ideas.map((idea, i) => (
+              <div key={i} className="my-2">
+                <div key={i} className="bg-white rounded-lg">
+                  <StormingIdea
+                    index={index}
+                    idea={idea}
+                    timeDisplay={timeDisplay}
+                  />
                 </div>
-                {index % 7 === 6 && (
+                {i % 7 === 6 && (
                   <div className="py-6 bg-stone-600 text-stone-400 text-sm text-center font-black ">
                     광고 <FontAwesomeIcon icon={faAd} />
                   </div>
                 )}
               </div>
             ))}
-          </>
+          </div>
         ) : (
           <div className="py-10 flex justify-center text-base font-black text-gray-400 ">
             가장 먼저 아이디어를 남겨주세요 💡

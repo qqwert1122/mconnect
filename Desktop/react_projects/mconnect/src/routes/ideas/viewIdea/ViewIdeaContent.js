@@ -29,6 +29,7 @@ import { useRecoilState } from "recoil";
 import { ideasState } from "atom";
 
 const ViewIdeaContent = ({
+  index,
   user,
   itemChangeProps,
   isOwner,
@@ -80,6 +81,7 @@ const ViewIdeaContent = ({
     "userIdeas",
     whatView.docId
   );
+
   const onBookmarkClick = () => {
     onBookmarkUpdate(whatView);
     countUpdate(whatView, "bookmark");
@@ -87,6 +89,7 @@ const ViewIdeaContent = ({
     if (isOwner === false) {
       onBackClick("view");
       deleteDoc(ideaRef);
+      index.deleteObject(whatView.searchId);
     }
     setIdeas(
       ideas.map((m) =>
@@ -109,6 +112,24 @@ const ViewIdeaContent = ({
           : m
       )
     );
+    const _idea = {
+      docId: whatView.docId,
+      userId: whatView.userId,
+      userName: whatView.userName,
+      userPhotoURL: whatView.userPhotoURL,
+      title: whatView.title,
+      text: whatView.text,
+      source: whatView.source,
+      tags: whatView.tags,
+      connectedIDs: whatView.connectedIDs,
+      createdAt: whatView.createdAt,
+      updatedAt: whatView.updatedAt,
+    };
+    index.saveObject({
+      ..._idea,
+      isPublic: !whatView.isPublic,
+      objectID: whatView.searchId,
+    });
   };
 
   // Ellipsis Menu

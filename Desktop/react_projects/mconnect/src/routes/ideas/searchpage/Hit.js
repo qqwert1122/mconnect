@@ -22,7 +22,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as farBookmark } from "@fortawesome/free-regular-svg-icons";
 
-const Hit = ({ hit }) => {
+const Hit = ({ hit, viewIdea }) => {
   const loggedInUser = useRecoilValue(userState);
   const [ideas, setIdeas] = useRecoilState(ideasState);
   const isOwner = loggedInUser.userId === hit.userId;
@@ -40,7 +40,6 @@ const Hit = ({ hit }) => {
   const userRef = doc(dbService, "users", loggedInUser.userId);
 
   const getCount = async () => {
-    console.log("개별 게시글");
     const countDoc = (await getDoc(countRef)).data();
     setCount(countDoc);
   };
@@ -58,21 +57,23 @@ const Hit = ({ hit }) => {
         bookmark_count: increment(-1),
         bookmark_users: newCount.bookmark_users,
       });
+      // update
       if (isOwner) {
         await updateDoc(userIdeaRef, {
           isBookmarked: false,
         });
         setIdeas(
           ideas.map((m) =>
-            m.id === hit.objectID ? { ...m, isBookmarked: false } : m
+            m.docId === hit.docId ? { ...m, isBookmarked: false } : m
           )
         );
       } else {
+        // delete
         await deleteDoc(userIdeaRef);
         await updateDoc(userRef, {
           idea_count: increment(-1),
         });
-        setIdeas(ideas.filter((f) => f.docId !== hit.objectID));
+        setIdeas(ideas.filter((f) => f.docId !== hit.docId));
       }
     } else {
       newCount.bookmark_users[loggedInUser.userId] = loggedInUser.userName;
@@ -85,17 +86,20 @@ const Hit = ({ hit }) => {
         },
       });
       if (isOwner) {
+        // update
         await updateDoc(userIdeaRef, {
           isBookmarked: true,
         });
         setIdeas(
           ideas.map((m) =>
-            m.id === hit.objectID ? { ...m, isBookmarked: true } : m
+            m.docId === hit.docId ? { ...m, isBookmarked: true } : m
           )
         );
       } else {
+        // create
         await setDoc(userIdeaRef, {
-          docId: hit.objectID,
+          docId: hit.docId,
+          searchId: hit.objectID,
           userId: hit.userId,
           userName: hit.userName,
           userPhotoURL: hit.userPhotoURL,
@@ -117,7 +121,8 @@ const Hit = ({ hit }) => {
         });
         setIdeas([
           {
-            docId: hit.objectID,
+            docId: hit.docId,
+            searchId: hit.objectID,
             userId: hit.userId,
             userName: hit.userName,
             userPhotoURL: hit.userPhotoURL,
@@ -144,6 +149,9 @@ const Hit = ({ hit }) => {
     <div
       key={hit.objectID}
       className={`relative w-full break-all overflow-hidden`}
+      onClick={() => {
+        viewIdea(hit);
+      }}
     >
       {hit.title.length > 0 && (
         <div className="mb-2 font-black">

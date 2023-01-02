@@ -45,6 +45,7 @@ const Ideas = ({ ...props }) => {
     onPublicUpdate,
     onDeleteClick,
     trends,
+    index,
   } = props;
 
   const ideas = useRecoilValue(ideasState);
@@ -145,11 +146,12 @@ const Ideas = ({ ...props }) => {
 
           {ideas.length > 0 ? (
             <>
-              {ideas.map((idea, index) => (
-                <div key={index} className="my-1">
+              {ideas.map((idea, i) => (
+                <div key={i} className="my-1">
                   <Idea
                     props={props}
                     idea={idea}
+                    i={i}
                     index={index}
                     isSelectMode={isSelectMode}
                   />
