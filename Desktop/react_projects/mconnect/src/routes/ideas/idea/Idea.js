@@ -57,6 +57,11 @@ const Idea = ({ props, idea, i, index, isSelectMode }) => {
 
   const onIdeaClick = (idea) => {
     viewIdea(idea);
+    setIdeas(
+      ideas.map((m) =>
+        m.docId === idea.docId ? { ...idea, isViewed: true } : m
+      )
+    );
   };
 
   // 삭제 대화상자

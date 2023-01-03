@@ -10,10 +10,12 @@ import {
 import {
   faBell,
   faCircleCheck as farCircleCheck,
+  faCircleQuestion,
   faCommentDots,
 } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userState, selectedIdeasState } from "atom";
+import dayjs from "dayjs";
 
 const IdeasTopBar = ({ ...props }) => {
   const {
@@ -40,6 +42,10 @@ const IdeasTopBar = ({ ...props }) => {
     navigate("/alarm");
   };
 
+  const onTutorialClick = () => {
+    navigate("/tutorial");
+  };
+
   const onDeleteClick = () => {
     setAlarm({ boolean: false, message: "" });
   };
@@ -57,11 +63,15 @@ const IdeasTopBar = ({ ...props }) => {
           </span>
         </div>
         <div className="flex gap-2">
-          {/* <button className="relative px-2" onClick={onAlarmClick}>
-            <FontAwesomeIcon icon={faBell} size="lg" />
-            <span className="animate-ping absolute right-0 -top-1 w-4 h-4 bg-red-300 text-white rounded-full" />
-            <span className="absolute right-1 top-0 w-2 h-2 bg-red-400 text-white rounded-full" />
-          </button> */}
+          <button className="relative px-2" onClick={onTutorialClick}>
+            <FontAwesomeIcon icon={faCircleQuestion} size="lg" />
+            {dayjs().diff(dayjs(loggedInUser.createdAt), "day") < 3 && (
+              <>
+                <span className="animate-ping absolute right-0 -top-1 w-4 h-4 bg-red-300 text-white rounded-full" />
+                <span className="absolute right-1 top-0 w-2 h-2 bg-red-400 text-white rounded-full" />
+              </>
+            )}
+          </button>
           <button className="px-2" onClick={onSelectModeClick}>
             {isSelectMode ? (
               <FontAwesomeIcon icon={fasCircleCheck} size="lg" />

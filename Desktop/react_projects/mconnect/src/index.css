@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Somi";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/naverfont_10@1.0/Somi.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   color: #191919;
   margin: 0;
@@ -12,4 +20,8 @@ body {
 
 .english__font {
   font-family: "Poiret One", cursive;
+}
+
+.tutorial__font {
+  font-family: "Somi", cursive;
 }

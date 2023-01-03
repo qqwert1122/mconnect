@@ -15,6 +15,7 @@ import OfferChat from "routes/setting/offer/OfferChat";
 import { Route, Routes } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { whatViewState } from "atom";
+import Tutorial from "routes/auth/Tutorial";
 
 const AppRouter = ({ ...props }) => {
   const whatView = useRecoilValue(whatViewState);
@@ -55,6 +56,7 @@ const AppRouter = ({ ...props }) => {
             path="/setting/opensource"
             element={<OpenSource {...props} />}
           />
+          <Route exact path="/tutorial" element={<Tutorial {...props} />} />
           <Route exact path="*" element={<Ideas {...props} />} />
         </>
       ) : (

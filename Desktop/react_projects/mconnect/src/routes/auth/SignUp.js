@@ -1,11 +1,6 @@
 import "css/App.css";
 import React, { useRef, useState } from "react";
-import {
-  authService,
-  dbService,
-  // storageService
-} from "fbase";
-// import { ref, uploadString, getDownloadURL } from "@firebase/storage";
+import { authService, dbService } from "fbase";
 import {
   collection,
   doc,
@@ -20,6 +15,7 @@ import Avatar from "@mui/material/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
+import dayjs from "dayjs";
 
 const SignUp = ({ ...props }) => {
   const { setLoggedInUser, setIsLoggedIn, navigate } = props;
@@ -83,6 +79,9 @@ const SignUp = ({ ...props }) => {
             isDarkMode: false,
           },
           achievement: {},
+          createdAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+          lastVisitedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+          vistCount: 1,
         });
         const registeredUser = (
           await getDoc(doc(dbService, "users", authService.currentUser.uid))

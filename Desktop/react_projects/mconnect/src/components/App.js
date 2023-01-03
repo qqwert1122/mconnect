@@ -133,8 +133,18 @@ const useDeliverProps = () => {
     });
   };
 
+  const updateVisiting = async (user) => {
+    const userRef = doc(dbService, "users", user.userId);
+    await updateDoc(userRef, {
+      visitCount: increment(1),
+      lastVisitedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+    });
+  };
+
   useEffect(() => {
-    if (loggedInUser) getNextPosts();
+    if (loggedInUser) {
+      getNextPosts();
+    }
   }, [loggedInUser]);
 
   const selectedIdeas = useRecoilValue(selectedIdeasState);
