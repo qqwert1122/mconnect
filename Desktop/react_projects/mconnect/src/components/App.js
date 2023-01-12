@@ -469,7 +469,7 @@ const App = () => {
       </div>
     </div>
   );
-  return <>{props.init ? <AppRouter {...props} /> : loading}</>;
+  return <div>{props.init ? <AppRouter {...props} /> : loading}</div>;
 };
 
 export default App;

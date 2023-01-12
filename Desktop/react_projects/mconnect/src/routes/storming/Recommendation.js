@@ -6,7 +6,7 @@ import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 const Recommendation = ({ idea }) => {
   return (
     <div className="relative">
-      <div className="h-60 p-5 m-1 mx-2 bg-stone-50 shadow-md rounded-xl break-all text-xs">
+      <div className="h-60 p-5 m-1 mx-2 bg-sky-50 shadow-md rounded-xl break-all text-xs">
         <div className="mb-2 truncate font-black text-sm">{idea.title}</div>
         <div className="mb-3 line-clamp-6">{idea.text}</div>
         <div className="ml-2 mb-1 flex gap-1 text-stone-400">

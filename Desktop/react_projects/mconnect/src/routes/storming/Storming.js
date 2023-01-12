@@ -171,8 +171,8 @@ const Storming = ({ ...props }) => {
       <StormingTopBar />
       <div className=" min-h-screen pb-14 text-sm">
         <div className="pt-20 m-4 ml-10 mb-2">
-          <div className="font-black text-lg">오늘의 발견</div>
-          <div className="text-stone-400 text-xs">에디터 추천</div>
+          <div className="font-black text-lg text-sky-400">오늘의 발견</div>
+          <div className="text-sky-300 text-xs ">에디터 추천</div>
         </div>
         <ul className={`pb-10`}>
           <Slider {...settings}>
@@ -182,8 +182,8 @@ const Storming = ({ ...props }) => {
           </Slider>
         </ul>
         <div className="ml-10 mb-2">
-          <div className="font-black text-lg">인기 태그</div>
-          <div className="text-stone-400 text-xs">최근 트렌드</div>
+          <div className="font-black text-lg text-sky-400">인기 태그</div>
+          <div className="text-xs text-sky-300">최근 트렌드</div>
         </div>
         <StormingTagBar
           loadNewIdea={loadNewIdea}
