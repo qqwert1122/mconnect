@@ -174,14 +174,14 @@ const Storming = ({ ...props }) => {
           <div className="font-black text-lg text-sky-400">오늘의 발견</div>
           <div className="text-sky-300 text-xs ">에디터 추천</div>
         </div>
-        <ul className={`pb-10`}>
+        <ul className="pb-10">
           <Slider {...settings}>
             {recommendation.map((idea, i) => (
               <Recommendation key={i} idea={idea} />
             ))}
           </Slider>
         </ul>
-        <div className="ml-10 mb-2">
+        <div className="ml-10 mt-4 mb-2">
           <div className="font-black text-lg text-sky-400">인기 태그</div>
           <div className="text-xs text-sky-300">최근 트렌드</div>
         </div>
@@ -192,10 +192,10 @@ const Storming = ({ ...props }) => {
           setItemPrmtr={setItemPrmtr}
         />
         {ideas.length > 0 ? (
-          <div className="mt-10 ml-5">
+          <div className="mt-5 ">
             {ideas.map((idea, i) => (
-              <div key={i} className="my-2">
-                <div key={i} className="bg-white rounded-lg">
+              <div key={i} className="my-1">
+                <div key={i} className="ml-5 bg-white rounded-lg">
                   <StormingIdea
                     index={index}
                     idea={idea}
