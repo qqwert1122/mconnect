@@ -16,6 +16,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userState, selectedIdeasState } from "atom";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 const IdeasTopBar = ({ ...props }) => {
   const {
@@ -50,35 +51,50 @@ const IdeasTopBar = ({ ...props }) => {
     setAlarm({ boolean: false, message: "" });
   };
 
+  const [scrollY, setScrollY] = useState(0);
+  window.addEventListener("scroll", function () {
+    setScrollY(window.scrollY);
+  });
+
   return (
     <div className="fixed top-0 w-full z-10">
-      <div className="flex justify-between items-center px-2 py-4 bg-white shadow">
-        <div className="flex items-center gap-2">
-          <span className="pl-2 text-lg font-black">아이디어</span>
-          <span
-            className="h-5 flex justify-center items-center font-black text-xs text-stone-400 bg-stone-200 rounded-xl px-2"
-            style={{ minWidth: "24px", maxWidth: "128px" }}
-          >
-            {loggedInUser.idea_count}
-          </span>
+      <div className="px-2 py-4 bg-white shadow">
+        <div
+          className={`${
+            scrollY < 300 ? "opacity-100 h-10" : "opacity-0 h-0"
+          } duration-100`}
+        >
+          <img className="mb-4 pl-2" width={110} src="./img/logo.png" />
         </div>
-        <div className="flex gap-2">
-          <button className="relative px-2" onClick={onTutorialClick}>
-            <FontAwesomeIcon icon={faCircleQuestion} size="lg" />
-            {dayjs().diff(dayjs(loggedInUser.createdAt), "day") < 3 && (
-              <>
-                <span className="animate-ping absolute right-0 -top-1 w-4 h-4 bg-red-300 text-white rounded-full" />
-                <span className="absolute right-1 top-0 w-2 h-2 bg-red-400 text-white rounded-full" />
-              </>
-            )}
-          </button>
-          <button className="px-2" onClick={onSelectModeClick}>
-            {isSelectMode ? (
-              <FontAwesomeIcon icon={fasCircleCheck} size="lg" />
-            ) : (
-              <FontAwesomeIcon icon={farCircleCheck} size="lg" />
-            )}
-          </button>
+
+        <div className="flex justify-between items-center ">
+          <div className="flex items-center gap-2">
+            <span className="pl-2 text-lg font-black">아이디어</span>
+            <span
+              className="h-5 flex justify-center items-center font-black text-xs text-stone-400 bg-stone-200 rounded-xl px-2"
+              style={{ minWidth: "24px", maxWidth: "128px" }}
+            >
+              {loggedInUser.idea_count}
+            </span>
+          </div>
+          <div className="flex gap-2">
+            <button className="relative px-2" onClick={onTutorialClick}>
+              <FontAwesomeIcon icon={faCircleQuestion} size="lg" />
+              {dayjs().diff(dayjs(loggedInUser.createdAt), "day") < 3 && (
+                <>
+                  <span className="animate-ping absolute right-0 -top-1 w-4 h-4 bg-red-300 text-white rounded-full" />
+                  <span className="absolute right-1 top-0 w-2 h-2 bg-red-400 text-white rounded-full" />
+                </>
+              )}
+            </button>
+            <button className="px-2" onClick={onSelectModeClick}>
+              {isSelectMode ? (
+                <FontAwesomeIcon icon={fasCircleCheck} size="lg" />
+              ) : (
+                <FontAwesomeIcon icon={farCircleCheck} size="lg" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
       {isSelectMode && selectedIdeas.length > 0 && (

@@ -1,3 +1,4 @@
+import ColoredIdeaList from "../ideas/writingIdea/ColoredIdeaList";
 import { faCircleCheck as farCheck } from "@fortawesome/free-regular-svg-icons";
 import {
   faCheck,
@@ -52,8 +53,9 @@ const Page6 = ({ page }) => {
     return (
       <Typewriter
         options={{
-          cursor: "",
+          cursor: "|",
           autoStart: true,
+          delay: 50,
         }}
         onInit={(typewriter) => {
           typewriter.pauseFor(500).typeString(text).start();
@@ -82,10 +84,15 @@ const Page6 = ({ page }) => {
             page === 5 ? "right-0 opacity-100 " : "-right-10 opacity-0"
           } text-center duration-1000 text-stone-400`}
         >
-          <div className="mb-4 text-xl text-orange-400 font-black">
+          <div className="mb-2 text-xl text-orange-400 font-black">
             아이디어끼리 연결하세요
           </div>
-          <div className="mb-10 p-3 w-72 flex items-center justify-between shadow-lg">
+          <div className="mb-10">
+            내가 기록한 지식과, 다른 유저가 기록한 지식을
+            <br />
+            연결해 새롭고 창의적인 아이디어를 발견하세요
+          </div>
+          <div className="mx-4 mb-3 p-3 flex items-center justify-between shadow-2xl rounded">
             <div className="flex gap-2">
               <span>아이디어</span>
               <span className="w-6 px-2 flex items-center bg-stone-200 text-stone-400 text-center rounded-xl text-xs">
@@ -162,13 +169,16 @@ const Page6 = ({ page }) => {
           </div>
 
           <div
-            className={` relative w-72 shadow-lg 
+            className={`mb-10 mx-auto relative w-72 shadow-md 
            ${pressed ? "h-24 opacity-100" : "h-0 opacity-0"}
            duration-500 text-orange-400 shadow-orange-200`}
           >
             {pressed && (
               <div className="p-4 text-left text-sm">{typewriter}</div>
             )}
+            <span className="absolute right-0 bottom-0">
+              <ColoredIdeaList ideas={samples} small={true} />
+            </span>
           </div>
         </div>
       </div>

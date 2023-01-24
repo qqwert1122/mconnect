@@ -1,58 +1,34 @@
 import {
-  faBookmark,
-  faCompass,
+  faBookmark as farBookmark,
   faHeart,
+  faCompass,
 } from "@fortawesome/free-regular-svg-icons";
-import { faHashtag } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as fasBookmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Avatar } from "@mui/material";
 import { userState } from "atom";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import Typewriter from "typewriter-effect";
 
 const Page4 = ({ page }) => {
   const loggedInUser = useRecoilValue(userState);
-  const comment =
+  const sampleAvatar = "https://avatars.dicebear.com/api/miniavs/CONNECTS.svg";
+  const sampleName = "CONNECTS";
+  const sampleText =
+    "배터리는 라이트의 법칙에 따라 누적 생산량이 두 배가 될 때마다 약 18%씩 가격이 떨어진다";
+  const text =
     "전기차 가격이 가솔린차 가격만큼 떨어지려면 kWh 당 배터리 가격이 83달러까지 떨어져야 한다";
-  const [pressed, setPressed] = useState(false);
-  const [isEnd, setIsEnd] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
 
-  const renderTypewriter = () => {
-    return (
-      <Typewriter
-        options={{
-          cursor: "",
-          autoStart: true,
-        }}
-        onInit={(typewriter) => {
-          typewriter
-            .pauseFor(500)
-            .typeString(comment)
-            .pauseFor(100)
-            .callFunction(() => {
-              setIsEnd(true);
-            })
-            .start();
-        }}
-      />
-    );
+  const handleBookmark = () => {
+    setBookmarked((prev) => !prev);
   };
-
-  const [typewriter, setTypewriter] = useState(renderTypewriter());
 
   useEffect(() => {
-    setTypewriter(<></>);
     if (page === 3) {
-      setPressed(false);
-      setIsEnd(false);
-      setTimeout(() => setTypewriter(renderTypewriter()));
+      setBookmarked(false);
     }
   }, [page]);
-
-  const handlePress = () => {
-    setPressed(true);
-  };
 
   return (
     <div className="w-screen h-full flex-none">
@@ -60,56 +36,54 @@ const Page4 = ({ page }) => {
         <div
           className={`${
             page === 3 ? "right-0 opacity-100 " : "-right-10 opacity-0"
-          } text-center relative duration-1000 text-stone-400`}
+          } text-center duration-1000 text-stone-400`}
         >
-          <div className="mb-2 text-xl text-orange-400 font-black">
-            아이디어를 기록하세요
-          </div>
-          <span>
-            번뜩이는 아이디어가 떠오르거나
-            <br />
-            지식을 발견하면 기록하세요
-          </span>
-          <div
-            className={`mt-10 relative w-72  shadow-lg ${
-              pressed ? "opacity-0 h-0" : "h-44 opacity-100"
-            } duration-500`}
-          >
-            <div className=" p-2 flex justify-end shadow">
-              <button
-                className={`relative ${
-                  !pressed && isEnd
-                    ? "bg-gradient-to-tr from-rose-400 to-orange-400 text-orange-100"
-                    : "bg-stone-200 text-stone-400"
-                }  p-1 px-2 rounded font-black text-sm text-center shadow-md`}
-                onClick={handlePress}
-                disabled={!isEnd}
-              >
-                작성
-                <div
-                  className={`absolute bottom-1 left-1 w-8 h-5 bg-rose-400 rounded ${
-                    !pressed && isEnd ? "animate-ping" : "opacity-0"
-                  }`}
-                ></div>
-              </button>
+          <div className="mb-5">
+            <div className="mb-2 text-xl text-orange-400 font-black">
+              다른 유저의 아이디어를 저장하세요
             </div>
-            <div className="p-4 text-left text-sm">
-              {pressed ? "" : typewriter}
+            <div className="mb-10">
+              다른 사람이 남긴 경제, 정치, 기술 등 분야의
+              <br />
+              다양한 지식과 아이디어를 탐색하고 저장하세요
             </div>
-            {!pressed && (
-              <div
-                className={`absolute ${
-                  isEnd ? "bottom-2 opacity-100" : "bottom-0 opacity-0"
-                } left-5 duration-100 text-xs`}
-              >
-                <FontAwesomeIcon icon={faHashtag} size="xs" /> 전기차, 배터리
+            <div className="mx-4 p-2 shadow-2xl rounded">
+              <div className="mb-2 flex items-center gap-2 text-xs">
+                <Avatar
+                  className="border-2 mr-1"
+                  alt="avatar"
+                  src={sampleAvatar}
+                  sx={{
+                    display: "flex",
+                    width: "25px",
+                    height: "25px",
+                  }}
+                />
+                <span>{sampleName}</span>
               </div>
-            )}
+              <div className="mb-2 flex items-center justify-between text-left text-sm">
+                <span>{sampleText}</span>
+                <button className="relative px-2" onClick={handleBookmark}>
+                  {bookmarked ? (
+                    <span className="text-orange-400">
+                      <FontAwesomeIcon icon={fasBookmark} size="xl" />
+                    </span>
+                  ) : (
+                    <FontAwesomeIcon icon={farBookmark} size="xl" />
+                  )}
+                  <div
+                    className={`absolute bottom-1 w-4 h-4 rounded-md  ${
+                      !bookmarked && "animate-ping bg-rose-400"
+                    }`}
+                  ></div>
+                </button>
+              </div>
+            </div>
           </div>
           <div
-            className={`mt-10 relative w-72 ${
-              pressed ? "bottom-0 opacity-100" : "h-0 -bottom-10 opacity-0"
-            } p-3 text-left shadow-lg duration-500`}
+            className={`mx-auto w-72 p-3 border border-stone-100 text-left ${
+              bookmarked ? "shadow-sm" : "shadow-lg"
+            } duration-500`}
           >
             <div className="pb-4 flex items-center gap-2 text-xs">
               <Avatar
@@ -122,21 +96,30 @@ const Page4 = ({ page }) => {
                   height: "25px",
                 }}
               />
-              <span>{loggedInUser.userName}</span>
+              <span style={{ fontSize: "8px" }}>{loggedInUser.userName}</span>
             </div>
-            <div className="pb-4 text-sm">{comment}</div>
-            <div className="flex gap-4 ">
-              <span className="text-red-400">
-                <FontAwesomeIcon icon={faHeart} />
-              </span>
-              <span className="text-orange-400">
-                <FontAwesomeIcon icon={faBookmark} />
-              </span>
-              <span className="text-sky-400">
-                <FontAwesomeIcon icon={faCompass} />
-                <div className=""></div>
-              </span>
+            <div className="pb-2 text-xs">{text}</div>
+          </div>
+
+          <div
+            className={`${
+              bookmarked ? "opacity-100 bottom-0" : "-bottom-10 opacity-0"
+            } duration-500 relative z-10 mx-auto w-72 p-3  text-left shadow-lg`}
+          >
+            <div className="pb-4 flex items-center gap-2">
+              <Avatar
+                className="border-2 mr-1"
+                alt="avatar"
+                src={sampleAvatar}
+                sx={{
+                  display: "flex",
+                  width: "25px",
+                  height: "25px",
+                }}
+              />
+              <span style={{ fontSize: "8px" }}>{sampleName}</span>
             </div>
+            <div className="pb-2 text-xs">{sampleText}</div>
           </div>
         </div>
       </div>

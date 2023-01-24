@@ -100,14 +100,19 @@ const Setting = ({ ...props }) => {
     <>
       <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
       <div className="fixed top-0 w-full z-10">
-        <div className="flex justify-between items-center px-2 p-4 bg-white shadow">
-          <div className="px-2 text-lg font-black">더보기</div>
-          <button className="mr-2 text-stone-400" onClick={onSignOutClick}>
-            <FontAwesomeIcon icon={faArrowRightFromBracket} size="lg" />
-          </button>
+        <div className=" px-2 p-4 bg-white shadow">
+          <div>
+            <img className="mb-4 pl-2" width={110} src="./img/logo.png" />
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="px-2 text-lg font-black">더 보기</div>
+            <button className="mr-2 text-stone-400" onClick={onSignOutClick}>
+              <FontAwesomeIcon icon={faArrowRightFromBracket} size="lg" />
+            </button>
+          </div>
         </div>
       </div>
-      <div className="mt-20 mb-16">
+      <div className="mt-28 mb-16">
         <SettingProfile loggedInUser={loggedInUser} />
         <div className="m-5 p-2">
           <div className="font-black pb-2">후원</div>

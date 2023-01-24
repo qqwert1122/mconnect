@@ -38,11 +38,13 @@ const SearchPage = ({ ...props }) => {
           </div>
           <div className="mt-14">
             <Configure
+              hitsPerPage={5}
               filters={`isPublic:true OR userId:${loggedInUser.userId}`}
             />
             <InfiniteHits
               classNames={{
-                root: "mt-18",
+                root: "mt-18 mb-20",
+                loadMore: "bg-blue-500 text-white",
               }}
               hitComponent={({ hit }) => <Hit hit={hit} viewIdea={viewIdea} />}
               cache={sessionStorageCache}

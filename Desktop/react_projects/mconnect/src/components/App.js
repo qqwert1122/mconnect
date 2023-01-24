@@ -151,7 +151,7 @@ const useDeliverProps = () => {
 
   let navigate = useNavigate();
 
-  const [navValue, setNavValue] = useState("/");
+  const [navValue, setNavValue] = useState(loggedInUser ? "/ideas" : "/");
 
   const clearWhatView = useResetRecoilState(whatViewState);
   const clearEdit = useResetRecoilState(isEditState);

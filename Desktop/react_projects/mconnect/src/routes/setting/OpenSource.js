@@ -449,6 +449,31 @@ const OpenSource = ({ ...props }) => {
       summary: "firebase",
       details: ``,
     },
+    {
+      summary: "icon",
+      details: (
+        <a
+          href="https://www.flaticon.com/free-stickers/technology"
+          title="technology stickers"
+        >
+          Technology stickers created by kerismaker - Flaticon
+        </a>
+      ),
+    },
+    {
+      summary: "picture",
+      details: (
+        <>
+          <a href="https://unsplash.com/ko/%EC%82%AC%EC%A7%84/EKD7UsqT-Co?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
+            Unsplash
+          </a>
+          의
+          <a href="https://unsplash.com/@diana_pole?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
+            Diana Polekhina
+          </a>
+        </>
+      ),
+    },
   ];
 
   return (

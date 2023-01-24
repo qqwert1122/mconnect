@@ -92,7 +92,7 @@ const SettingProfileEdit = ({ loggedInUser, isEdit, setIsEdit }) => {
       </div>
       <input
         ref={inputRef}
-        className={`mb-2 ${
+        className={`w-48 mb-2 ${
           name.length === 0 && "animate-pulse"
         } bg-transparent placeholder-white text-white ${
           name.length > 20 && "text-red-400"

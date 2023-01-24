@@ -5,16 +5,16 @@ const Page3 = ({ page }) => {
         <div
           className={`${
             page === 2 ? "right-0 opacity-100 " : "-right-10 opacity-0"
-          } text-center relative duration-1000 text-stone-400`}
+          } mb-16 text-center relative duration-1000 text-stone-400`}
         >
-          <img className="m-auto" width={200} src="./img/info_3.png" />
+          <img className="m-auto" width={200} src="./img/tutorial_2.png" />
           <div className="mt-10 mb-2 text-xl text-orange-400 font-black">
-            아이디어끼리 연결하세요
+            지식을 더 깊숙이!
           </div>
           <span>
-            수집한 아이디어들을 서로 연결해
+            어떤 주제에 대해 조금 더 자세히
             <br />
-            새롭고 멋진 아이디어를 발견하세요
+            알고싶은 것이 있지 않나요?
           </span>
         </div>
       </div>

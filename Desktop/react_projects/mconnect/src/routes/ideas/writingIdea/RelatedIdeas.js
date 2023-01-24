@@ -105,7 +105,7 @@ const RelatedIdeas = ({ setNavValue, viewIdea, isItIn }) => {
                 <Slider {...settings}>
                   {formCnctedIdeas.map((idea, index) => (
                     <div key={index}>
-                      {idea.id === -1 ? (
+                      {idea.docId === -1 ? (
                         <div className="flex gap-1 justify-center items-center relative h-60 p-5 m-1 bg-white text-stone-300 shadow rounded-3xl text-xs break-all">
                           <FontAwesomeIcon icon={faCircleInfo} /> 삭제되었습니다
                           <button
@@ -185,7 +185,7 @@ const RelatedIdeas = ({ setNavValue, viewIdea, isItIn }) => {
           <>
             <SuggestedIdeas
               setNavValue={setNavValue}
-              id={-1}
+              docId={whatEdit.docId}
               writing={true}
               tagsPrmtr={formTags}
               tabChange=""

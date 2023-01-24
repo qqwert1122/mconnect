@@ -1,3 +1,4 @@
+import "css/Gradient.css";
 import Idea from "routes/ideas/idea/Idea";
 import IdeasTopBar from "./IdeasTopBar";
 import BottomNavigationBar from "routes/BottomNavigationBar";
@@ -15,6 +16,9 @@ import {
   faPlusCircle,
   faPlus,
   faChevronDown,
+  faPen,
+  faBookmark,
+  faCompass,
 } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 import { useRecoilValue } from "recoil";
@@ -91,54 +95,51 @@ const Ideas = ({ ...props }) => {
         />
         <div
           className={`${
-            isSelectMode && selectedIdeas.length ? "pt-36" : "pt-14"
+            isSelectMode && selectedIdeas.length ? "pt-44" : "pt-24"
           } pb-16 bg-stone-50 min-h-screen`}
         >
-          <div className="pt-6 pb-2 pl-4 font-black text-sm">
-            기록하세요, 저장하세요, 연결하세요
-          </div>
-          <ul className={`pb-10`}>
+          <ul className={`pb-10 font-black`}>
             <Slider {...settings}>
-              <li className="relative p-5 w-full h-32 bg-gradient-to-r from-orange-300 to-pink-300 text-orange-100 text-sm shadow">
-                <div className="w-3/5 font-bold">
-                  <h1 className="mb-2 font-black text-xl text-white">
-                    기록하세요
+              <li className="stacked-linear-1 overflow-hidden relative p-5 w-full h-36 text-sm shadow text-yellow-50">
+                <div className="absolute top-10 left-4 w-3/5">
+                  <h1 className="mb-2 font-black text-xl">
+                    기록하세요 <FontAwesomeIcon icon={faPen} size="sm" />
                   </h1>
                   <p>경제, 정치, 기술 무엇이든</p>
-                  <p>기록하세요</p>
+                  <p>간단하게 기록하세요</p>
                 </div>
                 <img
-                  className="absolute top-4 right-10"
-                  width={100}
-                  src="./img/info_1.png"
+                  className="absolute top-4 right-4 drop-shadow-2xl"
+                  width={150}
+                  src="./img/tutorial_1.png"
                 />
               </li>
-              <li className="relative p-5 w-full h-32 bg-gradient-to-r from-pink-300 to-red-300 text-red-100 text-sm shadow">
-                <div className="w-3/5 font-bold">
-                  <h1 className="mb-2 font-black text-xl text-white">
-                    저장하세요
+              <li className="stacked-linear-2 overflow-hidden relative p-5 w-full h-36 text-sm shadow text-orange-50">
+                <div className="absolute top-10 left-4 w-3/5">
+                  <h1 className="mb-2 font-black text-xl">
+                    저장하세요 <FontAwesomeIcon icon={faBookmark} size="sm" />
                   </h1>
-                  <p>다른 사람들의 아이디어를</p>
+                  <p>다른 사람의 아이디어를</p>
                   <p>탐색하고 저장하세요</p>
                 </div>
                 <img
-                  className="absolute top-4 right-10"
-                  width={100}
-                  src="./img/info_2.png"
+                  className="absolute top-4 right-4 drop-shadow-2xl"
+                  width={150}
+                  src="./img/tutorial_2.png"
                 />
               </li>
-              <li className="relative p-5 w-full h-32 bg-gradient-to-r from-red-300 to-orange-300 text-orange-100 text-sm shadow">
-                <div className="w-3/5 font-bold">
-                  <h1 className="mb-2 font-black text-xl text-white">
-                    연결하세요
+              <li className="stacked-linear-3 overflow-hidden relative p-5 w-full h-36 text-sm shadow text-sky-50">
+                <div className="absolute top-10 left-4 w-3/5">
+                  <h1 className="mb-2 font-black text-xl">
+                    연결하세요 <FontAwesomeIcon icon={faCompass} size="sm" />
                   </h1>
                   <p>아이디어들을 연결해</p>
                   <p>새로운 아이디어를 찾으세요</p>
                 </div>
                 <img
-                  className="absolute top-4 right-10"
-                  width={100}
-                  src="./img/info_3.png"
+                  className="absolute top-4 right-4 drop-shadow-2xl"
+                  width={150}
+                  src="./img/tutorial_3.png"
                 />
               </li>
             </Slider>

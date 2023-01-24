@@ -40,22 +40,18 @@ const BottomNavigationBar = ({ navValue, setNavValue }) => {
             }}
           >
             <BottomNavigationAction
-              // label="아이디어"
               value="/ideas"
               icon={<NotesRoundedIcon />}
             />
             <BottomNavigationAction
-              // label="탐색"
               value="/storming"
               icon={<ExploreRoundedIcon />}
             />
             <BottomNavigationAction
-              // label="검색"
               value="/searchpage"
               icon={<SearchRoundedIcon />}
             />
             <BottomNavigationAction
-              // label="Profile"
               value="/setting"
               icon={<MoreHorizRoundedIcon />}
             />

@@ -23,7 +23,12 @@ const Eval = ({ ...props }) => {
 
   const [text, setText] = useState();
   function onChange(e) {
-    setText(e.target.value);
+    if (e.target.value === " ") {
+      setText("");
+    } else {
+      setText(e.target.value);
+    }
+    console.log(text);
   }
 
   const ratings = [
@@ -61,19 +66,26 @@ const Eval = ({ ...props }) => {
   };
 
   async function onSubmit() {
-    await addDoc(collection(dbService, "evaluation"), {
-      userId: loggedInUser.userId,
-      userName: loggedInUser.userName,
-      date: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
-      rating: rating,
-      text: text,
-    });
-    setRatingsPrmtr(0);
-    setText("");
-    rating = 5;
-    toast.success("정상적으로 제출되었습니다", {
-      theme: "colored",
-    });
+    if (text === "") {
+      toast.error("내용을 채워주세요", {
+        theme: "colored",
+      });
+      return;
+    } else {
+      await addDoc(collection(dbService, "evaluation"), {
+        userId: loggedInUser.userId,
+        userName: loggedInUser.userName,
+        date: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+        rating: rating,
+        text: text,
+      });
+      setRatingsPrmtr(0);
+      setText("");
+      rating = 5;
+      toast.success("정상적으로 제출되었습니다", {
+        theme: "colored",
+      });
+    }
   }
 
   return (

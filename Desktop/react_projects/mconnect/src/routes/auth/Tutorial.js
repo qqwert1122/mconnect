@@ -30,7 +30,11 @@ const Tutorial = ({ ...props }) => {
     setPage((page) => page - 1);
   };
   const handleNext = () => {
-    setPage((page) => page + 1);
+    if (page === lastPage) {
+      onBackClick();
+    } else {
+      setPage((page) => page + 1);
+    }
   };
 
   return (
@@ -72,15 +76,16 @@ const Tutorial = ({ ...props }) => {
       </div>
 
       <button
-        className={`absolute w-12 h-12 bottom-5 right-5 ${
-          page === lastPage
-            ? "bg-stone-100 text-stone-200"
-            : "bg-gradient-to-b from-orange-300 to-orange-500 text-orange-50"
-        } duration-500 shadow-xl rounded-2xl text-lg font-black`}
+        className={`${
+          page === lastPage ? "px-4 text-base" : "w-12 text-lg"
+        } absolute h-12 bottom-5 right-5 bg-gradient-to-b from-orange-300 to-orange-500 text-orange-50 duration-500 shadow-xl rounded-2xl font-black`}
         onClick={handleNext}
-        disabled={page === lastPage}
       >
-        <FontAwesomeIcon icon={faChevronRight} />
+        {page === lastPage ? (
+          "새 아이디어를 찾으러!"
+        ) : (
+          <FontAwesomeIcon icon={faChevronRight} />
+        )}
       </button>
       <button
         className={`absolute w-12 h-12 bottom-5 left-5  ${
