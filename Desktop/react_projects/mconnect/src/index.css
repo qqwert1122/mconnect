@@ -17,11 +17,3 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-.english__font {
-  font-family: "Poiret One", cursive;
-}
-
-.tutorial__font {
-  font-family: "Somi", cursive;
-}

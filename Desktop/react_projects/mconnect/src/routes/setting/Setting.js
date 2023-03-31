@@ -1,5 +1,6 @@
 import SettingProfile from "./SettingProfile";
 import "css/Animation.css";
+import "css/Gradient.css"
 import BottomNavigationBar from "routes/BottomNavigationBar";
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -117,13 +118,13 @@ const Setting = ({ ...props }) => {
         <div className="m-5 p-2">
           <div className="font-black pb-2">후원</div>
           <div className="flex gap-5 relative">
-            <div className="w-1/2 h-24 relative p-5 rounded shadow-lg bg-gradient-to-br from-red-400  via-orange-400 to-yellow-500 text-orange-50 font-black text-sm">
+            <div className="stacked-linear-donation w-1/2 h-24 relative p-5 rounded shadow-lg text-white font-black text-sm">
               <span className="absolute top-2 left-2">
                 <FontAwesomeIcon icon={faCommentDollar} size="xl" />
               </span>
               <span className="absolute bottom-2 right-2">개발자 후원</span>
             </div>
-            <div className="w-1/2 h-24 relative p-5 rounded shadow-lg bg-gradient-to-br from-yellow-300 via-orange-300 to-rose-400 text-orange-50 font-black text-sm">
+            <div className="stacked-linear-ad w-1/2 h-24 relative p-5 rounded shadow-lg text-white font-black text-sm">
               <span className="absolute top-2 left-2">
                 <FontAwesomeIcon icon={faRectangleAd} size="xl" />
               </span>

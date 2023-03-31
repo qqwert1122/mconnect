@@ -1,11 +1,8 @@
 import "css/App.css";
+import "css/Gradient.css";
 import React from "react";
 import { authService, provider, signInWithPopup } from "fbase";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useSetRecoilState } from "recoil";
 import { userState } from "atom";
 
@@ -49,17 +46,18 @@ const Auth = ({ ...props }) => {
   };
 
   return (
-    <div className="w-screen h-screen">
-      <img className="m-auto pt-16 w-72" src="img/auth.png" />
-      <div className="mt-5 font-black text-center">
-        <p className="english__font text-4xl">Welcome,</p>
-        <p className="english__font text-5xl text-orange-400">Connects</p>
-        <p className="my-5 text-sm text-orange-300">
-          아이디어를 기록하고, 저장하고, 연결해 <br />
-          통찰력 있는 새 아이디어를 찾으세요
+    <div className="w-screen h-screen flex justify-center items-center">
+      <div>
+        <img className="m-auto" width={300} src="./img/logo_nobg.svg" />
+        <p className="mb-1 text-base text-center font-black text-orange-500">
+          간편 로그인
         </p>
-        <>
-          <p className="mb-5 text-base text-center font-black">간편 로그인</p>
+        <div className="flex-col m-auto text-sm text-center ">
+          <p className="mb-3 text-xs text-orange-400">
+            기존에 사용하시는 계정으로
+            <br />
+            간단하게 회원가입 하세요
+          </p>
           <img
             className="mx-auto mb-1"
             width={200}
@@ -67,12 +65,12 @@ const Auth = ({ ...props }) => {
             src="./img/btn_google.png"
           />
           <button
-            className="relative w-48 h-12 mb-3 m-1 font-black rounded-sm bg-black text-white text-sm shadow"
+            className="relative w-48 h-10 mb-3 m-1 font-black rounded-sm bg-orange-500 text-orange-100 text-sm shadow"
             onClick={onTestClick}
           >
-            Test mode
+            Test Mode
           </button>
-        </>
+        </div>
       </div>
     </div>
   );

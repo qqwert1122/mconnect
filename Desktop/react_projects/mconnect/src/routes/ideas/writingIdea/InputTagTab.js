@@ -68,7 +68,7 @@ const InputTagTab = ({ tagInput, trends }) => {
           {trends.map((tag, index) => (
             <button
               key={index}
-              className={`border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words ${
+              className={`relative border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words ${
                 formTags.includes(tag)
                   ? "bg-stone-300 "
                   : index === 0
@@ -77,6 +77,7 @@ const InputTagTab = ({ tagInput, trends }) => {
               } `}
               onClick={(e) => onTagClick(e, tag)}
             >
+              {index===0 && <span className="absolute -left-2 -top-2 px-1 rounded-xl bg-red-500 text-white" style={{fontSize:"10px"}}>HOT</span>}
               {tag}
             </button>
           ))}

@@ -393,7 +393,7 @@ const StormingIdea = ({ index, idea, timeDisplay }) => {
             <Skeleton variant="circular" width={30} height={30} />
             <Skeleton variant="text" width={100} height={30} />
           </div>
-          <Skeleton variant="text" width={300} height={160} />
+          <Skeleton variant="text" width={300} height={120} />
         </div>
       )}
     </>

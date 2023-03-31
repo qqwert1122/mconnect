@@ -96,7 +96,7 @@ const SignUp = ({ ...props }) => {
     <div className="w-screen h-screen flex items-center justify-center">
       <div className="absolute w-screen h-screen opacity-50 bg-gradient-to-t from-rose-400 to-orange-400"></div>
       <div className="z-10 relative w-4/5 h-3/4 py-24 px-5 flex justify-center items-center rounded-3xl shadow-xl bg-white">
-        <div className="absolute top-8 right-8 english__font text-4xl text-stone-400">
+        <div className="absolute top-8 right-8 text-4xl text-stone-400">
           Sign Up
         </div>
         {tabValue === 0 && (

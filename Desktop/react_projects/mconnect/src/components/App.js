@@ -47,6 +47,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
+import SignUp from "routes/auth/SignUp";
 
 const useDeliverProps = () => {
   const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
@@ -463,8 +464,8 @@ const App = () => {
         <div className="flex justify-center text-center">
           <CircularProgress color="inherit" />
         </div>
-        <div className="english__font flex justify-center mt-6 text-2xl font-black">
-          Loading
+        <div className="flex justify-center mt-6 text-xl font-black">
+          로딩중
         </div>
       </div>
     </div>

@@ -50,6 +50,7 @@ const Ideas = ({ ...props }) => {
     onDeleteClick,
     trends,
     index,
+    toastAlarm
   } = props;
 
   const ideas = useRecoilValue(ideasState);

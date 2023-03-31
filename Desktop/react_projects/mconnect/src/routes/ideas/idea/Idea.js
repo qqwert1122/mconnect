@@ -56,12 +56,14 @@ const Idea = ({ props, idea, i, index, isSelectMode }) => {
   };
 
   const onIdeaClick = (idea) => {
-    viewIdea(idea);
-    setIdeas(
-      ideas.map((m) =>
-        m.docId === idea.docId ? { ...idea, isViewed: true } : m
-      )
-    );
+    setTimeout(() => {
+      viewIdea(idea);
+      setIdeas(
+        ideas.map((m) =>
+          m.docId === idea.docId ? { ...idea, isViewed: true } : m
+        )
+      );
+    }, 100);
   };
 
   // 삭제 대화상자
@@ -134,7 +136,7 @@ const Idea = ({ props, idea, i, index, isSelectMode }) => {
             <Skeleton variant="circular" width={30} height={30} />
             <Skeleton variant="text" width={100} height={30} />
           </div>
-          <Skeleton variant="text" width={320} height={160} />
+          <Skeleton variant="text" width={320} height={120} />
         </div>
       )}
     </div>

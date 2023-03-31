@@ -6,15 +6,17 @@ import {
   faCircleCheck as fasCircleCheck,
   faXmarkCircle,
   faFlaskVial,
+  faTrashCan as fasTrashCan
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faBell,
   faCircleCheck as farCircleCheck,
   faCircleQuestion,
   faCommentDots,
+  faTrashCan as farTrashCan,
 } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { userState, selectedIdeasState } from "atom";
+import { userState, selectedIdeasState,ideasState } from "atom";
 import dayjs from "dayjs";
 import { useState } from "react";
 
@@ -28,9 +30,12 @@ const IdeasTopBar = ({ ...props }) => {
     setIsViewDetailsClicked,
     alarm,
     setAlarm,
+    onDeleteClick,
+    toastAlarm
   } = props;
   const loggedInUser = useRecoilValue(userState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
+  const [ideas, setIdeas] = useRecoilState(ideasState);
 
   const onSelectModeClick = () => {
     setIsSelectMode((prev) => !prev);
@@ -39,17 +44,21 @@ const IdeasTopBar = ({ ...props }) => {
     }
   };
 
-  const onAlarmClick = () => {
-    navigate("/alarm");
-  };
-
   const onTutorialClick = () => {
     navigate("/tutorial");
   };
 
-  const onDeleteClick = () => {
+  const onXmarkClick = () => {
     setAlarm({ boolean: false, message: "" });
   };
+
+  const _onDeleteClick = () => {
+    selectedIdeas.forEach((idea) => {
+      onDeleteClick(idea)
+      setIdeas(ideas.filter((f) => f.docId !== idea.docId));
+    });
+    toastAlarm("delete")
+  }
 
   const [scrollY, setScrollY] = useState(0);
   window.addEventListener("scroll", function () {
@@ -78,6 +87,13 @@ const IdeasTopBar = ({ ...props }) => {
             </span>
           </div>
           <div className="flex gap-2">
+            <button className="px-2" onClick={_onDeleteClick}>
+              {isSelectMode && selectedIdeas.length > 0 ? (
+                <FontAwesomeIcon icon={fasTrashCan} size="lg" />
+              ) : (
+                <FontAwesomeIcon icon={farTrashCan} size="lg" />
+              )}
+            </button>
             <button className="relative px-2" onClick={onTutorialClick}>
               <FontAwesomeIcon icon={faCircleQuestion} size="lg" />
               {dayjs().diff(dayjs(loggedInUser.createdAt), "day") < 3 && (
@@ -116,8 +132,7 @@ const IdeasTopBar = ({ ...props }) => {
           </span>
           <span>{alarm.message}</span>
         </span>
-
-        <button onClick={onDeleteClick}>
+        <button onClick={onXmarkClick}>
           <FontAwesomeIcon icon={faXmarkCircle} />
         </button>
       </div>
