@@ -40,7 +40,7 @@ const BottomNavigationBar = ({ navValue, setNavValue }) => {
             }}
           >
             <BottomNavigationAction
-              value="/ideas"
+              value="/contents"
               icon={<NotesRoundedIcon />}
             />
             <BottomNavigationAction

@@ -6,7 +6,7 @@ import {
   faCircleCheck as fasCircleCheck,
   faXmarkCircle,
   faFlaskVial,
-  faTrashCan as fasTrashCan
+  faTrashCan as fasTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faBell,
@@ -16,7 +16,13 @@ import {
   faTrashCan as farTrashCan,
 } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { userState, selectedIdeasState,ideasState } from "atom";
+import {
+  userState,
+  selectedIdeasState,
+  ideasState,
+  testCountState,
+  pagesState,
+} from "atom";
 import dayjs from "dayjs";
 import { useState } from "react";
 
@@ -31,7 +37,7 @@ const IdeasTopBar = ({ ...props }) => {
     alarm,
     setAlarm,
     onDeleteClick,
-    toastAlarm
+    toastAlarm,
   } = props;
   const loggedInUser = useRecoilValue(userState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
@@ -53,17 +59,22 @@ const IdeasTopBar = ({ ...props }) => {
   };
 
   const _onDeleteClick = () => {
+    if (selectedIdeas.length === 0) return;
     selectedIdeas.forEach((idea) => {
-      onDeleteClick(idea)
+      onDeleteClick(idea);
       setIdeas(ideas.filter((f) => f.docId !== idea.docId));
     });
-    toastAlarm("delete")
-  }
+    toastAlarm("delete");
+  };
 
   const [scrollY, setScrollY] = useState(0);
   window.addEventListener("scroll", function () {
     setScrollY(window.scrollY);
   });
+
+  const onNewClick = () => {
+    navigate(`/new`);
+  };
 
   return (
     <div className="fixed top-0 w-full z-10">
@@ -87,6 +98,7 @@ const IdeasTopBar = ({ ...props }) => {
             </span>
           </div>
           <div className="flex gap-2">
+            <button onClick={onNewClick}>new</button>
             <button className="px-2" onClick={_onDeleteClick}>
               {isSelectMode && selectedIdeas.length > 0 ? (
                 <FontAwesomeIcon icon={fasTrashCan} size="lg" />

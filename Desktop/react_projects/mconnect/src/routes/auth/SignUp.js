@@ -87,7 +87,7 @@ const SignUp = ({ ...props }) => {
           await getDoc(doc(dbService, "users", authService.currentUser.uid))
         ).data();
         setLoggedInUser(registeredUser);
-        navigate("/ideas");
+        navigate("/contents");
         setIsLoggedIn(true);
     }
   };

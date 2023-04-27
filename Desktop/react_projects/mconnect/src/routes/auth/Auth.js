@@ -21,7 +21,7 @@ const Auth = ({ ...props }) => {
     } catch (error) {
       console.log(error);
     }
-    setNavValue("/ideas");
+    setNavValue("/contents");
   };
 
   const onTestClick = async () => {
@@ -42,7 +42,7 @@ const Auth = ({ ...props }) => {
     setLoggedInUser(testUser);
     setIsLoggedIn(true);
     setInit(true);
-    setNavValue("/ideas");
+    setNavValue("/contents");
   };
 
   return (

@@ -174,7 +174,7 @@ const SuggestedIdea = ({
         className={`absolute -top-1 -right-1 rounded-full ${
           isChecked(idea)
             ? "bg-red-400 text-white"
-            : "border-2 border-stone-400"
+            : "border-2 bg-white border-stone-400"
         } w-6 h-6 shadow-xl`}
         onClick={(e) => {
           onIdeaSelect(e, idea);
@@ -183,7 +183,7 @@ const SuggestedIdea = ({
       >
         {isChecked(idea) && <FontAwesomeIcon icon={faCheck} />}
       </button>
-      <div className="h-60 p-4 m-1 bg-white shadow rounded-3xl text-xs break-all">
+      <div className="h-60 p-4 m-1 border shadow rounded-3xl text-xs break-all">
         <div
           onClick={(e) => (writing ? onIdeaClick(e, idea) : onIdeaClick(idea))}
         >

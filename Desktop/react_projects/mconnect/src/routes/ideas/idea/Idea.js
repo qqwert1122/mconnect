@@ -63,7 +63,7 @@ const Idea = ({ props, idea, i, index, isSelectMode }) => {
           m.docId === idea.docId ? { ...idea, isViewed: true } : m
         )
       );
-    }, 100);
+    }, 200);
   };
 
   // 삭제 대화상자

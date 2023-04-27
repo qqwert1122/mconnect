@@ -1,6 +1,11 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
+export const pagesState = atom({
+  key: "pagesState",
+  default: ["ideas"],
+});
+
 export const userState = atom({
   key: "userState",
   default: null,
@@ -34,23 +39,11 @@ export const isEditState = atom({
 export const colorsState = atom({
   key: "colorListState",
   default: [
-    "bg-red-400",
-    "bg-orange-400",
-    "bg-amber-400",
-    "bg-yellow-400",
-    "bg-lime-400",
-    "bg-green-400",
-    "bg-emerald-400",
-    "bg-teal-400",
-    "bg-cyan-400",
-    "bg-sky-400",
-    "bg-blue-400",
-    "bg-indigo-400",
-    "bg-violet-400",
-    "bg-purple-400",
-    "bg-fuchsia-400",
-    "bg-pink-400",
-    "bg-rose-400",
+    "bg-gradient-to-br from-red-400 via-pink-400 to-purple-600",
+    "bg-gradient-to-br from-pink-400 via-orange-400 to-amber-600",
+    "bg-gradient-to-br from-lime-400 via-green-400 to-emerald-600",
+    "bg-gradient-to-br from-teal-400 via-cyan-400 to-sky-600",
+    "bg-gradient-to-br from-blue-400 via-indigo-400 to-violet-600",
   ],
 });
 

@@ -1,7 +1,5 @@
 import DeleteDialog from "../idea/DeleteDialog";
 import { useState } from "react";
-import { dbService } from "fbase";
-import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
@@ -15,33 +13,36 @@ import {
   faTrashCan,
   faCopy,
 } from "@fortawesome/free-regular-svg-icons";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { whatViewState } from "atom";
+import { useSetRecoilState } from "recoil";
 import { isEditState } from "atom";
 
 const ViewIdeaTopBar = ({
-  user,
+  content,
   isOwner,
   navigate,
+  setIsVisible,
   initEditor,
-  onBackClick,
   onDeleteClick,
   toastAlarm,
 }) => {
-  const whatView = useRecoilValue(whatViewState);
   const setIsEdit = useSetRecoilState(isEditState);
+
+  const onBackClick = () => {
+    setIsVisible(false);
+    navigate(-1);
+  };
 
   const onEditClick = () => {
     setAnchorEl(null);
     setIsEdit(true);
-    initEditor(whatView);
+    initEditor(content);
     navigate("/writingidea");
   };
 
   const _onDeleteClick = () => {
     setDeleteDialogOpen(false);
     setAnchorEl(null);
-    onDeleteClick(whatView);
+    onDeleteClick(content);
     toastAlarm("delete");
     navigate(-1);
   };
@@ -116,7 +117,7 @@ const ViewIdeaTopBar = ({
         deleteDialogOpen={deleteDialogOpen}
         setDeleteDialogOpen={setDeleteDialogOpen}
         onDeleteClick={_onDeleteClick}
-        idea={whatView}
+        idea={content}
       />
     </div>
   );

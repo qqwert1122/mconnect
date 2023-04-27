@@ -2,26 +2,39 @@ import "css/Animation.css";
 import ViewIdeaTopBar from "./ViewIdeaTopBar";
 import ViewIdeaContent from "./ViewIdeaContent";
 import ViewIdeaBottom from "./ViewIdeaBottom";
-import React, { useState } from "react";
-import {} from "fbase";
-import {} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { dbService } from "fbase";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+  doc,
+  getDocs,
+  getDoc,
+  updateDoc,
+  increment,
+  deleteDoc,
+  limit,
+  startAfter,
+} from "firebase/firestore";
 import Skeleton from "@mui/material/Skeleton";
 import { useRecoilValue, useResetRecoilState } from "recoil";
-import { userState, whatViewState } from "atom";
+import { userState } from "atom";
 import { faAd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate, useParams } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ViewIdea = ({ ...props }) => {
   const {
     timeDisplay,
-    navigate,
     setNavValue,
     viewIdea,
-    onBackClick,
     getIdeasFromIDs,
     initEditor,
     isItIn,
-    getCount,
     countUpdate,
     onLikeUpdate,
     onBookmarkUpdate,
@@ -31,50 +44,126 @@ const ViewIdea = ({ ...props }) => {
     index,
   } = props;
   const loggedInUser = useRecoilValue(userState);
-  const whatView = useRecoilValue(whatViewState);
-  const isOwner = loggedInUser.userId === whatView.userId;
+  const { docId } = useParams();
 
-  // tab state
+  const [isVisible, setIsVisible] = useState(false);
+  const [isMount, setIsMount] = useState(false);
   const [itemChangeProps, setItemChangeProps] = useState(0);
+  const [count, setCount] = useState({});
+  const [content, setContent] = useState({});
+  const [isDeleted, setIsDeleted] = useState(false);
+  const [isOwner, setIsOwner] = useState();
+
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    setIsVisible(true);
+    getData();
+  }, [docId]);
+
+  const getData = async () => {
+    // get content from db
+    const countRef = doc(dbService, "counts", docId);
+    const countData = (await getDoc(countRef)).data();
+    const contentRef = doc(
+      dbService,
+      "users",
+      loggedInUser.userId,
+      "userIdeas",
+      docId
+    );
+    if (
+      countData !== undefined &&
+      countData.view_users.hasOwnProperty(loggedInUser.userId) === false
+    ) {
+      await updateDoc(countRef, {
+        view_count: increment(1),
+        view_users: {
+          ...countData.view_users,
+          [loggedInUser.userId]: loggedInUser.userName,
+        },
+      });
+      await updateDoc(contentRef, {
+        isViewed: true,
+      });
+    } else if (countData === undefined || countData === null) {
+      setIsDeleted(true);
+    }
+    setCount(countData);
+    setIsDeleted(false);
+
+    // get count from db
+    const contentData = (await getDoc(contentRef)).data();
+    setContent(contentData);
+
+    setIsMount(true);
+    setIsOwner(loggedInUser.userId === content.userId);
+  };
+
+  const loading = (
+    <div className="w-screen h-screen flex justify-center items-center mx-auto bg-white">
+      <div className="flex-col">
+        <div className="flex justify-center text-center">
+          <CircularProgress color="inherit" />
+        </div>
+        <div className="flex justify-center mt-6 text-base font-black">
+          로딩중
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <>
-      {whatView ? (
-        <div
-          className="pt-12 text-sm min-h-screen bg-stone-100"
-          style={{ paddingBottom: "52px" }}
-        >
-          <div className="flex-col bg-white shadow">
-            <ViewIdeaTopBar
-              user={loggedInUser}
-              isOwner={isOwner}
-              navigate={navigate}
-              initEditor={initEditor}
-              onBackClick={onBackClick}
-              onDeleteClick={onDeleteClick}
-              toastAlarm={toastAlarm}
-            />
-            <ViewIdeaContent
-              index={index}
-              user={loggedInUser}
-              itemChangeProps={itemChangeProps}
-              isOwner={isOwner}
-              timeDisplay={timeDisplay}
-              onBackClick={onBackClick}
-              getCount={getCount}
-              countUpdate={countUpdate}
-              onLikeUpdate={onLikeUpdate}
-              onBookmarkUpdate={onBookmarkUpdate}
-              onPublicUpdate={onPublicUpdate}
-            />
+    <div
+      className={`page ${
+        isVisible ? "visible" : ""
+      } bg-stone-100 duration-500 `}
+    >
+      {isMount ? (
+        <div className="text-sm" style={{ paddingBottom: "52px" }}>
+          <div
+            className={` ${
+              itemChangeProps != 0 && "brightness-75 blur-sm"
+            } duration-500 bg-stone-100`}
+          >
+            <div className="flex-col pt-12 bg-white shadow">
+              <ViewIdeaTopBar
+                content={content}
+                isOwner={isOwner}
+                navigate={navigate}
+                setIsVisible={setIsVisible}
+                initEditor={initEditor}
+                onDeleteClick={onDeleteClick}
+                toastAlarm={toastAlarm}
+              />
+              <ViewIdeaContent
+                isMount={isMount}
+                navigate={navigate}
+                setIsVisible={setIsVisible}
+                index={index}
+                user={loggedInUser}
+                itemChangeProps={itemChangeProps}
+                isOwner={isOwner}
+                timeDisplay={timeDisplay}
+                count={count}
+                content={content}
+                setContent={setContent}
+                isDeleted={isDeleted}
+                countUpdate={countUpdate}
+                onLikeUpdate={onLikeUpdate}
+                onBookmarkUpdate={onBookmarkUpdate}
+                onPublicUpdate={onPublicUpdate}
+              />
+            </div>
+            <div className="py-6 mt-2 mb-56 bg-stone-600 text-stone-400 text-sm text-center font-black ">
+              광고 <FontAwesomeIcon icon={faAd} />
+            </div>
           </div>
-          <div className="py-6 mt-2 mb-56 bg-stone-600 text-stone-400 text-sm text-center font-black ">
-            광고 <FontAwesomeIcon icon={faAd} />
-          </div>
+
           <ViewIdeaBottom
+            content={content}
             itemChangeProps={itemChangeProps}
             setItemChangeProps={setItemChangeProps}
-            navigate={navigate}
             setNavValue={setNavValue}
             viewIdea={viewIdea}
             getIdeasFromIDs={getIdeasFromIDs}
@@ -82,15 +171,9 @@ const ViewIdea = ({ ...props }) => {
           />
         </div>
       ) : (
-        <div className="p-4 flex-col">
-          <div className="flex items-center gap-2">
-            <Skeleton variant="circular" width={30} height={30} />
-            <Skeleton variant="text" width={120} height={30} />
-          </div>
-          <Skeleton variant="text" width={320} height={160} />
-        </div>
+        loading
       )}
-    </>
+    </div>
   );
 };
 

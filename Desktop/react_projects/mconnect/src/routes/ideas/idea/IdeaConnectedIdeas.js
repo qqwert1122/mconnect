@@ -13,7 +13,6 @@ const IdeaConnectedIdeas = ({ idea, getIdeasFromIDs, viewDetail }) => {
     if (idea.connectedIDs.length > 0) {
       getIdeasFromIDs(idea.connectedIDs).then((idea) => setCnctedIdeas(idea));
     }
-    console.log(cnctedIdeas);
   }, []);
 
   return (

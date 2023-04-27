@@ -3,48 +3,26 @@ import SuggestedIdeas from "../SuggestedIdeas";
 import ViewIdeaBottomBar from "./ViewIdeaBottomBar";
 import ColoredIdeaList from "../writingIdea/ColoredIdeaList";
 import ConnectedIdeas from "./ConnectedIdeas";
-import { useEffect, useRef, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useRef } from "react";
 import {} from "@fortawesome/free-regular-svg-icons";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { whatViewState } from "atom";
 
 const ViewIdeaBottom = ({
+  content,
   itemChangeProps,
   setItemChangeProps,
-  navigate,
   setNavValue,
   viewIdea,
   getIdeasFromIDs,
   isItIn,
 }) => {
-  const whatView = useRecoilValue(whatViewState);
-
   const itemChange = (props) => {
-    switch (props) {
-      case 1:
-        if (itemChangeProps != 1) {
-          setItemChangeProps(1);
-        } else {
-          setItemChangeProps(0);
-        }
-        break;
-      case 2:
-        if (itemChangeProps != 2) {
-          setItemChangeProps(2);
-        } else {
-          setItemChangeProps(0);
-        }
-        break;
-      case 3:
-        if (itemChangeProps != 3) {
-          setItemChangeProps(3);
-        } else {
-          setItemChangeProps(0);
-        }
-        break;
-    }
+    const itemChangeMap = {
+      1: itemChangeProps === 1 ? 0 : 1,
+      2: itemChangeProps === 2 ? 0 : 2,
+      3: itemChangeProps === 3 ? 0 : 3,
+    };
+
+    setItemChangeProps(itemChangeMap[props] || 0);
   };
 
   const onIdeaClick = (idea) => {
@@ -68,33 +46,53 @@ const ViewIdeaBottom = ({
   });
 
   return (
-    <div className="w-screen fixed bottom-0 z-30" ref={tabRef}>
-      {itemChangeProps === 0 && (
-        <ColoredIdeaList ideas={whatView.connectedIDs} />
-      )}
-      {itemChangeProps === 1 && (
-        <div className="moveRightToLeft bg-stone-50 shadow-inner">
-          <SuggestedIdeas
-            setNavValue={setNavValue}
-            docId={whatView.docId}
-            Writing={false}
-            tagsPrmtr={whatView.tags}
-            tabChange={itemChange}
-            onIdeaClick={onIdeaClick}
-            isItIn={isItIn}
-          />
-        </div>
-      )}
-      {itemChangeProps === 2 && whatView.connectedIDs.length > 0 && (
+    <div className="w-screen fixed bottom-0" ref={tabRef}>
+      <div
+        className={`${
+          itemChangeProps === 0 ? "translate-y-0" : "translate-y-full hidden"
+        } absolute right-0 bottom-16`}
+      >
+        <ColoredIdeaList ideas={content.connectedIDs} />
+      </div>
+
+      <div
+        className={`${
+          itemChangeProps === 1 ? "translate-y-0" : "translate-y-full"
+        } absolute bottom-14 w-full z-10 duration-200 bg-white rounded-t-2xl border`}
+      >
+        <SuggestedIdeas
+          setNavValue={setNavValue}
+          docId={content.docId}
+          Writing={false}
+          tagsPrmtr={content.tags}
+          tabChange={itemChange}
+          onIdeaClick={onIdeaClick}
+          isItIn={isItIn}
+        />
+      </div>
+
+      <div
+        className={`${
+          itemChangeProps === 2 && content.connectedIDs.length > 0
+            ? "translate-y-0"
+            : "translate-y-full"
+        } absolute bottom-14 w-full z-10 duration-200 bg-white rounded-t-2xl shadow-inner`}
+      >
         <ConnectedIdeas
+          content={content}
           onIdeaClick={onIdeaClick}
           getIdeasFromIDs={getIdeasFromIDs}
+          tabChange={itemChange}
         />
-      )}
-      <ViewIdeaBottomBar
-        itemChange={itemChange}
-        itemChangeProps={itemChangeProps}
-      />
+      </div>
+
+      <div className="relative z-20">
+        <ViewIdeaBottomBar
+          content={content}
+          itemChange={itemChange}
+          itemChangeProps={itemChangeProps}
+        />
+      </div>
     </div>
   );
 };

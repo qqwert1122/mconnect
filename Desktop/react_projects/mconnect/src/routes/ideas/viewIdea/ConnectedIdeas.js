@@ -7,12 +7,16 @@ import { useRecoilValue } from "recoil";
 import { whatViewState } from "atom";
 import { useEffect, useState } from "react";
 
-const ConnectedIdeas = ({ onIdeaClick, getIdeasFromIDs }) => {
-  const whatView = useRecoilValue(whatViewState);
+const ConnectedIdeas = ({
+  content,
+  onIdeaClick,
+  getIdeasFromIDs,
+  tabChange,
+}) => {
   const [cnctedIdeas, setCnctedIdeas] = useState([]);
   useEffect(() => {
-    if (whatView.connectedIDs.length > 0) {
-      getIdeasFromIDs(whatView.connectedIDs).then((idea) =>
+    if (content.connectedIDs.length > 0) {
+      getIdeasFromIDs(content.connectedIDs).then((idea) =>
         setCnctedIdeas(idea)
       );
     }
@@ -30,9 +34,14 @@ const ConnectedIdeas = ({ onIdeaClick, getIdeasFromIDs }) => {
   };
 
   return (
-    <div className="moveRightToLeft bg-stone-50 shadow-inner">
-      <div className="mx-16 pt-5 mb-2 text-center text-base font-black z-10">
-        {whatView.connectedIDs.length}개 연결됨
+    <div className="bg-white border rounded-t-2xl">
+      <div className="flex justify-between mx-8 pt-5 mb-2 z-10 text-base font-black">
+        연결된 아이디어
+        <button onClick={() => tabChange(2)}>닫기</button>
+      </div>
+      <hr />
+      <div className="mx-16 pt-8 mb-2 text-left text-sm font-black z-10">
+        {content.connectedIDs.length}개 연결됨
       </div>
       <div className="relative pb-10 text-xs">
         <Slider {...settings}>
@@ -44,7 +53,7 @@ const ConnectedIdeas = ({ onIdeaClick, getIdeasFromIDs }) => {
                 </div>
               ) : (
                 <div
-                  className="relative h-60 p-5 m-1 bg-white shadow rounded-3xl text-xs break-all"
+                  className="relative h-60 p-5 m-1 border shadow rounded-3xl text-xs break-all"
                   onClick={() => onIdeaClick(idea)}
                 >
                   {idea.title.length > 0 && (

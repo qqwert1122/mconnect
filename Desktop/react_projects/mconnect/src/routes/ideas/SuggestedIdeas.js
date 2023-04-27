@@ -37,11 +37,11 @@ const SuggestedIdeas = ({
   isItIn,
 }) => {
   // docId
-  //  - whatEdit or whatView docId
+  //  - whatEdit or content docId
   // Writing
   //  - is writing ? "from writing" : "from viewing"
   // tagsPrmtr
-  //  - tagsPrmtr ? formTags : whatView.tags
+  //  - tagsPrmtr ? formTags : content.tags
   // tabChange
   //  - tab ? none : tabChange(=itemChange)
   // onIdeaClick={onIdeaClick}
@@ -212,27 +212,26 @@ const SuggestedIdeas = ({
 
   return (
     <>
-      <div className="flex justify-center pt-5 mb-2 z-10">
+      <div className="flex justify-between mx-8 pt-5 mb-2 z-10 text-base font-black">
         {writing ? (
-          <div className="text-base font-black">
+          <div>
             추천 &nbsp;
             <FontAwesomeIcon icon={faThumbsUp} />
           </div>
         ) : (
-          <button className="text-base font-black" onClick={() => tabChange(1)}>
-            추천 아이디어 &nbsp;
-            <FontAwesomeIcon icon={faAngleDown} />
-          </button>
+          <div>추천 아이디어</div>
         )}
+        <button onClick={() => tabChange(1)}>닫기</button>
       </div>
+      <hr />
       <div className="p-5 flex flex-nowrap overflow-x-scroll">
         {tagsPrmtr.map((tag, index) => (
           <button
             key={index}
             className={`relative flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs duration-500 break-words ${
               tag === tagChangeProps
-                ? "shadow-lg bg-stone-600 text-white -top-1"
-                : "shadow bg-white top-0"
+                ? " bg-sky-400 text-white -top-1"
+                : " bg-white top-0"
             }`}
             style={{ flexBasis: "auto" }}
             onClick={(e) => onSuggestedTagClick(e, tag)}
@@ -248,9 +247,10 @@ const SuggestedIdeas = ({
             className="flex justify-center items-center text-xl font-black "
             style={{ height: "248px" }}
           >
-            <FontAwesomeIcon icon={faQuoteLeft} />
+            <img className="" width={150} src="./img/empty.png" />
+            {/* <FontAwesomeIcon icon={faQuoteLeft} />
             &nbsp; 텅 &nbsp;
-            <FontAwesomeIcon icon={faQuoteRight} />
+            <FontAwesomeIcon icon={faQuoteRight} /> */}
           </div>
         ) : (
           <Slider {...sugtdSettings}>

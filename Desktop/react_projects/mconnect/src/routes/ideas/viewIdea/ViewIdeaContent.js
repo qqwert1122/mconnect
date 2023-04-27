@@ -27,74 +27,64 @@ import {
 import { whatViewState } from "atom";
 import { useRecoilState } from "recoil";
 import { ideasState } from "atom";
+import { CircularProgress } from "@mui/material";
 
 const ViewIdeaContent = ({
+  isMount,
   index,
   user,
+  navigate,
+  setIsVisible,
   itemChangeProps,
   isOwner,
   timeDisplay,
-  onBackClick,
-  getCount,
+  count,
+  content,
+  setContent,
   countUpdate,
   onLikeUpdate,
   onBookmarkUpdate,
   onPublicUpdate,
+  isDeleted,
 }) => {
-  const [whatView, setWhatView] = useRecoilState(whatViewState);
   const [ideas, setIdeas] = useRecoilState(ideasState);
-  const [count, setCount] = useState({});
-
-  const [init, setInit] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
-
-  // get Data from promise
-  getCount(whatView).then((data) => {
-    if (data === undefined || null) {
-      setIsDeleted(true);
-    } else {
-      setIsDeleted(false);
-    }
-    setCount(data);
-    // initialize the state of deletion
-    setInit(true);
-  });
-
-  // click event with firestore
-  const onLikeClick = () => {
-    onLikeUpdate(whatView);
-    countUpdate(whatView, "like");
-    setWhatView({ ...whatView, isLiked: !whatView.isLiked });
-    setIdeas(
-      ideas.map((m) =>
-        m.docId === whatView.docId
-          ? { ...whatView, isLiked: !whatView.isLiked }
-          : m
-      )
-    );
-  };
 
   const ideaRef = doc(
     dbService,
     "users",
     user.userId,
     "userIdeas",
-    whatView.docId
+    content.docId
   );
 
+  // click event with firestore
+  const onLikeClick = () => {
+    onLikeUpdate(content);
+    countUpdate(content, "like");
+    setContent({ ...content, isLiked: !content.isLiked });
+    setIdeas(
+      ideas.map((m) =>
+        m.docId === content.docId
+          ? { ...content, isLiked: !content.isLiked }
+          : m
+      )
+    );
+  };
+
   const onBookmarkClick = () => {
-    onBookmarkUpdate(whatView);
-    countUpdate(whatView, "bookmark");
-    setWhatView({ ...whatView, isBookmarked: !whatView.isBookmarked });
+    onBookmarkUpdate(content);
+    countUpdate(content, "bookmark");
+    setContent({ ...content, isBookmarked: !content.isBookmarked });
     if (isOwner === false) {
-      onBackClick("view");
+      setIsVisible(false);
+      navigate(-1);
       deleteDoc(ideaRef);
-      index.deleteObject(whatView.searchId);
+      index.deleteObject(content.searchId);
     }
     setIdeas(
       ideas.map((m) =>
-        m.docId === whatView.docId
-          ? { ...whatView, isBookmarked: !whatView.isBookmarked }
+        m.docId === content.docId
+          ? { ...content, isBookmarked: !content.isBookmarked }
           : m
       )
     );
@@ -102,33 +92,33 @@ const ViewIdeaContent = ({
 
   const onPublicClick = () => {
     if (isOwner) {
-      onPublicUpdate(whatView);
-      setWhatView({ ...whatView, isPublic: !whatView.isPublic });
+      onPublicUpdate(content);
+      setContent({ ...content, isPublic: !content.isPublic });
     }
     setIdeas(
       ideas.map((m) =>
-        m.docId === whatView.docId
-          ? { ...whatView, isPublic: !whatView.isPublic }
+        m.docId === content.docId
+          ? { ...content, isPublic: !content.isPublic }
           : m
       )
     );
     const _idea = {
-      docId: whatView.docId,
-      userId: whatView.userId,
-      userName: whatView.userName,
-      userPhotoURL: whatView.userPhotoURL,
-      title: whatView.title,
-      text: whatView.text,
-      source: whatView.source,
-      tags: whatView.tags,
-      connectedIDs: whatView.connectedIDs,
-      createdAt: whatView.createdAt,
-      updatedAt: whatView.updatedAt,
+      docId: content.docId,
+      userId: content.userId,
+      userName: content.userName,
+      userPhotoURL: content.userPhotoURL,
+      title: content.title,
+      text: content.text,
+      source: content.source,
+      tags: content.tags,
+      connectedIDs: content.connectedIDs,
+      createdAt: content.createdAt,
+      updatedAt: content.updatedAt,
     };
     index.saveObject({
       ..._idea,
-      isPublic: !whatView.isPublic,
-      objectID: whatView.searchId,
+      isPublic: !content.isPublic,
+      objectID: content.searchId,
     });
   };
 
@@ -145,20 +135,20 @@ const ViewIdeaContent = ({
   return (
     <>
       <div className={`${itemChangeProps != 0 && "blur-sm"} duration-100`}>
-        {whatView.title !== "" && (
+        {content.title !== "" && (
           <div className="flex px-5 pt-5 font-black text-lg break-all">
-            {whatView.title}
+            {content.title}
           </div>
         )}
         <div
           className={`${
-            whatView.title === "" ? "p-5" : "px-5 py-3 pb-5"
+            content.title === "" ? "p-5" : "px-5 py-3 pb-5"
           } flex items-center gap-2`}
         >
           <Avatar
             className="border-2"
             alt="avatar"
-            src={isOwner ? user.userPhotoURL : whatView.userPhotoURL}
+            src={isOwner ? user.userPhotoURL : content.userPhotoURL}
             sx={{
               display: "flex",
               width: "30px",
@@ -167,73 +157,67 @@ const ViewIdeaContent = ({
           />
           <div className="flex-col text-xs">
             <span className="font-black flex">
-              {isOwner ? user.userName : whatView.userName}
+              {isOwner ? user.userName : content.userName}
             </span>
-            <span className="flex">{whatView.createdAt}</span>
+            <span className="flex">{content.createdAt}</span>
           </div>
         </div>
 
         <div className="flex p-5 text-base break-all whitespace-pre-line">
-          <span>{whatView.text}</span>
+          <span>{content.text}</span>
         </div>
-        {whatView.source.length != 0 && (
+        {content.source.length != 0 && (
           <div className="flex flex-wrap items-center p-5 py-2 gap-2 text-stone-400 text-xs break-all">
             <span className="text-stone-300">
               <FontAwesomeIcon icon={faQuoteLeft} />
             </span>
-            <span>{whatView.source}</span>
+            <span>{content.source}</span>
           </div>
         )}
-        {whatView.tags.length != 0 && (
+        {content.tags.length != 0 && (
           <div className="flex flex-wrap items-center p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs word-breaks">
             <span className="pt-1 text-stone-300">
               <FontAwesomeIcon icon={faHashtag} />
             </span>
-            {whatView.tags.map((tag, index) => (
+            {content.tags.map((tag, index) => (
               <span key={index}>
-                {index === whatView.tags.length - 1 ? tag : `${tag},`}
+                {index === content.tags.length - 1 ? tag : `${tag},`}
               </span>
             ))}
           </div>
         )}
         {isOwner === false && (
           <div className="flex items-start p-5 pt-1 pb-4 text-stone-400 text-xs">
-            {timeDisplay(whatView.updatedAt)}에 저장됨
+            {timeDisplay(content.updatedAt)}에 저장됨
           </div>
         )}
 
-        {init ? (
-          <>
-            {isDeleted ? (
-              <div className="flex items-center p-5 pt-1 pb-4 gap-1 text-stone-300 text-xs">
-                <FontAwesomeIcon icon={faCircleInfo} />원 작성자가 삭제한
-                아이디어입니다.
-              </div>
-            ) : (
-              <div className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs">
-                <span>
-                  조회&nbsp;
-                  {count.view_count}
-                </span>
-                {count.like_count != 0 && (
-                  <button
-                    aria-controls={open ? "demo-positioned-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
-                    onClick={handleEllipsisClick}
-                  >
-                    좋아요&nbsp;
-                    {count.like_count}
-                  </button>
-                )}
-                {count.bookmark_count != 0 && (
-                  <span>저장됨&nbsp;{count.bookmark_count}</span>
-                )}
-              </div>
-            )}
-          </>
+        {isDeleted ? (
+          <div className="flex items-center p-5 pt-1 pb-4 gap-1 text-stone-300 text-xs">
+            <FontAwesomeIcon icon={faCircleInfo} />원 작성자가 삭제한
+            아이디어입니다.
+          </div>
         ) : (
-          <></>
+          <div className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs">
+            <span>
+              조회&nbsp;
+              {count.view_count}
+            </span>
+            {count.like_count != 0 && (
+              <button
+                aria-controls={open ? "demo-positioned-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleEllipsisClick}
+              >
+                좋아요&nbsp;
+                {count.like_count}
+              </button>
+            )}
+            {count.bookmark_count != 0 && (
+              <span>저장됨&nbsp;{count.bookmark_count}</span>
+            )}
+          </div>
         )}
       </div>
 
@@ -245,30 +229,30 @@ const ViewIdeaContent = ({
       >
         <button
           className="text-red-400 px-2"
-          onClick={() => onLikeClick(whatView)}
+          onClick={() => onLikeClick(content)}
         >
           <FontAwesomeIcon
-            icon={whatView.isLiked ? fasHeart : farHeart}
+            icon={content.isLiked ? fasHeart : farHeart}
             size="lg"
           />
         </button>
         <button className="text-orange-400 px-2" onClick={onBookmarkClick}>
           <FontAwesomeIcon
-            icon={whatView.isBookmarked ? fasBookmark : farBookmark}
+            icon={content.isBookmarked ? fasBookmark : farBookmark}
             size="lg"
           />
         </button>
         {isOwner && (
           <button className="text-sky-400 px-2" onClick={onPublicClick}>
             <FontAwesomeIcon
-              icon={whatView.isPublic ? fasCompass : farCompass}
+              icon={content.isPublic ? fasCompass : farCompass}
               size="lg"
             />
           </button>
         )}
       </div>
 
-      {init && isDeleted === false && (
+      {isMount && isDeleted === false && (
         <Menu
           id="demo-positioned-menu"
           aria-labelledby="demo-positioned-button"

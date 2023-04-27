@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import algoliasearch from "algoliasearch";
-import { authService, dbService, messaging } from "fbase";
+import { authService, dbService } from "fbase";
 import {
   collection,
   onSnapshot,
@@ -12,7 +12,6 @@ import {
   where,
   doc,
   getDocs,
-  documentId,
   getDoc,
   updateDoc,
   increment,
@@ -21,7 +20,6 @@ import {
   startAfter,
 } from "firebase/firestore";
 import dayjs from "dayjs";
-import { v4 } from "uuid";
 import "dayjs/locale/ko";
 import {
   useRecoilState,
@@ -44,10 +42,6 @@ import {
   whatViewState,
   cnctedIdeasState,
 } from "atom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import {} from "@fortawesome/free-regular-svg-icons";
-import SignUp from "routes/auth/SignUp";
 
 const useDeliverProps = () => {
   const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
@@ -152,18 +146,13 @@ const useDeliverProps = () => {
 
   let navigate = useNavigate();
 
-  const [navValue, setNavValue] = useState(loggedInUser ? "/ideas" : "/");
+  const [navValue, setNavValue] = useState(loggedInUser ? "/contents" : "/");
 
-  const clearWhatView = useResetRecoilState(whatViewState);
   const clearEdit = useResetRecoilState(isEditState);
   const clearWhatEdit = useResetRecoilState(whatEditState);
 
   const onBackClick = (type = "default") => {
-    navigate(-1);
     switch (type) {
-      case "view":
-        clearWhatView();
-        break;
       case "edit":
         clearEdit();
         clearWhatEdit();
@@ -171,6 +160,7 @@ const useDeliverProps = () => {
       default:
         break;
     }
+    navigate(-1);
   };
 
   const setWhatView = useSetRecoilState(whatViewState);
@@ -200,7 +190,7 @@ const useDeliverProps = () => {
       });
     }
     setWhatView(idea);
-    navigate(`/${idea.docId}`);
+    navigate(`/contents/${idea.docId}`);
   };
 
   useEffect(() => {
@@ -267,38 +257,30 @@ const useDeliverProps = () => {
     setFormText("");
     setFormSource("");
     setFormPublic(true);
-    if (selectedIdeas.length > 1) {
-      setFormTags(concatTags());
-      setFormCnctedIdeas(selectedIdeas);
-    } else {
-      setFormTags([]);
-      setFormCnctedIdeas([]);
-    }
+    setFormTags(selectedIdeas.length > 1 ? concatTags() : []);
+    setFormCnctedIdeas(selectedIdeas.length > 1 ? selectedIdeas : []);
   };
 
   const initEditor = (idea) => {
+    const { title, text, source, tags, isPublic, connectedIDs } = idea;
     setWhatEdit(idea);
-    setFormTitle(idea.title);
-    setFormText(idea.text);
-    setFormSource(idea.source);
-    setFormTags(idea.tags);
-    setFormPublic(idea.isPublic);
-    if (idea.connectedIDs.length > 0) {
-      getIdeasFromIDs(idea.connectedIDs).then((idea) =>
-        setFormCnctedIdeas(idea)
-      );
+    setFormTitle(title);
+    setFormText(text);
+    setFormSource(source);
+    setFormTags(tags);
+    setFormPublic(isPublic);
+    if (connectedIDs.length > 0) {
+      getIdeasFromIDs(connectedIDs).then((ideas) => setFormCnctedIdeas(ideas));
     } else {
       setFormCnctedIdeas([]);
     }
   };
 
   const getCount = async (idea) => {
-    const data = (await getDoc(doc(dbService, "counts", idea.docId))).data();
-    if (data === undefined) {
-      return undefined;
-    } else {
-      return data;
-    }
+    const docRef = doc(dbService, "counts", idea.docId);
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+    return data || undefined;
   };
 
   const countUpdate = async (idea, type) => {
@@ -464,7 +446,7 @@ const App = () => {
         <div className="flex justify-center text-center">
           <CircularProgress color="inherit" />
         </div>
-        <div className="flex justify-center mt-6 text-xl font-black">
+        <div className="flex justify-center mt-6 text-base font-black">
           로딩중
         </div>
       </div>
