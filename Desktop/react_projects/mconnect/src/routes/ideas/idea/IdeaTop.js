@@ -131,12 +131,13 @@ const IdeaTop = ({
         }}
       >
         {isOwner && (
-          <MenuItem onClick={onEditClick}>
+          <MenuItem sx={{ fontSize: "14px" }} onClick={onEditClick}>
             <FontAwesomeIcon icon={faPenToSquare} />
             &nbsp; 수정
           </MenuItem>
         )}
         <MenuItem
+          sx={{ fontSize: "14px" }}
           onClick={() => {
             setDeleteDialogOpen(true);
             handleEllipsisClose();
@@ -145,7 +146,7 @@ const IdeaTop = ({
           <FontAwesomeIcon icon={faTrashCan} />
           &nbsp; 삭제
         </MenuItem>
-        <MenuItem onClick={handleEllipsisClose}>
+        <MenuItem sx={{ fontSize: "14px" }} onClick={handleEllipsisClose}>
           <FontAwesomeIcon icon={faCopy} />
           &nbsp; 복사
         </MenuItem>

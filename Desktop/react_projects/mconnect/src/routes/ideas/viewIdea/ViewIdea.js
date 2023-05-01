@@ -18,6 +18,7 @@ import {
   deleteDoc,
   limit,
   startAfter,
+  collectionGroup,
 } from "firebase/firestore";
 import Skeleton from "@mui/material/Skeleton";
 import { useRecoilValue, useResetRecoilState } from "recoil";
@@ -26,6 +27,7 @@ import { faAd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate, useParams } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import UserList from "./UserList";
 
 const ViewIdea = ({ ...props }) => {
   const {
@@ -46,18 +48,15 @@ const ViewIdea = ({ ...props }) => {
   const loggedInUser = useRecoilValue(userState);
   const { docId } = useParams();
 
-  const [isVisible, setIsVisible] = useState(false);
   const [isMount, setIsMount] = useState(false);
   const [itemChangeProps, setItemChangeProps] = useState(0);
   const [count, setCount] = useState({});
   const [content, setContent] = useState({});
   const [isDeleted, setIsDeleted] = useState(false);
-  const [isOwner, setIsOwner] = useState();
 
   let navigate = useNavigate();
 
   useEffect(() => {
-    setIsVisible(true);
     getData();
   }, [docId]);
 
@@ -72,6 +71,7 @@ const ViewIdea = ({ ...props }) => {
       "userIdeas",
       docId
     );
+    const contentData = (await getDoc(contentRef)).data();
     if (
       countData !== undefined &&
       countData.view_users.hasOwnProperty(loggedInUser.userId) === false
@@ -83,69 +83,86 @@ const ViewIdea = ({ ...props }) => {
           [loggedInUser.userId]: loggedInUser.userName,
         },
       });
-      await updateDoc(contentRef, {
-        isViewed: true,
-      });
+      if (contentData !== undefined) {
+        await updateDoc(contentRef, {
+          isViewed: true,
+        });
+      }
     } else if (countData === undefined || countData === null) {
       setIsDeleted(true);
     }
     setCount(countData);
     setIsDeleted(false);
 
-    // get count from db
-    const contentData = (await getDoc(contentRef)).data();
-    setContent(contentData);
-
+    if (contentData === undefined) {
+      const q = query(
+        collectionGroup(dbService, "userIdeas"),
+        where("docId", "==", docId)
+      );
+      await getDocs(q).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          setContent(doc.data());
+        });
+      });
+    } else {
+      setContent(contentData);
+    }
     setIsMount(true);
-    setIsOwner(loggedInUser.userId === content.userId);
+  };
+
+  const [open, setOpen] = useState(false);
+
+  // Ellipsis Menu
+  const handleEllipsisClick = () => {
+    setItemChangeProps(0);
+    setOpen(true);
+  };
+
+  const handleEllipsisClose = () => {
+    setOpen(false);
+    setTabs(0);
+  };
+
+  const [tabs, setTabs] = useState(0);
+  const handleTabs = (v) => {
+    setTabs(v);
   };
 
   const loading = (
     <div className="w-screen h-screen flex justify-center items-center mx-auto bg-white">
-      <div className="flex-col">
-        <div className="flex justify-center text-center">
-          <CircularProgress color="inherit" />
-        </div>
-        <div className="flex justify-center mt-6 text-base font-black">
-          로딩중
-        </div>
+      <div className="flex justify-center text-center">
+        <CircularProgress color="inherit" />
       </div>
     </div>
   );
 
   return (
-    <div
-      className={`page ${
-        isVisible ? "visible" : ""
-      } bg-stone-100 duration-500 `}
-    >
+    <div className="h-screen bg-stone-100">
       {isMount ? (
-        <div className="text-sm" style={{ paddingBottom: "52px" }}>
+        <>
           <div
             className={` ${
-              itemChangeProps != 0 && "brightness-75 blur-sm"
+              (itemChangeProps != 0 || open) && "brightness-75 blur-sm"
             } duration-500 bg-stone-100`}
           >
             <div className="flex-col pt-12 bg-white shadow">
               <ViewIdeaTopBar
                 content={content}
-                isOwner={isOwner}
+                isOwner={loggedInUser.userId === content.userId}
                 navigate={navigate}
-                setIsVisible={setIsVisible}
                 initEditor={initEditor}
                 onDeleteClick={onDeleteClick}
                 toastAlarm={toastAlarm}
               />
               <ViewIdeaContent
-                isMount={isMount}
                 navigate={navigate}
-                setIsVisible={setIsVisible}
-                index={index}
                 user={loggedInUser}
+                handleEllipsisClick={handleEllipsisClick}
                 itemChangeProps={itemChangeProps}
-                isOwner={isOwner}
+                isOwner={loggedInUser.userId === content.userId}
                 timeDisplay={timeDisplay}
                 count={count}
+                setCount={setCount}
                 content={content}
                 setContent={setContent}
                 isDeleted={isDeleted}
@@ -161,6 +178,9 @@ const ViewIdea = ({ ...props }) => {
           </div>
 
           <ViewIdeaBottom
+            open={open}
+            setOpen={setOpen}
+            setIsMount={setIsMount}
             content={content}
             itemChangeProps={itemChangeProps}
             setItemChangeProps={setItemChangeProps}
@@ -169,7 +189,15 @@ const ViewIdea = ({ ...props }) => {
             getIdeasFromIDs={getIdeasFromIDs}
             isItIn={isItIn}
           />
-        </div>
+
+          <UserList
+            open={open}
+            handleEllipsisClose={handleEllipsisClose}
+            tabs={tabs}
+            handleTabs={handleTabs}
+            count={count}
+          />
+        </>
       ) : (
         loading
       )}

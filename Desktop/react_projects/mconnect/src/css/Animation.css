@@ -1,21 +1,23 @@
+.open-enter {
+  opacity: 0;
+  transform: translateX(10%);
+}
+.open-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.open-exit {
+  opacity: 1;
+}
+.open-exit-active {
+  opacity: 0;
+  transform: translateX(-10%);
+  transition: opacity 300ms, transform 300ms;
+}
+
 .hiddenscroll {
   overflow-x: hidden;
-}
-
-.page {
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 10%;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  transition: all 0.2s ease;
-}
-
-.page.visible {
-  opacity: 1;
-  left: 0;
 }
 
 nav {

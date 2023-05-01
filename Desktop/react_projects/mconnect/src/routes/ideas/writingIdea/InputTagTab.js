@@ -11,7 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
-const InputTagTab = ({ tagInput, trends }) => {
+const InputTagTab = ({ handleTabClose, tagInput, trends }) => {
   const [formTags, setFormTags] = useRecoilState(formTagsState);
   const recentTags = useRecoilValue(recentTagsState);
   const [formTag, setFormTag] = useState("");
@@ -42,14 +42,22 @@ const InputTagTab = ({ tagInput, trends }) => {
   };
 
   return (
-    <div className="moveRightToLeft">
-      <div className="overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
+    <>
+      <div className="overflow-y-scroll flex-col border-box border rounded-t-2xl">
+        <div className="flex justify-between p-4 text-base font-black">
+          <p>
+            <FontAwesomeIcon icon={faHashtag} /> 태그
+          </p>
+          <button onClick={(e) => handleTabClose(e)}>닫기</button>
+        </div>
+        <hr />
+        <div className="p-4 pb-2 text-stone-400">선택된 태그</div>
         {formTags.length > 0 && (
-          <div className="p-4 flex flex-nowrap overflow-x-scroll">
+          <div className="relative px-4 flex flex-nowrap overflow-x-scroll">
             {formTags.map((tag, index) => (
               <button
                 key={index}
-                className="flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words bg-stone-600 text-white"
+                className="flex-grow-0 flex-shrink-0 border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words bg-sky-400 text-white"
                 style={{ flexBasis: "auto" }}
                 onClick={(e) => onTagClick(e, tag)}
               >
@@ -60,7 +68,9 @@ const InputTagTab = ({ tagInput, trends }) => {
         )}
 
         <div
-          className={`px-4 ${formTags.length === 0 && "pt-10"} text-stone-400`}
+          className={`p-4 pb-2 ${
+            formTags.length === 0 && "pt-10"
+          } text-stone-400`}
         >
           이런 태그는 어때요 <FontAwesomeIcon icon={faThumbsUp} />
         </div>
@@ -70,14 +80,21 @@ const InputTagTab = ({ tagInput, trends }) => {
               key={index}
               className={`relative border-box rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 break-words ${
                 formTags.includes(tag)
-                  ? "bg-stone-300 "
+                  ? "bg-stone-200 "
                   : index === 0
                   ? "bg-gradient-to-r from-orange-200 to-pink-200 border-red-200"
                   : "bg-white"
               } `}
               onClick={(e) => onTagClick(e, tag)}
             >
-              {index===0 && <span className="absolute -left-2 -top-2 px-1 rounded-xl bg-red-500 text-white" style={{fontSize:"10px"}}>HOT</span>}
+              {index === 0 && (
+                <span
+                  className="absolute -left-2 -top-2 px-1 rounded-xl bg-gradient-to-br from-pink-400 to-red-600 text-white"
+                  style={{ fontSize: "10px" }}
+                >
+                  HOT
+                </span>
+              )}
               {tag}
             </button>
           ))}
@@ -89,14 +106,14 @@ const InputTagTab = ({ tagInput, trends }) => {
         {recentTags.length === 0 ? (
           <div className="p-4 pt-2 text-sm">기존 태그가 없습니다</div>
         ) : (
-          <div className="p-4 pt-2 flex flex-nowrap overflow-x-auto">
+          <div className="relative p-4 pt-2 flex flex-nowrap overflow-x-auto">
             {recentTags
               .filter((tag) => tag.includes(formTag))
               .map((tag, index) => (
                 <button
                   key={index}
-                  className={`flex-shrink-0 flex-grow-0  rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 ${
-                    formTags.includes(tag) ? "bg-stone-300 " : "bg-white"
+                  className={`relative flex-shrink-0 flex-grow-0 rounded-3xl border-2 mr-1 mb-1 px-3 py-1 text-xs shadow-sm duration-500 ${
+                    formTags.includes(tag) ? "bg-stone-200 " : "bg-white"
                   }`}
                   style={{ flexBasis: "auto" }}
                   onClick={(e) => onTagClick(e, tag)}
@@ -109,8 +126,8 @@ const InputTagTab = ({ tagInput, trends }) => {
 
         <div className="flex justify-between ">
           <input
-            className="w-full p-2 shadow-inner"
-            placeholder="태그..."
+            className="w-full p-2 border"
+            placeholder="태그를 입력하세요"
             value={formTag}
             onChange={onTagChange}
             ref={tagInput}
@@ -123,10 +140,7 @@ const InputTagTab = ({ tagInput, trends }) => {
           </button>
         </div>
       </div>
-      <div className="absolute -top-2 left-2 text-stone-400">
-        <FontAwesomeIcon icon={faHashtag} /> 태그
-      </div>
-    </div>
+    </>
   );
 };
 

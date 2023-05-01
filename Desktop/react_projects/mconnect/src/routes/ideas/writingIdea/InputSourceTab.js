@@ -10,7 +10,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { formSourceState } from "atom";
 import { recentSourcesState } from "atom";
 
-const InputSourceTab = ({ sourceInput }) => {
+const InputSourceTab = ({ handleTabClose, sourceInput }) => {
   const [formSource, setFormSource] = useRecoilState(formSourceState);
   const recentSources = useRecoilValue(recentSourcesState);
 
@@ -28,15 +28,22 @@ const InputSourceTab = ({ sourceInput }) => {
   };
 
   return (
-    <div className="moveRightToLeft">
-      <div className="overflow-y-scroll flex-col border-box shadow-inner bg-stone-50">
+    <>
+      <div className="overflow-y-scroll flex-col border rounded-t-2xl">
+        <div className="p-4 flex justify-between font-black text-base">
+          <p>
+            <FontAwesomeIcon icon={faQuoteLeft} /> 출처
+          </p>
+          <button onClick={(e) => handleTabClose(e)}>닫기</button>
+        </div>
+        <hr />
         <div className="pt-4 px-4 text-stone-400">
           최근 <FontAwesomeIcon icon={faClockRotateLeft} />
         </div>
         {recentSources.length === 0 ? (
           <div className="p-4 pt-2 text-sm">기존 출처가 없습니다</div>
         ) : (
-          <div className="p-4 pt-2 flex flex-nowrap overflow-x-auto">
+          <div className="p-4 pt-2 relative flex flex-nowrap overflow-x-auto">
             {recentSources
               .filter((source) => source.includes(formSource))
               .map((source, index) => (
@@ -66,14 +73,7 @@ const InputSourceTab = ({ sourceInput }) => {
           ref={sourceInput}
         />
       </div>
-      <div
-        className={`absolute ${
-          formSource.length > 0 ? "-top-2 left-2" : "-top-2 -left-20"
-        } text-stone-400 duration-500`}
-      >
-        <FontAwesomeIcon icon={faQuoteLeft} /> 출처
-      </div>
-    </div>
+    </>
   );
 };
 

@@ -27,7 +27,6 @@ import {
   selectedIdeasState,
   formPublicState,
   ideasState,
-  whatViewState,
 } from "atom";
 
 var relativeTime = require("dayjs/plugin/relativeTime");
@@ -63,7 +62,6 @@ const WritingIdea = ({ ...props }) => {
   const [recentTags, setRecentTags] = useRecoilState(recentTagsState);
   const [recentSources, setRecentSources] = useRecoilState(recentSourcesState);
   const [ideas, setIdeas] = useRecoilState(ideasState);
-  const [whatView, setWhatView] = useRecoilState(whatViewState);
   const [selectedIdeas, setSelectedIdeas] = useRecoilState(selectedIdeasState);
 
   const clearEdit = useResetRecoilState(isEditState);
@@ -115,7 +113,7 @@ const WritingIdea = ({ ...props }) => {
       };
       try {
         if (isCnctnRequired) {
-          toast.error("아이디어 2개 이상을 선택하세요", {
+          toast.error("아이디어를 2개 이상 선택하세요", {
             theme: "colored",
           });
           return;
@@ -131,9 +129,6 @@ const WritingIdea = ({ ...props }) => {
         setIdeas(
           ideas.map((m) => (m.docId === whatEdit.docId ? { ...document } : m))
         );
-        if (whatView) {
-          setWhatView({ ...document });
-        }
         index.saveObject({ ...document, objectID: whatEdit.docId });
       } catch (event) {
         console.error("Error editing document: ", event);
@@ -165,7 +160,7 @@ const WritingIdea = ({ ...props }) => {
       };
       try {
         if (isCnctnRequired) {
-          toast.error("아이디어 2개 이상을 선택하세요", {
+          toast.error("아이디어를 2개 이상 선택하세요", {
             theme: "colored",
           });
           return;
@@ -218,7 +213,8 @@ const WritingIdea = ({ ...props }) => {
   };
 
   const [bottomItemChangeProps, setBottomItemChangeProps] = useState(0);
-  const handleTabClose = () => {
+  const handleTabClose = (e) => {
+    e.preventDefault();
     setBottomItemChangeProps(0);
   };
 
@@ -248,6 +244,7 @@ const WritingIdea = ({ ...props }) => {
           showTitleAndCnctn={showTitleAndCnctn}
           bottomItemChangeProps={bottomItemChangeProps}
           setBottomItemChangeProps={setBottomItemChangeProps}
+          handleTabClose={handleTabClose}
           isItIn={isItIn}
           trends={trends}
         />

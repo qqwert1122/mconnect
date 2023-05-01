@@ -5,7 +5,11 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Ripples from "react-ripples";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHashtag, faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCirclePlus,
+  faHashtag,
+  faQuoteLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const IdeaMiddle = ({
@@ -34,10 +38,10 @@ const IdeaMiddle = ({
   // tag ellipsis menu
   const open = Boolean(anchorEl);
 
-  const handleEllipsisClick = (event, idea) => {
-    setDialogTags(idea.tags);
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleEllipsisClick = (event, idea) => {
+  //   setDialogTags(idea.tags);
+  //   setAnchorEl(event.currentTarget);
+  // };
 
   const handleEllipsisClose = () => {
     setAnchorEl(false);
@@ -73,14 +77,14 @@ const IdeaMiddle = ({
         )}
         {/* category, tags */}
         {idea.tags.length > 0 && (
-          <span className="flex flex-wrap ml-2 pb-2 gap-2 text-xs">
+          <span className="flex flex-wrap ml-2 pb-2 gap-1 text-xs">
             <span className="text-stone-300">
               <FontAwesomeIcon icon={faHashtag} />
             </span>
-            {idea.tags.length > 4 ? (
+            {idea.tags.length > 6 ? (
               <>
                 {idea.tags
-                  .filter((tag, index) => index < 4)
+                  .filter((tag, index) => index < 6)
                   .map((tag, index) => (
                     <button
                       key={index}
@@ -88,15 +92,15 @@ const IdeaMiddle = ({
                       aria-controls={open ? "demo-positioned-menu" : undefined}
                       aria-haspopup="true"
                       aria-expanded={open ? "true" : undefined}
-                      onClick={(e) =>
-                        index === 3 && handleEllipsisClick(e, idea)
-                      }
+                      // onClick={(e) =>
+                      //   index === 5 && handleEllipsisClick(e, idea)
+                      // }
                       className="border-box text-stone-400"
                       sx={{
                         color: "inherit",
                       }}
                     >
-                      {index === 3 ? `+ ${idea.tags.length - 3}` : `${tag},`}
+                      {index === 5 ? `...` : `${tag},`}
                     </button>
                   ))}
               </>

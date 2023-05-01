@@ -11,7 +11,7 @@ import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
 import Skeleton from "@mui/material/Skeleton";
 import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { userState, ideasState, whatViewState, selectedIdeasState } from "atom";
+import { userState, ideasState, selectedIdeasState } from "atom";
 
 const Idea = ({ props, idea, i, index, isSelectMode }) => {
   const {
@@ -57,7 +57,7 @@ const Idea = ({ props, idea, i, index, isSelectMode }) => {
 
   const onIdeaClick = (idea) => {
     setTimeout(() => {
-      viewIdea(idea);
+      viewIdea(idea, "my");
       setIdeas(
         ideas.map((m) =>
           m.docId === idea.docId ? { ...idea, isViewed: true } : m

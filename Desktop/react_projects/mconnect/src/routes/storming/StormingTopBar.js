@@ -1,14 +1,23 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {} from "@fortawesome/free-regular-svg-icons";
 import { faBolt, faCompass, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StormingTagBar from "./StormingTagBar";
+import { throttle } from "lodash";
 
 const StormingTopBar = ({ loadNewIdea, trends, itemPrmtr, setItemPrmtr }) => {
   const [scrollY, setScrollY] = useState(0);
-  window.addEventListener("scroll", function () {
-    setScrollY(window.scrollY);
-  });
+  useEffect(() => {
+    const handleScroll = throttle(() => {
+      setScrollY(window.scrollY);
+    }, 500);
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const _trends = ["전체", ...trends];
 
@@ -32,7 +41,7 @@ const StormingTopBar = ({ loadNewIdea, trends, itemPrmtr, setItemPrmtr }) => {
             scrollY < 300 ? "opacity-100 h-10" : "opacity-0 h-0"
           } duration-100`}
         >
-          <img className="mb-4 pl-2" width={110} src="./img/logo.png" />
+          <img className="mb-4" width={150} src="./img/text_logo.svg" />
         </div>
         <div className="flex items-center gap-2 px-2 text-lg font-black">
           탐색

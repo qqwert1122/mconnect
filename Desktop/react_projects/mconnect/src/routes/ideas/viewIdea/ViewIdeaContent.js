@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { dbService } from "fbase";
 import {
   doc,
+  setDoc,
   updateDoc,
   increment,
   getDoc,
   deleteDoc,
 } from "firebase/firestore";
+import algoliasearch from "algoliasearch";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -24,21 +26,21 @@ import {
   faHeart as farHeart,
   faBookmark as farBookmark,
 } from "@fortawesome/free-regular-svg-icons";
-import { whatViewState } from "atom";
-import { useRecoilState } from "recoil";
 import { ideasState } from "atom";
-import { CircularProgress } from "@mui/material";
+import { useRecoilState } from "recoil";
+import { v4 } from "uuid";
+import dayjs from "dayjs";
 
 const ViewIdeaContent = ({
-  isMount,
-  index,
+  open,
   user,
   navigate,
-  setIsVisible,
   itemChangeProps,
+  handleEllipsisClick,
   isOwner,
   timeDisplay,
   count,
+  setCount,
   content,
   setContent,
   countUpdate,
@@ -57,37 +59,178 @@ const ViewIdeaContent = ({
     content.docId
   );
 
-  // click event with firestore
-  const onLikeClick = () => {
-    onLikeUpdate(content);
-    countUpdate(content, "like");
-    setContent({ ...content, isLiked: !content.isLiked });
-    setIdeas(
-      ideas.map((m) =>
-        m.docId === content.docId
-          ? { ...content, isLiked: !content.isLiked }
-          : m
-      )
-    );
+  const countRef = doc(dbService, "counts", content.docId);
+  const userIdeaRef = doc(
+    dbService,
+    "users",
+    user.userId,
+    "userIdeas",
+    content.docId
+  );
+  const userRef = doc(dbService, "users", user.userId);
+
+  const onLikeClick = async () => {
+    if (isOwner) {
+      onLikeUpdate(content);
+      countUpdate(content, "like");
+      if (count.like_users.hasOwnProperty(user.userId)) {
+        delete count.like_users[user.userId];
+        setCount((prevCount) => ({
+          ...prevCount,
+          like_count: prevCount.like_count - 1,
+        }));
+      } else {
+        setCount((prevCount) => ({
+          ...prevCount,
+          like_count: prevCount.like_count + 1,
+          like_users: {
+            ...prevCount.like_users,
+            [user.userId]: user.userName,
+          },
+        }));
+      }
+      setContent({ ...content, isLiked: !content.isLiked });
+      setIdeas(
+        ideas.map((m) =>
+          m.docId === content.docId
+            ? { ...content, isLiked: !content.isLiked }
+            : m
+        )
+      );
+    } else {
+      if (count.like_users.hasOwnProperty(user.userId)) {
+        delete count.like_users[user.userId];
+        setCount((prevCount) => ({
+          ...prevCount,
+          like_count: prevCount.like_count - 1,
+        }));
+        await updateDoc(countRef, {
+          like_count: increment(-1),
+          like_users: count.like_users,
+        });
+      } else {
+        setCount((prevCount) => ({
+          ...prevCount,
+          like_count: prevCount.like_count + 1,
+          like_users: {
+            ...prevCount.like_users,
+            [user.userId]: user.userName,
+          },
+        }));
+        await updateDoc(countRef, {
+          like_count: increment(1),
+          like_users: {
+            ...count.like_users,
+            [user.userId]: user.userName,
+          },
+        });
+      }
+      setContent({ ...content, isLiked: !content.isLiked });
+    }
   };
 
-  const onBookmarkClick = () => {
-    onBookmarkUpdate(content);
-    countUpdate(content, "bookmark");
-    setContent({ ...content, isBookmarked: !content.isBookmarked });
-    if (isOwner === false) {
-      setIsVisible(false);
-      navigate(-1);
-      deleteDoc(ideaRef);
-      index.deleteObject(content.searchId);
+  const APP_ID = process.env.REACT_APP_ALGOLIA_APP_ID;
+  const API_KEY = process.env.REACT_APP_ALGOLIA_API_KEY;
+  const client = algoliasearch(APP_ID, API_KEY);
+  const index = client.initIndex("userIdeas");
+
+  const onBookmarkClick = async (idea) => {
+    if (isOwner) {
+      onBookmarkUpdate(content);
+      countUpdate(content, "bookmark");
+      if (count.bookmark_users.hasOwnProperty(user.userId)) {
+        delete count.bookmark_users[user.userId];
+        setCount((prevCount) => ({
+          ...prevCount,
+          bookmark_count: prevCount.bookmark_count - 1,
+        }));
+      } else {
+        setCount((prevCount) => ({
+          ...prevCount,
+          bookmark_count: prevCount.bookmark_count + 1,
+          bookmark_users: {
+            ...prevCount.bookmark_users,
+            [user.userId]: user.userName,
+          },
+        }));
+      }
+      setContent({ ...content, isBookmarked: !content.isBookmarked });
+      setIdeas(
+        ideas.map((m) =>
+          m.docId === content.docId
+            ? { ...content, isBookmarked: !content.isBookmarked }
+            : m
+        )
+      );
+    } else {
+      if (count.bookmark_users.hasOwnProperty(user.userId)) {
+        delete count.bookmark_users[user.userId];
+        await updateDoc(countRef, {
+          bookmark_count: increment(-1),
+          bookmark_users: count.bookmark_users,
+        });
+        deleteDoc(ideaRef);
+        await updateDoc(userRef, {
+          idea_count: increment(-1),
+        });
+        setIdeas(ideas.filter((f) => f.docId !== content.docId));
+        index.deleteObject(content.searchId);
+        navigate(-1);
+      } else {
+        setCount((prevCount) => ({
+          ...prevCount,
+          bookmark_count: prevCount.bookmark_count + 1,
+          bookmark_users: {
+            ...prevCount.bookmark_users,
+            [user.userId]: user.userName,
+          },
+        }));
+        await updateDoc(countRef, {
+          bookmark_count: increment(1),
+          bookmark_users: {
+            ...count.bookmark_users,
+            [user.userId]: user.userName,
+          },
+        });
+        setContent({ ...content, isBookmarked: !content.isBookmarked });
+        setIdeas(
+          ideas.map((m) =>
+            m.docId === content.docId
+              ? { ...content, isBookmarked: !content.isBookmarked }
+              : m
+          )
+        );
+        const newIdeaId = v4();
+        const _document = {
+          docId: content.docId,
+          userId: content.userId,
+          userName: content.userName,
+          userPhotoURL: content.userPhotoURL,
+          title: content.title,
+          text: content.text,
+          source: content.source,
+          tags: content.tags,
+          connectedIDs: content.connectedIDs,
+          createdAt: content.createdAt,
+          updatedAt: dayjs().format("YYYY. MM. DD. HH:mm:ss"),
+        };
+        const document = {
+          ..._document,
+          searchId: newIdeaId,
+          isPublic: false,
+          isLiked: count.like_users.hasOwnProperty(user.userId),
+          isBookmarked: true,
+          isViewed: count.view_users.hasOwnProperty(user.userId),
+          isOriginal: false,
+        };
+        await setDoc(userIdeaRef, { ...document });
+        await updateDoc(userRef, {
+          idea_count: increment(1),
+        });
+        setIdeas([{ ...document }, ...ideas]);
+        index.saveObject({ ..._document, objectID: newIdeaId });
+      }
     }
-    setIdeas(
-      ideas.map((m) =>
-        m.docId === content.docId
-          ? { ...content, isBookmarked: !content.isBookmarked }
-          : m
-      )
-    );
   };
 
   const onPublicClick = () => {
@@ -122,19 +265,9 @@ const ViewIdeaContent = ({
     });
   };
 
-  // Ellipsis Menu
-  const [anchorEl, setAnchorEl] = useState(false);
-  const open = Boolean(anchorEl);
-  const handleEllipsisClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleEllipsisClose = () => {
-    setAnchorEl(false);
-  };
-
   return (
-    <>
-      <div className={`${itemChangeProps != 0 && "blur-sm"} duration-100`}>
+    <div className="relative">
+      <div>
         {content.title !== "" && (
           <div className="flex px-5 pt-5 font-black text-lg break-all">
             {content.title}
@@ -175,7 +308,7 @@ const ViewIdeaContent = ({
           </div>
         )}
         {content.tags.length != 0 && (
-          <div className="flex flex-wrap items-center p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs word-breaks">
+          <div className="flex flex-wrap items-center p-5 pt-1 pb-4 gap-1 text-stone-400 text-xs word-breaks">
             <span className="pt-1 text-stone-300">
               <FontAwesomeIcon icon={faHashtag} />
             </span>
@@ -198,26 +331,28 @@ const ViewIdeaContent = ({
             아이디어입니다.
           </div>
         ) : (
-          <div className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs">
+          <button
+            className="flex items-start p-5 pt-1 pb-4 gap-2 text-stone-400 text-xs"
+            onClick={handleEllipsisClick}
+          >
             <span>
               조회&nbsp;
               {count.view_count}
             </span>
             {count.like_count != 0 && (
-              <button
+              <span
                 aria-controls={open ? "demo-positioned-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
-                onClick={handleEllipsisClick}
               >
                 좋아요&nbsp;
                 {count.like_count}
-              </button>
+              </span>
             )}
             {count.bookmark_count != 0 && (
               <span>저장됨&nbsp;{count.bookmark_count}</span>
             )}
-          </div>
+          </button>
         )}
       </div>
 
@@ -227,18 +362,21 @@ const ViewIdeaContent = ({
           itemChangeProps != 0 && "blur-sm"
         }`}
       >
-        <button
-          className="text-red-400 px-2"
-          onClick={() => onLikeClick(content)}
-        >
+        <button className="text-red-400 px-2" onClick={onLikeClick}>
           <FontAwesomeIcon
-            icon={content.isLiked ? fasHeart : farHeart}
+            icon={
+              count.like_users.hasOwnProperty(user.userId) ? fasHeart : farHeart
+            }
             size="lg"
           />
         </button>
         <button className="text-orange-400 px-2" onClick={onBookmarkClick}>
           <FontAwesomeIcon
-            icon={content.isBookmarked ? fasBookmark : farBookmark}
+            icon={
+              count.bookmark_users.hasOwnProperty(user.userId)
+                ? fasBookmark
+                : farBookmark
+            }
             size="lg"
           />
         </button>
@@ -251,31 +389,7 @@ const ViewIdeaContent = ({
           </button>
         )}
       </div>
-
-      {isMount && isDeleted === false && (
-        <Menu
-          id="demo-positioned-menu"
-          aria-labelledby="demo-positioned-button"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleEllipsisClose}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {Object.values(count.like_users).map((user, index) => (
-            <MenuItem key={index}>
-              <div className="text-xs">{user}</div>
-            </MenuItem>
-          ))}
-        </Menu>
-      )}
-    </>
+    </div>
   );
 };
 

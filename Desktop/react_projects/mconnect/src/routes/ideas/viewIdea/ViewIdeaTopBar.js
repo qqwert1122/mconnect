@@ -20,7 +20,6 @@ const ViewIdeaTopBar = ({
   content,
   isOwner,
   navigate,
-  setIsVisible,
   initEditor,
   onDeleteClick,
   toastAlarm,
@@ -28,7 +27,6 @@ const ViewIdeaTopBar = ({
   const setIsEdit = useSetRecoilState(isEditState);
 
   const onBackClick = () => {
-    setIsVisible(false);
     navigate(-1);
   };
 
@@ -99,16 +97,16 @@ const ViewIdeaTopBar = ({
         }}
       >
         {isOwner && (
-          <MenuItem onClick={onEditClick}>
+          <MenuItem sx={{ fontSize: "14px" }} onClick={onEditClick}>
             <FontAwesomeIcon icon={faPenToSquare} />
             &nbsp; 수정
           </MenuItem>
         )}
-        <MenuItem onClick={onDeleteMenuItemClick}>
+        <MenuItem sx={{ fontSize: "14px" }} onClick={onDeleteMenuItemClick}>
           <FontAwesomeIcon icon={faTrashCan} />
           &nbsp; 삭제
         </MenuItem>
-        <MenuItem onClick={handleEllipsisClose}>
+        <MenuItem sx={{ fontSize: "14px" }} onClick={handleEllipsisClose}>
           <FontAwesomeIcon icon={faCopy} />
           &nbsp; 복사
         </MenuItem>

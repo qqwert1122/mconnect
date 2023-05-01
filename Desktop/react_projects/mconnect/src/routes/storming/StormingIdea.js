@@ -37,7 +37,7 @@ import { userState } from "atom";
 import { ideasState } from "atom";
 import { v4 } from "uuid";
 
-const StormingIdea = ({ index, idea, timeDisplay }) => {
+const StormingIdea = ({ index, idea, viewIdea, timeDisplay }) => {
   const loggedInUser = useRecoilValue(userState);
   const isOwner = loggedInUser.userId === idea.userId;
 
@@ -288,9 +288,9 @@ const StormingIdea = ({ index, idea, timeDisplay }) => {
             )}
             <div
               className="w-full mb-5 flex items-center break-all whitespace-pre-line line-clamp-6"
-              // onClick={() => {
-              //   onViewIdeaClick(dbIdea);
-              // }}
+              onClick={() => {
+                viewIdea(idea);
+              }}
             >
               {idea.text}
             </div>

@@ -8,47 +8,24 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleUp,
+  faCircleNodes,
   faHashtag,
   faQuoteLeft,
 } from "@fortawesome/free-solid-svg-icons";
-import { faCompass as farCompass } from "@fortawesome/free-regular-svg-icons";
+import {
+  faThumbsUp,
+  faCompass as farCompass,
+} from "@fortawesome/free-regular-svg-icons";
 
 const WritingBottomBar = ({
   bottomItemChangeProps,
-  setBottomItemChangeProps,
+  bottomItemChange,
   showTitleAndCnctn,
 }) => {
   const formSource = useRecoilValue(formSourceState);
   const formTags = useRecoilValue(formTagsState);
   const [formPublic, setFormPublic] = useRecoilState(formPublicState);
   const formCnctedIdeas = useRecoilValue(formCnctedIdeasState);
-
-  const bottomItemChange = (e, props) => {
-    e.preventDefault();
-    switch (props) {
-      case 1:
-        if (bottomItemChangeProps != 1) {
-          setBottomItemChangeProps(1);
-        } else {
-          setBottomItemChangeProps(0);
-        }
-        break;
-      case 2:
-        if (bottomItemChangeProps != 2) {
-          setBottomItemChangeProps(2);
-        } else {
-          setBottomItemChangeProps(0);
-        }
-        break;
-      case 3:
-        if (bottomItemChangeProps != 3) {
-          setBottomItemChangeProps(3);
-        } else {
-          setBottomItemChangeProps(0);
-        }
-        break;
-    }
-  };
 
   const onPublicClick = (e) => {
     e.preventDefault();
@@ -59,15 +36,17 @@ const WritingBottomBar = ({
     <div className="flex justify-between items-center p-2 py-4 shadow-inner">
       <div className="flex gap-2 text-lg">
         <button
-          className={`${formSource.length === 0 && "text-stone-400"} px-2`}
+          className={`${formSource.length === 0 && "text-stone-400"} ${
+            bottomItemChangeProps === 1 && "text-sky-400"
+          } duration-500 px-2`}
           onClick={(e) => bottomItemChange(e, 1)}
         >
           <FontAwesomeIcon icon={faQuoteLeft} />
         </button>
         <button
-          className={`relative ${
-            formTags.length === 0 && "text-stone-400"
-          } px-2`}
+          className={`relative ${formTags.length === 0 && "text-stone-400"} ${
+            bottomItemChangeProps === 2 && "text-sky-400"
+          } duration-500 px-2`}
           onClick={(e) => bottomItemChange(e, 2)}
         >
           <FontAwesomeIcon icon={faHashtag} />
@@ -99,24 +78,23 @@ const WritingBottomBar = ({
       </div>
 
       {showTitleAndCnctn && (
-        <div
-          className={`flex justify-end items-center gap-2 ${
-            formCnctedIdeas.length < 2 && "animate-pulse text-red-400"
-          }`}
-        >
+        <div className="flex justify-end items-center gap-4">
           <button
-            className="text-base font-black"
+            className={`text-base font-black duration-500 ${
+              bottomItemChangeProps === 4 && "text-sky-400"
+            }`}
+            onClick={(e) => bottomItemChange(e, 4)}
+          >
+            추천 <FontAwesomeIcon icon={faThumbsUp} />
+          </button>
+          <button
+            className={`text-base font-black duration-500 ${
+              formCnctedIdeas.length < 2 && "animate-pulse text-red-400"
+            } ${bottomItemChangeProps === 3 && "text-sky-400"}`}
             onClick={(e) => bottomItemChange(e, 3)}
           >
-            연결된 아이디어
+            연결 <FontAwesomeIcon icon={faCircleNodes} />
           </button>
-          <span
-            className={`${
-              bottomItemChangeProps === 3 && "rotate-180"
-            } duration-500`}
-          >
-            <FontAwesomeIcon icon={faAngleUp} />
-          </span>
         </div>
       )}
     </div>

@@ -1,6 +1,6 @@
 import SettingProfile from "./SettingProfile";
 import "css/Animation.css";
-import "css/Gradient.css"
+import "css/Gradient.css";
 import BottomNavigationBar from "routes/BottomNavigationBar";
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -103,7 +103,7 @@ const Setting = ({ ...props }) => {
       <div className="fixed top-0 w-full z-10">
         <div className=" px-2 p-4 bg-white shadow">
           <div>
-            <img className="mb-4 pl-2" width={110} src="./img/logo.png" />
+            <img className="mb-4" width={150} src="./img/text_logo.svg" />
           </div>
           <div className="flex justify-between items-center">
             <div className="px-2 text-lg font-black">더 보기</div>

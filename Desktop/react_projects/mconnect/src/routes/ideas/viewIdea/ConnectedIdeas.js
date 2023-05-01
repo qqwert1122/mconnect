@@ -4,7 +4,6 @@ import { Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilValue } from "recoil";
-import { whatViewState } from "atom";
 import { useEffect, useState } from "react";
 
 const ConnectedIdeas = ({
@@ -20,7 +19,7 @@ const ConnectedIdeas = ({
         setCnctedIdeas(idea)
       );
     }
-  }, []);
+  }, [content]);
 
   const settings = {
     dots: true,
@@ -35,7 +34,7 @@ const ConnectedIdeas = ({
 
   return (
     <div className="bg-white border rounded-t-2xl">
-      <div className="flex justify-between mx-8 pt-5 mb-2 z-10 text-base font-black">
+      <div className="flex justify-between p-4 z-10 text-base font-black">
         연결된 아이디어
         <button onClick={() => tabChange(2)}>닫기</button>
       </div>

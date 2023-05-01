@@ -2,6 +2,7 @@ import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronDown,
+  faInfoCircle,
   faQuoteLeft,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -16,7 +17,7 @@ const SelectedIdeasSlide = ({ ...props }) => {
 
   // event handler
   const onIdeaClick = (idea) => {
-    viewIdea(idea);
+    viewIdea(idea, "my");
   };
 
   const onViewDetailsClick = (e) => {
@@ -43,20 +44,31 @@ const SelectedIdeasSlide = ({ ...props }) => {
   return (
     <>
       <div
-        className={`${
-          isViewDetailsClicked ? "h-96" : "h-20"
-        } shadow-lg bg-white duration-100`}
+        className="shadow-lg bg-white duration-200 rounded-b-2xl text-sm"
+        style={{
+          height: `${isViewDetailsClicked ? "400px" : "96px"}`,
+        }}
       >
         {isViewDetailsClicked === false ? (
           <>
             <div className="mx-16 pt-5 mb-2 text-center font-black z-10">
               {selectedIdeas.length}개 선택됨
+              <p className="text-xs text-red-300 font-normal">
+                <FontAwesomeIcon icon={faInfoCircle} /> 연결하려면 2개 이상의
+                아이디어가 필요해요
+              </p>
             </div>
           </>
         ) : (
           <>
-            <div className="mx-16 pt-5 mb-2 text-center font-black z-10">
-              선택된 아이디어
+            <div className="mx-16 pt-5 mb-2 text-left z-10">
+              <p className="font-black ">선택된 아이디어</p>
+              {selectedIdeas.length < 2 && (
+                <p className="text-xs text-red-300">
+                  <FontAwesomeIcon icon={faInfoCircle} /> 연결하려면 2개 이상의
+                  아이디어가 필요해요
+                </p>
+              )}
             </div>
             <div className="relative pb-10">
               <Slider {...settings}>
@@ -112,12 +124,14 @@ const SelectedIdeasSlide = ({ ...props }) => {
           </>
         )}
         <button
-          className={`flex mx-auto p-2 px-10 mt-2 ${
-            isViewDetailsClicked && "rotate-180"
-          }`}
+          className={`flex mx-auto p-2 px-10 mt-2 font-black`}
           onClick={onViewDetailsClick}
         >
-          <FontAwesomeIcon icon={faChevronDown} />
+          {isViewDetailsClicked ? (
+            <div>닫기</div>
+          ) : (
+            <FontAwesomeIcon icon={faChevronDown} />
+          )}
         </button>
       </div>
     </>

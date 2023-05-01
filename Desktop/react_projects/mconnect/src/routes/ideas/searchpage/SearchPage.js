@@ -8,10 +8,9 @@ import {
   Configure,
 } from "react-instantsearch-hooks-web";
 import { createInfiniteHitsSessionStorageCache } from "instantsearch.js/es/lib/infiniteHitsCache";
-
-import BottomNavigationBar from "routes/BottomNavigationBar";
 import { useRecoilValue } from "recoil";
 import { userState } from "atom";
+import BottomNavigationBar from "routes/BottomNavigationBar";
 
 const SearchPage = ({ ...props }) => {
   const { navValue, setNavValue, getIDsFromIdeas, viewIdea } = props;
@@ -25,9 +24,9 @@ const SearchPage = ({ ...props }) => {
   const sessionStorageCache = createInfiniteHitsSessionStorageCache();
 
   return (
-    <div className="min-h-screen flex-col">
+    <>
       <BottomNavigationBar navValue={navValue} setNavValue={setNavValue} />
-      <div className="relative">
+      <div className="min-h-screen flex-col relative">
         <InstantSearch searchClient={searchClient} indexName="userIdeas">
           <div>
             <SearchBox
@@ -53,7 +52,7 @@ const SearchPage = ({ ...props }) => {
           </div>
         </InstantSearch>
       </div>
-    </div>
+    </>
   );
 };
 

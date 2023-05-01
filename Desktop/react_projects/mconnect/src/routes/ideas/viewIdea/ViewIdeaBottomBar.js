@@ -1,8 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import { faAngleUp, faCircleNodes } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
-import { useRecoilValue } from "recoil";
-import { whatViewState } from "atom";
 
 const ViewIdeaBottomBar = ({ content, itemChange, itemChangeProps }) => {
   return (
@@ -14,7 +12,7 @@ const ViewIdeaBottomBar = ({ content, itemChange, itemChangeProps }) => {
           } duration-200 px-2 text-base font-black`}
           onClick={() => itemChange(1)}
         >
-          관련 <FontAwesomeIcon icon={faThumbsUp} />
+          추천 <FontAwesomeIcon icon={faThumbsUp} />
         </button>
       </div>
 
@@ -28,12 +26,12 @@ const ViewIdeaBottomBar = ({ content, itemChange, itemChangeProps }) => {
             className="text-base font-black"
             onClick={() => itemChange(2)}
           >
-            연결된 아이디어
+            연결
           </button>
           <span
             className={`${itemChangeProps === 2 && "rotate-180"} duration-500`}
           >
-            <FontAwesomeIcon icon={faAngleUp} />
+            <FontAwesomeIcon icon={faCircleNodes} />
           </span>
         </div>
       )}

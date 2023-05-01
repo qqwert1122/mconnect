@@ -45,9 +45,9 @@ const WritingTopBar = ({ onBackClick, showTitleAndCnctn }) => {
         type="submit"
         className={`${
           formText
-            ? "bg-gradient-to-tr from-rose-400 to-orange-400 text-orange-100"
+            ? "bg-gradient-to-tr from-sky-400 to-blue-400 text-white"
             : "bg-stone-200 text-stone-400"
-        } p-1 px-2 rounded font-black text-center shadow-md `}
+        } p-1 px-2 rounded font-black text-center shadow-md duration-500`}
         value="작성"
       />
     </div>

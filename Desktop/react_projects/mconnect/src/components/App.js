@@ -39,9 +39,9 @@ import {
   selectedIdeasState,
   isEditState,
   whatEditState,
-  whatViewState,
   cnctedIdeasState,
 } from "atom";
+import BottomNavigationBar from "routes/BottomNavigationBar";
 
 const useDeliverProps = () => {
   const [loggedInUser, setLoggedInUser] = useRecoilState(userState);
@@ -146,7 +146,19 @@ const useDeliverProps = () => {
 
   let navigate = useNavigate();
 
-  const [navValue, setNavValue] = useState(loggedInUser ? "/contents" : "/");
+  const [navValue, setNavValue] = useState(isLoggedIn ? "/contents" : "/auth");
+
+  useEffect(() => {
+    navigate(`${navValue}`, { replace: true });
+  }, [navValue]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      setNavValue("/contents");
+    } else {
+      setNavValue("/auth");
+    }
+  }, [isLoggedIn]);
 
   const clearEdit = useResetRecoilState(isEditState);
   const clearWhatEdit = useResetRecoilState(whatEditState);
@@ -163,8 +175,7 @@ const useDeliverProps = () => {
     navigate(-1);
   };
 
-  const setWhatView = useSetRecoilState(whatViewState);
-  const viewIdea = async (idea) => {
+  const viewIdea = async (idea, route) => {
     const countRef = doc(dbService, "counts", idea.docId);
     const countData = (await getDoc(countRef)).data();
     const userIdeaRef = doc(
@@ -185,17 +196,14 @@ const useDeliverProps = () => {
           [loggedInUser.userId]: loggedInUser.userName,
         },
       });
+    }
+    if (route == "my") {
       await updateDoc(userIdeaRef, {
         isViewed: true,
       });
     }
-    setWhatView(idea);
     navigate(`/contents/${idea.docId}`);
   };
-
-  useEffect(() => {
-    navigate(`${navValue}`, { replace: true });
-  }, [navValue]);
 
   const getIdeasFromIDs = async (IDs) => {
     const q1 = query(
@@ -442,13 +450,8 @@ const App = () => {
 
   const loading = (
     <div className="w-screen h-screen flex justify-center items-center mx-auto">
-      <div className="flex-col">
-        <div className="flex justify-center text-center">
-          <CircularProgress color="inherit" />
-        </div>
-        <div className="flex justify-center mt-6 text-base font-black">
-          로딩중
-        </div>
+      <div className="flex justify-center text-center">
+        <CircularProgress color="inherit" />
       </div>
     </div>
   );

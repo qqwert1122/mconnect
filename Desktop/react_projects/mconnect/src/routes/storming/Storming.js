@@ -28,7 +28,8 @@ import {
 import Slider from "react-slick";
 
 const Storming = ({ ...props }) => {
-  const { isLoggedIn, timeDisplay, navValue, setNavValue, trends } = props;
+  const { isLoggedIn, timeDisplay, navValue, setNavValue, trends, viewIdea } =
+    props;
 
   const APP_ID = process.env.REACT_APP_ALGOLIA_APP_ID;
   const API_KEY = process.env.REACT_APP_ALGOLIA_API_KEY;
@@ -199,10 +200,11 @@ const Storming = ({ ...props }) => {
           <div className="mt-5 ">
             {ideas.map((idea, i) => (
               <div key={i} className="my-1">
-                <div key={i} className="ml-5 bg-white rounded-lg">
+                <div className="ml-5 bg-white rounded-lg">
                   <StormingIdea
                     index={index}
                     idea={idea}
+                    viewIdea={viewIdea}
                     timeDisplay={timeDisplay}
                   />
                 </div>

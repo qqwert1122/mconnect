@@ -21,11 +21,6 @@ export const selectedIdeasState = atom({
   default: [],
 });
 
-export const whatViewState = atom({
-  key: "whatViewState",
-  default: {},
-});
-
 export const whatEditState = atom({
   key: "whatEditState",
   default: {},
@@ -39,11 +34,11 @@ export const isEditState = atom({
 export const colorsState = atom({
   key: "colorListState",
   default: [
-    "bg-gradient-to-br from-red-400 via-pink-400 to-purple-600",
-    "bg-gradient-to-br from-pink-400 via-orange-400 to-amber-600",
-    "bg-gradient-to-br from-lime-400 via-green-400 to-emerald-600",
-    "bg-gradient-to-br from-teal-400 via-cyan-400 to-sky-600",
-    "bg-gradient-to-br from-blue-400 via-indigo-400 to-violet-600",
+    "bg-gradient-to-br from-cyan-300 to-cyan-500",
+    "bg-gradient-to-br from-sky-300 to-sky-500",
+    "bg-gradient-to-br from-blue-300 to-blue-500",
+    "bg-gradient-to-br from-indigo-300 to-indigo-500",
+    "bg-gradient-to-br from-violet-300 to-violet-500",
   ],
 });
 

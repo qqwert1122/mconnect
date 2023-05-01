@@ -19,6 +19,7 @@ import {
   faAngleDown,
   faAnglesRight,
   faMagnifyingGlass,
+  faCircleRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { toast } from "react-toastify";
@@ -32,7 +33,7 @@ const SuggestedIdeas = ({
   docId,
   writing,
   tagsPrmtr,
-  tabChange,
+  tabClose,
   onIdeaClick,
   isItIn,
 }) => {
@@ -42,8 +43,6 @@ const SuggestedIdeas = ({
   //  - is writing ? "from writing" : "from viewing"
   // tagsPrmtr
   //  - tagsPrmtr ? formTags : content.tags
-  // tabChange
-  //  - tab ? none : tabChange(=itemChange)
   // onIdeaClick={onIdeaClick}
   //  - navigate view page by clicking idea
   // isItIn ?
@@ -77,28 +76,6 @@ const SuggestedIdeas = ({
     tagsPrmtr.length > 0 && tagsPrmtr[0]
   );
 
-  // get Ideas that matches the tagPrmtr.
-  const [filteredIdeas, setFilteredIdeas] = useState([]);
-
-  const getFilteredIdeas = async (query) => {
-    const ideaRef = await getDocs(query).then((snapshot) => {
-      setFilteredIdeas((ideas) => {
-        const arr = [...ideas];
-        snapshot.forEach((doc) => {
-          if (doc.data().docId != docId) {
-            arr.push(doc.data());
-          }
-        });
-        return arr;
-      });
-      if (snapshot.docs.length === 0) {
-        setLastVisible(-1);
-      } else {
-        setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
-      }
-    });
-  };
-
   const MAX_IDEAS_LENGTH = 15;
   const NUM_LOADMORE = 5;
 
@@ -120,10 +97,10 @@ const SuggestedIdeas = ({
       orderBy("createdAt", "desc"),
       limit(NUM_LOADMORE)
     );
-    const ideaRef = await getDocs(q1).then((snapshot) => {
+    await getDocs(q1).then((snapshot) => {
       const arr = [];
       snapshot.forEach((doc) => {
-        if (doc.docId != docId) {
+        if (doc.data().docId != docId) {
           arr.push(doc.data());
         }
       });
@@ -154,6 +131,28 @@ const SuggestedIdeas = ({
     }
     getFilteredIdeas(q);
   }
+
+  // get Ideas that matches the tagPrmtr.
+  const [filteredIdeas, setFilteredIdeas] = useState([]);
+
+  const getFilteredIdeas = async (query) => {
+    await getDocs(query).then((snapshot) => {
+      setFilteredIdeas((ideas) => {
+        const arr = [...ideas];
+        snapshot.forEach((doc) => {
+          if (doc.data().docId != docId) {
+            arr.push(doc.data());
+          }
+        });
+        return arr;
+      });
+      if (snapshot.docs.length === 0) {
+        setLastVisible(-1);
+      } else {
+        setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+      }
+    });
+  };
 
   let navigate = useNavigate();
 
@@ -212,16 +211,9 @@ const SuggestedIdeas = ({
 
   return (
     <>
-      <div className="flex justify-between mx-8 pt-5 mb-2 z-10 text-base font-black">
-        {writing ? (
-          <div>
-            추천 &nbsp;
-            <FontAwesomeIcon icon={faThumbsUp} />
-          </div>
-        ) : (
-          <div>추천 아이디어</div>
-        )}
-        <button onClick={() => tabChange(1)}>닫기</button>
+      <div className="flex justify-between p-4 z-10 text-base font-black">
+        추천 아이디어
+        <button onClick={tabClose}>닫기</button>
       </div>
       <hr />
       <div className="p-5 flex flex-nowrap overflow-x-scroll">
@@ -244,13 +236,17 @@ const SuggestedIdeas = ({
       <div className="relative pb-10">
         {filteredIdeas.length === 0 ? (
           <div
-            className="flex justify-center items-center text-xl font-black "
+            className="flex justify-center items-center text-center font-black "
             style={{ height: "248px" }}
           >
-            <img className="" width={150} src="./img/empty.png" />
-            {/* <FontAwesomeIcon icon={faQuoteLeft} />
-            &nbsp; 텅 &nbsp;
-            <FontAwesomeIcon icon={faQuoteRight} /> */}
+            <div className="flex-col">
+              <img
+                className="mx-auto pb-5"
+                width={150}
+                src="../img/empty_box.png"
+              />
+              <span>아이디어가 비어있어요</span>
+            </div>
           </div>
         ) : (
           <Slider {...sugtdSettings}>
@@ -277,7 +273,7 @@ const SuggestedIdeas = ({
                     {filteredIdeas.length === MAX_IDEAS_LENGTH ? (
                       <FontAwesomeIcon icon={faMagnifyingGlass} />
                     ) : (
-                      <FontAwesomeIcon icon={faAnglesRight} />
+                      <FontAwesomeIcon icon={faCircleRight} />
                     )}
                   </button>
                 )}

@@ -11,14 +11,8 @@ const New = ({ ...props }) => {
 
   const [pages, setPages] = useRecoilState(pagesState);
 
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
   return (
-    <div className={`hiddenscroll page ${isVisible ? "visible" : ""}`}>
+    <>
       <div className="fixed top-0 w-full h-14 px-5 p-3 z-20 flex justify-between bg-white shadow">
         <button onClick={onBackClick}>
           <FontAwesomeIcon icon={faChevronLeft} />
@@ -32,7 +26,7 @@ const New = ({ ...props }) => {
         ))}
       </div>
       <br />
-    </div>
+    </>
   );
 };
 

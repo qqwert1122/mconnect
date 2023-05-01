@@ -7,6 +7,9 @@ import { useEffect, useRef } from "react";
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const ViewIdeaBottom = ({
+  open,
+  setOpen,
+  setIsMount,
   content,
   itemChangeProps,
   setItemChangeProps,
@@ -21,13 +24,20 @@ const ViewIdeaBottom = ({
       2: itemChangeProps === 2 ? 0 : 2,
       3: itemChangeProps === 3 ? 0 : 3,
     };
-
+    setOpen(false);
     setItemChangeProps(itemChangeMap[props] || 0);
   };
 
   const onIdeaClick = (idea) => {
     setItemChangeProps(0);
+    setIsMount(false);
     viewIdea(idea);
+  };
+
+  const onMyIdeaClick = (idea) => {
+    setItemChangeProps(0);
+    setIsMount(false);
+    viewIdea(idea, "my");
   };
 
   // Ref
@@ -65,7 +75,7 @@ const ViewIdeaBottom = ({
           docId={content.docId}
           Writing={false}
           tagsPrmtr={content.tags}
-          tabChange={itemChange}
+          tabClose={() => itemChange(1)}
           onIdeaClick={onIdeaClick}
           isItIn={isItIn}
         />
@@ -80,7 +90,7 @@ const ViewIdeaBottom = ({
       >
         <ConnectedIdeas
           content={content}
-          onIdeaClick={onIdeaClick}
+          onIdeaClick={onMyIdeaClick}
           getIdeasFromIDs={getIdeasFromIDs}
           tabChange={itemChange}
         />
