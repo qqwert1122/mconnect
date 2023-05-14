@@ -185,7 +185,7 @@ const Hit = ({ hit, viewIdea }) => {
       <div className="flex justify-between items-center ">
         <span className="flex gap-2 items-center text-xs">
           <Avatar
-            className="border-2"
+            className="border"
             alt="avatar"
             src={hit.userPhotoURL}
             sx={{

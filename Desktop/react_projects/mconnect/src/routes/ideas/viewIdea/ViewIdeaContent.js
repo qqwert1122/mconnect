@@ -279,7 +279,7 @@ const ViewIdeaContent = ({
           } flex items-center gap-2`}
         >
           <Avatar
-            className="border-2"
+            className="border"
             alt="avatar"
             src={isOwner ? user.userPhotoURL : content.userPhotoURL}
             sx={{

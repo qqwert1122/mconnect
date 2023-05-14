@@ -48,36 +48,30 @@ const UserList = ({ open, handleEllipsisClose, tabs, handleTabs, count }) => {
           {tabs === 0 && (
             <>
               {Object.values(count.view_users).map((user, index) => (
-                <>
-                  <div key={index} className="text-sm p-4 py-2 font-black">
-                    {user}
-                  </div>
+                <div key={index}>
+                  <div className="text-sm p-4 py-2 font-black">{user}</div>
                   {index !== count.view_count - 1 && <hr />}
-                </>
+                </div>
               ))}
             </>
           )}
           {tabs === 1 && (
             <>
               {Object.values(count.like_users).map((user, index) => (
-                <>
-                  <div key={index} className="text-sm p-4 py-2 font-black">
-                    {user}
-                  </div>
+                <div key={index}>
+                  <div className="text-sm p-4 py-2 font-black">{user}</div>
                   {index !== count.view_count - 1 && <hr />}
-                </>
+                </div>
               ))}
             </>
           )}
           {tabs === 2 && (
             <>
               {Object.values(count.bookmark_users).map((user, index) => (
-                <>
-                  <div key={index} className="text-sm p-4 py-2 font-black">
-                    {user}
-                  </div>
+                <div key={index}>
+                  <div className="text-sm p-4 py-2 font-black">{user}</div>
                   {index !== count.view_count - 1 && <hr />}
-                </>
+                </div>
               ))}
             </>
           )}

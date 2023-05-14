@@ -16,21 +16,27 @@ const DeveloperApp = ({ ...props }) => {
 
   const developerApp = [
     createApp(
-      "Connects",
+      "CONNECT",
       "아이디어 커뮤니티, 사람들과 함께 성장하세요",
-      "bg-orange-400",
+      "bg-sky-400",
       true
     ),
     createApp(
       "100-timer",
       "Hustle하는 사람들을 위한 주100시간 타이머",
-      "bg-stone-600",
+      "bg-black",
       false
     ),
     createApp(
-      "ID KEEP",
+      "IDEA LINE",
       "아이디어 이력 관리 어플리케이션",
-      "bg-rose-400",
+      "bg-purple-400",
+      false
+    ),
+    createApp(
+      "3 Words Secret Message",
+      "3단어로 간편하게 전송하는 비밀 메시지",
+      "bg-orange-400",
       false
     ),
   ];

@@ -8,7 +8,7 @@ const Page3 = ({ page }) => {
           } mb-16 text-center relative duration-1000 text-stone-400`}
         >
           <img className="m-auto" width={200} src="./img/tutorial_2.png" />
-          <div className="mt-10 mb-2 text-xl text-orange-400 font-black">
+          <div className="mt-10 mb-2 text-xl text-sky-400 font-black">
             지식을 더 깊숙이!
           </div>
           <span>

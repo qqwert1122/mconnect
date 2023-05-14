@@ -1,4 +1,5 @@
 import ColoredIdeaList from "../ideas/writingIdea/ColoredIdeaList";
+import "css/Gradient.css";
 import { faCircleCheck as farCheck } from "@fortawesome/free-regular-svg-icons";
 import {
   faCheck,
@@ -84,7 +85,7 @@ const Page6 = ({ page }) => {
             page === 5 ? "right-0 opacity-100 " : "-right-10 opacity-0"
           } text-center duration-1000 text-stone-400`}
         >
-          <div className="mb-2 text-xl text-orange-400 font-black">
+          <div className="mb-2 text-xl text-sky-400 font-black">
             아이디어끼리 연결하세요
           </div>
           <div className="mb-10">
@@ -158,7 +159,7 @@ const Page6 = ({ page }) => {
               className={`relative bottom-5 z-10 flex gap-2 shadow-2xl rounded-full px-4 p-2 text-sm duration-200 border-4   ${
                 samples.filter((v) => v.isChecked === true).length === 2 &&
                 !pressed
-                  ? "right-0 opacity-100 bg-gradient-to-tr from-rose-400 to-orange-400 text-orange-100 border-orange-200 animate-bounce"
+                  ? "right-0 opacity-100 stacked-linear-circle text-white animate-bounce"
                   : "-right-3 opacity-0"
               }`}
               onClick={() => setPressed(true)}
@@ -171,7 +172,7 @@ const Page6 = ({ page }) => {
           <div
             className={`mb-10 mx-auto relative w-72 shadow-md 
            ${pressed ? "h-24 opacity-100" : "h-0 opacity-0"}
-           duration-500 text-orange-400 shadow-orange-200`}
+           duration-500 text-sky-400 shadow-sky-200`}
           >
             {pressed && (
               <div className="p-4 text-left text-sm">{typewriter}</div>

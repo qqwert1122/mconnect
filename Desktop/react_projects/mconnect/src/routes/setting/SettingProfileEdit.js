@@ -1,3 +1,4 @@
+import "css/Gradient.css";
 import { useCallback, useRef, useState } from "react";
 import { dbService } from "fbase";
 import {
@@ -76,7 +77,10 @@ const SettingProfileEdit = ({ loggedInUser, isEdit, setIsEdit }) => {
   const onSubmit = async () => {
     if (isDuplicated || name.length === 0) return;
     const userRef = doc(dbService, "users", loggedInUser.userId);
-    await updateDoc(userRef, { userName: name });
+    await updateDoc(userRef, {
+      userName: name,
+      userPhotoURL: `https://avatars.dicebear.com/api/miniavs/${name}.svg`,
+    });
     loadingCallback(() => setIsEdit(false));
     init();
   };
@@ -84,7 +88,7 @@ const SettingProfileEdit = ({ loggedInUser, isEdit, setIsEdit }) => {
   return (
     <div
       className={`relative ${!isEdit && "hidden"} m-7 p-5 px-10
-      relative  bg-gradient-to-tr from-orange-300 to-red-400 rounded shadow-lg`}
+      relative  stacked-linear-rec rounded shadow-lg`}
     >
       <div className="mb-2 flex gap-1 font-black text-white">
         <span>닉네임 변경</span>
@@ -105,10 +109,7 @@ const SettingProfileEdit = ({ loggedInUser, isEdit, setIsEdit }) => {
         }}
         maxLength={20}
       />
-      <button
-        className="absolute top-2 right-2 text-red-200"
-        onClick={onCancle}
-      >
+      <button className="absolute top-2 right-2 text-white" onClick={onCancle}>
         <FontAwesomeIcon icon={faXmarkCircle} size="lg" />
       </button>
       {loading ? (

@@ -65,7 +65,7 @@ const ViewIdeaTopBar = ({
 
   return (
     <div className="fixed top-0 z-10 w-full p-3 flex justify-between items-center shadow bg-white">
-      <button onClick={() => onBackClick("view")}>
+      <button onClick={onBackClick}>
         <FontAwesomeIcon icon={faChevronLeft} size="lg" />
       </button>
       {/* ellipsis */}

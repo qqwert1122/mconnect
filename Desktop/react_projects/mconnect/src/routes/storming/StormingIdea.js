@@ -225,7 +225,7 @@ const StormingIdea = ({ index, idea, viewIdea, timeDisplay }) => {
           <div className="flex justify-between items-center pt-4 ml-4">
             <div className="flex items-center gap-2">
               <Avatar
-                className="border-2"
+                className="border"
                 alt="avatar"
                 src={idea.userPhotoURL}
                 sx={{

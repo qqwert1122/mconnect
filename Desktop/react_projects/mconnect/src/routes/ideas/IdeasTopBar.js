@@ -1,4 +1,5 @@
 import "css/Animation.css";
+import "css/Gradient.css";
 import SelectedIdeasSlide from "routes/ideas/SelectedIdeasSlide";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -119,8 +120,8 @@ const IdeasTopBar = ({ ...props }) => {
 
       <div
         className={`${
-          alarm.boolean ? "visible opacity-100" : "invisible opacity-0"
-        } duration-1000 p-4 flex justify-between bg-gradient-to-br from-pink-500  to-orange-500  text-orange-200 shadow-xl`}
+          alarm.active ? "visible opacity-100" : "invisible opacity-0"
+        } duration-500 p-4 flex justify-between stacked-linear-rec text-white font-black shadow-xl`}
       >
         <span className="flex gap-5">
           <span>

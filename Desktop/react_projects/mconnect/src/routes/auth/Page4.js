@@ -39,7 +39,7 @@ const Page4 = ({ page }) => {
           } text-center duration-1000 text-stone-400`}
         >
           <div className="mb-5">
-            <div className="mb-2 text-xl text-orange-400 font-black">
+            <div className="mb-2 text-xl text-sky-400 font-black">
               다른 유저의 아이디어를 저장하세요
             </div>
             <div className="mb-10">

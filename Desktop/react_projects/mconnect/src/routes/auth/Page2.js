@@ -63,7 +63,7 @@ const Page2 = ({ page }) => {
             page === 1 ? "right-0 opacity-100 " : "-right-10 opacity-0"
           } text-center relative duration-1000 text-stone-400`}
         >
-          <div className="mb-2 text-xl text-orange-400 font-black">
+          <div className="mb-2 text-xl text-sky-400 font-black">
             아이디어를 기록하세요
           </div>
           <span>

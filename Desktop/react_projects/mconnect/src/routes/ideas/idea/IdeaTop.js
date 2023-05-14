@@ -18,9 +18,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { dbService } from "fbase";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { userState } from "atom";
-import { selectedIdeasState } from "atom";
-import { isEditState } from "atom";
+import { selectedIdeasState, isEditState, userState } from "atom";
 
 const IdeaTop = ({
   isOwner,
@@ -58,6 +56,15 @@ const IdeaTop = ({
     navigate("/writingidea");
   };
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+  };
+
+  const onPasteClick = () => {
+    setAnchorEl(null);
+    copyToClipboard(idea.text);
+  };
+
   return (
     <div className="flex justify-between items-center ml-4">
       <div className="flex items-center">
@@ -75,7 +82,7 @@ const IdeaTop = ({
         </button>
         {/* avatar, name, time */}
         <Avatar
-          className="border-2 mr-1"
+          className="border mr-1"
           alt="avatar"
           src={isOwner ? loggedInUser.userPhotoURL : idea.userPhotoURL}
           sx={{
@@ -146,7 +153,7 @@ const IdeaTop = ({
           <FontAwesomeIcon icon={faTrashCan} />
           &nbsp; 삭제
         </MenuItem>
-        <MenuItem sx={{ fontSize: "14px" }} onClick={handleEllipsisClose}>
+        <MenuItem sx={{ fontSize: "14px" }} onClick={onPasteClick}>
           <FontAwesomeIcon icon={faCopy} />
           &nbsp; 복사
         </MenuItem>

@@ -53,7 +53,7 @@ const Tutorial = ({ ...props }) => {
             <div
               key={i}
               className={`${
-                i === page ? "w-7 bg-orange-400" : "w-2 bg-stone-200"
+                i === page ? "w-7 bg-sky-400" : "w-2 bg-stone-200"
               } h-2 rounded-full  duration-500`}
             ></div>
           ))}
@@ -78,7 +78,7 @@ const Tutorial = ({ ...props }) => {
       <button
         className={`${
           page === lastPage ? "px-4 text-base" : "w-12 text-lg"
-        } absolute h-12 bottom-5 right-5 bg-gradient-to-b from-orange-300 to-orange-500 text-orange-50 duration-500 shadow-xl rounded-2xl font-black`}
+        } absolute h-12 bottom-5 right-5 bg-gradient-to-b from-sky-300 to-sky-500 text-white shadow-xl rounded-2xl font-black`}
         onClick={handleNext}
       >
         {page === lastPage ? (

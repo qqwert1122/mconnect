@@ -72,22 +72,41 @@ const useDeliverProps = () => {
     });
   }, []);
 
+  let navigate = useNavigate();
+  const [navValue, setNavValue] = useState(isLoggedIn ? "/contents" : "/auth");
+
+  useEffect(() => {
+    navigate(`${navValue}`, { replace: true });
+  }, [navValue]);
+
+  useEffect(() => {
+    console.log(isLoggedIn);
+    console.log(loggedInUser);
+    if (isLoggedIn) {
+      console.log("contents");
+      setNavValue("/contents");
+    } else {
+      console.log("auth");
+      setNavValue("/auth");
+    }
+  }, [isLoggedIn]);
+
   const [ideas, setIdeas] = useRecoilState(ideasState);
   const [alarm, setAlarm] = useState({
-    boolean: false,
+    active: false,
     message: "",
   });
+
   const toastAlarm = (type) => {
-    switch (type) {
-      case "new":
-        setAlarm({ boolean: true, message: "새 글이 등록되었습니다" });
-        break;
-      case "delete":
-        setAlarm({ boolean: true, message: "글이 삭제되었습니다" });
-        break;
-    }
+    const messages = {
+      new: "새 글이 등록되었습니다",
+      delete: "글이 삭제되었습니다",
+    };
+
+    setAlarm({ active: true, message: messages[type] });
+
     setTimeout(() => {
-      setAlarm({ boolean: false, message: "" });
+      setAlarm({ active: false, message: "" });
     }, 5000);
   };
 
@@ -143,22 +162,6 @@ const useDeliverProps = () => {
   }, [loggedInUser]);
 
   const selectedIdeas = useRecoilValue(selectedIdeasState);
-
-  let navigate = useNavigate();
-
-  const [navValue, setNavValue] = useState(isLoggedIn ? "/contents" : "/auth");
-
-  useEffect(() => {
-    navigate(`${navValue}`, { replace: true });
-  }, [navValue]);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      setNavValue("/contents");
-    } else {
-      setNavValue("/auth");
-    }
-  }, [isLoggedIn]);
 
   const clearEdit = useResetRecoilState(isEditState);
   const clearWhatEdit = useResetRecoilState(whatEditState);
@@ -415,6 +418,7 @@ const useDeliverProps = () => {
   };
 
   return {
+    setLoggedInUser,
     getNextPosts,
     init,
     setInit,

@@ -54,12 +54,12 @@ const AppRouter = ({ ...props }) => {
             </Route>
             <Route path="/error" element={<Error {...props} />} />
             <Route path="/tutorial" element={<Tutorial {...props} />} />
-            <Route path="*" element={<Error {...props} />} />
+            <Route path="*" element={<Ideas {...props} />} />
           </>
         ) : (
           <>
-            <Route exact path="/signup" element={<SignUp {...props} />} />
             <Route exact path="/auth" element={<Auth {...props} />} />
+            <Route exact path="/signup" element={<SignUp {...props} />} />
           </>
         )}
       </Routes>

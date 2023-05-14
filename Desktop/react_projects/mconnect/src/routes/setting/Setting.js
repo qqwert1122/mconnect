@@ -20,28 +20,28 @@ import {
 import {} from "@fortawesome/free-regular-svg-icons";
 
 const Setting = ({ ...props }) => {
-  const { navigate, navValue, setNavValue } = props;
+  const { navigate, navValue, setNavValue, setIsLoggedIn } = props;
   const loggedInUser = useRecoilValue(userState);
   const setChatUser = useSetRecoilState(chatUserState);
   const [isFirstChat, setIsFirstChat] = useRecoilState(isFirstChatState);
 
   const onSignOutClick = async () => {
+    setIsLoggedIn(false);
     await authService.signOut();
-    navigate("/");
+    navigate("/auth");
   };
 
   const menuItem = [
     {
       label: "평가",
-      dscrp: "Connects에 대해 솔직히 평가해주세요",
+      dscrp: "CONNECT에 대해 솔직히 평가해주세요",
       navigation: "/setting/eval",
       color: "bg-red-400",
       icon: <FontAwesomeIcon icon={faStar} size="sm" />,
     },
     {
       label: "제안 / 협업",
-      dscrp:
-        "Connects 운영자에게 서비스 개선 방안, 협업 등에 대해 제안해주세요",
+      dscrp: "운영자에게 개선, 협업을 제안해주세요",
       navigation: `${
         loggedInUser.isAuthority ? "/setting/offer" : "/setting/offer/offerChat"
       }`,
@@ -50,14 +50,14 @@ const Setting = ({ ...props }) => {
     },
     {
       label: "다른 어플리케이션",
-      dscrp: "Connects 제작자의 다른 어플리케이션들을 확인해보세요",
+      dscrp: "CONNECT의 다른 어플리케이션들을 확인하세요",
       navigation: "/setting/developerApp",
       color: "bg-green-400",
       icon: <FontAwesomeIcon icon={faLayerGroup} size="sm" />,
     },
     {
       label: "오픈소스",
-      dscrp: "Connects 제작에 도움을 준 오픈소스를 확인해보세요",
+      dscrp: "제작에 도움을 준 오픈소스를 확인해보세요",
       navigation: "/setting/opensource",
       color: "bg-sky-400",
       icon: <FontAwesomeIcon icon={faCode} size="sm" />,
@@ -115,7 +115,7 @@ const Setting = ({ ...props }) => {
       </div>
       <div className="mt-28 mb-16">
         <SettingProfile loggedInUser={loggedInUser} />
-        <div className="m-5 p-2">
+        {/* <div className="m-5 p-2">
           <div className="font-black pb-2">후원</div>
           <div className="flex gap-5 relative">
             <div className="stacked-linear-donation w-1/2 h-24 relative p-5 rounded shadow-lg text-white font-black text-sm">
@@ -131,7 +131,7 @@ const Setting = ({ ...props }) => {
               <span className="absolute bottom-2 right-2">광고 제거</span>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="m-5 p-2">
           {menuItem.map((item, index) => (
             <div key={index}>

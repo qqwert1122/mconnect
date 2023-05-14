@@ -53,10 +53,12 @@ const SelectedIdeasSlide = ({ ...props }) => {
           <>
             <div className="mx-16 pt-5 mb-2 text-center font-black z-10">
               {selectedIdeas.length}개 선택됨
-              <p className="text-xs text-red-300 font-normal">
-                <FontAwesomeIcon icon={faInfoCircle} /> 연결하려면 2개 이상의
-                아이디어가 필요해요
-              </p>
+              {selectedIdeas.length < 2 && (
+                <p className="text-xs text-red-300 font-normal">
+                  <FontAwesomeIcon icon={faInfoCircle} /> 연결하려면 2개 이상의
+                  아이디어가 필요해요
+                </p>
+              )}
             </div>
           </>
         ) : (

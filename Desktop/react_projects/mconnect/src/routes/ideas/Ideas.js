@@ -123,7 +123,7 @@ const Ideas = ({ ...props }) => {
               </div>
               <img
                 className="absolute top-4 right-4 drop-shadow-2xl"
-                width={150}
+                width={120}
                 src="./img/tutorial_1.png"
               />
             </li>
@@ -135,7 +135,7 @@ const Ideas = ({ ...props }) => {
               </div>
               <img
                 className="absolute top-4 right-4 drop-shadow-2xl"
-                width={150}
+                width={120}
                 src="./img/tutorial_2.png"
               />
             </li>
@@ -144,12 +144,10 @@ const Ideas = ({ ...props }) => {
                 <h1 className="mb-2 text-xl">연결하세요</h1>
                 <p>전에 없던 브레인스토밍,</p>
                 <p>당신의 창의력을 발휘하세요</p>
-                {/* <p>아이디어들을 연결해</p>
-                  <p>새로운 아이디어를 찾으세요</p> */}
               </div>
               <img
                 className="absolute top-4 right-4 drop-shadow-2xl"
-                width={150}
+                width={120}
                 src="./img/tutorial_3.png"
               />
             </li>
@@ -176,7 +174,14 @@ const Ideas = ({ ...props }) => {
           </>
         ) : (
           <div className="h-96 flex items-center justify-center text-base font-black text-gray-400 ">
-            새 아이디어를 입력해주세요 ✏️
+            <div className="flex-col">
+              <img
+                className="mx-auto pb-5"
+                width={150}
+                src="../img/empty_box.png"
+              />
+              <span>아이디어가 비어있어요</span>
+            </div>
           </div>
         )}
       </div>

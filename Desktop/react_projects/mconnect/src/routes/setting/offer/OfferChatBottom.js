@@ -60,7 +60,7 @@ const OfferChatBottom = ({ loggedInUser, chatUser }) => {
         }}
       />
       <button
-        className="w-16 shadow-inner bg-orange-400 text-white"
+        className="w-16 shadow-inner rounded bg-sky-400 text-white"
         onClick={onSubmit}
       >
         <FontAwesomeIcon icon={faPaperPlane} size="lg" />
