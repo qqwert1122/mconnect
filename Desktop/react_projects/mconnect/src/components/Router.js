@@ -20,6 +20,7 @@ import { useRecoilValue } from "recoil";
 import { pagesState } from "atom";
 import Tutorial from "routes/auth/Tutorial";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import CreateNewAccount from "routes/auth/CreateNewAccount";
 
 const AppRouter = ({ ...props }) => {
   return (
@@ -60,6 +61,11 @@ const AppRouter = ({ ...props }) => {
           <>
             <Route exact path="/auth" element={<Auth {...props} />} />
             <Route exact path="/signup" element={<SignUp {...props} />} />
+            <Route
+              exact
+              path="/createnewaccount"
+              element={<CreateNewAccount {...props} />}
+            />
           </>
         )}
       </Routes>

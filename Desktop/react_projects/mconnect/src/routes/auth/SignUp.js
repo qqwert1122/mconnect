@@ -31,8 +31,8 @@ const SignUp = ({ ...props }) => {
   const [name, setName] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [isDuplicated, setIsDuplicated] = useState(false);
-  const [isShort, setIsShort] = useState(false);
+  const [off, setOff] = useState(true);
+  const [message, setMessage] = useState("닉네임이 너무 짧습니다");
 
   const loadingCallback = (callback) => {
     setLoading(true);
@@ -50,37 +50,84 @@ const SignUp = ({ ...props }) => {
     };
   };
 
-  const nickNameCheck = useCallback(
+  const isSimilarToAdminName = (username) => {
+    var adminNamePattern = /admin/i;
+    var reservedUsernames = [
+      "admin",
+      "administrator",
+      "superuser",
+      "connect",
+      "connects",
+      "Connect",
+      "Connects",
+      "CONNECT",
+      "CONNECTS",
+      "관리자",
+      "매니저",
+      "운영진",
+      "운영자",
+      "직원",
+      "대표자",
+      "어드민",
+      "최고관리자",
+      "루트",
+      "시스템관리자",
+      "root",
+      "rootadmin",
+    ];
+    if (adminNamePattern.test(username)) {
+      return true;
+    }
+    if (reservedUsernames.includes(username.toLowerCase())) {
+      return true;
+    }
+    return false;
+  };
+
+  const isDuplicated = useCallback(
     _debounce(async (value) => {
       const q = query(
         collection(dbService, "users"),
-        where(
-          "userName",
-          "==",
-          value === "" ? authService.currentUser.displayName : value
-        )
+        where("userName", "==", value)
       );
       const _nickNameCheck = await getDocs(q);
       loadingCallback(
         _nickNameCheck.docs.length == 0
-          ? () => setIsDuplicated(false)
+          ? () => {
+              return true;
+            }
           : () => {
-              setIsDuplicated(true);
+              return false;
             }
       );
     }, 1000),
     []
   );
 
+  const isShort = (m) => {
+    if (m.length < 2) return true;
+    else return false;
+  };
+
   const onChange = (e) => {
-    if (e.target.value.length < 2 && e.target.value.length > 0) {
-      setIsShort(true);
-      setName(e.target.value);
-    } else {
-      setIsShort(false);
-      nickNameCheck(e.target.value);
-      setName(e.target.value);
+    setName(e.target.value);
+    if (isShort(e.target.value)) {
+      setMessage("닉네임이 너무 짧습니다");
+      setOff(true);
+      return;
     }
+    if (isSimilarToAdminName(e.target.value)) {
+      setMessage("사용 불가능한 닉네임입니다");
+      setOff(true);
+      return;
+    }
+    if (isDuplicated(e.target.value)) {
+      setMessage("이미 사용 중인 닉네임입니다");
+      setOff(true);
+      return;
+    }
+    setMessage("");
+    setOff(false);
   };
 
   const onSpaceKeyDown = (e) => {
@@ -90,25 +137,13 @@ const SignUp = ({ ...props }) => {
   };
 
   const onSubmit = async () => {
-    if (isDuplicated || isShort) return;
-    const q = query(
-      collection(dbService, "users"),
-      where(
-        "userName",
-        "==",
-        name === "" ? authService.currentUser.displayName : name
-      )
-    );
-    const _nickNameCheck = await getDocs(q);
-    if (_nickNameCheck.docs.length > 0) return;
+    if (off) return;
 
     await setDoc(doc(dbService, "users", authService.currentUser.uid), {
       userId: authService.currentUser.uid,
       userEmail: authService.currentUser.email,
-      userName: name === "" ? authService.currentUser.displayName : name,
-      userPhotoURL: `https://avatars.dicebear.com/api/miniavs/${
-        name === "" ? authService.currentUser.displayName : name
-      }.svg`,
+      userName: name,
+      userPhotoURL: `https://avatars.dicebear.com/api/miniavs/${name}.svg`,
       isAdRemoved: false,
       isAuthority: false,
       isOfficial: false,
@@ -131,35 +166,38 @@ const SignUp = ({ ...props }) => {
 
   return (
     <div className="relative w-screen h-screen bg-white">
-      <div className="pt-32 p-8">
+      <div className="p-4 text-lg font-black">프로필</div>
+      <div className="pt-20 p-8">
         <div className="relative flex justify-center mb-16">
-          <Avatar
-            alt="avatar"
-            src={`https://avatars.dicebear.com/api/miniavs/${
-              name === "" ? authService.currentUser.displayName : name
-            }.svg`}
-            sx={{
-              display: "flex",
-              width: "150px",
-              height: "150px",
-              borderWidth: "2px",
-            }}
-          />
+          <div>
+            <Avatar
+              alt="avatar"
+              src={`https://avatars.dicebear.com/api/miniavs/${name}.svg`}
+              sx={{
+                display: "flex",
+                width: "150px",
+                height: "150px",
+                borderWidth: "2px",
+              }}
+            />
+            <br />
+            <div className="text-center h-8 font-black">{name}</div>
+          </div>
         </div>
         <div
           className={`font-black text-lg mb-2 ${
             name.length > 20 && "text-red-400"
           }`}
         >
-          닉네임을 입력하세요
+          이름(닉네임)을 입력하세요
         </div>
         <div className="flex items-center mb-5 gap-5">
           <input
             ref={userNameRef}
             type="text"
             name="inputUserName"
-            className={`w-60 border-b-2 text-lg `}
-            placeholder={authService.currentUser.displayName}
+            className={`p-2 w-60 border-b-2`}
+            placeholder="여기에 입력하세요"
             value={name}
             onChange={onChange}
             onKeyDown={onSpaceKeyDown}
@@ -173,30 +211,21 @@ const SignUp = ({ ...props }) => {
           ) : (
             <button
               className={`${
-                isDuplicated || isShort ? "text-stone-200" : "text-sky-300"
+                off ? "text-stone-200" : "text-sky-300"
               } duration-500`}
             >
               <FontAwesomeIcon icon={faCircleCheck} size="2xl" />
             </button>
           )}
         </div>
-        {isShort && (
-          <div className="text-red-400 font-black text-xs mb-2">
-            닉네임은 2글자 이상이어야 합니다
-          </div>
-        )}
-        {isDuplicated && (
-          <div className="text-red-400 font-black text-xs mb-2">
-            중복된 닉네임이 있습니다
-          </div>
-        )}
+
+        <div className="h-6 text-red-400 font-black text-xs">{message}</div>
+
         <div className="text-xs text-stone-400 mb-10">
           최소 2글자, 최대 20글자,
-          <span className={`${isShort && "text-red-400"}`}>
+          <span className={`${isShort(name) && "text-red-400"}`}>
             현재&nbsp;
-            {name.length === 0
-              ? authService.currentUser.displayName.length
-              : name.length}
+            {name.length}
             글자
           </span>
         </div>
@@ -211,11 +240,11 @@ const SignUp = ({ ...props }) => {
       <div className="z-10 fixed bottom-0 w-full h-16">
         <button
           className={`w-full h-full font-black text-white ${
-            isDuplicated || isShort ? "bg-stone-200" : "bg-sky-400"
-          } rounded-t-xl`}
+            off ? "bg-stone-200" : "bg-sky-400"
+          }`}
           onClick={onSubmit}
         >
-          가입하고 아이디어 남기러 가기
+          등록하기
         </button>
       </div>
     </div>

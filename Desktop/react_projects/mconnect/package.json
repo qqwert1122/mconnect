@@ -24,6 +24,7 @@
     "react-bottom-scroll-listener": "^5.0.0",
     "react-dom": "^18.0.0",
     "react-instantsearch-hooks-web": "^6.31.1",
+    "react-naver-login": "^0.1.4",
     "react-ripples": "^2.2.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
