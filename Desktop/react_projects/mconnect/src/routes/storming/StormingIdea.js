@@ -17,12 +17,15 @@ import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCopy,
   faHeart as farHeart,
   faBookmark as farBookmark,
   faThumbsUp,
+  faBell,
 } from "@fortawesome/free-regular-svg-icons";
 import {
   faEllipsis,
@@ -198,6 +201,15 @@ const StormingIdea = ({ index, idea, viewIdea, timeDisplay }) => {
     setAnchorEl(null);
   };
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+  };
+
+  const onPasteClick = () => {
+    copyToClipboard(idea.text);
+    handleEllipsisClose();
+  };
+
   const onRecommendationClick = async () => {
     const recommendRef = doc(dbService, "recommendation", idea.docId);
     await setDoc(recommendRef, {
@@ -206,6 +218,22 @@ const StormingIdea = ({ index, idea, viewIdea, timeDisplay }) => {
       isLiked: false,
       isOriginal: false,
       isViewed: false,
+    });
+    handleEllipsisClose();
+  };
+
+  const onReportClick = async () => {
+    const reportRef = doc(dbService, "report", idea.docId);
+    await setDoc(reportRef, {
+      userId: idea.userId,
+      title: idea.title,
+      text: idea.text,
+      tags: idea.tags,
+      source: idea.source,
+      reporter: loggedInUser.userId,
+    });
+    toast.success("신고가 완료되었습니다", {
+      theme: "colored",
     });
     handleEllipsisClose();
   };
@@ -268,9 +296,13 @@ const StormingIdea = ({ index, idea, viewIdea, timeDisplay }) => {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={handleEllipsisClose}>
+              <MenuItem onClick={onPasteClick}>
                 <FontAwesomeIcon icon={faCopy} />
                 &nbsp; 복사
+              </MenuItem>
+              <MenuItem onClick={onReportClick}>
+                <FontAwesomeIcon icon={faBell} />
+                &nbsp; 신고
               </MenuItem>
               {loggedInUser.isAuthority && (
                 <MenuItem onClick={onRecommendationClick}>
@@ -386,6 +418,18 @@ const StormingIdea = ({ index, idea, viewIdea, timeDisplay }) => {
               />
             </button>
           </div>
+          <ToastContainer
+            className="black-background"
+            position="bottom-center"
+            autoClose={3000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </>
       ) : (
         <div className="ml-4 pt-2">

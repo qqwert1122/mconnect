@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  sendEmailVerification,
+} from "firebase/auth";
+import { authService } from "fbase";
 import { faChevronLeft, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -49,13 +54,39 @@ const CreateNewAccount = ({ ...props }) => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        // ...
+
+        authService
+          .auth()
+          .signOut()
+          .then(function () {
+            // 로그아웃 성공
+            console.log("회원가입 후 자동 로그인이 방지되었습니다.");
+            // 여기서 필요한 추가 작업을 수행할 수 있습니다.
+          })
+          .catch(function (error) {
+            // 로그아웃 실패
+            console.log("로그아웃 중 오류가 발생했습니다.", error);
+          });
+
+        // 이메일 확인 메일 전송
+        user
+          .sendEmailVerification()
+          .then(function () {
+            // 이메일 전송 성공
+            console.log("이메일 확인 메일이 전송되었습니다.");
+            // 여기서 필요한 추가 작업을 수행할 수 있습니다.
+          })
+          .catch(function (error) {
+            // 이메일 전송 실패
+            console.log("이메일 확인 메일 전송 중 오류가 발생했습니다.", error);
+          });
       })
       .catch((error) => {
         if (error.code === "auth/email-already-in-use") {
           setAlertMessage("이미 가입된 이메일입니다");
           return;
         }
+        console.log(error.code);
       });
   };
 

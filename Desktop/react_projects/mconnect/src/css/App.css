@@ -1,21 +1,6 @@
-.instagram {
-  background: radial-gradient(
-      circle farthest-corner at 32% 106%,
-      #ffe17d 0%,
-      #ffcd69 10%,
-      #fa9137 28%,
-      #eb4141 42%,
-      transparent 82%
-    ),
-    linear-gradient(110deg, #234bd7 12%, #c33cbe 58%);
-}
-
-.app__logo {
-  text-shadow: 0.1em 0.1em 0 #ffff83;
-}
-
 body {
   -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 ::-webkit-scrollbar {
   display: none;
@@ -27,9 +12,13 @@ body {
 }
 
 .highlight:after {
+  -webkit-animation-name: highlighting;
   animation-name: highlighting;
+  -webkit-animation-duration: 0.4s;
   animation-duration: 0.4s;
+  -webkit-animation-timing-function: ease-out;
   animation-timing-function: ease-out;
+  -webkit-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
   content: "";
   width: 0%;
@@ -41,6 +30,15 @@ body {
   left: 0;
   z-index: -1;
   transition: 0.2s all;
+}
+
+@-webkit-keyframes highlighting {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 @keyframes highlighting {

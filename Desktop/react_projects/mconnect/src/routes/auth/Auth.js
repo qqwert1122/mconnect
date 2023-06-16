@@ -1,19 +1,13 @@
 import "css/App.css";
 import "css/Gradient.css";
 import React, { useCallback, useState } from "react";
-import { authService, dbService, provider, signInWithPopup } from "fbase";
-import {
-  getAuth,
-  sendSignInLinkToEmail,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { authService, provider, signInWithPopup } from "fbase";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useSetRecoilState } from "recoil";
 import { userState } from "atom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { queryAllByAltText } from "@testing-library/react";
-import { collection, getDocs, query, where } from "firebase/firestore";
 
 const Auth = ({ ...props }) => {
   const { setNavValue, navigate } = props;
@@ -21,7 +15,7 @@ const Auth = ({ ...props }) => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberEmail, setRememberEmail] = useState(true);
 
   const handleRememberEmail = (e) => {
@@ -32,13 +26,13 @@ const Auth = ({ ...props }) => {
     setEmail(e.target.value);
   };
 
-  // const onPasswordChange = (e) => {
-  //   setPassword(e.target.value);
-  // };
+  const onPasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
 
-  // const clearPassword = () => {
-  //   setPassword("");
-  // };
+  const clearPassword = () => {
+    setPassword("");
+  };
 
   const validateEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,12 +40,7 @@ const Auth = ({ ...props }) => {
     return emailPattern.test(email);
   };
 
-  const actionCodeSettings = {
-    url: "https://connect-memo-16299.web.app",
-    handleCodeInApp: true,
-  };
-
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (email.length < 1) {
       setAlertMessage("이메일을 입력하세요");
       return;
@@ -60,25 +49,17 @@ const Auth = ({ ...props }) => {
       setAlertMessage("유효하지 않은 이메일입니다");
       return;
     }
-    const q = query(
-      collection(dbService, "users"),
-      where("userEmail", "==", email)
-    );
-    const _emailCheck = await getDocs(q);
-    if (_emailCheck.docs.length == 0) {
-      setAlertMessage("유효하지 않은 이메일입니다");
+    if (password.length < 1) {
+      setAlertMessage("비밀번호를 입력하세요");
       return;
     }
-    // if (password.length < 1) {
-    //   setAlertMessage("비밀번호를 입력하세요");
-    //   return;
-    // }
 
     setAlertMessage("");
     const auth = getAuth();
-    sendSignInLinkToEmail(auth, email, actionCodeSettings)
-      .then(() => {
-        window.localStorage.setItem("emailForSignIn", email);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
         // ...
       })
       .catch((error) => {
@@ -109,14 +90,15 @@ const Auth = ({ ...props }) => {
               onChange={onEmailChange}
             />
             <br />
-            {/* <input
+            <input
               className="m-2 p-2 border border-stone-300 placeholder-stone-400 rounded w-64 h-8 text-sm"
               placeholder="비밀번호"
               type="password"
               value={password}
               onChange={onPasswordChange}
               onClick={clearPassword}
-            /> */}
+            />
+            <br />
             <br />
             <div className="flex justify-center gap-2">
               <input
@@ -143,7 +125,7 @@ const Auth = ({ ...props }) => {
               className="w-64 h-10 p-2 m-2 rounded text-white bg-sky-400"
               onClick={onSubmit}
             >
-              이메일 인증하고 로그인하기
+              로그인
             </button>
             <br />
             <button

@@ -582,6 +582,16 @@ const OpenSource = ({ ...props }) => {
         </>
       ),
     },
+    {
+      summary: "previewed",
+      details: (
+        <>
+          <a href="https://previewed.app/template/8F223412" title="empty icons">
+            making mockup image files through previewed app
+          </a>
+        </>
+      ),
+    },
   ];
 
   return (

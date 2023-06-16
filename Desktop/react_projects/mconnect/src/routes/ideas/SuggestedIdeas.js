@@ -113,7 +113,8 @@ const SuggestedIdeas = ({
     });
   }
 
-  function loadMore() {
+  function loadMore(e) {
+    e.preventDefault();
     let q;
     if (lastVisible === -1) return;
     else if (lastVisible) {
@@ -156,7 +157,8 @@ const SuggestedIdeas = ({
 
   let navigate = useNavigate();
 
-  function searchMore() {
+  function searchMore(e) {
+    e.preventDefault();
     setNavValue("/searchpage");
   }
 
@@ -266,8 +268,8 @@ const SuggestedIdeas = ({
                     className="absolute -right-8 top-24 text-stone-600 text-2xl"
                     onClick={
                       filteredIdeas.length === MAX_IDEAS_LENGTH
-                        ? searchMore
-                        : loadMore
+                        ? (e) => searchMore(e)
+                        : (e) => loadMore(e)
                     }
                   >
                     {filteredIdeas.length === MAX_IDEAS_LENGTH ? (

@@ -174,7 +174,7 @@ const Storming = ({ ...props }) => {
         itemPrmtr={itemPrmtr}
         setItemPrmtr={setItemPrmtr}
       />
-      <div className=" min-h-screen pb-14 text-sm">
+      <div className=" min-h-screen pb-14 text-sm overflow-hidden">
         <div className="pt-28 m-4 ml-10 mb-2">
           <div className="font-black text-lg text-sky-400">오늘의 발견</div>
           <div className="text-sky-300 text-xs ">에디터 추천</div>

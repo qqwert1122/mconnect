@@ -57,6 +57,9 @@ const useDeliverProps = () => {
   useEffect(() => {
     authService.onAuthStateChanged(async (user) => {
       if (user) {
+        if (user.emailVerified) {
+          navigate("/setting");
+        }
         onSnapshot(doc(dbService, "users", user.uid), (doc) => {
           if (doc.data() === undefined) {
             navigate("/signup");
@@ -80,10 +83,7 @@ const useDeliverProps = () => {
   }, [navValue]);
 
   useEffect(() => {
-    console.log(isLoggedIn);
-    console.log(loggedInUser);
     if (isLoggedIn) {
-      console.log("contents");
       setNavValue("/contents");
     } else {
       console.log("auth");
